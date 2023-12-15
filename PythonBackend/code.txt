@@ -1,0 +1,61 @@
+# set openai key from app.env file
+import os
+from dotenv import dotenv_values
+from langchain.llms import OpenAI
+import wget
+from langchain.embeddings.openai import OpenAIEmbeddings
+from PyPDF2 import PdfReader
+from langchain.text_splitter import CharacterTextSplitter
+from langchain.vectorstores import ElasticVectorSearch, Pinecone, Weaviate, FAISS
+from langchain.chains.question_answering import load_qa_chain
+from langchain.llms import OpenAI
+
+env_values = dotenv_values("./app.env")
+os.environ["OPENAI_API_KEY"] = env_values["OPENAI_API_KEY"]
+
+llm = OpenAI(model_name="text-davinci-003", temperature=0.5)
+
+
+def readPdf(fileName):
+    reader = PdfReader(fileName)
+    pdf_text = ""
+    for page in reader.pages:
+        text = page.extract_text()
+        if text:
+            pdf_text += text
+    return pdf_text
+
+
+# text splitter
+text_splitter = CharacterTextSplitter(
+    separator="\n",
+    chunk_size=1000,
+    chunk_overlap=200,
+    length_function=len,
+)
+
+# use langchain for use QnA chain for make extraction text
+chain = load_qa_chain(llm)
+
+embeddings = OpenAIEmbeddings()
+print(embeddings)
+
+# download pdf file for reading
+url = "https://www.eimj.org/uplode/images/photo/Performance_Evaluation_of_Websites_Using_Machine_Learning..pdf"
+fileName = wget.download(url)
+
+# read file and splitting
+pdf_text = readPdf(fileName)
+text_chunks = text_splitter.split_text(pdf_text)
+
+# convert text to embedding and creat vectores
+pdf_embeddings = FAISS.from_texts(text_chunks, embeddings)
+print(type(pdf_embeddings))
+
+query = "What is Machine Learning?"
+docs = pdf_embeddings.similarity_search(query)
+chain.run(input_documents=docs, question=query)
+
+query = "What is response time?"
+docs = pdf_embeddings.similarity_search(query)
+chain.run(input_documents=docs, question=query)
