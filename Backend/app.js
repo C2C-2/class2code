@@ -1,22 +1,33 @@
-const express = require("express");
 require("express-async-errors");
 require("dotenv").config();
+const express = require("express");
+const { ApolloServer } = require("apollo-server-express");
 const compression = require("compression");
-const bodyParser = require("body-parser");
+const cors = require("cors");
+const { typeDefs } = require("./src/schema/schema");
+const { resolvers } = require("./src/controllers/resolvers");
+const Variables = require("./src/config/Variables");
+
+const PORT = 3000;
 
 const app = express();
-app.use(express.json());
-
-const cors = require("cors");
-app.use(cors());
 app.use(compression());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cors());
 
-app.all("*", (req, res, next) => {
-  res.status(404).send("Not Found");
+const server = new ApolloServer({
+  typeDefs,
+  resolvers,
 });
 
-app.listen({ port: 5000 }, () => {
-  console.log("listening on port 5000");
-});
+async function startServer() {
+  await server.start();
+  server.applyMiddleware({ app });
+
+  app.listen({ port: PORT }, () => {
+    console.log(
+      `🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`
+    );
+  });
+}
+
+startServer();
