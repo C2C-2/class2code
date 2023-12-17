@@ -9,6 +9,11 @@ from langchain.llms import OpenAI
 from langchain.text_splitter import CharacterTextSplitter
 from langchain.vectorstores import FAISS
 from flask_httpauth import HTTPBasicAuth
+import wget
+import firebase_admin
+from firebase_admin import credentials, storage
+from io import BytesIO
+import redis
 
 auth = HTTPBasicAuth()
 
@@ -37,8 +42,8 @@ app = Flask(__name__)
 CORS(app)
 
 
-def readPdf(fileName):
-    reader = PdfReader(fileName)
+def readPdfFromBytes(file_bytes):
+    reader = PdfReader(BytesIO(file_bytes))
     pdf_text = ""
     for page in reader.pages:
         text = page.extract_text()
@@ -55,21 +60,51 @@ text_splitter = CharacterTextSplitter(
     length_function=len,
 )
 
+# Initialize Firebase
+cred = credentials.Certificate(
+    "./serviceAccountKey.json"
+)  # Replace with your service account key file
+firebase_admin.initialize_app(cred, {"storageBucket": "class2code.appspot.com"})
+
+# Get a reference to the storage service
+bucket = storage.bucket()
+
+# Initialize Redis
+
+r = redis.Redis(
+    host="redis-16970.c322.us-east-1-2.ec2.cloud.redislabs.com",
+    port=16970,
+    password="GF1z5u5d1G0XR3n9tR7JJYBTmGOQgYu9",
+)
+
 
 @app.route("/read_pdf", methods=["POST"])
 @auth.login_required
 def read_and_answer():
-    # Retrieve path or file from the request
-    file_path = "files/file1.pdf"
-    query = request.json.get("query", "")
+    filename = request.json.get("filename", "")
+    file_url = "projects/" + filename
 
-    # Read file and splitting
-    pdf_text = readPdf(file_path)
+    # Check if the file is already in Redis
+    file_bytes = r.get(filename)
+
+    if file_bytes is None:
+        print("aa")
+        # File not in Redis, download and store it
+        file_url = "projects/" + filename
+        blob = bucket.blob(file_url)
+        file_bytes = blob.download_as_bytes()
+
+        # Store the file_bytes in Redis with a time-to-live (TTL) of 1 hour (3600 seconds)
+        r.setex(filename, 3600, file_bytes)
+
+    # Read file in-memory and splitting
+    pdf_text = readPdfFromBytes(file_bytes)
     text_chunks = text_splitter.split_text(pdf_text)
 
     # Convert text to embedding and create vectors
     pdf_embeddings = FAISS.from_texts(text_chunks, embeddings)
 
+    query = request.json.get("query", "")
     # Use langchain to run QnA chain for extracting text
     docs = pdf_embeddings.similarity_search(query)
     answer = chain.run(input_documents=docs, question=query)

@@ -8,6 +8,7 @@ const resolvers = {
       const password = "yu23M@1R!f";
       const credentials = `${username}:${password}`;
       const message = args.message;
+      const fileName = args.fileName;
 
       // Base64 encode the credentials
       const encodedCredentials = base64.encode(credentials);
@@ -15,7 +16,7 @@ const resolvers = {
       // Replace 'https://example.com/api/aimessage' with the actual API endpoint
       const response = await axios.post(
         "http://127.0.0.1:5000/read_pdf",
-        { query: message },
+        { query: message, filename: fileName },
         {
           headers: {
             Authorization: `Basic ${encodedCredentials}`,

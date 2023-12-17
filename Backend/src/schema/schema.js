@@ -6,7 +6,7 @@ const typeDefs = gql`
   }
 
   type Query {
-    AIMessage(message: String!): AIMessage
+    AIMessage(message: String!, fileName: String!): AIMessage
   }
 `;
 
