@@ -9,7 +9,6 @@ from langchain.llms import OpenAI
 from langchain.text_splitter import CharacterTextSplitter
 from langchain.vectorstores import FAISS
 from flask_httpauth import HTTPBasicAuth
-import wget
 import firebase_admin
 from firebase_admin import credentials, storage
 from io import BytesIO
@@ -70,11 +69,9 @@ firebase_admin.initialize_app(cred, {"storageBucket": "class2code.appspot.com"})
 bucket = storage.bucket()
 
 # Initialize Redis
-
 r = redis.Redis(
-    host="redis-16970.c322.us-east-1-2.ec2.cloud.redislabs.com",
-    port=16970,
-    password="GF1z5u5d1G0XR3n9tR7JJYBTmGOQgYu9",
+    host="127.0.0.1",
+    port=6379,
 )
 
 
@@ -88,14 +85,13 @@ def read_and_answer():
     file_bytes = r.get(filename)
 
     if file_bytes is None:
-        print("aa")
         # File not in Redis, download and store it
         file_url = "projects/" + filename
         blob = bucket.blob(file_url)
         file_bytes = blob.download_as_bytes()
 
         # Store the file_bytes in Redis with a time-to-live (TTL) of 1 hour (3600 seconds)
-        r.setex(filename, 3600, file_bytes)
+        r.set(filename, file_bytes)
 
     # Read file in-memory and splitting
     pdf_text = readPdfFromBytes(file_bytes)
