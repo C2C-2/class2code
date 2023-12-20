@@ -6,6 +6,7 @@ const compression = require("compression");
 const cors = require("cors");
 const { typeDefs } = require("./src/schema/schema");
 const { resolvers } = require("./src/controllers/resolvers");
+require('dotenv').config();
 
 // this file save all global variables like urls
 //it return module (javascript object)

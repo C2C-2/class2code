@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 from langchain.embeddings.openai import OpenAIEmbeddings
 from dotenv import dotenv_values
+from dotenv import load_dotenv
 import os
 from PyPDF2 import PdfReader
 from langchain.chains.question_answering import load_qa_chain
@@ -16,8 +17,15 @@ import redis
 
 auth = HTTPBasicAuth()
 
+# Load configuration from the .env file
+load_dotenv()
+
+# Access environment variables
+username = os.getenv("AI_USERNAME")
+password = os.getenv("AI_PASSWORD")
+
 users = {
-    "QA2!eR23c": "yu23M@1R!f",
+    username: password,
 }
 
 
