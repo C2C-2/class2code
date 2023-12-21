@@ -1,8 +1,9 @@
 module.exports = {
-  MessageContent: "string",
-  Date: {
+  TeamName: "string",
+  IsDeleted: "boolean",
+  CreateDate: {
     type: "string",
     default: () => new Date().toString(),
   },
-  IsDeleted: "boolean",
+  TeamRole: "string",
 };
