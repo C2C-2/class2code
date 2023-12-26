@@ -2,14 +2,16 @@ const Neode = require("neode");
 
 // Import Neode and configure it with your Neo4j connection details
 const instance = new Neode(
-  "bolt://localhost:7687",
-  "neo4j",
-  "Qazwsx1234",
+  process.env.NeodeServerUrl,
+  process.env.NeodeUsername,
+  process.env.NeodePassword,
   true
 );
 
-instance.withDirectory(
-  "C:/Users/Mohmmad/Documents/vsProject/web/Class2Code/Backend/src/models"
-);
+const dir = __dirname.split("\\");
+dir.pop();
+dir.push("models");
+
+instance.withDirectory(dir.join("/"));
 
 module.exports = instance;

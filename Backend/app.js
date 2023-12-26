@@ -6,20 +6,15 @@ const compression = require("compression");
 const cors = require("cors");
 const { typeDefs } = require("./src/schema/schema");
 const { resolvers } = require("./src/controllers/resolvers");
-require('dotenv').config();
+require("dotenv").config();
 
-// this file save all global variables like urls
-//it return module (javascript object)
-const Variables = require("./src/config/Variables");
-
-//fixed variable to save this server port, so sever run in this port
+// fixed variable to save this server port, so sever run in this port
 const PORT = 3000;
 
 const app = express();
 
-//this to compression data when request and response
+// this to compression data when request and response
 app.use(compression());
-
 app.use(cors());
 
 const server = new ApolloServer({
@@ -28,8 +23,8 @@ const server = new ApolloServer({
 });
 
 /*
-@ this method to start apollo Server and add app as middleware 
-to add other middleware: compression, because I can't make it without 
+@ this method to start apollo Server and add app as middleware
+to add other middleware: compression, because I can't make it without
 express server.
 
 @without any parameters and return type.
