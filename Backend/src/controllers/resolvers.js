@@ -36,6 +36,10 @@ const resolvers = {
         // this int args from to check if chat already exist or create new
         const { chatID } = args;
 
+        if (message === null || fileName === null) {
+          throw new Error("Message or fileName is null");
+        }
+
         // Base64 encode the credentials
         // this step required to send username & password to auth
         const encodedCredentials = base64.encode(credentials);
@@ -65,6 +69,10 @@ const resolvers = {
           }),
         ]);
 
+        if (chat === null || createdMessage === null) {
+          throw new Error("Chat or createdMessage is null");
+        }
+
         // Relate AIMessage to AIChat
         await chat.relateTo(createdMessage, "has_a");
 
@@ -78,30 +86,71 @@ const resolvers = {
       }
     },
 
+    /**
+     * Creates a new AI chat.
+     *
+     * @param {Object} parent - The parent object.
+     * @param {Object} args - The arguments object.
+     * @param {string} args.userID - The ID of the user.
+     * @return {Object} The newly created AI chat object.
+     */
     createNewAIChat: async (parent, args) => {
-      const { userID } = args;
+      try {
+        // this int args from client with user id value to create new AI chat.
+        const { userID } = args;
 
-      const [AIChat, User] = await Promise.all([
-        NeodeObject?.create("AIChat", {}),
-        NeodeObject?.findById("User", userID),
-      ]);
+        if (userID === null) {
+          throw new Error("UserID is null");
+        }
 
-      // Relate AIChat to User
-      await AIChat.relateTo(User, "has_a");
+        const [AIChat, User] = await Promise.all([
+          NeodeObject?.create("AIChat", {}),
+          NeodeObject?.findById("User", userID),
+        ]);
 
-      return {
-        id: AIChat.identity().toString(),
-        ...AIChat.properties(),
-        messages: {},
-      };
+        if (AIChat === null || User === null) {
+          throw new Error("AIChat or User is null");
+        }
+
+        // Relate AIChat to User
+        await AIChat.relateTo(User, "has_a");
+
+        return {
+          id: AIChat.identity().toString(),
+          ...AIChat.properties(),
+          messages: {},
+        };
+      } catch (error) {
+        console.error("Error in createNewAIChat resolver:", error.message);
+        throw new Error("An error occurred while processing the request");
+      }
     },
 
+    /**
+     * Retrieves the AI chat with the specified chat ID.
+     *
+     * @param {Object} parent - The parent object.
+     * @param {Object} args - The arguments object.
+     * @param {string} args.chatID - The ID of the chat.
+     * @return {Object} - The AI chat object with the specified chat ID.
+     * @throws {Error} - If the chatID is null or if the chat is not found.
+     */
     getAIChat: async (parent, args) => {
       try {
         const { chatID } = args;
+
+        if (chatID === null) {
+          throw new Error("ChatID is null");
+        }
+
+        // this query get chat by chatID with all messages.
         const cypherQuery =
           "MATCH (chat:AIChat)-[:HAS_A]->(message:AIMessage) WHERE ID(chat) = $chatID RETURN chat, collect(message) as messages";
         const result = await NeodeObject.cypher(cypherQuery, { chatID });
+
+        if (result.records.length === 0) {
+          throw new Error("Chat not found");
+        }
 
         return {
           ...result.records[0].get("chat").properties,
