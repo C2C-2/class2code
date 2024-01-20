@@ -147,12 +147,13 @@ const resolvers = {
           NeodeObject?.findById("User", userID),
         ]);
 
-        if (User === null) {
+        if (User === false) {
+          NeodeObject?.delete(AIChat);
           throw new Error("User not found");
         }
 
         // Relate AIChat to User
-        await AIChat.relateTo(User, "has_a");
+        await AIChat.relateTo(User, "chat_with_AI");
 
         return {
           id: AIChat.identity().toString(),
