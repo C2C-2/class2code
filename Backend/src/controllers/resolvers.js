@@ -85,47 +85,6 @@ const resolvers = {
         throw new Error("An error occurred while processing the request");
       }
     },
-
-    /**
-     * Creates a new AI chat.
-     *
-     * @param {Object} parent - The parent object.
-     * @param {Object} args - The arguments object.
-     * @param {string} args.userID - The ID of the user.
-     * @return {Object} The newly created AI chat object.
-     */
-    createNewAIChat: async (parent, args) => {
-      try {
-        // this int args from client with user id value to create new AI chat.
-        const { userID } = args;
-
-        if (userID === null) {
-          throw new Error("UserID is null");
-        }
-
-        const [AIChat, User] = await Promise.all([
-          NeodeObject?.create("AIChat", {}),
-          NeodeObject?.findById("User", userID),
-        ]);
-
-        if (AIChat === null || User === null) {
-          throw new Error("AIChat or User is null");
-        }
-
-        // Relate AIChat to User
-        await AIChat.relateTo(User, "has_a");
-
-        return {
-          id: AIChat.identity().toString(),
-          ...AIChat.properties(),
-          messages: {},
-        };
-      } catch (error) {
-        console.error("Error in createNewAIChat resolver:", error.message);
-        throw new Error("An error occurred while processing the request");
-      }
-    },
-
     /**
      * Retrieves the AI chat with the specified chat ID.
      *
@@ -162,6 +121,47 @@ const resolvers = {
       } catch (error) {
         console.error("Error fetching AIChat:", error.message);
         throw error;
+      }
+    },
+  },
+  Mutation: {
+    /**
+     * Creates a new AI chat.
+     *
+     * @param {Object} parent - The parent object.
+     * @param {Object} args - The arguments object.
+     * @param {string} args.userID - The ID of the user.
+     * @return {Object} The newly created AI chat object.
+     */
+    createNewAIChat: async (parent, args) => {
+      try {
+        // this int args from client with user id value to create new AI chat.
+        const { userID } = args;
+
+        if (userID === null) {
+          throw new Error("UserID is null");
+        }
+
+        const [AIChat, User] = await Promise.all([
+          NeodeObject?.create("AIChat", {}),
+          NeodeObject?.findById("User", userID),
+        ]);
+
+        if (User === null) {
+          throw new Error("User not found");
+        }
+
+        // Relate AIChat to User
+        await AIChat.relateTo(User, "has_a");
+
+        return {
+          id: AIChat.identity().toString(),
+          ...AIChat.properties(),
+          messages: {},
+        };
+      } catch (error) {
+        console.error("Error in createNewAIChat resolver:", error.message);
+        throw new Error("An error occurred while processing the request");
       }
     },
   },

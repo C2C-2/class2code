@@ -1,25 +1,13 @@
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import { Button } from "@mantine/core";
 import "./Main2.css";
-import { useQuery, gql } from "@apollo/client";
-export const Main2 = () => {
-  const chatID = 1;
-  const [chat, setChat] = useState("");
-  const [messages, setMessages] = useState("");
 
-  const getChatQuery = gql`
-    query {
-      getChat
-    }
-  `;
-
-  const { data, loading, refetch } = useQuery(getChatQuery);
-
-  console.log(data);
+const Main2 = () => {
+  const [message, setMessage] = useState("");
 
   const sendMessage = async () => {};
   return (
-    <div className="body">
+    <div>
       <div className="content">
         <div className="MainTop">
           <span>ChatUI</span>
@@ -85,6 +73,26 @@ export const Main2 = () => {
               <text className="textUser">
                 The advantages of Artificial Intelligence
               </text>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                className="edit"
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <g clipPath="url(#clip0_91_832)">
+                  <path
+                    d="M3 17.4601V20.5001C3 20.7801 3.22 21.0001 3.5 21.0001H6.54C6.67 21.0001 6.8 20.9501 6.89 20.8501L17.81 9.94006L14.06 6.19006L3.15 17.1001C3.05 17.2001 3 17.3201 3 17.4601ZM20.71 7.04006C21.1 6.65006 21.1 6.02006 20.71 5.63006L18.37 3.29006C17.98 2.90006 17.35 2.90006 16.96 3.29006L15.13 5.12006L18.88 8.87006L20.71 7.04006Z"
+                    fill="#718096"
+                  />
+                </g>
+                <defs>
+                  <clipPath id="clip0_91_832">
+                    <rect width="24" height="24" fill="white" />
+                  </clipPath>
+                </defs>
+              </svg>
             </div>
           </div>
           <div className="aiResponse">
@@ -194,17 +202,37 @@ export const Main2 = () => {
                 </linearGradient>
               </defs>
             </svg>
-            <div className="AiText"></div>
+            <text className="AiText">
+              Artificial Intelligence (AI) offers numerous advantages and has
+              the potential to revolutionize various aspects of our lives. Here
+              are some key advantages of AI: Automation: AI can automate
+              repetitive and mundane tasks, saving time and effort for humans.
+              It can handle large volumes of data, perform complex calculations,
+              and execute tasks with precision and consistency. This automation
+              leads to increased productivity and efficiency in various
+              industries. Decision-making: AI systems can analyze vast amounts
+              of data, identify patterns, and make informed decisions based on
+              that analysis. This ability is particularly useful in complex
+              scenarios where humans may struggle to process large datasets or
+              where quick and accurate decisions are crucial. Improved accuracy:
+              AI algorithms can achieve high levels of accuracy and precision in
+              tasks such as image recognition, natural language processing, and
+              data analysis. They can eliminate human errors caused by fatigue,
+              distractions, or bias, leading to more reliable and consistent
+              results. Continuous operation: AI systems can work tirelessly
+              without the need for breaks, resulting in uninterrupted 24/7
+              operations. This capability is especially beneficial in
+              applications like customer support chatbots, manufacturing
+              processes, and surveillance systems.
+            </text>
           </div>
         </div>
-      </div>
-      <div className="footer">
         <div className="chatFooter">
           <div className="inp">
             <input
               type="text"
               placeholder="Send Message"
-              onChange={(e) => setMessages(e.target.value)}
+              onChange={(e) => setMessage(e.target.value)}
             />
             <Button
               variant="filled"
@@ -218,14 +246,16 @@ export const Main2 = () => {
             </Button>
           </div>
         </div>
-        <div className="Under">
-          <div className="UnderClass">© 2023 Class2Code.</div>
-          <div className="UnderHome">Home Page</div>
-          <div className="UnderLicense">License</div>
-          <div className="UnderTeamOfUse">Team of Use</div>
-          <div className="UnderPrivacy">Privacy Policy</div>
-        </div>
+      </div>
+      <div className="Under">
+        <div className="UnderClass">© 2023 Class2Code.</div>
+        <div className="UnderHome">Home Page</div>
+        <div className="UnderLicense">License</div>
+        <div className="UnderTeamOfUse">Team of Use</div>
+        <div className="UnderPrivacy">Privacy Policy</div>
       </div>
     </div>
   );
 };
+
+export default Main2;

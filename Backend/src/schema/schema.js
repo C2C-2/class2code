@@ -17,8 +17,11 @@ const typeDefs = gql`
   type Query {
     sendMessage(message: String!, fileName: String!, chatID: Int): AIMessage!
     getAIChat(chatID: Int!): AIChat!
-    createNewAIChat(userID: Int!): AIChat!
     getOldAIChats(userID: Int!): [AIChat!]!
+  }
+
+  type Mutation {
+    createNewAIChat(userID: Int!): AIChat!
   }
 `;
 
