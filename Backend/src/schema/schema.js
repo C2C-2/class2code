@@ -22,6 +22,7 @@ const typeDefs = gql`
 
   type Mutation {
     createNewAIChat(userID: Int!): AIChat!
+    login(userID: Int!, username: String!, password: String!): String!
   }
 `;
 

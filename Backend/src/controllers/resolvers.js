@@ -1,5 +1,8 @@
 const axios = require("axios");
 const base64 = require("base-64");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const Tokens = require("../mysqlModels/Tokens");
 
 /* this library to sync entity with data base, so with this library I can
 use models to define schema for database objects and manage it without use
@@ -160,6 +163,68 @@ const resolvers = {
           ...AIChat.properties(),
           messages: {},
         };
+      } catch (error) {
+        console.error("Error in createNewAIChat resolver:", error.message);
+        throw new Error("An error occurred while processing the request");
+      }
+    },
+    login: async (parent, args) => {
+      try {
+        const { userID, username, password } = args;
+
+        if (!userID) {
+          throw new Error(
+            `Are you send userID? UserID is required, userID value is ${userID}. please check userID value before send`
+          );
+        }
+
+        if (!username) {
+          throw new Error(
+            `Are you send username? username is required, username value is ${username}. please check username value before send`
+          );
+        }
+
+        if (!password) {
+          throw new Error("Are you send password? username is required");
+        }
+
+        const [User] = await Promise.all([
+          NeodeObject?.findById("User", userID),
+        ]);
+
+        if (User === false || User.Username !== username) {
+          throw new Error(
+            "User not found, check again please userID and username"
+          );
+        }
+
+        bcrypt.compare(password, User.Password, (err, result) => {
+          if (err) {
+            throw new Error(err);
+          }
+
+          if (!result) {
+            throw new Error(
+              "Are you sure you send correct username and password? please check it again"
+            );
+          }
+
+          let token = jwt.sign({ id: User.id }, "userToken");
+
+          if (token === null) {
+            token = jwt.sign({ id: User.id }, "userToken");
+            if (token === null) {
+              throw new Error("something wrong in system please try again");
+            }
+          }
+
+          Tokens.create({ userID: User.id, token }).catch((error) => {
+            throw new Error(
+              `something wrong in system please try again (${error})`
+            );
+          });
+          return token;
+        });
       } catch (error) {
         console.error("Error in createNewAIChat resolver:", error.message);
         throw new Error("An error occurred while processing the request");
