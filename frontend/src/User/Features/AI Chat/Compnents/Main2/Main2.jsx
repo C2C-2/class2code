@@ -38,12 +38,14 @@ export const Main2 = () => {
 
   const [createNewAIChat] = useMutation(postChatQuery);
 
-  const sendMessage = async () => {
+  const createNewChat = async () => {
     console.log("e");
     createNewAIChat({ variables: { userID } }).then((e) => {
       console.log(e);
     });
   };
+
+  const sendMessage = async () => {};
 
   return (
     <div className="body">
