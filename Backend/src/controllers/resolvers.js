@@ -126,6 +126,21 @@ const resolvers = {
         throw error;
       }
     },
+    logout: async (parent, args) => {
+      const { userID } = args;
+
+      if (userID === null) {
+        throw new Error(
+          `Are you send userID? UserID is required, userID value is ${userID}. please check userID value before send`
+        );
+      }
+
+      await Tokens.destroy({
+        where: {
+          userID,
+        },
+      }).then(() => true);
+    },
   },
   Mutation: {
     /**
@@ -188,6 +203,7 @@ const resolvers = {
           throw new Error("Are you send password? username is required");
         }
 
+        // NeodeObject is Object from Neode library to manage database without use queries.
         const [User] = await Promise.all([
           NeodeObject?.findById("User", userID),
         ]);
@@ -218,6 +234,7 @@ const resolvers = {
             }
           }
 
+          // this to save token in Mysql database to check is correct or not.
           Tokens.create({ userID: User.id, token }).catch((error) => {
             throw new Error(
               `something wrong in system please try again (${error})`
@@ -226,7 +243,31 @@ const resolvers = {
           return token;
         });
       } catch (error) {
-        console.error("Error in createNewAIChat resolver:", error.message);
+        throw new Error("An error occurred while processing the request");
+      }
+    },
+    createNewUser: async (parent, args) => {
+      try {
+        const { user } = args;
+
+        if (!user) {
+          throw new Error(
+            `Are you send user? user is required, user value is ${user}. please check user value before send`
+          );
+        }
+
+        let User = NeodeObject?.create("User", user);
+
+        if (User === false) {
+          User = NeodeObject?.create("User", user);
+
+          if (User === false) {
+            throw new Error("something wrong in system please try again");
+          }
+        }
+
+        return User;
+      } catch (error) {
         throw new Error("An error occurred while processing the request");
       }
     },

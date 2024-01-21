@@ -14,15 +14,35 @@ const typeDefs = gql`
     Messages: [AIMessage!]!
   }
 
+  type User {
+    Username: String!
+    FirstName: String!
+    LastName: String!
+    Email: String!
+    Password: String!
+    Country: String!
+    IsActive: Boolean!
+    CreatedBy: Int!
+    CreateDate: String!
+    Rate: Int!
+    DateOfBirth: String!
+    Gender: String!
+    Work: String!
+    Bio: String!
+    LastTimeOnline: String!
+  }
+
   type Query {
     sendMessage(message: String!, fileName: String!, chatID: Int): AIMessage!
     getAIChat(chatID: Int!): AIChat!
     getOldAIChats(userID: Int!): [AIChat!]!
+    logout(userID: Int!): Boolean!
   }
 
   type Mutation {
     createNewAIChat(userID: Int!): AIChat!
     login(userID: Int!, username: String!, password: String!): String!
+    createNewUser(user: User!): User!
   }
 `;
 

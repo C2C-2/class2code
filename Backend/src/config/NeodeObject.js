@@ -1,22 +1,17 @@
-const Sequelize = require("sequelize");
+const Neode = require("neode");
 
-const sequelize = new Sequelize(
-  process.env.DB_NAME,
-  process.env.DB_USER,
-  process.env.DB_PASSWORD,
-  {
-    host: process.env.DB_HOST,
-    dialect: "mysql",
-  }
+// Import Neode and configure it with your Neo4j connection details
+const instance = new Neode(
+  process.env.NeodeServerUrl,
+  process.env.NeodeUsername,
+  process.env.NeodePassword,
+  true
 );
 
-sequelize
-  .sync({ force: false })
-  .then(() => {
-    console.log("Database synchronized");
-  })
-  .catch((error) => {
-    console.error("Failed to synchronize database:", error);
-  });
+const dir = __dirname.split("\\");
+dir.pop();
+dir.push("models");
 
-module.exports = sequelize;
+instance.withDirectory(dir.join("/"));
+
+module.exports = instance;
