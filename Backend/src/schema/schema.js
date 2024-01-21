@@ -14,17 +14,35 @@ const typeDefs = gql`
     Messages: [AIMessage!]!
   }
 
-  type User {
+  input UserInput {
     Username: String!
     FirstName: String!
     LastName: String!
     Email: String!
-    Password: String!
+    Password: String
     Country: String!
     IsActive: Boolean!
     CreatedBy: Int!
     CreateDate: String!
-    Rate: Int!
+    Rate: Float!
+    DateOfBirth: String!
+    Gender: String!
+    Work: String!
+    Bio: String!
+    LastTimeOnline: String!
+  }
+
+  type UserType {
+    Username: String!
+    FirstName: String!
+    LastName: String!
+    Email: String!
+    Password: String
+    Country: String!
+    IsActive: Boolean!
+    CreatedBy: Int!
+    CreateDate: String!
+    Rate: Float!
     DateOfBirth: String!
     Gender: String!
     Work: String!
@@ -41,8 +59,9 @@ const typeDefs = gql`
 
   type Mutation {
     createNewAIChat(userID: Int!): AIChat!
-    login(userID: Int!, username: String!, password: String!): String!
-    createNewUser(user: User!): User!
+    login(username: String!, password: String!): String
+    loginByGoogle(idToken: String!): String
+    createNewUser(user: UserInput!): UserType!
   }
 `;
 

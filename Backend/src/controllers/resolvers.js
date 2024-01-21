@@ -3,6 +3,21 @@ const base64 = require("base-64");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const Tokens = require("../mysqlModels/Tokens");
+const { OAuth2Client } = require("google-auth-library");
+
+const CLIENT_ID =
+  "992817283464-0pl3okfc0c8bets12lqj5altvmpl2on4.apps.googleusercontent.com";
+
+const client = new OAuth2Client(CLIENT_ID);
+
+async function verify(token) {
+  const ticket = await client.verifyidToken({
+    idToken: token,
+    audience: CLIENT_ID,
+  });
+  const payload = ticket.getPayload();
+  return payload;
+}
 
 /* this library to sync entity with data base, so with this library I can
 use models to define schema for database objects and manage it without use
@@ -127,19 +142,28 @@ const resolvers = {
       }
     },
     logout: async (parent, args) => {
-      const { userID } = args;
+      try {
+        const { userID } = args;
 
-      if (userID === null) {
-        throw new Error(
-          `Are you send userID? UserID is required, userID value is ${userID}. please check userID value before send`
-        );
+        if (userID === null) {
+          throw new Error(
+            `Are you send userID? UserID is required, userID value is ${userID}. please check userID value before send`
+          );
+        }
+
+        await Tokens.destroy({
+          where: {
+            userID,
+          },
+        }).catch(() => {
+          throw new Error("something wrong in system please try again");
+        });
+
+        return true;
+      } catch (error) {
+        console.error("Error in logout resolver:", error.message);
+        return false;
       }
-
-      await Tokens.destroy({
-        where: {
-          userID,
-        },
-      }).then(() => true);
     },
   },
   Mutation: {
@@ -185,13 +209,7 @@ const resolvers = {
     },
     login: async (parent, args) => {
       try {
-        const { userID, username, password } = args;
-
-        if (!userID) {
-          throw new Error(
-            `Are you send userID? UserID is required, userID value is ${userID}. please check userID value before send`
-          );
-        }
+        const { username, password } = args;
 
         if (!username) {
           throw new Error(
@@ -205,43 +223,89 @@ const resolvers = {
 
         // NeodeObject is Object from Neode library to manage database without use queries.
         const [User] = await Promise.all([
-          NeodeObject?.findById("User", userID),
+          NeodeObject?.first("User", { Username: username }),
         ]);
 
-        if (User === false || User.Username !== username) {
+        if (User === false) {
           throw new Error(
             "User not found, check again please userID and username"
           );
         }
 
-        bcrypt.compare(password, User.Password, (err, result) => {
-          if (err) {
-            throw new Error(err);
-          }
+        const userID = User.identity().toString();
 
-          if (!result) {
+        const tokenResult = bcrypt
+          .compare(password, User.properties().Password)
+          .catch(() => {
             throw new Error(
               "Are you sure you send correct username and password? please check it again"
             );
-          }
-
-          let token = jwt.sign({ id: User.id }, "userToken");
-
-          if (token === null) {
-            token = jwt.sign({ id: User.id }, "userToken");
-            if (token === null) {
-              throw new Error("something wrong in system please try again");
-            }
-          }
-
-          // this to save token in Mysql database to check is correct or not.
-          Tokens.create({ userID: User.id, token }).catch((error) => {
-            throw new Error(
-              `something wrong in system please try again (${error})`
-            );
           });
-          return token;
+
+        if (!tokenResult) {
+          throw new Error(
+            "Are you sure you send correct username and password? please check it again"
+          );
+        }
+
+        let token = jwt.sign({ id: userID }, "userToken");
+
+        if (token === null) {
+          token = jwt.sign({ id: userID }, "userToken");
+          if (token === null) {
+            throw new Error("something wrong in system please try again");
+          }
+        }
+
+        // this to save token in Mysql database to check is correct or not.
+        Tokens.create({ userID, token }).catch((error) => {
+          throw new Error(
+            `something wrong in system please try again (${error})`
+          );
         });
+        return token;
+      } catch (error) {
+        throw new Error("An error occurred while processing the request");
+      }
+    },
+    loginByGoogle: async (parent, args) => {
+      try {
+        const { idToken } = args;
+
+        if (!idToken) {
+          throw new Error("Google ID token is required");
+        }
+
+        const payload = await verify(idToken);
+
+        // Check if the user exists in your database
+        const [User] = await Promise.all([
+          NeodeObject?.first("User", { Email: payload.email }),
+        ]);
+
+        if (!User) {
+          throw new Error("User not found, please register first");
+        }
+
+        const userID = User.identity().toString();
+
+        let token = jwt.sign({ id: userID }, "userToken");
+
+        if (token === null) {
+          token = jwt.sign({ id: userID }, "userToken");
+          if (token === null) {
+            throw new Error("something wrong in system please try again");
+          }
+        }
+
+        // this to save token in Mysql database to check is correct or not.
+        Tokens.create({ userID, token }).catch((error) => {
+          throw new Error(
+            `something wrong in system please try again (${error})`
+          );
+        });
+
+        return token;
       } catch (error) {
         throw new Error("An error occurred while processing the request");
       }
@@ -256,17 +320,38 @@ const resolvers = {
           );
         }
 
-        let User = NeodeObject?.create("User", user);
+        const newUser = {
+          ...user,
+          Password: bcrypt.hashSync(user.Password, 10),
+        };
+
+        let User = NeodeObject?.create("User", newUser);
 
         if (User === false) {
-          User = NeodeObject?.create("User", user);
+          User = NeodeObject?.create("User", newUser);
 
           if (User === false) {
             throw new Error("something wrong in system please try again");
           }
         }
 
-        return User;
+        return {
+          id: User.identity().toString(),
+          Username: newUser.Username,
+          FirstName: newUser.FirstName,
+          LastName: newUser.LastName,
+          Email: newUser.Email,
+          Country: newUser.Country,
+          IsActive: newUser.IsActive,
+          CreatedBy: newUser.CreatedBy,
+          CreateDate: newUser.CreateDate,
+          Rate: newUser.Rate,
+          DateOfBirth: newUser.DateOfBirth,
+          Gender: newUser.Gender,
+          Work: newUser.Work,
+          Bio: newUser.Bio,
+          LastTimeOnline: newUser.LastTimeOnline,
+        };
       } catch (error) {
         throw new Error("An error occurred while processing the request");
       }
