@@ -20,16 +20,16 @@ const typeDefs = gql`
     LastName: String!
     Email: String!
     Password: String
-    Country: String!
-    IsActive: Boolean!
-    CreatedBy: Int!
-    CreateDate: String!
-    Rate: Float!
-    DateOfBirth: String!
-    Gender: String!
-    Work: String!
-    Bio: String!
-    LastTimeOnline: String!
+    Country: String
+    IsActive: Boolean
+    CreatedBy: Int
+    CreateDate: String
+    Rate: Float
+    DateOfBirth: String
+    Gender: String
+    Work: String
+    Bio: String
+    LastTimeOnline: String
   }
 
   type UserType {
@@ -61,7 +61,10 @@ const typeDefs = gql`
     createNewAIChat(userID: Int!): AIChat!
     login(username: String!, password: String!): String
     loginByGoogle(idToken: String!): String
+    loginByLinkedin(code: String!): String
+    loginByGitHup(code: String!): String
     createNewUser(user: UserInput!): UserType!
+    forgetPassword(email: String!): Boolean
   }
 `;
 

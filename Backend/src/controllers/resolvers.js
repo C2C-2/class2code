@@ -4,11 +4,21 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const Tokens = require("../mysqlModels/Tokens");
 const { OAuth2Client } = require("google-auth-library");
+const nodemailer = require("nodemailer");
 
-const CLIENT_ID =
-  "992817283464-0pl3okfc0c8bets12lqj5altvmpl2on4.apps.googleusercontent.com";
+const CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 
 const client = new OAuth2Client(CLIENT_ID);
+
+const myEmail = "202007723@bethlehem.edu";
+
+const transporter = nodemailer.createTransport({
+  service: "gmail", // Update with your email service provider (e.g., 'gmail', 'yahoo', etc.)
+  auth: {
+    user: myEmail, // Update with your email address
+    pass: process.env.EMAIL_PASSWORD, // Update with your email password or an app-specific password
+  },
+});
 
 async function verify(token) {
   const ticket = await client.verifyidToken({
@@ -18,6 +28,59 @@ async function verify(token) {
   const payload = ticket.getPayload();
   return payload;
 }
+
+const getLinkedInAccessToken = async (code) => {
+  const response = await axios.post(
+    "https://www.linkedin.com/oauth/v2/accessToken",
+    `grant_type=authorization_code&code=${code}&client_id=${process.env.LINKEDIN_CLIENT_ID}&client_secret=${process.env.LINKEDIN_CLIENT_SECRET}&redirect_uri=${process.env.LINKEDIN_REDIRECT_URI}`,
+    {
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+    }
+  );
+
+  return response.data.access_token;
+};
+
+const getLinkedInUserProfile = async (accessToken) => {
+  const response = await axios.get("https://api.linkedin.com/v2/me", {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+
+  return response.data;
+};
+
+const getGitHubAccessToken = async (code) => {
+  const response = await axios.post(
+    "https://github.com/login/oauth/access_token",
+    {
+      client_id: process.env.GITHUB_CLIENT_ID,
+      client_secret: process.env.GITHUB_CLIENT_SECRET,
+      code,
+      redirect_uri: process.env.GITHUB_REDIRECT_URI,
+    },
+    {
+      headers: {
+        Accept: "application/json",
+      },
+    }
+  );
+
+  return response.data.access_token;
+};
+
+const getGitHubUser = async (accessToken) => {
+  const response = await axios.get("https://api.github.com/user", {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+
+  return response.data;
+};
 
 /* this library to sync entity with data base, so with this library I can
 use models to define schema for database objects and manage it without use
@@ -310,6 +373,102 @@ const resolvers = {
         throw new Error("An error occurred while processing the request");
       }
     },
+    loginByLinkedin: async (parent, args) => {
+      try {
+        const { code } = args;
+
+        if (!code) {
+          throw new Error("LinkedIn authorization code is required");
+        }
+
+        // Exchange the authorization code for an access token
+        const accessToken = await getLinkedInAccessToken(code);
+
+        // Get user profile information from LinkedIn
+        const linkedinUserProfile = await getLinkedInUserProfile(accessToken);
+
+        // Check if the user exists in your database
+        const [User] = await Promise.all([
+          NeodeObject?.first("User", { LinkedInID: linkedinUserProfile.id }),
+        ]);
+
+        if (!User) {
+          throw new Error("User not found, please register first");
+        }
+
+        const userID = User.identity().toString();
+
+        let token = jwt.sign({ id: userID }, "userToken");
+
+        if (token === null) {
+          token = jwt.sign({ id: userID }, "userToken");
+          if (token === null) {
+            throw new Error(
+              "Something went wrong in the system, please try again"
+            );
+          }
+        }
+
+        // Save token in the database to check if it's correct or not
+        Tokens.create({ userID, token }).catch((error) => {
+          throw new Error(
+            `Something went wrong in the system, please try again (${error})`
+          );
+        });
+
+        return token;
+      } catch (error) {
+        throw new Error("An error occurred while processing the request");
+      }
+    },
+    loginByGitHup: async (parent, args) => {
+      try {
+        const { code } = args;
+
+        if (!code) {
+          throw new Error("GitHub authorization code is required");
+        }
+
+        // Exchange the authorization code for an access token
+        const accessToken = await getGitHubAccessToken(code);
+
+        // Get user information from GitHub
+        const githubUser = await getGitHubUser(accessToken);
+
+        // Check if the user exists in your database
+        const [User] = await Promise.all([
+          NeodeObject?.first("User", { GitHubID: githubUser.id }),
+        ]);
+
+        if (!User) {
+          throw new Error("User not found, please register first");
+        }
+
+        const userID = User.identity().toString();
+
+        let token = jwt.sign({ id: userID }, "userToken");
+
+        if (token === null) {
+          token = jwt.sign({ id: userID }, "userToken");
+          if (token === null) {
+            throw new Error(
+              "Something went wrong in the system, please try again"
+            );
+          }
+        }
+
+        // Save token in the database to check if it's correct or not
+        Tokens.create({ userID, token }).catch((error) => {
+          throw new Error(
+            `Something went wrong in the system, please try again (${error})`
+          );
+        });
+
+        return token;
+      } catch (error) {
+        throw new Error("An error occurred while processing the request");
+      }
+    },
     createNewUser: async (parent, args) => {
       try {
         const { user } = args;
@@ -354,6 +513,40 @@ const resolvers = {
         };
       } catch (error) {
         throw new Error("An error occurred while processing the request");
+      }
+    },
+    forgetPassword: async (parent, args) => {
+      try {
+        const { email } = args;
+
+        if (!email) {
+          throw new Error("Email is required");
+        }
+
+        const [User] = await Promise.all([
+          NeodeObject?.first("User", { Email: email }),
+        ]);
+
+        if (!User) {
+          throw new Error("User not found, please register first");
+        }
+
+        // Generate a temporary password or a reset token (depending on your workflow)
+        const temporaryPassword = "123456"; // Implement this function
+
+        // Send a password reset email
+        const mailOptions = {
+          from: myEmail, // Update with your email address
+          to: email,
+          subject: "Password Reset Request",
+          text: `Your code is: ${temporaryPassword}`,
+        };
+
+        await transporter.sendMail(mailOptions);
+
+        return "Password reset email sent successfully";
+      } catch (error) {
+        throw new Error(`An error occurred: ${error.message}`);
       }
     },
   },
