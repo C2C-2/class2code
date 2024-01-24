@@ -1,8 +1,10 @@
 import "@mantine/core/styles.css";
 import { MantineProvider } from "@mantine/core";
-import { SideBar } from "./User/Features/AI Chat/Compnents/SideBar/SideBar";
-import { Main } from "./User/Features/AI Chat/Compnents/Main/Main";
-import { AIChat } from "./User/Features/AI Chat/AIChat";
+// import { SideBar } from "./User/Features/AI Chat/Compnents/SideBar/SideBar";
+// import { Main } from "./User/Features/AI Chat/Compnents/Main/Main";
+// import { AIChat } from "./User/Features/AI Chat/AIChat";
+// import { LogIn } from "./User/Features/AI Chat/Compnents/Login/LogIn";
+import SignUp from "./User/Features/AI Chat/Compnents/Signup/SignUp";
 import {
   ApolloClient,
   InMemoryCache,
@@ -19,7 +21,9 @@ function App() {
       <MantineProvider>
         {/* <SideBar/> 
          <Main/> */}
-        <AIChat />
+        {/* <AIChat /> */}
+        {/* <LogIn></LogIn> */}
+<SignUp/>
       </MantineProvider>
     </ApolloProvider>
   );
