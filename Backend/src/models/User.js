@@ -19,7 +19,7 @@ module.exports = {
   Gender: "string",
   Work: "string",
   Bio: "string",
-  LastTimeOnline: "datetime",
+  LastTimeOnline: "string",
   chat_with_AI: {
     type: "relationship",
     target: "AIChat",
