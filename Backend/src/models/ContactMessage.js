@@ -1,4 +1,7 @@
 module.exports = {
   Message: "string",
-  CreatedDate: "string",
+  CreatedDate: {
+    type: "string",
+    default: () => new Date().toString(),
+  },
 };

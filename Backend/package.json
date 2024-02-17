@@ -28,6 +28,7 @@
     "i": "^0.3.7",
     "jsonwebtoken": "^9.0.2",
     "mysql2": "^3.7.1",
+    "neo4j": "^2.0.0-RC2",
     "neode": "^0.4.9",
     "nodemailer": "^6.9.8",
     "nodemon": "^3.0.2",

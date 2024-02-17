@@ -1,9 +1,15 @@
 module.exports = {
   CompanyName: "string",
   CompanyDescription: "string",
-  Rate: "int",
+  Rate: {
+    type: "int",
+    default: 0,
+  },
   Domain: "string",
-  IsDeleted: "boolean",
+  IsDeleted: {
+    type: "boolean",
+    default: false,
+  },
   CreateDate: {
     type: "string",
     default: () => new Date().toString(),

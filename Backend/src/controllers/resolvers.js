@@ -1,14 +1,8 @@
 const axios = require("axios");
 const base64 = require("base-64");
 const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
 const Tokens = require("../mysqlModels/Tokens");
-const { OAuth2Client } = require("google-auth-library");
 const nodemailer = require("nodemailer");
-
-const CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
-
-const client = new OAuth2Client(CLIENT_ID);
 
 const myEmail = "202007723@bethlehem.edu";
 
@@ -19,68 +13,6 @@ const transporter = nodemailer.createTransport({
     pass: process.env.EMAIL_PASSWORD, // Update with your email password or an app-specific password
   },
 });
-
-async function verify(token) {
-  const ticket = await client.verifyidToken({
-    idToken: token,
-    audience: CLIENT_ID,
-  });
-  const payload = ticket.getPayload();
-  return payload;
-}
-
-const getLinkedInAccessToken = async (code) => {
-  const response = await axios.post(
-    "https://www.linkedin.com/oauth/v2/accessToken",
-    `grant_type=authorization_code&code=${code}&client_id=${process.env.LINKEDIN_CLIENT_ID}&client_secret=${process.env.LINKEDIN_CLIENT_SECRET}&redirect_uri=${process.env.LINKEDIN_REDIRECT_URI}`,
-    {
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-    }
-  );
-
-  return response.data.access_token;
-};
-
-const getLinkedInUserProfile = async (accessToken) => {
-  const response = await axios.get("https://api.linkedin.com/v2/me", {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
-  });
-
-  return response.data;
-};
-
-const getGitHubAccessToken = async (code) => {
-  const response = await axios.post(
-    "https://github.com/login/oauth/access_token",
-    {
-      client_id: process.env.GITHUB_CLIENT_ID,
-      client_secret: process.env.GITHUB_CLIENT_SECRET,
-      code,
-      redirect_uri: process.env.GITHUB_REDIRECT_URI,
-    },
-    {
-      headers: {
-        Accept: "application/json",
-      },
-    }
-  );
-
-  return response.data.access_token;
-};
-
-const getGitHubUser = async (accessToken) => {
-  const response = await axios.get("https://api.github.com/user", {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
-  });
-
-  return response.data;
-};
 
 /* this library to sync entity with data base, so with this library I can
 use models to define schema for database objects and manage it without use
@@ -115,7 +47,7 @@ const resolvers = {
         // ########################################################
 
         // this int args from to check if chat already exist or create new
-        const { chatID } = args;
+        const { chatId } = args;
 
         if (message === null || fileName === null) {
           throw new Error("Message or fileName is null");
@@ -141,8 +73,8 @@ const resolvers = {
         // Create AIChat and AIMessage nodes
         // I save it in database to get it when user need it from old chats
         const [chat, createdMessage] = await Promise.all([
-          chatID
-            ? NeodeObject.findById("AIChat", chatID)
+          chatId
+            ? NeodeObject.findById("AIChat", chatId)
             : NeodeObject.create("AIChat", {}),
           NeodeObject.create("AIMessage", {
             Question: message,
@@ -171,22 +103,22 @@ const resolvers = {
      *
      * @param {Object} parent - The parent object.
      * @param {Object} args - The arguments object.
-     * @param {string} args.chatID - The ID of the chat.
+     * @param {string} args.chatId - The ID of the chat.
      * @return {Object} - The AI chat object with the specified chat ID.
-     * @throws {Error} - If the chatID is null or if the chat is not found.
+     * @throws {Error} - If the chatId is null or if the chat is not found.
      */
     getAIChat: async (parent, args) => {
       try {
-        const { chatID } = args;
+        const { chatId } = args;
 
-        if (chatID === null) {
+        if (!chatId) {
           throw new Error("ChatID is null");
         }
 
-        // this query get chat by chatID with all messages.
+        // this query get chat by chatId with all messages.
         const cypherQuery =
-          "MATCH (chat:AIChat)-[:HAS_A]->(message:AIMessage) WHERE ID(chat) = $chatID RETURN chat, collect(message) as messages";
-        const result = await NeodeObject.cypher(cypherQuery, { chatID });
+          "MATCH (chat:AIChat)-[:HAS_A]->(message:AIMessage) WHERE ID(chat) = $chatId RETURN chat, collect(message) as messages";
+        const result = await NeodeObject.cypher(cypherQuery, { chatId });
 
         if (result.records.length === 0) {
           throw new Error("Chat not found");
@@ -194,7 +126,7 @@ const resolvers = {
 
         return {
           ...result.records[0].get("chat").properties,
-          id: chatID,
+          id: chatId,
           Messages: result.records[0]
             .get("messages")
             .map((message) => message.properties),
@@ -206,17 +138,17 @@ const resolvers = {
     },
     logout: async (parent, args) => {
       try {
-        const { userID } = args;
+        const { userId } = args;
 
-        if (userID === null) {
+        if (userId === null) {
           throw new Error(
-            `Are you send userID? UserID is required, userID value is ${userID}. please check userID value before send`
+            `Are you send userId? UserID is required, userId value is ${userId}. please check userId value before send`
           );
         }
 
         await Tokens.destroy({
           where: {
-            userID,
+            userId,
           },
         }).catch(() => {
           throw new Error("something wrong in system please try again");
@@ -228,6 +160,100 @@ const resolvers = {
         return false;
       }
     },
+    getUser: async (parent, args) => {
+      try {
+        // this int args from client with user id value
+        const { userId } = args;
+
+        if (!userId) {
+          throw new Error(
+            `Are you send userId? UserID is required, userId value is ${userId}. please check userId value before send`
+          );
+        }
+
+        const cypherQuery =
+          "MATCH (user:User) - [:CHAT_WITH_AI]-> (chats:AIChat) WHERE ID(user) = $userId RETURN user, chats";
+        const result = await NeodeObject.cypher(cypherQuery, { userId });
+
+        if (result.records.length === 0) {
+          throw new Error("User not found");
+        }
+
+        return {
+          ...result?.records[0]?.get("user").properties,
+          id: userId,
+          AIChats: result?.records?.map(
+            (record) => record?.get("chats")?.properties
+          ),
+        };
+      } catch (error) {
+        console.error("Error in getUser resolver:", error.message);
+      }
+    },
+
+    deleteTeam: async (parent, args) => {
+      try {
+        const { teamId } = args;
+
+        if (!teamId) {
+          throw new Error(
+            `Are you send teamId? teamId is required, teamId value is ${teamId}. please check teamId value before send`
+          );
+        }
+
+        const team = await NeodeObject?.findById("Team", teamId);
+
+        if (!team) {
+          throw new Error("Team not found");
+        }
+        return await team.delete();
+      } catch (error) {
+        console.error("Error in deleteTeam resolver:", error.message);
+      }
+    },
+
+    deleteCompany: async (parent, args) => {
+      try {
+        const { companyId } = args;
+
+        if (!companyId) {
+          throw new Error(
+            `Are you send companyId? companyId is required, companyId value is ${companyId}. please check companyId value before send`
+          );
+        }
+
+        const company = await NeodeObject?.findById("Company", companyId);
+
+        if (!company) {
+          throw new Error("Company not found");
+        }
+
+        return await company.delete();
+      } catch (error) {
+        console.error("Error in deleteCompany resolver:", error.message);
+      }
+    },
+    deleteSkill: async (parent, args) => {
+      try {
+        const { skillId } = args;
+
+        if (!skillId) {
+          throw new Error(
+            `Are you send skillId? skillId is required, skillId value is ${skillId}. please check skillId value before send`
+          );
+        }
+
+        const skill = await NeodeObject?.findById("Skill", skillId);
+
+        if (!skill) {
+          throw new Error("Skill not found");
+        }
+
+        return await skill.delete();
+      } catch (error) {
+        console.error("Error in deleteSkill resolver:", error.message);
+      }
+    },
   },
   Mutation: {
     /**
@@ -235,21 +261,21 @@ const resolvers = {
      *
      * @param {Object} parent - The parent object.
      * @param {Object} args - The arguments object.
-     * @param {string} args.userID - The ID of the user.
+     * @param {string} args.userId - The ID of the user.
      * @return {Object} The newly created AI chat object.
      */
     createNewAIChat: async (parent, args) => {
       try {
         // this int args from client with user id value to create new AI chat.
-        const { userID } = args;
+        const { userId } = args;
 
-        if (userID === null) {
+        if (userId === null) {
           throw new Error("UserID is null");
         }
 
         const [AIChat, User] = await Promise.all([
           NeodeObject?.create("AIChat", {}),
-          NeodeObject?.findById("User", userID),
+          NeodeObject?.findById("User", userId),
         ]);
 
         if (User === false) {
@@ -258,214 +284,11 @@ const resolvers = {
         }
 
         // Relate AIChat to User
-        await AIChat.relateTo(User, "chat_with_AI");
+        await User.relateTo(AIChat, "chat_with_AI");
 
-        return {
-          id: AIChat.identity().toString(),
-          ...AIChat.properties(),
-          messages: {},
-        };
+        return AIChat.toJson();
       } catch (error) {
         console.error("Error in createNewAIChat resolver:", error.message);
-        throw new Error("An error occurred while processing the request");
-      }
-    },
-    login: async (parent, args) => {
-      try {
-        const { username, password } = args;
-
-        if (!username) {
-          throw new Error(
-            `Are you send username? username is required, username value is ${username}. please check username value before send`
-          );
-        }
-
-        if (!password) {
-          throw new Error("Are you send password? username is required");
-        }
-
-        // NeodeObject is Object from Neode library to manage database without use queries.
-        const [User] = await Promise.all([
-          NeodeObject?.first("User", { Username: username }),
-        ]);
-
-        if (User === false) {
-          throw new Error(
-            "User not found, check again please userID and username"
-          );
-        }
-
-        const userID = User.identity().toString();
-
-        const tokenResult = bcrypt
-          .compare(password, User.properties().Password)
-          .catch(() => {
-            throw new Error(
-              "Are you sure you send correct username and password? please check it again"
-            );
-          });
-
-        if (!tokenResult) {
-          throw new Error(
-            "Are you sure you send correct username and password? please check it again"
-          );
-        }
-
-        let token = jwt.sign({ id: userID }, "userToken");
-
-        if (token === null) {
-          token = jwt.sign({ id: userID }, "userToken");
-          if (token === null) {
-            throw new Error("something wrong in system please try again");
-          }
-        }
-
-        // this to save token in Mysql database to check is correct or not.
-        Tokens.create({ userID, token }).catch((error) => {
-          throw new Error(
-            `something wrong in system please try again (${error})`
-          );
-        });
-        return token;
-      } catch (error) {
-        throw new Error("An error occurred while processing the request");
-      }
-    },
-    loginByGoogle: async (parent, args) => {
-      try {
-        const { idToken } = args;
-
-        if (!idToken) {
-          throw new Error("Google ID token is required");
-        }
-
-        const payload = await verify(idToken);
-
-        // Check if the user exists in your database
-        const [User] = await Promise.all([
-          NeodeObject?.first("User", { Email: payload.email }),
-        ]);
-
-        if (!User) {
-          throw new Error("User not found, please register first");
-        }
-
-        const userID = User.identity().toString();
-
-        let token = jwt.sign({ id: userID }, "userToken");
-
-        if (token === null) {
-          token = jwt.sign({ id: userID }, "userToken");
-          if (token === null) {
-            throw new Error("something wrong in system please try again");
-          }
-        }
-
-        // this to save token in Mysql database to check is correct or not.
-        Tokens.create({ userID, token }).catch((error) => {
-          throw new Error(
-            `something wrong in system please try again (${error})`
-          );
-        });
-
-        return token;
-      } catch (error) {
-        throw new Error("An error occurred while processing the request");
-      }
-    },
-    loginByLinkedin: async (parent, args) => {
-      try {
-        const { code } = args;
-
-        if (!code) {
-          throw new Error("LinkedIn authorization code is required");
-        }
-
-        // Exchange the authorization code for an access token
-        const accessToken = await getLinkedInAccessToken(code);
-
-        // Get user profile information from LinkedIn
-        const linkedinUserProfile = await getLinkedInUserProfile(accessToken);
-
-        // Check if the user exists in your database
-        const [User] = await Promise.all([
-          NeodeObject?.first("User", { LinkedInID: linkedinUserProfile.id }),
-        ]);
-
-        if (!User) {
-          throw new Error("User not found, please register first");
-        }
-
-        const userID = User.identity().toString();
-
-        let token = jwt.sign({ id: userID }, "userToken");
-
-        if (token === null) {
-          token = jwt.sign({ id: userID }, "userToken");
-          if (token === null) {
-            throw new Error(
-              "Something went wrong in the system, please try again"
-            );
-          }
-        }
-
-        // Save token in the database to check if it's correct or not
-        Tokens.create({ userID, token }).catch((error) => {
-          throw new Error(
-            `Something went wrong in the system, please try again (${error})`
-          );
-        });
-
-        return token;
-      } catch (error) {
-        throw new Error("An error occurred while processing the request");
-      }
-    },
-    loginByGitHup: async (parent, args) => {
-      try {
-        const { code } = args;
-
-        if (!code) {
-          throw new Error("GitHub authorization code is required");
-        }
-
-        // Exchange the authorization code for an access token
-        const accessToken = await getGitHubAccessToken(code);
-
-        // Get user information from GitHub
-        const githubUser = await getGitHubUser(accessToken);
-
-        // Check if the user exists in your database
-        const [User] = await Promise.all([
-          NeodeObject?.first("User", { GitHubID: githubUser.id }),
-        ]);
-
-        if (!User) {
-          throw new Error("User not found, please register first");
-        }
-
-        const userID = User.identity().toString();
-
-        let token = jwt.sign({ id: userID }, "userToken");
-
-        if (token === null) {
-          token = jwt.sign({ id: userID }, "userToken");
-          if (token === null) {
-            throw new Error(
-              "Something went wrong in the system, please try again"
-            );
-          }
-        }
-
-        // Save token in the database to check if it's correct or not
-        Tokens.create({ userID, token }).catch((error) => {
-          throw new Error(
-            `Something went wrong in the system, please try again (${error})`
-          );
-        });
-
-        return token;
-      } catch (error) {
         throw new Error("An error occurred while processing the request");
       }
     },
@@ -494,23 +317,7 @@ const resolvers = {
           }
         }
 
-        return {
-          id: User.identity().toString(),
-          Username: newUser.Username,
-          FirstName: newUser.FirstName,
-          LastName: newUser.LastName,
-          Email: newUser.Email,
-          Country: newUser.Country,
-          IsActive: newUser.IsActive,
-          CreatedBy: newUser.CreatedBy,
-          CreateDate: newUser.CreateDate,
-          Rate: newUser.Rate,
-          DateOfBirth: newUser.DateOfBirth,
-          Gender: newUser.Gender,
-          Work: newUser.Work,
-          Bio: newUser.Bio,
-          LastTimeOnline: newUser.LastTimeOnline,
-        };
+        return User.toJson();
       } catch (error) {
         throw new Error("An error occurred while processing the request");
       }
@@ -547,6 +354,198 @@ const resolvers = {
         return "Password reset email sent successfully";
       } catch (error) {
         throw new Error(`An error occurred: ${error.message}`);
+      }
+    },
+    createNewProject: async (parent, args) => {
+      try {
+        const { project } = args;
+
+        if (!project) {
+          throw new Error(
+            `Are you send project? project is required, project value is ${project}. please check project value before send`
+          );
+        }
+
+        return (await NeodeObject?.create("Project", project)).toJson();
+      } catch (error) {
+        throw new Error(`An error occurred: ${error.message}`);
+      }
+    },
+    createNewTeam: async (parent, args) => {
+      try {
+        const { team, companyId } = args;
+
+        if (!team) {
+          throw new Error(
+            "Are you send team? team is required. please check team value before send"
+          );
+        }
+
+        const company = await NeodeObject?.findById("Company", companyId);
+        if (!company) {
+          throw new Error("Company not found, please create one first");
+        }
+        const teamCreated = await NeodeObject?.create("Team", team);
+        await company.relateTo(teamCreated, "has_a_team");
+
+        return teamCreated.toJson();
+      } catch (error) {
+        throw new Error(`An error occurred: ${error.message}`);
+      }
+    },
+    createNewChat: async (parent, args) => {
+      try {
+        const { userId, chat } = args;
+
+        if (!chat) {
+          throw new Error(
+            `Are you send chat? chat is required, chat value is ${chat}. please check chat value before send`
+          );
+        }
+
+        const chatCreated = await NeodeObject?.create("Chat", chat);
+        const user = await NeodeObject?.findById("User", userId);
+
+        if (!user) {
+          throw new Error("User not found, please register first");
+        }
+
+        await user.relateTo(chatCreated, "chat_with");
+
+        return chatCreated.toJson();
+      } catch (error) {
+        throw new Error(`An error occurred: ${error.message}`);
+      }
+    },
+    sendMessage: async (parent, args) => {
+      try {
+        const { message, chatId } = args;
+
+        if (!message) {
+          throw new Error(
+            "Are you send message? message is required. please check message value before send"
+          );
+        }
+
+        const chat = await NeodeObject?.findById("Chat", chatId);
+
+        if (!chat) {
+          throw new Error("Chat not found, please create one first");
+        }
+
+        const messageCreated = await NeodeObject?.create("Message", message);
+
+        await chat.relateTo(messageCreated, "has_a");
+
+        return messageCreated.toJson();
+      } catch (error) {
+        throw new Error(`An error occurred: ${error.message}`);
+      }
+    },
+    createNewCompany: async (parent, args) => {
+      try {
+        const { company, userId } = args;
+
+        if (!company) {
+          throw new Error(
+            "Are you send company? company is required. please check company value before send"
+          );
+        }
+
+        const user = await NeodeObject?.findById("User", userId);
+
+        if (!user) {
+          throw new Error("User not found, please register first");
+        }
+
+        const companyCreated = await NeodeObject?.create("Company", company);
+
+        await user.relateTo(companyCreated, "admin_of");
+
+        return companyCreated.toJson();
+      } catch (error) {
+        throw new Error(`An error occurred: ${error.message}`);
+      }
+    },
+    createNewSkill: async (parent, args) => {
+      try {
+        const { skill, userId } = args;
+
+        if (!skill) {
+          throw new Error(
+            "Are you send skill? skill is required. please check skill value before send"
+          );
+        }
+
+        const user = await NeodeObject?.findById("User", userId);
+
+        if (!user) {
+          throw new Error("User not found, please register first");
+        }
+
+        const skillCreated = await NeodeObject?.create("Skill", skill);
+
+        await user.relateTo(skillCreated, "has_a_skill");
+
+        return skillCreated.toJson();
+      } catch (error) {
+        throw new Error(`An error occurred: ${error.message}`);
+      }
+    },
+    createNewContactMessage: async (parent, args) => {
+      try {
+        const { contactMessage, userId } = args;
+
+        if (!contactMessage) {
+          throw new Error(
+            `Are you send contactMessage? contactMessage is required, contactMessage value is ${contactMessage}. please check contactMessage value before send`
+          );
+        }
+
+        const user = await NeodeObject?.findById("User", userId);
+
+        if (!user) {
+          throw new Error("User not found, please register first");
+        }
+
+        const newContactMessage = await NeodeObject?.create(
+          "ContactMessage",
+          contactMessage
+        );
+
+        await user.relateTo(newContactMessage, "contact_us");
+
+        return newContactMessage.toJson();
+      } catch (error) {
+        console.error(
+          "Error in createNewContactMessage resolver:",
+          error.message
+        );
+      }
+    },
+    createPositionPost: async (parent, args) => {
+      try {
+        const { post, companyId } = args;
+
+        if (!post) {
+          throw new Error(
+            `Are you send post? post is required, post value is ${post}. please check post value before send`
+          );
+        }
+
+        const company = await NeodeObject?.findById("Company", companyId);
+
+        if (!company) {
+          throw new Error("Company not found, please create one first");
+        }
+
+        const newPost = await NeodeObject?.create("PositionPost", post);
+
+        await company.relateTo(newPost, "has_a_post");
+
+        return newPost.toJson();
+      } catch (error) {
+        console.error("Error in createPositionPost resolver:", error.message);
       }
     },
   },
