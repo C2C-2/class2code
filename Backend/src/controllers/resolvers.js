@@ -28,9 +28,418 @@ const Variables = require("../config/Variables");
 
 const resolvers = {
   Query: {
+    /**
+     * Retrieves the AI chat with the specified chat ID.
+     *
+     * @param {Object} parent - The parent object.
+     * @param {Object} args - The arguments object.
+     * @param {string} args.chatId - The ID of the chat.
+     * @return {Object} - The AI chat object with the specified chat ID.
+     * @throws {Error} - If the chatId is null or if the chat is not found.
+     */
+    getAIChat: async (parent, args) => {
+      try {
+        const { chatId } = args;
+
+        if (!chatId) {
+          throw new Error("ChatID is null");
+        }
+
+        // this query get chat by chatId with all messages.
+        const cypherQuery =
+          "MATCH (chat:AIChat)-[:HAS_A]->(message:AIMessage) WHERE ID(chat) = $chatId RETURN chat, collect(message) as messages";
+        const result = await NeodeObject.cypher(cypherQuery, { chatId });
+
+        if (result.records.length === 0) {
+          throw new Error("Chat not found");
+        }
+
+        return {
+          ...result.records[0].get("chat").properties,
+          id: chatId,
+          Messages: result.records[0]
+            .get("messages")
+            .map((message) => message.properties),
+        };
+      } catch (error) {
+        console.error("Error fetching AIChat:", error.message);
+        throw error;
+      }
+    },
+    /**
+     * A function that handles the logout process.
+     *
+     * @param {Object} parent - The parent object
+     * @param {Object} args - The arguments object containing userId
+     * @return {Boolean} Returns true if the logout is successful, false otherwise
+     */
+    logout: async (parent, args) => {
+      try {
+        const { userId } = args;
+
+        if (userId === null) {
+          throw new Error(
+            `Are you send userId? UserID is required, userId value is ${userId}. please check userId value before send`
+          );
+        }
+
+        await Tokens.destroy({
+          where: {
+            userId,
+          },
+        }).catch(() => {
+          throw new Error("something wrong in system please try again");
+        });
+
+        return true;
+      } catch (error) {
+        console.error("Error in logout resolver:", error.message);
+        return false;
+      }
+    },
+    /**
+     * Asynchronous function to retrieve user data based on user ID.
+     *
+     * @param {Object} parent - The parent object
+     * @param {Object} args - The arguments object containing userId
+     * @return {Object} The user data and AI chat history
+     */
+    getUser: async (parent, args) => {
+      try {
+        // this int args from client with user id value
+        const { userId } = args;
+
+        if (!userId) {
+          throw new Error(
+            `Are you send userId? UserID is required, userId value is ${userId}. please check userId value before send`
+          );
+        }
+
+        const cypherQuery =
+          "MATCH (user:User) - [:CHAT_WITH_AI]-> (chats:AIChat) WHERE ID(user) = $userId RETURN user, chats";
+        const result = await NeodeObject.cypher(cypherQuery, { userId });
+
+        if (result.records.length === 0) {
+          throw new Error("User not found");
+        }
+
+        return {
+          ...result?.records[0]?.get("user").properties,
+          id: userId,
+          AIChats: result?.records?.map(
+            (record) => record?.get("chats")?.properties
+          ),
+        };
+      } catch (error) {
+        console.error("Error in getUser resolver:", error.message);
+      }
+    },
+    /**
+     * A function to delete a team.
+     *
+     * @param {Object} parent - the parent object
+     * @param {Object} args - the arguments object with teamId
+     * @return {Promise} a promise that resolves to the deleted team
+     */
+    deleteTeam: async (parent, args) => {
+      try {
+        const { teamId } = args;
+
+        if (!teamId) {
+          throw new Error(
+            `Are you send teamId? teamId is required, teamId value is ${teamId}. please check teamId value before send`
+          );
+        }
+
+        const team = await NeodeObject?.findById("Team", teamId);
+
+        if (!team) {
+          throw new Error("Team not found");
+        }
+        return await team.delete();
+      } catch (error) {
+        console.error("Error in deleteTeam resolver:", error.message);
+      }
+    },
+    /**
+     * A function to delete a company.
+     *
+     * @param {Object} parent - The parent object
+     * @param {Object} args - The arguments object
+     * @param {string} args.companyId - The ID of the company to be deleted
+     * @return {Promise<Object>} A Promise that resolves to the deleted company object
+     */
+    deleteCompany: async (parent, args) => {
+      try {
+        // int args from client
+        const { companyId } = args;
+
+        if (!companyId) {
+          throw new Error(
+            `Are you send companyId? companyId is required, companyId value is ${companyId}. please check companyId value before send`
+          );
+        }
+
+        const company = await NeodeObject?.findById("Company", companyId);
+
+        if (!company) {
+          throw new Error("Company not found");
+        }
+
+        await company.delete();
+
+        return true;
+      } catch (error) {
+        console.error("Error in deleteCompany resolver:", error.message);
+        return false;
+      }
+    },
+    /**
+     * Delete a skill by its ID.
+     *
+     * @param {Object} parent - The parent object
+     * @param {Object} args - The arguments object containing skillId
+     * @return {Promise} A Promise that resolves to the deleted skill
+     */
+    deleteSkill: async (parent, args) => {
+      try {
+        // int args from client
+        const { skillId } = args;
+
+        if (!skillId) {
+          throw new Error(
+            `Are you send skillId? skillId is required, skillId value is ${skillId}. please check skillId value before send`
+          );
+        }
+
+        // return skill object.
+        const skill = await NeodeObject?.findById("Skill", skillId);
+
+        if (!skill) {
+          throw new Error("Skill not found");
+        }
+
+        await skill.delete();
+        return true;
+      } catch (error) {
+        console.error("Error in deleteSkill resolver:", error.message);
+        return false;
+      }
+    },
+    /**
+     * A function to get all companies associated with a user.
+     *
+     * @param {Object} parent - The parent object
+     * @param {Object} args - The arguments object containing userId
+     * @return {Array} An array of companies associated with the user
+     */
+    getAllUserCompanies: async (parent, args) => {
+      try {
+        const { userId, page = 0, limit = 6 } = args;
+
+        if (!userId) {
+          throw new Error(
+            `Are you send userId? userId is required, userId value is ${userId}. please check userId value before send`
+          );
+        }
+
+        const user = await NeodeObject?.cypher(
+          `
+          MATCH (user:User) -[r:ADMIN_OF]-> (company:Company) where ID(user) = $userId return user,r,company
+          `,
+          { userId }
+        );
+
+        if (!user) {
+          throw new Error("User not found");
+        }
+
+        return user.records
+          .map((record) => ({
+            _id: `${record.get("company").identity}`,
+            ...record.get("company").properties,
+          }))
+          .slice((page - 1) * limit, limit);
+      } catch (error) {
+        console.error("Error in getAllUserCompanies resolver:", error.message);
+      }
+    },
+    /**
+     * Asynchronously filters companies based on user ID, filter type, and sorting order.
+     *
+     * @param {Object} parent - The parent object
+     * @param {Object} args - The arguments object containing userId {int},
+     *  filterType {string: Rate, CreatedDate}, and desc {boolean: witch mean is desc order or not}
+     * @return {Array} An array of filtered companies
+     */
+    filterMyCompanies: async (parent, args) => {
+      try {
+        const {
+          userId,
+          filterType = "CreatedDate",
+          desc = false,
+          page = 0,
+          limit = 6,
+        } = args;
+
+        if (!userId) {
+          throw new Error(
+            `Are you send userId? userId is required, userId value is ${userId}. please check userId value before send`
+          );
+        }
+
+        // this query filter companies on Neo4j database
+        // its return object of 2 value {records: array of result objects, summary}
+        const companies = await NeodeObject?.cypher(
+          `MATCH (user:User) -[r:ADMIN_OF]-> (companies:Company) return companies ORDER BY companies.${filterType} ${
+            desc ? "desc" : "asc"
+          }`
+        );
+
+        // I make map because result is not as a schema type.
+        return companies.records
+          .map((record) => ({
+            ...record.get("companies").properties,
+            _id: `${record.get("companies").identity}`,
+          }))
+          .slice((page - 1) * limit, limit);
+      } catch (error) {
+        console.error("Error in filterMyCompanies resolver:", error.message);
+      }
+    },
+    searchInMyCompanies: async (parent, args) => {
+      try {
+        const { userId, word = "", page = 0, limit = 6 } = args;
+
+        if (!userId) {
+          throw new Error(
+            `Are you send userId? userId is required, userId value is ${userId}. please check userId value before send`
+          );
+        }
+
+        const companies = await NeodeObject?.cypher(
+          `MATCH (user:User) -[r:ADMIN_OF]-> (companies:Company) where Id(user) = ${userId} 
+          AND (companies.CompanyDescription CONTAINS '${word}' 
+          OR companies.CompanyName CONTAINS '${word}'
+          OR companies.Domain CONTAINS '${word}') return companies`
+        );
+
+        return companies.records
+          .map((record) => ({
+            ...record.get("companies").properties,
+            _id: `${record.get("companies").identity}`,
+          }))
+          .slice((page - 1) * limit, limit);
+      } catch (error) {
+        console.error("Error in searchInMyCompanies resolver:", error.message);
+      }
+    },
+    getAllUserWorksCompanies: async (parent, args) => {
+      try {
+        const { userId, page = 0, limit = 6 } = args;
+
+        if (!userId) {
+          throw new Error(
+            `Are you send userId? userId is required, userId value is ${userId}. please check userId value before send`
+          );
+        }
+
+        const user = await NeodeObject?.cypher(
+          `
+          MATCH (user:User) -[r:ADMIN_OF]-> (company:Company) where ID(user) = $userId return user,r,company
+          `,
+          { userId }
+        );
+
+        if (!user) {
+          throw new Error("User not found");
+        }
+
+        return user.records
+          .map((record) => ({
+            _id: `${record.get("company").identity}`,
+            ...record.get("company").properties,
+          }))
+          .slice((page - 1) * limit, limit);
+      } catch (error) {
+        console.error("Error in getAllUserCompanies resolver:", error.message);
+      }
+    },
+    /**
+     * Asynchronously filters companies based on user ID, filter type, and sorting order.
+     *
+     * @param {Object} parent - The parent object
+     * @param {Object} args - The arguments object containing userId {int},
+     *  filterType {string: Rate, CreatedDate}, and desc {boolean: witch mean is desc order or not}
+     * @return {Array} An array of filtered companies
+     */
+    filterWorksCompanies: async (parent, args) => {
+      try {
+        const {
+          userId,
+          filterType = "CreatedDate",
+          desc = false,
+          page = 0,
+          limit = 6,
+        } = args;
+
+        if (!userId) {
+          throw new Error(
+            `Are you send userId? userId is required, userId value is ${userId}. please check userId value before send`
+          );
+        }
+
+        // this query filter companies on Neo4j database
+        // its return object of 2 value {records: array of result objects, summary}
+        const companies = await NeodeObject?.cypher(
+          `MATCH (user:User) -[r:ADMIN_OF]-> (companies:Company) return companies ORDER BY companies.${filterType} ${
+            desc ? "desc" : "asc"
+          }`
+        );
+
+        // I make map because result is not as a schema type.
+        return companies.records
+          .map((record) => ({
+            ...record.get("companies").properties,
+            _id: `${record.get("companies").identity}`,
+          }))
+          .slice((page - 1) * limit, limit);
+      } catch (error) {
+        console.error("Error in filterMyCompanies resolver:", error.message);
+      }
+    },
+    searchInWorksCompanies: async (parent, args) => {
+      try {
+        const { userId, word = "", page = 0, limit = 6 } = args;
+
+        if (!userId) {
+          throw new Error(
+            `Are you send userId? userId is required, userId value is ${userId}. please check userId value before send`
+          );
+        }
+
+        const companies = await NeodeObject?.cypher(
+          `MATCH (user:User) -[r:ADMIN_OF]-> (companies:Company) where Id(user) = ${userId} 
+          AND (companies.CompanyDescription CONTAINS '${word}' 
+          OR companies.CompanyName CONTAINS '${word}'
+          OR companies.Domain CONTAINS '${word}') return companies`
+        );
+
+        return companies.records
+          .map((record) => ({
+            ...record.get("companies").properties,
+            _id: `${record.get("companies").identity}`,
+          }))
+          .slice((page - 1) * limit, limit);
+      } catch (error) {
+        console.error("Error in searchInMyCompanies resolver:", error.message);
+      }
+    },
+  },
+  Mutation: {
     /* this to send message to AI module and get answer about a project from
     it file */
-    sendMessage: async (parent, args) => {
+    sendAIMessage: async (parent, args) => {
       try {
         // this used to basic auth in python backend (AI model)
         const username = process.env.AI_USERNAME;
@@ -99,164 +508,6 @@ const resolvers = {
       }
     },
     /**
-     * Retrieves the AI chat with the specified chat ID.
-     *
-     * @param {Object} parent - The parent object.
-     * @param {Object} args - The arguments object.
-     * @param {string} args.chatId - The ID of the chat.
-     * @return {Object} - The AI chat object with the specified chat ID.
-     * @throws {Error} - If the chatId is null or if the chat is not found.
-     */
-    getAIChat: async (parent, args) => {
-      try {
-        const { chatId } = args;
-
-        if (!chatId) {
-          throw new Error("ChatID is null");
-        }
-
-        // this query get chat by chatId with all messages.
-        const cypherQuery =
-          "MATCH (chat:AIChat)-[:HAS_A]->(message:AIMessage) WHERE ID(chat) = $chatId RETURN chat, collect(message) as messages";
-        const result = await NeodeObject.cypher(cypherQuery, { chatId });
-
-        if (result.records.length === 0) {
-          throw new Error("Chat not found");
-        }
-
-        return {
-          ...result.records[0].get("chat").properties,
-          id: chatId,
-          Messages: result.records[0]
-            .get("messages")
-            .map((message) => message.properties),
-        };
-      } catch (error) {
-        console.error("Error fetching AIChat:", error.message);
-        throw error;
-      }
-    },
-    logout: async (parent, args) => {
-      try {
-        const { userId } = args;
-
-        if (userId === null) {
-          throw new Error(
-            `Are you send userId? UserID is required, userId value is ${userId}. please check userId value before send`
-          );
-        }
-
-        await Tokens.destroy({
-          where: {
-            userId,
-          },
-        }).catch(() => {
-          throw new Error("something wrong in system please try again");
-        });
-
-        return true;
-      } catch (error) {
-        console.error("Error in logout resolver:", error.message);
-        return false;
-      }
-    },
-    getUser: async (parent, args) => {
-      try {
-        // this int args from client with user id value
-        const { userId } = args;
-
-        if (!userId) {
-          throw new Error(
-            `Are you send userId? UserID is required, userId value is ${userId}. please check userId value before send`
-          );
-        }
-
-        const cypherQuery =
-          "MATCH (user:User) - [:CHAT_WITH_AI]-> (chats:AIChat) WHERE ID(user) = $userId RETURN user, chats";
-        const result = await NeodeObject.cypher(cypherQuery, { userId });
-
-        if (result.records.length === 0) {
-          throw new Error("User not found");
-        }
-
-        return {
-          ...result?.records[0]?.get("user").properties,
-          id: userId,
-          AIChats: result?.records?.map(
-            (record) => record?.get("chats")?.properties
-          ),
-        };
-      } catch (error) {
-        console.error("Error in getUser resolver:", error.message);
-      }
-    },
-
-    deleteTeam: async (parent, args) => {
-      try {
-        const { teamId } = args;
-
-        if (!teamId) {
-          throw new Error(
-            `Are you send teamId? teamId is required, teamId value is ${teamId}. please check teamId value before send`
-          );
-        }
-
-        const team = await NeodeObject?.findById("Team", teamId);
-
-        if (!team) {
-          throw new Error("Team not found");
-        }
-        return await team.delete();
-      } catch (error) {
-        console.error("Error in deleteTeam resolver:", error.message);
-      }
-    },
-
-    deleteCompany: async (parent, args) => {
-      try {
-        const { companyId } = args;
-
-        if (!companyId) {
-          throw new Error(
-            `Are you send companyId? companyId is required, companyId value is ${companyId}. please check companyId value before send`
-          );
-        }
-
-        const company = await NeodeObject?.findById("Company", companyId);
-
-        if (!company) {
-          throw new Error("Company not found");
-        }
-
-        return await company.delete();
-      } catch (error) {
-        console.error("Error in deleteCompany resolver:", error.message);
-      }
-    },
-    deleteSkill: async (parent, args) => {
-      try {
-        const { skillId } = args;
-
-        if (!skillId) {
-          throw new Error(
-            `Are you send skillId? skillId is required, skillId value is ${skillId}. please check skillId value before send`
-          );
-        }
-
-        const skill = await NeodeObject?.findById("Skill", skillId);
-
-        if (!skill) {
-          throw new Error("Skill not found");
-        }
-
-        return await skill.delete();
-      } catch (error) {
-        console.error("Error in deleteSkill resolver:", error.message);
-      }
-    },
-  },
-  Mutation: {
-    /**
      * Creates a new AI chat.
      *
      * @param {Object} parent - The parent object.
@@ -292,6 +543,13 @@ const resolvers = {
         throw new Error("An error occurred while processing the request");
       }
     },
+    /**
+     * Asynchronous function to create a new user.
+     *
+     * @param {Object} parent - The parent object.
+     * @param {Object} args - The arguments object containing user information.
+     * @return {Object} The newly created user object.
+     */
     createNewUser: async (parent, args) => {
       try {
         const { user } = args;
@@ -322,6 +580,13 @@ const resolvers = {
         throw new Error("An error occurred while processing the request");
       }
     },
+    /**
+     * This function handles the process of forgetting a user's password.
+     *
+     * @param {object} parent - The parent object
+     * @param {object} args - The arguments object containing the user's email
+     * @return {string} A message indicating the success of the password reset email sending process
+     */
     forgetPassword: async (parent, args) => {
       try {
         const { email } = args;
@@ -356,6 +621,13 @@ const resolvers = {
         throw new Error(`An error occurred: ${error.message}`);
       }
     },
+    /**
+     * A function to create a new project.
+     *
+     * @param {Object} parent - The parent object
+     * @param {Object} args - The arguments object containing the project
+     * @return {Object} The newly created project
+     */
     createNewProject: async (parent, args) => {
       try {
         const { project } = args;
@@ -371,6 +643,13 @@ const resolvers = {
         throw new Error(`An error occurred: ${error.message}`);
       }
     },
+    /**
+     * A function to create a new team.
+     *
+     * @param {Object} parent - the parent object
+     * @param {Object} args - the arguments object containing team and companyId
+     * @return {Object} the newly created team object
+     */
     createNewTeam: async (parent, args) => {
       try {
         const { team, companyId } = args;
@@ -393,6 +672,13 @@ const resolvers = {
         throw new Error(`An error occurred: ${error.message}`);
       }
     },
+    /**
+     * Asynchronously creates a new chat.
+     *
+     * @param {Object} parent - the parent object
+     * @param {Object} args - the arguments object with userId and chat
+     * @return {Object} the newly created chat in JSON format
+     */
     createNewChat: async (parent, args) => {
       try {
         const { userId, chat } = args;
@@ -417,6 +703,14 @@ const resolvers = {
         throw new Error(`An error occurred: ${error.message}`);
       }
     },
+    /**
+     * Asynchronously sends a message to a chat, creates the message,
+     * relates it to the chat, and returns the created message as JSON.
+     *
+     * @param {Object} parent - The parent object
+     * @param {Object} args - The arguments object containing message and chatId
+     * @return {Object} The created message as JSON
+     */
     sendMessage: async (parent, args) => {
       try {
         const { message, chatId } = args;
@@ -442,6 +736,13 @@ const resolvers = {
         throw new Error(`An error occurred: ${error.message}`);
       }
     },
+    /**
+     * Asynchronously creates a new company.
+     *
+     * @param {Object} parent - the parent object
+     * @param {Object} args - the arguments containing company and userId
+     * @return {Object} the newly created company object
+     */
     createNewCompany: async (parent, args) => {
       try {
         const { company, userId } = args;
@@ -467,6 +768,13 @@ const resolvers = {
         throw new Error(`An error occurred: ${error.message}`);
       }
     },
+    /**
+     * Create a new skill for a user.
+     *
+     * @param {object} parent - The parent object
+     * @param {object} args - The arguments containing the skill and userId
+     * @return {object} The newly created skill
+     */
     createNewSkill: async (parent, args) => {
       try {
         const { skill, userId } = args;
@@ -492,6 +800,13 @@ const resolvers = {
         throw new Error(`An error occurred: ${error.message}`);
       }
     },
+    /**
+     * Asynchronous function for creating a new contact message.
+     *
+     * @param {Object} parent - The parent object
+     * @param {Object} args - The arguments object containing contactMessage and userId
+     * @return {Object} The newly created contact message object
+     */
     createNewContactMessage: async (parent, args) => {
       try {
         const { contactMessage, userId } = args;
@@ -523,6 +838,13 @@ const resolvers = {
         );
       }
     },
+    /**
+     * Asynchronously creates a position post.
+     *
+     * @param {Object} parent - the parent object
+     * @param {Object} args - the arguments object containing post and companyId
+     * @return {Object} the newly created position post as a JSON object
+     */
     createPositionPost: async (parent, args) => {
       try {
         const { post, companyId } = args;
@@ -546,6 +868,13 @@ const resolvers = {
         return newPost.toJson();
       } catch (error) {
         console.error("Error in createPositionPost resolver:", error.message);
+      }
+    },
+    addUserToTeam: async (parent, args) => {
+      try {
+      } catch (error) {
+        console.error("Error in addUserToTeam resolver:", error.message);
+        return false;
       }
     },
   },

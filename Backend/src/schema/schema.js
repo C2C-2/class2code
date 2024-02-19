@@ -1,6 +1,11 @@
 const { gql } = require("apollo-server");
 
 const typeDefs = gql`
+  type integer {
+    low: Int
+    high: Int
+  }
+
   type AIMessage {
     _id: ID
     Question: String
@@ -35,7 +40,7 @@ const typeDefs = gql`
     _id: ID
     CompanyName: String
     CompanyDescription: String
-    Rate: String
+    Rate: integer
     Domain: String
     IsDeleted: Boolean
     CreateDate: String
@@ -45,6 +50,7 @@ const typeDefs = gql`
     CompanyName: String
     CompanyDescription: String
     Domain: String
+    Rate: Int
   }
 
   type ContactMessage {
@@ -204,7 +210,6 @@ const typeDefs = gql`
   }
 
   type Query {
-    sendMessage(message: String!, fileName: String!, chatId: Int!): AIMessage
     getAIChat(chatId: Int!): AIChat
     getOldAIChats(userId: Int!): [AIChat]
     logout(userId: Int!): Boolean
@@ -212,9 +217,38 @@ const typeDefs = gql`
     deleteTeam(teamId: Int!): Boolean
     deleteCompany(companyId: Int!): Boolean
     deleteSkill(skillId: Int!): Boolean
+    getAllUserCompanies(userId: Int!, page: Int!, limit: Int!): [Company]
+    filterMyCompanies(
+      userId: Int!
+      filterType: String!
+      desc: Boolean
+      page: Int!
+      limit: Int!
+    ): [Company]
+    searchInMyCompanies(
+      userId: Int!
+      word: String!
+      page: Int!
+      limit: Int!
+    ): [Company]
+    getAllUserWorksCompanies(userId: Int!, page: Int!, limit: Int!): [Company]
+    filterWorksCompanies(
+      userId: Int!
+      filterType: String!
+      desc: Boolean
+      page: Int!
+      limit: Int!
+    ): [Company]
+    searchInWorksCompanies(
+      userId: Int!
+      word: String!
+      page: Int!
+      limit: Int!
+    ): [Company]
   }
 
   type Mutation {
+    sendAIMessage(message: String!, fileName: String!, chatId: Int!): AIMessage
     createNewAIChat(userId: Int!): AIChat
     createNewUser(user: UserInput!): UserType
     forgetPassword(email: String!): Boolean
@@ -230,6 +264,7 @@ const typeDefs = gql`
       userId: Int!
     ): ContactMessage
     createPositionPost(post: PositionPostInput!, companyId: Int!): PositionPost
+    addUserToTeam(teamId: Int!, userId: Int!): boolean
   }
 `;
 
