@@ -2,7 +2,10 @@ module.exports = {
   Content: "string",
   CreatedDate: {
     type: "string",
-    default: new Date().toString(),
+    default: () => new Date().toString(),
   },
-  IsDeleted: "boolean",
+  IsDeleted: {
+    type: "boolean",
+    default: false,
+  },
 };

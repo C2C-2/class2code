@@ -5,7 +5,7 @@ module.exports = {
   },
   CreatedDate: {
     type: "string",
-    default: new Date().toString(),
+    default: () => new Date().toString(),
   },
   has_a: {
     type: "relationship",

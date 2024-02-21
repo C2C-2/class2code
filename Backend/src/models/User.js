@@ -13,7 +13,10 @@ module.exports = {
   Country: "string",
   IsActive: "boolean",
   CreatedBy: "int",
-  CreateDate: "string",
+  CreateDate: {
+    type: "string",
+    default: () => new Date().toString(),
+  },
   Rate: "int",
   DateOfBirth: "string",
   Gender: "string",

@@ -1,8 +1,12 @@
 module.exports = {
+  userId: "int",
   MessageContent: "string",
-  Date: {
+  CreatedDate: {
     type: "string",
     default: () => new Date().toString(),
   },
-  IsDeleted: "boolean",
+  IsDeleted: {
+    type: "boolean",
+    default: false,
+  },
 };
