@@ -1,3 +1,4 @@
+/* eslint-disable object-curly-newline */
 /* eslint-disable consistent-return */
 /* eslint-disable indent */
 const axios = require("axios");
@@ -5,7 +6,7 @@ const base64 = require("base-64");
 const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
 const Tokens = require("../mysqlModels/Tokens");
-const storage = require("../config/Firebase");
+const bucket = require("../config/Firebase");
 
 const myEmail = "202007723@bethlehem.edu";
 
@@ -448,6 +449,35 @@ const resolvers = {
           .slice((page - 1) * limit, limit);
       } catch (error) {
         console.error("Error in searchInMyCompanies resolver:", error.message);
+      }
+    },
+    getProjectNotes: async (parent, args) => {
+      try {
+        const { projectId } = args;
+
+        if (!projectId) {
+          throw new Error(
+            `Are you send projectId? projectId is required, projectId value is ${projectId}. please check projectId value before send`
+          );
+        }
+
+        const notes = await NeodeObject?.cypher(
+          ` 
+          MATCH (p:Project) - [:HAS_NOTE] -> (n:ProjectNote) WHERE ID(p) = $projectId
+          MATCH (n) - [:HAS_TASK] -> (t:ProjectNoteTask)
+          RETURN n, t`,
+          { projectId }
+        );
+
+        return {
+          ...notes.records[0].get("n").properties,
+          _id: `${notes.records[0].get("n").identity}`,
+          tasks: notes.records.map((record) => ({
+            tasks: record.get("t").properties,
+          })),
+        };
+      } catch (error) {
+        console.error("Error in getProjectNotes resolver:", error.message);
       }
     },
   },
@@ -923,12 +953,27 @@ const resolvers = {
     },
     uploadUserImage: async (parent, args) => {
       try {
-        args.file.then((file) => {
-          //Contents of Upload scalar: https://github.com/jaydenseric/graphql-upload#class-graphqlupload
-          //file.createReadStream() is a readable node stream that contains the contents of the uploaded file
-          //node stream api: https://nodejs.org/api/stream.html
-          return file;
+        const { image } = args;
+        const { filename, mimetype, createReadStream } = image;
+
+        const stream = createReadStream();
+        const bucketFile = bucket.file(filename);
+
+        const writeStream = bucketFile.createWriteStream({
+          metadata: {
+            contentType: mimetype,
+          },
         });
+
+        stream.pipe(writeStream);
+
+        await new Promise((resolve, reject) => {
+          writeStream.on("finish", resolve);
+          writeStream.on("error", reject);
+        });
+
+        console.log(`File ${filename} uploaded to Firebase Storage.`);
+        return true;
       } catch (error) {
         console.error("Error in uploadUserImage resolver:", error.message);
         return false;

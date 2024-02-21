@@ -107,15 +107,16 @@ const typeDefs = gql`
     FileName: String
   }
 
-  type ProjectNote {
-    _id: ID
-    Title: String
-  }
-
   type ProjectNoteTask {
     _id: ID
     Title: String
     Description: String
+  }
+
+  type ProjectNote {
+    _id: ID
+    Title: String
+    Tasks: [ProjectNoteTask]
   }
 
   type ProjectRequirement {
@@ -209,10 +210,9 @@ const typeDefs = gql`
     AIChats: [AIChat]
   }
 
-  type File {
+  input File {
     filename: String!
     mimetype: String!
-    encoding: String!
   }
 
   type Query {
@@ -251,6 +251,7 @@ const typeDefs = gql`
       page: Int
       limit: Int
     ): [Company]
+    getProjectNote(projectId: Int!): ProjectNote
   }
 
   type Mutation {
@@ -271,7 +272,7 @@ const typeDefs = gql`
     ): ContactMessage
     createPositionPost(post: PositionPostInput!, companyId: Int!): PositionPost
     addUserToTeam(teamId: Int!, userId: Int!): Boolean
-    uploadUserImage(image: File!, userId: Int!): Boolean
+    uploadUserImage(image: File!): Boolean
   }
 `;
 
