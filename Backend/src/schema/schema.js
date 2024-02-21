@@ -209,6 +209,12 @@ const typeDefs = gql`
     AIChats: [AIChat]
   }
 
+  type File {
+    filename: String!
+    mimetype: String!
+    encoding: String!
+  }
+
   type Query {
     getAIChat(chatId: Int!): AIChat
     getOldAIChats(userId: Int!): [AIChat]
@@ -217,13 +223,13 @@ const typeDefs = gql`
     deleteTeam(teamId: Int!): Boolean
     deleteCompany(companyId: Int!): Boolean
     deleteSkill(skillId: Int!): Boolean
-    getAllUserCompanies(userId: Int!, page: Int!, limit: Int!): [Company]
+    getAllUserCompanies(userId: Int!, page: Int, limit: Int): [Company]
     filterMyCompanies(
       userId: Int!
       filterType: String!
       desc: Boolean
-      page: Int!
-      limit: Int!
+      page: Int
+      limit: Int
     ): [Company]
     searchInMyCompanies(
       userId: Int!
@@ -231,19 +237,19 @@ const typeDefs = gql`
       page: Int!
       limit: Int!
     ): [Company]
-    getAllUserWorksCompanies(userId: Int!, page: Int!, limit: Int!): [Company]
+    getAllUserWorksCompanies(userId: Int!, page: Int, limit: Int): [Company]
     filterWorksCompanies(
       userId: Int!
       filterType: String!
       desc: Boolean
-      page: Int!
-      limit: Int!
+      page: Int
+      limit: Int
     ): [Company]
     searchInWorksCompanies(
       userId: Int!
       word: String!
-      page: Int!
-      limit: Int!
+      page: Int
+      limit: Int
     ): [Company]
   }
 
@@ -264,7 +270,8 @@ const typeDefs = gql`
       userId: Int!
     ): ContactMessage
     createPositionPost(post: PositionPostInput!, companyId: Int!): PositionPost
-    addUserToTeam(teamId: Int!, userId: Int!): boolean
+    addUserToTeam(teamId: Int!, userId: Int!): Boolean
+    uploadUserImage(image: File!, userId: Int!): Boolean
   }
 `;
 

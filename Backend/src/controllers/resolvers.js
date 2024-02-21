@@ -1,8 +1,11 @@
+/* eslint-disable consistent-return */
+/* eslint-disable indent */
 const axios = require("axios");
 const base64 = require("base-64");
 const bcrypt = require("bcrypt");
-const Tokens = require("../mysqlModels/Tokens");
 const nodemailer = require("nodemailer");
+const Tokens = require("../mysqlModels/Tokens");
+const storage = require("../config/Firebase");
 
 const myEmail = "202007723@bethlehem.edu";
 
@@ -307,8 +310,17 @@ const resolvers = {
         console.error("Error in filterMyCompanies resolver:", error.message);
       }
     },
+    /**
+     * Async function to search for companies based on user ID, search
+     * word, and pagination parameters.
+     *
+     * @param {Object} parent - The parent object
+     * @param {Object} args - The arguments object containing userId, word, page, and limit
+     * @return {Array} An array of companies based on the search criteria and pagination
+     */
     searchInMyCompanies: async (parent, args) => {
       try {
+        // eslint-disable-next-line object-curly-newline
         const { userId, word = "", page = 0, limit = 6 } = args;
 
         if (!userId) {
@@ -344,35 +356,28 @@ const resolvers = {
           );
         }
 
-        const user = await NeodeObject?.cypher(
+        const companies = await NeodeObject?.cypher(
           `
-          MATCH (user:User) -[r:ADMIN_OF]-> (company:Company) where ID(user) = $userId return user,r,company
+          MATCH (u:User) - [:IN_TEAM] -> (t:Team) WHERE ID(u) = $userId
+          MATCH (c:Company) -[:has_a_team]-> (t) RETURN c
           `,
           { userId }
         );
 
-        if (!user) {
+        if (!companies) {
           throw new Error("User not found");
         }
 
-        return user.records
+        return companies.records
           .map((record) => ({
-            _id: `${record.get("company").identity}`,
-            ...record.get("company").properties,
+            _id: `${record.get("c").identity}`,
+            ...record.get("c").properties,
           }))
           .slice((page - 1) * limit, limit);
       } catch (error) {
         console.error("Error in getAllUserCompanies resolver:", error.message);
       }
     },
-    /**
-     * Asynchronously filters companies based on user ID, filter type, and sorting order.
-     *
-     * @param {Object} parent - The parent object
-     * @param {Object} args - The arguments object containing userId {int},
-     *  filterType {string: Rate, CreatedDate}, and desc {boolean: witch mean is desc order or not}
-     * @return {Array} An array of filtered companies
-     */
     filterWorksCompanies: async (parent, args) => {
       try {
         const {
@@ -389,19 +394,23 @@ const resolvers = {
           );
         }
 
-        // this query filter companies on Neo4j database
-        // its return object of 2 value {records: array of result objects, summary}
         const companies = await NeodeObject?.cypher(
-          `MATCH (user:User) -[r:ADMIN_OF]-> (companies:Company) return companies ORDER BY companies.${filterType} ${
+          `
+          MATCH (u:User) - [:IN_TEAM] -> (t:Team) WHERE ID(u) = $userId
+          MATCH (c:Company) -[:has_a_team]-> (t) RETURN c ORDER BY companies.${filterType} ${
+            // eslint-disable-next-line indent
             desc ? "desc" : "asc"
-          }`
+            // eslint-disable-next-line indent
+          }
+          `,
+          { userId }
         );
 
         // I make map because result is not as a schema type.
         return companies.records
           .map((record) => ({
-            ...record.get("companies").properties,
-            _id: `${record.get("companies").identity}`,
+            ...record.get("c").properties,
+            _id: `${record.get("c").identity}`,
           }))
           .slice((page - 1) * limit, limit);
       } catch (error) {
@@ -410,6 +419,7 @@ const resolvers = {
     },
     searchInWorksCompanies: async (parent, args) => {
       try {
+        // eslint-disable-next-line object-curly-newline
         const { userId, word = "", page = 0, limit = 6 } = args;
 
         if (!userId) {
@@ -419,16 +429,21 @@ const resolvers = {
         }
 
         const companies = await NeodeObject?.cypher(
-          `MATCH (user:User) -[r:ADMIN_OF]-> (companies:Company) where Id(user) = ${userId} 
-          AND (companies.CompanyDescription CONTAINS '${word}' 
+          `
+          MATCH (u:User) - [:IN_TEAM] -> (t:Team) WHERE ID(u) = $userId
+          MATCH (c:Company) -[:has_a_team]-> (t) where 
+          companies.CompanyDescription CONTAINS '${word}' 
           OR companies.CompanyName CONTAINS '${word}'
-          OR companies.Domain CONTAINS '${word}') return companies`
+          OR companies.Domain CONTAINS '${word}' 
+          RETURN c
+          `,
+          { userId }
         );
 
         return companies.records
           .map((record) => ({
-            ...record.get("companies").properties,
-            _id: `${record.get("companies").identity}`,
+            ...record.get("c").properties,
+            _id: `${record.get("c").identity}`,
           }))
           .slice((page - 1) * limit, limit);
       } catch (error) {
@@ -638,7 +653,7 @@ const resolvers = {
           );
         }
 
-        return (await NeodeObject?.create("Project", project)).toJson();
+        return (await NeodeObject?.create("Project", project))?.toJson();
       } catch (error) {
         throw new Error(`An error occurred: ${error.message}`);
       }
@@ -872,8 +887,50 @@ const resolvers = {
     },
     addUserToTeam: async (parent, args) => {
       try {
+        const { userId, teamId } = args;
+
+        if (!userId) {
+          throw new Error(
+            `Are you send userId? userId is required, userId value is ${userId}. please check userId value before send`
+          );
+        }
+
+        if (!teamId) {
+          throw new Error(
+            `Are you send teamId? teamId is required, teamId value is ${teamId}. please check teamId value before send`
+          );
+        }
+
+        const user = await NeodeObject?.findById("User", userId);
+
+        if (!user) {
+          throw new Error("User not found");
+        }
+
+        const team = await NeodeObject?.findById("Team", teamId);
+
+        if (!team) {
+          throw new Error("Team not found");
+        }
+
+        await user.relateTo(team, "in_team");
+
+        return true;
       } catch (error) {
         console.error("Error in addUserToTeam resolver:", error.message);
+        return false;
+      }
+    },
+    uploadUserImage: async (parent, args) => {
+      try {
+        args.file.then((file) => {
+          //Contents of Upload scalar: https://github.com/jaydenseric/graphql-upload#class-graphqlupload
+          //file.createReadStream() is a readable node stream that contains the contents of the uploaded file
+          //node stream api: https://nodejs.org/api/stream.html
+          return file;
+        });
+      } catch (error) {
+        console.error("Error in uploadUserImage resolver:", error.message);
         return false;
       }
     },

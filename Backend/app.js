@@ -7,7 +7,6 @@ const cors = require("cors");
 const { typeDefs } = require("./src/schema/schema");
 const { resolvers } = require("./src/controllers/resolvers");
 require("dotenv").config();
-const sequelize = require("./src/config/MySqlDB");
 
 // fixed variable to save this server port, so sever run in this port
 const PORT = 3000;
@@ -38,15 +37,6 @@ async function startServer() {
     console.log(
       `🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`
     );
-
-    sequelize
-      .sync({ force: false })
-      .then(() => {
-        console.log("Database synchronized");
-      })
-      .catch((error) => {
-        console.error("Failed to synchronize database:", error);
-      });
   });
 }
 
