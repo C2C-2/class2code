@@ -1,0 +1,30 @@
+.frame {
+  align-items: center;
+  background-color: var(--variable-collection-light);
+  border-radius: 8px;
+  display: flex;
+  height: 40px;
+  justify-content: space-between;
+  padding: 10px 16px;
+  position: relative;
+  width: 156px;
+}
+
+.frame .text-wrapper {
+  color: var(--variable-collection-30);
+  font-family: "Inter-Medium", Helvetica;
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: normal;
+  margin-top: -0.5px;
+  position: relative;
+  white-space: nowrap;
+  width: fit-content;
+}
+
+.frame .vector {
+  height: 16px;
+  position: relative;
+  width: 16px;
+}

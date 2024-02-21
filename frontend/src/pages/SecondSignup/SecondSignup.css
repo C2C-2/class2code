@@ -1,3 +1,25 @@
-/* .mainCenterDiv{
-    background-color: black;
-} */
+.main {
+  height: 100vh;
+}
+
+.mainCenterDiv {
+  height: 85% !important;
+  width: 85% !important;
+  border-radius: 12px;
+}
+
+.hello {
+  background-color: #fff4e6;
+  padding: 1.5rem 1rem;
+  border-radius: 8px;
+}
+
+.subtitle {
+  font-weight: 600;
+  color: #00000066;
+  font-size: 14px;
+}
+
+.skills {
+  overflow: scroll;
+}
