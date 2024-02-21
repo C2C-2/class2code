@@ -472,8 +472,9 @@ const resolvers = {
         return {
           ...notes.records[0].get("n").properties,
           _id: `${notes.records[0].get("n").identity}`,
-          tasks: notes.records.map((record) => ({
-            tasks: record.get("t").properties,
+          Tasks: notes.records.map((record) => ({
+            _id: `${record.get("t").identity}`,
+            ...record.get("t").properties,
           })),
         };
       } catch (error) {
@@ -977,6 +978,80 @@ const resolvers = {
       } catch (error) {
         console.error("Error in uploadUserImage resolver:", error.message);
         return false;
+      }
+    },
+    createProjectNote: async (parent, args) => {
+      try {
+        const { projectNote, projectId } = args;
+
+        if (!projectNote) {
+          throw new Error(
+            `Are you send projectNote? projectNote is required, projectNote value is ${projectNote}. please check projectNote value before send`
+          );
+        }
+
+        if (!projectId) {
+          throw new Error(
+            `Are you send projectId? projectId is required, projectNote value is ${projectId}. please check projectId value before send`
+          );
+        }
+
+        const project = await NeodeObject?.findById("Project", projectId);
+
+        if (!project) {
+          throw new Error("Project not found");
+        }
+
+        const newProjectNote = await NeodeObject?.create(
+          "ProjectNote",
+          projectNote
+        );
+
+        await project.relateTo(newProjectNote, "has_note");
+
+        return newProjectNote.toJson();
+      } catch (error) {
+        console.error("Error in createProjectNote resolver:", error.message);
+      }
+    },
+    createProjectNoteTask: async (parent, args) => {
+      try {
+        const { projectNoteTask, projectNoteId } = args;
+
+        if (!projectNoteTask) {
+          throw new Error(
+            `Are you send projectNoteTask? projectNoteTask is required, projectNoteTask value is ${projectNoteTask}. please check projectNoteTask value before send`
+          );
+        }
+
+        if (!projectNoteId) {
+          throw new Error(
+            `Are you send projectNoteId? projectNoteId is required, projectNoteId value is ${projectNoteId}. please check projectNoteId value before send`
+          );
+        }
+
+        const projectNote = await NeodeObject?.findById(
+          "ProjectNote",
+          projectNoteId
+        );
+
+        if (!projectNote) {
+          throw new Error("ProjectNote not found");
+        }
+
+        const newProjectNoteTask = await NeodeObject?.create(
+          "ProjectNoteTask",
+          projectNoteTask
+        );
+
+        await projectNote.relateTo(newProjectNoteTask, "has_task");
+
+        return newProjectNoteTask.toJson();
+      } catch (error) {
+        console.error(
+          "Error in createProjectNoteTask resolver:",
+          error.message
+        );
       }
     },
   },

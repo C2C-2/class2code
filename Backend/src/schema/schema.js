@@ -113,10 +113,19 @@ const typeDefs = gql`
     Description: String
   }
 
+  input ProjectNoteTaskInput {
+    Title: String
+    Description: String
+  }
+
   type ProjectNote {
     _id: ID
     Title: String
     Tasks: [ProjectNoteTask]
+  }
+
+  input ProjectNoteInput {
+    Title: String
   }
 
   type ProjectRequirement {
@@ -251,7 +260,7 @@ const typeDefs = gql`
       page: Int
       limit: Int
     ): [Company]
-    getProjectNote(projectId: Int!): ProjectNote
+    getProjectNotes(projectId: Int!): ProjectNote
   }
 
   type Mutation {
@@ -273,6 +282,14 @@ const typeDefs = gql`
     createPositionPost(post: PositionPostInput!, companyId: Int!): PositionPost
     addUserToTeam(teamId: Int!, userId: Int!): Boolean
     uploadUserImage(image: File!): Boolean
+    createProjectNote(
+      projectNote: ProjectNoteInput!
+      projectId: Int!
+    ): ProjectNote
+    createProjectNoteTask(
+      projectNoteTask: ProjectNoteTaskInput!
+      projectNoteId: Int!
+    ): ProjectNoteTask
   }
 `;
 
