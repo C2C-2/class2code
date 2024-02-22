@@ -133,6 +133,10 @@ const typeDefs = gql`
     Value: String
   }
 
+  input ProjectRequirementInput {
+    Value: String
+  }
+
   type Skill {
     _id: ID
     Skill: String
@@ -165,8 +169,24 @@ const typeDefs = gql`
     CreateDate: String
   }
 
+  input TaskInput {
+    TaskName: String
+    TaskStatus: String
+    StartDate: String
+    EndDate: String
+    Priority: Int
+    Comments: String
+    IsMarked: Boolean
+    CreateDate: String
+  }
+
   type TaskStep {
     _id: ID
+    Description: String
+    Number: Int
+  }
+
+  input TaskStepInput {
     Description: String
     Number: Int
   }
@@ -265,6 +285,12 @@ const typeDefs = gql`
     getUserSkills(userId: Int!): [Skill]
     getUserSocialMediaAccounts(userId: Int!): [SocialMediaLink]
     deleteSocialMediaAccounts(id: Int!): Boolean
+    getProjects(page: Int, limit: Int): [Project]
+    getProjectRequirements(projectId: Int!): [ProjectRequirement]
+    searchInProjects(page: Int, limit: Int, word: String!): [Project]
+    applyForProject(projectId: Int!, companyId: Int!): Boolean
+    getProjectApplies(projectId: Int!): Int
+    getTask(taskId: Int!): Task
   }
 
   type Mutation {
@@ -273,7 +299,10 @@ const typeDefs = gql`
     createNewUser(user: UserInput!): UserType
     forgetPassword(email: String!): Boolean
     updateUser(userId: Int!, user: UserInput!): UserType
-    createNewProject(project: ProjectInput!): Project
+    createNewProject(
+      project: ProjectInput!
+      requirements: [ProjectRequirementInput!]
+    ): Project
     createNewTeam(team: TeamInput!, companyId: Int!): Team
     createNewChat(userId: Int!, chat: ChatInput!): Chat
     sendMessage(message: MessageInput!, chatId: Int!): Message
@@ -297,6 +326,14 @@ const typeDefs = gql`
       socialMediaAccount: SocialMediaLinkInput!
       userId: Int!
     ): SocialMediaLink
+    createTaskForUser(
+      task: TaskInput!
+      userId: Int!
+      userCreateTaskId: Int!
+    ): Task
+    createTaskForTeam(task: TaskInput!, teamId: Int!, userId: Int!): TaskStep
+    updateTask(taskId: Int!, task: TaskInput!): Task
+    updateTaskStep(taskStepId: Int!, taskStep: TaskStepInput!): TaskStep
   }
 `;
 

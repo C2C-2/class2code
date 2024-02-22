@@ -117,19 +117,13 @@ const resolvers = {
             `Are you send userId? UserID is required, userId value is ${userId}. please check userId value before send`
           );
         }
+        const result = await NeodeObject.findById("User", userId);
 
-        const cypherQuery =
-          "MATCH (user:User) WHERE ID(user) = $userId RETURN user";
-        const result = await NeodeObject.cypher(cypherQuery, { userId });
-
-        if (result.records.length === 0) {
+        if (!result) {
           throw new Error("User not found");
         }
 
-        return {
-          ...result?.records[0]?.get("user").properties,
-          id: userId,
-        };
+        return result.toJson();
       } catch (error) {
         console.error("Error in getUser resolver:", error.message);
       }
@@ -599,6 +593,164 @@ const resolvers = {
         return false;
       }
     },
+    getProjects: async (parent, args) => {
+      try {
+        const { page = 0, limit = 6 } = args;
+
+        const allProjects = await NeodeObject?.all("Project");
+
+        return allProjects
+          .toJson()
+          .then((e) => e.slice(page * limit, (page + 1) * limit));
+      } catch (error) {
+        console.error("Error in getProjects resolver:", error.message);
+      }
+    },
+    getProjectRequirements: async (parent, args) => {
+      try {
+        const { projectId } = args;
+
+        if (!projectId) {
+          throw new Error(
+            `Are you send projectId? projectId is required, projectId value is ${projectId}. please check projectId value before send`
+          );
+        }
+
+        const project = await NeodeObject?.cypher(
+          ` MATCH (p:Project) -[:HAS_REQUIREMENT] -> (r:ProjectRequirement) 
+            WHERE ID(p) = $projectId
+            RETURN r
+          `,
+          { projectId }
+        );
+
+        return project.records.map((record) => ({
+          ...record.get("r").properties,
+          _id: `${record.get("r").identity}`,
+        }));
+      } catch (error) {
+        console.error("Error in getProjects resolver:", error.message);
+      }
+    },
+    getProjectApplies: async (parent, args) => {
+      try {
+        const { projectId } = args;
+
+        if (!projectId) {
+          throw new Error(
+            `Are you send projectId? projectId is required, projectId value is ${projectId}. please check projectId value before send`
+          );
+        }
+
+        const numberOfApplies = await NeodeObject?.cypher(
+          ` MATCH (c:Company) -[:TAKE_A_PROJECT] -> (p:Project) 
+            WHERE ID(p) = $projectId
+            RETURN count(c) as numberOfApplies
+          `,
+          { projectId }
+        );
+
+        return numberOfApplies.records[0].get("numberOfApplies");
+      } catch (error) {
+        console.error("Error in getProjects resolver:", error.message);
+      }
+    },
+    searchInProjects: async (parent, args) => {
+      try {
+        const { word, page = 0, limit = 6 } = args;
+
+        if (!word) {
+          throw new Error(
+            `Are you send word? word is required, word value is ${word}. please check word value before send`
+          );
+        }
+
+        const projects = await NeodeObject?.cypher(
+          ` MATCH (p:Project) 
+            WHERE p.ProjectName CONTAINS $word
+            WHERE p.ProjectDescription CONTAINS $word
+            RETURN p
+          `,
+          { word }
+        );
+
+        return projects.records
+          .map((record) => ({
+            ...record.get("p").properties,
+            _id: `${record.get("p").identity}`,
+          }))
+          .slice(page * limit, (page + 1) * limit);
+      } catch (error) {
+        console.error("Error in getProjects resolver:", error.message);
+      }
+    },
+    applyForProject: async (parent, args) => {
+      try {
+        const { projectId, companyId } = args;
+
+        if (!projectId) {
+          throw new Error(
+            `Are you send projectId? projectId is required, projectId value is ${projectId}. please check projectId value before send`
+          );
+        }
+
+        if (!companyId) {
+          throw new Error(
+            `Are you send companyId? companyId is required, companyId value is ${companyId}. please check companyId value before send`
+          );
+        }
+
+        const project = await NeodeObject?.findById("Project", projectId);
+
+        if (!project) {
+          throw new Error("Project not found");
+        }
+
+        const company = await NeodeObject?.findById("Company", companyId);
+
+        if (!company) {
+          throw new Error("Company not found");
+        }
+
+        await company.relateTo(project, "TAKE_A_PROJECT");
+
+        return true;
+      } catch (error) {
+        console.error("Error in getProjects resolver:", error.message);
+        return false;
+      }
+    },
+    getTask: async (parent, args) => {
+      try {
+        const { taskId } = args;
+
+        if (!taskId) {
+          throw new Error(
+            `Are you send taskId? taskId is required, taskId value is ${taskId}. please check taskId value before send`
+          );
+        }
+
+        const task = await NeodeObject?.findById("Task", taskId);
+        const taskSteps = await NeodeObject?.cypher(
+          `MATCH (t:Task) -[:HAS_A] -> (ts:TaskStep)
+           WHERE ID(t) = $taskId
+           RETURN ts
+          `,
+          { taskId }
+        );
+
+        return {
+          ...task?.properties,
+          _id: `${task?.identity}`,
+          TaskSteps: taskSteps.records.map((record) => ({
+            ...record.get("ts").properties,
+            _id: `${record.get("ts").identity}`,
+          })),
+        };
+      } catch (error) {
+        console.error("Error in getTask resolver:", error.message);
+      }
+    },
   },
   Mutation: {
     /* this to send message to AI module and get answer about a project from
@@ -794,7 +946,7 @@ const resolvers = {
      */
     createNewProject: async (parent, args) => {
       try {
-        const { project } = args;
+        const { project, requirements } = args;
 
         if (!project) {
           throw new Error(
@@ -802,7 +954,20 @@ const resolvers = {
           );
         }
 
-        return (await NeodeObject?.create("Project", project))?.toJson();
+        const newProject = await NeodeObject?.create("Project", project);
+
+        if (requirements) {
+          requirements.foreach(async (requirement) => {
+            const newRequirement = await NeodeObject?.create(
+              "ProjectRequirement",
+              requirement
+            );
+
+            await newProject.relateTo(newRequirement, "has_requirement");
+          });
+        }
+
+        return newProject?.toJson();
       } catch (error) {
         throw new Error(`An error occurred: ${error.message}`);
       }
@@ -1166,6 +1331,105 @@ const resolvers = {
           "Error in createNewSocialMediaLink resolver:",
           error.message
         );
+      }
+    },
+    createTaskForUser: async (parent, args) => {
+      try {
+        const { task, userId, userCreateTaskId } = args;
+
+        if (!userId) {
+          throw new Error(
+            `Are you send userId? userId is required, userId value is ${userId}. please check userId value before send`
+          );
+        }
+
+        const user = await NeodeObject?.findById("User", userId);
+
+        if (!user) {
+          throw new Error("User not found");
+        }
+
+        const newTask = await NeodeObject?.create("Task", task);
+
+        if (!userCreateTaskId) {
+          throw new Error(
+            `Are you send userCreateTaskId? userCreateTaskId is required, userCreateTaskId value is ${userCreateTaskId}. please check userCreateTaskId value before send`
+          );
+        }
+
+        const userCreateTask = await NeodeObject?.findById(
+          "User",
+          userCreateTaskId
+        );
+
+        if (!userCreateTask) {
+          throw new Error("User need to Create Task is not found");
+        }
+
+        await userCreateTask.relateTo(newTask, "create_task");
+
+        await user.relateTo(newTask, "has_a_task");
+
+        return newTask.toJson();
+      } catch (error) {
+        console.error("Error in createTaskForUser resolver:", error.message);
+      }
+    },
+    createTaskForTeam: async (parent, args) => {
+      try {
+        const { task, teamId, userId } = args;
+
+        if (!teamId) {
+          throw new Error(
+            `Are you send teamId? teamId is required, teamId value is ${teamId}. please check teamId value before send`
+          );
+        }
+
+        if (!userId) {
+          throw new Error(
+            `Are you send userId? userId is required, userId value is ${userId}. please check userId value before send`
+          );
+        }
+
+        const team = await NeodeObject?.findById("Team", teamId);
+
+        if (!team) {
+          throw new Error("Team not found");
+        }
+
+        const user = await NeodeObject?.findById("User", userId);
+
+        if (!user) {
+          throw new Error("User not found");
+        }
+
+        const newTask = await NeodeObject?.create("Task", task);
+
+        await team.relateTo(newTask, "has_a_task");
+
+        await user.relateTo(newTask, "create_task");
+      } catch (error) {
+        console.error("Error in createTaskForTeam resolver:", error.message);
+      }
+    },
+    updateTask: async (parent, args) => {
+      try {
+        const { taskId, task } = args;
+
+        if (!taskId) {
+          throw new Error(
+            `Are you send taskId? taskId is required, taskId value is ${taskId}. please check taskId value before send`
+          );
+        }
+        const updatedTask = await NeodeObject?.findById("Task", taskId).then(
+          (t) => t.update(task)
+        );
+
+        console.log(updatedTask.toJson());
+
+        return updatedTask.toJson();
+      } catch (error) {
+        console.error("Error in updateTask resolver:", error.message);
       }
     },
   },
