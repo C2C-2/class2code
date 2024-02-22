@@ -128,4 +128,11 @@ module.exports = {
     direction: "out",
     eager: true,
   },
+  work_on: {
+    type: "relationship",
+    target: "Project",
+    relationship: "WORK_ON",
+    direction: "out",
+    eager: true,
+  },
 };

@@ -148,6 +148,11 @@ const typeDefs = gql`
     Link: String
   }
 
+  input SocialMediaLinkInput {
+    PlatformName: String
+    Link: String
+  }
+
   type Task {
     _id: ID
     TaskName: String
@@ -219,11 +224,6 @@ const typeDefs = gql`
     AIChats: [AIChat]
   }
 
-  input File {
-    filename: String!
-    mimetype: String!
-  }
-
   type Query {
     getAIChat(chatId: Int!): AIChat
     getOldAIChats(userId: Int!): [AIChat]
@@ -261,6 +261,10 @@ const typeDefs = gql`
       limit: Int
     ): [Company]
     getProjectNotes(projectId: Int!): ProjectNote
+    getProfileStatistics(userId: Int!): UserType
+    getUserSkills(userId: Int!): [Skill]
+    getUserSocialMediaAccounts(userId: Int!): [SocialMediaLink]
+    deleteSocialMediaAccounts(id: Int!): Boolean
   }
 
   type Mutation {
@@ -270,7 +274,7 @@ const typeDefs = gql`
     forgetPassword(email: String!): Boolean
     updateUser(userId: Int!, user: UserInput!): UserType
     createNewProject(project: ProjectInput!): Project
-    createNewTeam(team: TeamInput!, companyId: Int): Team
+    createNewTeam(team: TeamInput!, companyId: Int!): Team
     createNewChat(userId: Int!, chat: ChatInput!): Chat
     sendMessage(message: MessageInput!, chatId: Int!): Message
     createNewCompany(company: CompanyInput!, userId: Int!): Company
@@ -280,8 +284,7 @@ const typeDefs = gql`
       userId: Int!
     ): ContactMessage
     createPositionPost(post: PositionPostInput!, companyId: Int!): PositionPost
-    addUserToTeam(teamId: Int!, userId: Int!): Boolean
-    uploadUserImage(image: File!): Boolean
+    addUserToTeam(teamId: Int!, userId: Int!, role: String!): Boolean
     createProjectNote(
       projectNote: ProjectNoteInput!
       projectId: Int!
@@ -290,6 +293,10 @@ const typeDefs = gql`
       projectNoteTask: ProjectNoteTaskInput!
       projectNoteId: Int!
     ): ProjectNoteTask
+    createNewSocialMediaLink(
+      socialMediaAccount: SocialMediaLinkInput!
+      userId: Int!
+    ): SocialMediaLink
   }
 `;
 

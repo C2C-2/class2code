@@ -6,7 +6,6 @@ const base64 = require("base-64");
 const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
 const Tokens = require("../mysqlModels/Tokens");
-const bucket = require("../config/Firebase");
 
 const myEmail = "202007723@bethlehem.edu";
 
@@ -120,7 +119,7 @@ const resolvers = {
         }
 
         const cypherQuery =
-          "MATCH (user:User) - [:CHAT_WITH_AI]-> (chats:AIChat) WHERE ID(user) = $userId RETURN user, chats";
+          "MATCH (user:User) WHERE ID(user) = $userId RETURN user";
         const result = await NeodeObject.cypher(cypherQuery, { userId });
 
         if (result.records.length === 0) {
@@ -130,9 +129,6 @@ const resolvers = {
         return {
           ...result?.records[0]?.get("user").properties,
           id: userId,
-          AIChats: result?.records?.map(
-            (record) => record?.get("chats")?.properties
-          ),
         };
       } catch (error) {
         console.error("Error in getUser resolver:", error.message);
@@ -479,6 +475,128 @@ const resolvers = {
         };
       } catch (error) {
         console.error("Error in getProjectNotes resolver:", error.message);
+      }
+    },
+    getProfileStatistics: async (parent, args) => {
+      try {
+        const { userId } = args;
+
+        if (!userId) {
+          throw new Error(
+            `Are you send userId? userId is required, userId value is ${userId}. please check userId value before send`
+          );
+        }
+
+        // ## user enroll project after finishing the project in company.
+        // where all users get the project points.
+        const numberOfProjects = await NeodeObject?.cypher(
+          `
+          MATCH (u:User) -[:WORK_ON]-> (p:Project) WHERE ID(u) = $userId
+          RETURN count(p)
+          `
+        );
+
+        const numberOfTeams = await NeodeObject?.cypher(
+          `
+          MATCH (u:User) -[:IN_TEAM]-> (t:Team) WHERE ID(u) = $userId
+          RETURN count(t)
+          `
+        );
+
+        const numberOfTasks = await NeodeObject?.cypher(
+          `
+          MATCH (u:User) -[:HAS_A_TASK]-> (t:Task) WHERE ID(u) = $userId
+          RETURN count(t)
+          `
+        );
+
+        return {
+          numberOfProjects: numberOfProjects.records[0].get("count(p)"),
+          numberOfTeams: numberOfTeams.records[0].get("count(t)"),
+          numberOfTasks: numberOfTasks.records[0].get("count(t)"),
+        };
+      } catch (error) {
+        console.error("Error in getProfileInfo resolver:", error.message);
+      }
+    },
+    getUserSkills: async (parent, args) => {
+      try {
+        const { userId } = args;
+
+        if (!userId) {
+          throw new Error(
+            `Are you send userId? userId is required, userId value is ${userId}. please check userId value before send`
+          );
+        }
+
+        const skills = await NeodeObject?.cypher(
+          `
+          MATCH (u:User) -[:HAS_A_SKILL]-> (s:Skill) WHERE ID(u) = $userId
+          RETURN s
+          `
+        );
+
+        return skills.records.map((record) => ({
+          ...record.get("s").properties,
+          _id: `${record.get("s").identity}`,
+        }));
+      } catch (error) {
+        console.error("Error in getUserSkills resolver:", error.message);
+      }
+    },
+    getUserSocialMediaAccounts: async (parent, args) => {
+      try {
+        const { userId } = args;
+
+        if (!userId) {
+          throw new Error(
+            `Are you send userId? userId is required, userId value is ${userId}. please check userId value before send`
+          );
+        }
+
+        const socialMediaAccounts = await NeodeObject?.cypher(
+          `
+          MATCH (u:User) -[:HAS_A_SOCIAL_MEDIA]-> (s:SocialMediaAccount) WHERE ID(u) = $userId
+          RETURN s
+          `
+        );
+
+        return socialMediaAccounts.records.map((record) => ({
+          ...record.get("s").properties,
+          _id: `${record.get("s").identity}`,
+        }));
+      } catch (error) {
+        console.error(
+          "Error in getUserSocialMediaAccounts resolver:",
+          error.message
+        );
+      }
+    },
+    deleteSocialMediaAccounts: async (parent, args) => {
+      try {
+        const { id } = args;
+
+        if (!id) {
+          throw new Error(
+            `Are you send socialMediaId? socialMediaId is required, socialMediaId value is ${id}. please check socialMediaId value before send`
+          );
+        }
+
+        // return skill object.
+        const account = await NeodeObject?.findById("SocialMediaLink", id);
+
+        if (!account) {
+          throw new Error("Skill not found");
+        }
+
+        await account.delete();
+        return true;
+      } catch (error) {
+        console.error(
+          "Error in deleteUserSocialMediaAccounts resolver:",
+          error.message
+        );
+        return false;
       }
     },
   },
@@ -918,7 +1036,7 @@ const resolvers = {
     },
     addUserToTeam: async (parent, args) => {
       try {
-        const { userId, teamId } = args;
+        const { userId, teamId, role } = args;
 
         if (!userId) {
           throw new Error(
@@ -932,51 +1050,16 @@ const resolvers = {
           );
         }
 
-        const user = await NeodeObject?.findById("User", userId);
-
-        if (!user) {
-          throw new Error("User not found");
-        }
-
-        const team = await NeodeObject?.findById("Team", teamId);
-
-        if (!team) {
-          throw new Error("Team not found");
-        }
-
-        await user.relateTo(team, "in_team");
+        await NeodeObject.writeCypher(
+          `MATCH (n:User) WHERE ID(n) = $userId
+           MATCH (t:Team) WHERE ID(t) = $teamId
+           CREATE (n) -[r:IN_TEAM {role: $role}] -> (t)`,
+          { userId, teamId, role }
+        );
 
         return true;
       } catch (error) {
         console.error("Error in addUserToTeam resolver:", error.message);
-        return false;
-      }
-    },
-    uploadUserImage: async (parent, args) => {
-      try {
-        const { image } = args;
-        const { filename, mimetype, createReadStream } = image;
-
-        const stream = createReadStream();
-        const bucketFile = bucket.file(filename);
-
-        const writeStream = bucketFile.createWriteStream({
-          metadata: {
-            contentType: mimetype,
-          },
-        });
-
-        stream.pipe(writeStream);
-
-        await new Promise((resolve, reject) => {
-          writeStream.on("finish", resolve);
-          writeStream.on("error", reject);
-        });
-
-        console.log(`File ${filename} uploaded to Firebase Storage.`);
-        return true;
-      } catch (error) {
-        console.error("Error in uploadUserImage resolver:", error.message);
         return false;
       }
     },
@@ -1050,6 +1133,37 @@ const resolvers = {
       } catch (error) {
         console.error(
           "Error in createProjectNoteTask resolver:",
+          error.message
+        );
+      }
+    },
+    createNewSocialMediaLink: async (parent, args) => {
+      try {
+        const { socialMediaAccount, userId } = args;
+
+        if (!userId) {
+          throw new Error(
+            `Are you send userId? userId is required, userId value is ${userId}. please check userId value before send`
+          );
+        }
+
+        const user = await NeodeObject?.findById("User", userId);
+
+        if (!user) {
+          throw new Error("User not found");
+        }
+
+        const newSocialMediaLink = await NeodeObject?.create(
+          "SocialMediaLink",
+          socialMediaAccount
+        );
+
+        await user.relateTo(newSocialMediaLink, "has_a_social_media");
+
+        return newSocialMediaLink.toJson();
+      } catch (error) {
+        console.error(
+          "Error in createNewSocialMediaLink resolver:",
           error.message
         );
       }
