@@ -25,6 +25,11 @@ const typeDefs = gql`
     CreatedDate: String
   }
 
+  input CommentInput {
+    Value: String
+    CreatedDate: String
+  }
+
   type Chat {
     _id: ID
     IsDeleted: Boolean
@@ -44,6 +49,9 @@ const typeDefs = gql`
     Domain: String
     IsDeleted: Boolean
     CreateDate: String
+    Teams: [Team]
+    Project: Project
+    Comments: [Comment]
   }
 
   input CompanyInput {
@@ -291,6 +299,8 @@ const typeDefs = gql`
     applyForProject(projectId: Int!, companyId: Int!): Boolean
     getProjectApplies(projectId: Int!): Int
     getTask(taskId: Int!): Task
+    getCompany(companyId: Int!): Company
+    companyTakeProject(companyId: Int!, projectId: Int!): Boolean
   }
 
   type Mutation {
@@ -334,6 +344,10 @@ const typeDefs = gql`
     createTaskForTeam(task: TaskInput!, teamId: Int!, userId: Int!): TaskStep
     updateTask(taskId: Int!, task: TaskInput!): Task
     updateTaskStep(taskStepId: Int!, taskStep: TaskStepInput!): TaskStep
+    createCompanyComment(comment: CommentInput!, companyId: Int!): Comment
+    updateCompany(companyId: Int!, company: CompanyInput!): Company
+    updateProject(projectId: Int!, project: ProjectInput!): Project
+    createTaskStep(taskStep: TaskStepInput!, taskId: Int!): TaskStep
   }
 `;
 

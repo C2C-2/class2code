@@ -97,7 +97,7 @@ const resolvers = {
         return true;
       } catch (error) {
         console.error("Error in logout resolver:", error.message);
-        return false;
+        throw new Error(`Error in getCompany: ${error.message}`);
       }
     },
     /**
@@ -126,6 +126,7 @@ const resolvers = {
         return result.toJson();
       } catch (error) {
         console.error("Error in getUser resolver:", error.message);
+        throw new Error(`Error in getCompany: ${error.message}`);
       }
     },
     /**
@@ -153,6 +154,7 @@ const resolvers = {
         return await team.delete();
       } catch (error) {
         console.error("Error in deleteTeam resolver:", error.message);
+        throw new Error(`Error in getCompany: ${error.message}`);
       }
     },
     /**
@@ -185,7 +187,7 @@ const resolvers = {
         return true;
       } catch (error) {
         console.error("Error in deleteCompany resolver:", error.message);
-        return false;
+        throw new Error(`Error in getCompany: ${error.message}`);
       }
     },
     /**
@@ -217,7 +219,7 @@ const resolvers = {
         return true;
       } catch (error) {
         console.error("Error in deleteSkill resolver:", error.message);
-        return false;
+        throw new Error(`Error in getCompany: ${error.message}`);
       }
     },
     /**
@@ -256,6 +258,7 @@ const resolvers = {
           .slice((page - 1) * limit, limit);
       } catch (error) {
         console.error("Error in getAllUserCompanies resolver:", error.message);
+        throw new Error(`Error in getCompany: ${error.message}`);
       }
     },
     /**
@@ -299,6 +302,7 @@ const resolvers = {
           .slice((page - 1) * limit, limit);
       } catch (error) {
         console.error("Error in filterMyCompanies resolver:", error.message);
+        throw new Error(`Error in getCompany: ${error.message}`);
       }
     },
     /**
@@ -335,6 +339,7 @@ const resolvers = {
           .slice((page - 1) * limit, limit);
       } catch (error) {
         console.error("Error in searchInMyCompanies resolver:", error.message);
+        throw new Error(`Error in getCompany: ${error.message}`);
       }
     },
     getAllUserWorksCompanies: async (parent, args) => {
@@ -367,6 +372,7 @@ const resolvers = {
           .slice((page - 1) * limit, limit);
       } catch (error) {
         console.error("Error in getAllUserCompanies resolver:", error.message);
+        throw new Error(`Error in getCompany: ${error.message}`);
       }
     },
     filterWorksCompanies: async (parent, args) => {
@@ -406,6 +412,7 @@ const resolvers = {
           .slice((page - 1) * limit, limit);
       } catch (error) {
         console.error("Error in filterMyCompanies resolver:", error.message);
+        throw new Error(`Error in getCompany: ${error.message}`);
       }
     },
     searchInWorksCompanies: async (parent, args) => {
@@ -439,6 +446,7 @@ const resolvers = {
           .slice((page - 1) * limit, limit);
       } catch (error) {
         console.error("Error in searchInMyCompanies resolver:", error.message);
+        throw new Error(`Error in getCompany: ${error.message}`);
       }
     },
     getProjectNotes: async (parent, args) => {
@@ -469,6 +477,7 @@ const resolvers = {
         };
       } catch (error) {
         console.error("Error in getProjectNotes resolver:", error.message);
+        throw new Error(`Error in getCompany: ${error.message}`);
       }
     },
     getProfileStatistics: async (parent, args) => {
@@ -504,13 +513,24 @@ const resolvers = {
           `
         );
 
+        const numberOfMyCompanies = await NeodeObject?.cypher(
+          `
+          MATCH (u:User) -[:admin_of] -> (c:Company) WHERE ID(u) = $userId
+          RETURN count(c) as myCompaniesCount
+          `,
+          { userId }
+        );
+
         return {
           numberOfProjects: numberOfProjects.records[0].get("count(p)"),
           numberOfTeams: numberOfTeams.records[0].get("count(t)"),
           numberOfTasks: numberOfTasks.records[0].get("count(t)"),
+          numberOfMyCompanies:
+            numberOfMyCompanies.records[0].get("myCompaniesCount"),
         };
       } catch (error) {
         console.error("Error in getProfileInfo resolver:", error.message);
+        throw new Error(`Error in getCompany: ${error.message}`);
       }
     },
     getUserSkills: async (parent, args) => {
@@ -536,6 +556,7 @@ const resolvers = {
         }));
       } catch (error) {
         console.error("Error in getUserSkills resolver:", error.message);
+        throw new Error(`Error in getCompany: ${error.message}`);
       }
     },
     getUserSocialMediaAccounts: async (parent, args) => {
@@ -564,6 +585,7 @@ const resolvers = {
           "Error in getUserSocialMediaAccounts resolver:",
           error.message
         );
+        throw new Error(`Error in getCompany: ${error.message}`);
       }
     },
     deleteSocialMediaAccounts: async (parent, args) => {
@@ -590,7 +612,7 @@ const resolvers = {
           "Error in deleteUserSocialMediaAccounts resolver:",
           error.message
         );
-        return false;
+        throw new Error(`Error in getCompany: ${error.message}`);
       }
     },
     getProjects: async (parent, args) => {
@@ -604,6 +626,7 @@ const resolvers = {
           .then((e) => e.slice(page * limit, (page + 1) * limit));
       } catch (error) {
         console.error("Error in getProjects resolver:", error.message);
+        throw new Error(`Error in getCompany: ${error.message}`);
       }
     },
     getProjectRequirements: async (parent, args) => {
@@ -630,6 +653,7 @@ const resolvers = {
         }));
       } catch (error) {
         console.error("Error in getProjects resolver:", error.message);
+        throw new Error(`Error in getCompany: ${error.message}`);
       }
     },
     getProjectApplies: async (parent, args) => {
@@ -653,6 +677,7 @@ const resolvers = {
         return numberOfApplies.records[0].get("numberOfApplies");
       } catch (error) {
         console.error("Error in getProjects resolver:", error.message);
+        throw new Error(`Error in getCompany: ${error.message}`);
       }
     },
     searchInProjects: async (parent, args) => {
@@ -682,6 +707,7 @@ const resolvers = {
           .slice(page * limit, (page + 1) * limit);
       } catch (error) {
         console.error("Error in getProjects resolver:", error.message);
+        throw new Error(`Error in getCompany: ${error.message}`);
       }
     },
     applyForProject: async (parent, args) => {
@@ -717,7 +743,7 @@ const resolvers = {
         return true;
       } catch (error) {
         console.error("Error in getProjects resolver:", error.message);
-        return false;
+        throw new Error(`Error in getCompany: ${error.message}`);
       }
     },
     getTask: async (parent, args) => {
@@ -749,6 +775,111 @@ const resolvers = {
         };
       } catch (error) {
         console.error("Error in getTask resolver:", error.message);
+        throw new Error(`Error in getCompany: ${error.message}`);
+      }
+    },
+    getCompany: async (parent, args) => {
+      try {
+        const { companyId } = args;
+
+        if (!companyId) {
+          throw new Error(
+            `Are you send companyId? companyId is required, companyId value is ${companyId}. please check companyId value before send`
+          );
+        }
+
+        const company = await NeodeObject?.findById("Company", companyId);
+
+        const teams = await NeodeObject?.cypher(
+          `MATCH (c:Company) -[:HAS_A_TEAM] -> (t:Team)
+           WHERE ID(c) = $companyId
+           RETURN t
+          `,
+          { companyId }
+        );
+
+        const project = await NeodeObject?.cypher(
+          `MATCH (c:Company) -[:TAKE_A_PROJECT] -> (p:Project)
+           WHERE ID(c) = $companyId
+           RETURN p
+          `,
+          { companyId }
+        );
+
+        const comments = await NeodeObject?.cypher(
+          `MATCH (c:Company) -[:HAS_A_COMMENT] -> (cm:Comment)
+           WHERE ID(c) = $companyId
+           RETURN cm
+          `,
+          { companyId }
+        );
+
+        if (!company) {
+          throw new Error("Company not found");
+        }
+
+        return {
+          ...company.toJson(),
+          Comments: await comments.records.map((record) => ({
+            ...record.get("cm").properties,
+            _id: `${record.get("cm").identity}`,
+          })),
+          Project: {
+            ...project.records[0].get("p").properties,
+            _id: `${project.records[0].get("p").identity}`,
+          },
+          Teams: await teams.records.map((record) => ({
+            ...record.get("t").properties,
+            _id: `${record.get("t").identity}`,
+          })),
+        };
+      } catch (error) {
+        console.error("Error in getCompany resolver:", error.message);
+        throw new Error(`Error in getCompany: ${error.message}`);
+      }
+    },
+    companyTakeProject: async (parent, args) => {
+      try {
+        const { companyId, projectId } = args;
+
+        if (!companyId) {
+          throw new Error(
+            `Are you send companyId? companyId is required, companyId value is ${companyId}. please check companyId value before send`
+          );
+        }
+
+        if (!projectId) {
+          throw new Error(
+            `Are you send projectId? projectId is required, projectId value is ${projectId}. please check projectId value before send`
+          );
+        }
+
+        const numberOfProjectsTakeIt = await NeodeObject?.cypher(
+          `MATCH (c:Company) -[:TAKE_A_PROJECT] -> (p:Project)
+           WHERE ID(c) = $companyId
+           RETURN count(p) as projects
+          `,
+          { companyId }
+        );
+
+        if (numberOfProjectsTakeIt.records[0].get("projects").low > 0) {
+          throw new Error("Company already take a project");
+        }
+
+        const company = await NeodeObject?.findById("Company", companyId);
+
+        if (!company) {
+          throw new Error("Company not found");
+        }
+
+        const project = await NeodeObject?.findById("Project", projectId);
+
+        await company.relateTo(project, "take_a_project");
+
+        return true;
+      } catch (error) {
+        console.error("Error in getCompany resolver:", error.message);
+        throw new Error(`Error in getCompany: ${error.message}`);
       }
     },
   },
@@ -1430,6 +1561,124 @@ const resolvers = {
         return updatedTask.toJson();
       } catch (error) {
         console.error("Error in updateTask resolver:", error.message);
+      }
+    },
+    updateTaskStep: async (parent, args) => {
+      try {
+        const { taskStepId, taskStep } = args;
+
+        if (!taskStepId) {
+          throw new Error(
+            `Are you send taskStepId? taskStepId is required, taskStepId value is ${taskStepId}. please check taskStepId value before send`
+          );
+        }
+
+        const updatedTaskStep = await NeodeObject?.findById(
+          "TaskStep",
+          taskStepId
+        ).then((t) => t.update(taskStep));
+
+        return updatedTaskStep.toJson();
+      } catch (error) {
+        console.error("Error in updateTaskStep resolver:", error.message);
+      }
+    },
+    createCompanyComment: async (parent, args) => {
+      try {
+        const { comment, companyId } = args;
+
+        if (!companyId) {
+          throw new Error(
+            `Are you send companyId? companyId is required, companyId value is ${companyId}. please check companyId value before send`
+          );
+        }
+
+        const company = await NeodeObject?.findById("Company", companyId);
+
+        if (!company) {
+          throw new Error("Company not found");
+        }
+
+        const newComment = await NeodeObject?.create("Comment", comment);
+
+        await company.relateTo(newComment, "has_a_comment");
+
+        return newComment.toJson();
+      } catch (error) {
+        console.error("Error in createCompanyComment resolver:", error.message);
+        throw error;
+      }
+    },
+    updateCompany: async (parent, args) => {
+      try {
+        const { companyId, company } = args;
+
+        if (!companyId) {
+          throw new Error(
+            `Are you send companyId? companyId is required, companyId value is ${companyId}. please check companyId value before send`
+          );
+        }
+
+        const updatedCompany = await NeodeObject?.findById(
+          "Company",
+          companyId
+        ).then((c) => c.update(company));
+
+        return updatedCompany.toJson();
+      } catch (error) {
+        console.error("Error in updateCompany resolver:", error.message);
+        throw error;
+      }
+    },
+    updateProject: async (parent, args) => {
+      try {
+        const { projectId, project } = args;
+
+        if (!projectId) {
+          throw new Error(
+            `Are you send projectId? projectId is required, projectId value is ${projectId}. please check projectId value before send`
+          );
+        }
+
+        const updatedProject = await NeodeObject?.findById(
+          "Project",
+          projectId
+        ).then((p) => p.update(project));
+
+        if (!updatedProject) {
+          throw new Error("Project not found");
+        }
+
+        return updatedProject.toJson();
+      } catch (error) {
+        console.error("Error in updateProject resolver:", error.message);
+        throw error;
+      }
+    },
+    createTaskStep: async (parent, args) => {
+      try {
+        const { taskId, taskStep } = args;
+
+        if (!taskId) {
+          throw new Error(
+            `Are you send taskId? taskId is required, taskId value is ${taskId}. please check taskId value before send`
+          );
+        }
+
+        const task = await NeodeObject?.findById("Task", taskId);
+
+        if (!task) {
+          throw new Error("Task not found");
+        }
+
+        const newTaskStep = await NeodeObject?.create("TaskStep", taskStep);
+
+        await task.relateTo(newTaskStep, "has_a");
+
+        return newTaskStep.toJson();
+      } catch (error) {
+        console.error("Error in createTaskStep resolver:", error.message);
+        throw error;
       }
     },
   },
