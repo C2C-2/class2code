@@ -297,10 +297,14 @@ const typeDefs = gql`
     getProjectRequirements(projectId: Int!): [ProjectRequirement]
     searchInProjects(page: Int, limit: Int, word: String!): [Project]
     applyForProject(projectId: Int!, companyId: Int!): Boolean
-    getProjectApplies(projectId: Int!): Int
+    getProjectApplies(projectId: Int!, page: Int, limit: Int): Int
     getTask(taskId: Int!): Task
     getCompany(companyId: Int!): Company
     companyTakeProject(companyId: Int!, projectId: Int!): Boolean
+    getUserTasks(userId: Int!, page: Int, limit: Int): [Task]
+    getMyCompanyTeams(companyId: Int!, page: Int, limit: Int): [Team]
+    getContactMessages(page: Int, limit: Int): [ContactMessage]
+    getAllPosts(userId: Int!, page: Int, limit: Int): [PositionPost]
   }
 
   type Mutation {
@@ -340,14 +344,24 @@ const typeDefs = gql`
       task: TaskInput!
       userId: Int!
       userCreateTaskId: Int!
+      companyId: Int!
     ): Task
     createTaskForTeam(task: TaskInput!, teamId: Int!, userId: Int!): TaskStep
-    updateTask(taskId: Int!, task: TaskInput!): Task
+    updateTask(
+      taskId: Int!
+      task: TaskInput!
+      taskSteps: [TaskStepInput!]
+    ): Task
     updateTaskStep(taskStepId: Int!, taskStep: TaskStepInput!): TaskStep
     createCompanyComment(comment: CommentInput!, companyId: Int!): Comment
     updateCompany(companyId: Int!, company: CompanyInput!): Company
     updateProject(projectId: Int!, project: ProjectInput!): Project
     createTaskStep(taskStep: TaskStepInput!, taskId: Int!): TaskStep
+    replayContactMessage(contactMessageId: Int!, message: String!): Boolean
+    updatePositionPost(
+      positionPostId: Int!
+      positionPost: PositionPostInput!
+    ): PositionPost
   }
 `;
 

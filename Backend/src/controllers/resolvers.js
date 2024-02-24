@@ -17,6 +17,17 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+const sendEmail = async ({ email, subject, text }) => {
+  const mailOptions = {
+    from: myEmail,
+    to: email,
+    subject,
+    text,
+  };
+
+  await transporter.sendMail(mailOptions);
+};
+
 /* this library to sync entity with data base, so with this library I can
 use models to define schema for database objects and manage it without use
 queries.
@@ -250,12 +261,10 @@ const resolvers = {
           throw new Error("User not found");
         }
 
-        return user.records
-          .map((record) => ({
-            _id: `${record.get("company").identity}`,
-            ...record.get("company").properties,
-          }))
-          .slice((page - 1) * limit, limit);
+        return user.records.slice((page - 1) * limit, limit).map((record) => ({
+          _id: `${record.get("company").identity}`,
+          ...record.get("company").properties,
+        }));
       } catch (error) {
         console.error("Error in getAllUserCompanies resolver:", error.message);
         throw new Error(`Error in getCompany: ${error.message}`);
@@ -295,11 +304,11 @@ const resolvers = {
 
         // I make map because result is not as a schema type.
         return companies.records
+          .slice((page - 1) * limit, limit)
           .map((record) => ({
             ...record.get("companies").properties,
             _id: `${record.get("companies").identity}`,
-          }))
-          .slice((page - 1) * limit, limit);
+          }));
       } catch (error) {
         console.error("Error in filterMyCompanies resolver:", error.message);
         throw new Error(`Error in getCompany: ${error.message}`);
@@ -332,11 +341,11 @@ const resolvers = {
         );
 
         return companies.records
+          .slice((page - 1) * limit, limit)
           .map((record) => ({
             ...record.get("companies").properties,
             _id: `${record.get("companies").identity}`,
-          }))
-          .slice((page - 1) * limit, limit);
+          }));
       } catch (error) {
         console.error("Error in searchInMyCompanies resolver:", error.message);
         throw new Error(`Error in getCompany: ${error.message}`);
@@ -365,11 +374,11 @@ const resolvers = {
         }
 
         return companies.records
+          .slice((page - 1) * limit, limit)
           .map((record) => ({
             _id: `${record.get("c").identity}`,
             ...record.get("c").properties,
-          }))
-          .slice((page - 1) * limit, limit);
+          }));
       } catch (error) {
         console.error("Error in getAllUserCompanies resolver:", error.message);
         throw new Error(`Error in getCompany: ${error.message}`);
@@ -405,11 +414,11 @@ const resolvers = {
 
         // I make map because result is not as a schema type.
         return companies.records
+          .slice((page - 1) * limit, limit)
           .map((record) => ({
             ...record.get("c").properties,
             _id: `${record.get("c").identity}`,
-          }))
-          .slice((page - 1) * limit, limit);
+          }));
       } catch (error) {
         console.error("Error in filterMyCompanies resolver:", error.message);
         throw new Error(`Error in getCompany: ${error.message}`);
@@ -439,11 +448,11 @@ const resolvers = {
         );
 
         return companies.records
+          .slice((page - 1) * limit, limit)
           .map((record) => ({
             ...record.get("c").properties,
             _id: `${record.get("c").identity}`,
-          }))
-          .slice((page - 1) * limit, limit);
+          }));
       } catch (error) {
         console.error("Error in searchInMyCompanies resolver:", error.message);
         throw new Error(`Error in getCompany: ${error.message}`);
@@ -658,7 +667,7 @@ const resolvers = {
     },
     getProjectApplies: async (parent, args) => {
       try {
-        const { projectId } = args;
+        const { projectId, page = 0, limit = 6 } = args;
 
         if (!projectId) {
           throw new Error(
@@ -666,15 +675,23 @@ const resolvers = {
           );
         }
 
-        const numberOfApplies = await NeodeObject?.cypher(
+        const applies = await NeodeObject?.cypher(
           ` MATCH (c:Company) -[:TAKE_A_PROJECT] -> (p:Project) 
             WHERE ID(p) = $projectId
-            RETURN count(c) as numberOfApplies
+            RETURN c
           `,
           { projectId }
         );
 
-        return numberOfApplies.records[0].get("numberOfApplies");
+        return {
+          Applies: applies.records
+            .slice(page * limit, (page + 1) * limit)
+            .map((record) => ({
+              ...record.get("c").properties,
+              _id: `${record.get("c").identity}`,
+            })),
+          NumberOfApplies: applies.records.length,
+        };
       } catch (error) {
         console.error("Error in getProjects resolver:", error.message);
         throw new Error(`Error in getCompany: ${error.message}`);
@@ -700,11 +717,11 @@ const resolvers = {
         );
 
         return projects.records
+          .slice(page * limit, (page + 1) * limit)
           .map((record) => ({
             ...record.get("p").properties,
             _id: `${record.get("p").identity}`,
-          }))
-          .slice(page * limit, (page + 1) * limit);
+          }));
       } catch (error) {
         console.error("Error in getProjects resolver:", error.message);
         throw new Error(`Error in getCompany: ${error.message}`);
@@ -882,6 +899,132 @@ const resolvers = {
         throw new Error(`Error in getCompany: ${error.message}`);
       }
     },
+    getUserTasks: async (parent, args) => {
+      try {
+        const { userId, page = 0, limit = 6 } = args;
+
+        if (!userId) {
+          throw new Error(
+            `Are you send userId? userId is required, userId value is ${userId}. please check userId value before send`
+          );
+        }
+
+        const tasks = await NeodeObject?.cypher(
+          `MATCH (user:User) -[:HAS_A_TASK] -> (task:Task)
+           MATCH (crater:User) - [:CREATE_TASK] -> (task)
+           MATCH (task) - [:IN_COMPANY] -> (company:Company)
+           WHERE ID(user) = $userId
+           RETURN task, crater, company
+          `,
+          { userId }
+        );
+
+        if (!tasks) {
+          throw new Error("Tasks not found");
+        }
+
+        return tasks.records
+          .slice(page * limit, (page + 1) * limit)
+          .map((record) => ({
+            ...record.get("task").properties,
+            _id: `${record.get("task").identity}`,
+            Crater: {
+              ...record.get("crater").properties,
+              _id: `${record.get("crater").identity}`,
+            },
+            InCompany: {
+              ...record.get("company").properties,
+              _id: `${record.get("company").identity}`,
+            },
+          }));
+      } catch (error) {
+        console.error("Error in getTasks resolver:", error.message);
+      }
+    },
+    getMyCompanyTeams: async (parent, args) => {
+      try {
+        const { companyId, page = 0, limit = 6 } = args;
+
+        if (!companyId) {
+          throw new Error(
+            `Are you send companyId? companyId is required, companyId value is ${companyId}. please check companyId value before send`
+          );
+        }
+
+        const teams = await NeodeObject?.cypher(
+          `MATCH (c:Company) -[:HAS_A_TEAM] -> (t:Team)
+           WHERE ID(c) = $companyId
+           RETURN t
+          `,
+          { companyId }
+        );
+
+        if (!teams) {
+          throw new Error("Teams not found");
+        }
+
+        return teams.records
+          .slice(page * limit, (page + 1) * limit)
+          .map((record) => ({
+            ...record.get("t").properties,
+            _id: `${record.get("t").identity}`,
+          }));
+      } catch (error) {
+        console.error("Error in getMyCompanyTeams resolver:", error.message);
+        throw new Error(`Error in getMyCompanyTeams: ${error.message}`);
+      }
+    },
+    getContactMessages: async (parent, args) => {
+      try {
+        const { page = 0, limit = 6 } = args;
+
+        const messages = await NeodeObject?.all("ContactMessage");
+
+        if (!messages) {
+          throw new Error("Messages not found");
+        }
+
+        return messages
+          .toJson()
+          .then((data) => data.slice(page * limit, (page + 1) * limit));
+      } catch (error) {
+        console.error("Error in getContactMessages resolver:", error.message);
+        throw new Error(`Error in getContactMessages: ${error.message}`);
+      }
+    },
+    getAllPosts: async (parent, args) => {
+      try {
+        const { userId, page = 0, limit = 10 } = args;
+
+        if (!userId) {
+          throw new Error(
+            `Are you send userId? userId is required, userId value is ${userId}. please check userId value before send`
+          );
+        }
+
+        const posts = await NeodeObject?.cypher(
+          `MATCH (c:Company) -[:HAS_A_POST]-> (p:PositionPost)
+           MATCH (u:User) -[:ADMIN_OF] -> (c1:Company)
+           WHERE ID(u) = $userId AND ID(c) <> ID(c1)
+           RETURN p, c`,
+          { userId }
+        );
+
+        if (!posts) {
+          throw new Error("Posts not found");
+        }
+
+        return posts.records
+          .slice(page * limit, (page + 1) * limit)
+          .map((record) => ({
+            ...record.get("p").properties,
+            _id: `${record.get("p").identity}`,
+          }));
+      } catch (error) {
+        console.error("Error in getAllPosts resolver:", error.message);
+        throw new Error(`Error in getAllPosts: ${error.message}`);
+      }
+    },
   },
   Mutation: {
     /* this to send message to AI module and get answer about a project from
@@ -1053,15 +1196,11 @@ const resolvers = {
         // Generate a temporary password or a reset token (depending on your workflow)
         const temporaryPassword = "123456"; // Implement this function
 
-        // Send a password reset email
-        const mailOptions = {
-          from: myEmail, // Update with your email address
-          to: email,
-          subject: "Password Reset Request",
+        sendEmail({
+          email,
+          subject: "Password Reset",
           text: `Your code is: ${temporaryPassword}`,
-        };
-
-        await transporter.sendMail(mailOptions);
+        });
 
         return "Password reset email sent successfully";
       } catch (error) {
@@ -1466,7 +1605,7 @@ const resolvers = {
     },
     createTaskForUser: async (parent, args) => {
       try {
-        const { task, userId, userCreateTaskId } = args;
+        const { task, userId, userCreateTaskId, companyId } = args;
 
         if (!userId) {
           throw new Error(
@@ -1478,6 +1617,18 @@ const resolvers = {
 
         if (!user) {
           throw new Error("User not found");
+        }
+
+        if (!companyId) {
+          throw new Error(
+            `Are you send companyId? companyId is required, companyId value is ${companyId}. please check companyId value before send`
+          );
+        }
+
+        const company = await NeodeObject?.findById("Company", companyId);
+
+        if (!company) {
+          throw new Error("Company not found");
         }
 
         const newTask = await NeodeObject?.create("Task", task);
@@ -1501,6 +1652,8 @@ const resolvers = {
 
         await user.relateTo(newTask, "has_a_task");
 
+        await newTask.relateTo(company, "in_company");
+
         return newTask.toJson();
       } catch (error) {
         console.error("Error in createTaskForUser resolver:", error.message);
@@ -1522,6 +1675,12 @@ const resolvers = {
           );
         }
 
+        if (!companyId) {
+          throw new Error(
+            `Are you send companyId? companyId is required, companyId value is ${companyId}. please check companyId value before send`
+          );
+        }
+
         const team = await NeodeObject?.findById("Team", teamId);
 
         if (!team) {
@@ -1539,13 +1698,16 @@ const resolvers = {
         await team.relateTo(newTask, "has_a_task");
 
         await user.relateTo(newTask, "create_task");
+
+        return newTask.toJson();
       } catch (error) {
         console.error("Error in createTaskForTeam resolver:", error.message);
+        throw error;
       }
     },
     updateTask: async (parent, args) => {
       try {
-        const { taskId, task } = args;
+        const { taskId, task, taskSteps } = args;
 
         if (!taskId) {
           throw new Error(
@@ -1556,11 +1718,21 @@ const resolvers = {
           (t) => t.update(task)
         );
 
-        console.log(updatedTask.toJson());
+        // delete task steps
+        await NeodeObject.cypher(
+          `MATCH (task:Task)-[r:HAS_A]->(taskSteps:TaskStep) where Id(task) 
+           = ${taskId} detach delete taskSteps`
+        );
+
+        // ### check if possible to remove task steps
+        if (taskSteps) {
+          await updatedTask.relateTo(taskSteps, "has_a");
+        }
 
         return updatedTask.toJson();
       } catch (error) {
         console.error("Error in updateTask resolver:", error.message);
+        throw error;
       }
     },
     updateTaskStep: async (parent, args) => {
@@ -1581,6 +1753,7 @@ const resolvers = {
         return updatedTaskStep.toJson();
       } catch (error) {
         console.error("Error in updateTaskStep resolver:", error.message);
+        throw error;
       }
     },
     createCompanyComment: async (parent, args) => {
@@ -1678,6 +1851,62 @@ const resolvers = {
         return newTaskStep.toJson();
       } catch (error) {
         console.error("Error in createTaskStep resolver:", error.message);
+        throw error;
+      }
+    },
+    replayContactMessage: async (parent, args) => {
+      try {
+        const { contactMessageId, message } = args;
+
+        if (!contactMessageId) {
+          throw new Error(
+            `Are you send contactMessageId? contactMessageId is required, contactMessageId value is ${contactMessageId}. please check contactMessageId value before send`
+          );
+        }
+
+        const userEmail = await NeodeObject?.cypher(
+          `MATCH (u:User) -[:CONTACT_US] -> (c:ContactMessage) 
+           where ID(c) = $contactMessageId
+           RETURN u.Email`,
+          { contactMessageId }
+        );
+
+        if (!userEmail) {
+          throw new Error("Contact message not found");
+        }
+
+        await sendEmail({
+          email: userEmail,
+          subject: "Replay contact message",
+          text: message,
+        });
+      } catch (error) {
+        console.error("Error in replayContactMessage resolver:", error.message);
+        throw new Error(`Error in replayContactMessage: ${error.message}`);
+      }
+    },
+    updatePositionPost: async (parent, args) => {
+      try {
+        const { positionPostId, positionPost } = args;
+
+        if (!positionPostId) {
+          throw new Error(
+            `Are you send positionPostId? positionPostId is required, positionPostId value is ${positionPostId}. please check positionPostId value before send`
+          );
+        }
+
+        const updatedPositionPost = await NeodeObject?.findById(
+          "PositionPost",
+          positionPostId
+        ).then((p) => p.update(positionPost));
+
+        if (!updatedPositionPost) {
+          throw new Error("Position post not found");
+        }
+
+        return updatedPositionPost.toJson();
+      } catch (error) {
+        console.error("Error in updatePositionPost resolver:", error.message);
         throw error;
       }
     },
