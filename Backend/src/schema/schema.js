@@ -305,6 +305,32 @@ const typeDefs = gql`
     getMyCompanyTeams(companyId: Int!, page: Int, limit: Int): [Team]
     getContactMessages(page: Int, limit: Int): [ContactMessage]
     getAllPosts(userId: Int!, page: Int, limit: Int): [PositionPost]
+    searchInPositionPosts(
+      page: Int
+      limit: Int
+      word: String!
+      userId: Int!
+    ): [PositionPost]
+    getAllPostsSortedByDate(
+      page: Int
+      limit: Int
+      isDESC: Boolean!
+      userId: Int!
+    ): [PositionPost]
+    getAllMyPosts(userId: Int!, page: Int, limit: Int): [PositionPost]
+    searchInMyPosts(
+      page: Int
+      limit: Int
+      word: String!
+      userId: Int!
+    ): [PositionPost]
+    getAllMyPostsSortedByDate(
+      page: Int
+      limit: Int
+      isDESC: Boolean!
+      userId: Int!
+    )
+    getTeam(teamId: Int!): Team
   }
 
   type Mutation {
@@ -362,6 +388,7 @@ const typeDefs = gql`
       positionPostId: Int!
       positionPost: PositionPostInput!
     ): PositionPost
+    applyToPost(postId: Int!, userId: Int!): Boolean
   }
 `;
 

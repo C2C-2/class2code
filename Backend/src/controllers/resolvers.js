@@ -994,6 +994,7 @@ const resolvers = {
     },
     getAllPosts: async (parent, args) => {
       try {
+        // userId is required to doesn't get user posts (my posts)
         const { userId, page = 0, limit = 10 } = args;
 
         if (!userId) {
@@ -1023,6 +1024,209 @@ const resolvers = {
       } catch (error) {
         console.error("Error in getAllPosts resolver:", error.message);
         throw new Error(`Error in getAllPosts: ${error.message}`);
+      }
+    },
+    searchInPositionPosts: async (parent, args) => {
+      try {
+        const { page = 0, limit = 10, word, userId } = args;
+
+        if (!word) {
+          throw new Error(
+            `Are you send word? word is required, word value is ${word}. please check word value before send`
+          );
+        }
+
+        if (!userId) {
+          throw new Error(
+            `Are you send userId? userId is required, userId value is ${userId}. please check userId value before send`
+          );
+        }
+
+        const posts = await NeodeObject?.cypher(
+          `
+          MATCH (c:Company) -[:HAS_A_POST]-> (p:PositionPost)
+          MATCH (u:User) -[:ADMIN_OF] -> (c1:Company)
+          where p.Content CONTAINS $word AND ID(u) = $userId AND ID(c) <> ID(c1)
+          return p
+          `,
+          { word, userId }
+        );
+
+        if (!posts) {
+          throw new Error("Posts not found");
+        }
+
+        return posts.records
+          .slice(page * limit, (page + 1) * limit)
+          .map((record) => ({
+            ...record.get("p").properties,
+            _id: `${record.get("p").identity}`,
+          }));
+      } catch (error) {
+        console.error(
+          "Error in searchInPositionPosts resolver:",
+          error.message
+        );
+        throw new Error(`Error in searchInPositionPosts: ${error.message}`);
+      }
+    },
+    getAllPostsSortedByDate: async (parent, args) => {
+      try {
+        const { page = 0, limit = 10, isDESC = false, userId } = args;
+
+        if (!userId) {
+          throw new Error(
+            `Are you send userId? userId is required, userId value is ${userId}. please check userId value before send`
+          );
+        }
+
+        const posts = await NeodeObject?.cypher(
+          `MATCH (c:Company) -[:HAS_A_POST]-> (p:PositionPost)
+           MATCH (u:User) -[:ADMIN_OF] -> (c1:Company)
+           WHERE ID(u) = $userId AND ID(c) <> ID(c1)
+           RETURN p ORDER BY p.CreatedDate ${isDESC ? "DESC" : "ASC"}`,
+          { userId }
+        );
+
+        return posts.records
+          .slice(page * limit, (page + 1) * limit)
+          .map((record) => ({
+            ...record.get("p").properties,
+            _id: `${record.get("p").identity}`,
+          }));
+      } catch (error) {
+        console.error(
+          "Error in getAllPostsSortedByDate resolver:",
+          error.message
+        );
+
+        throw new Error(`Error in getAllPostsSortedByDate: ${error.message}`);
+      }
+    },
+    getAllMyPosts: async (parent, args) => {
+      try {
+        const { page = 0, limit = 10, userId } = args;
+
+        if (!userId) {
+          throw new Error(
+            `Are you send userId? userId is required, userId value is ${userId}. please check userId value before send`
+          );
+        }
+
+        const posts = await NeodeObject?.cypher(
+          `MATCH (u:User) -[:ADMIN_OF] -> (c:Company)
+          MATCH (c:Company) -[:HAS_A_POST]-> (p:PositionPost)
+          WHERE ID(u) = $userId
+          RETURN p`,
+          { userId }
+        );
+
+        return posts.records
+          .slice(page * limit, (page + 1) * limit)
+          .map((record) => ({
+            ...record.get("p").properties,
+            _id: `${record.get("p").identity}`,
+          }));
+      } catch (error) {
+        console.error("Error in getAllMyPosts resolver:", error.message);
+        throw new Error(`Error in getAllMyPosts: ${error.message}`);
+      }
+    },
+    searchInMyPosts: async (parent, args) => {
+      try {
+        const { page = 0, limit = 10, word, userId } = args;
+
+        if (!word) {
+          throw new Error(
+            `Are you send word? word is required, word value is ${word}. please check word value before send`
+          );
+        }
+
+        if (!userId) {
+          throw new Error(
+            `Are you send userId? userId is required, userId value is ${userId}. please check userId value before send`
+          );
+        }
+
+        const posts = await NeodeObject?.cypher(
+          `MATCH (u:User) -[:ADMIN_OF] -> (c:Company)
+          MATCH (c:Company) -[:HAS_A_POST]-> (p:PositionPost)
+          WHERE ID(u) = $userId AND p.Content CONTAINS $word
+          RETURN p`,
+          { word, userId }
+        );
+
+        return posts.records
+          .slice(page * limit, (page + 1) * limit)
+          .map((record) => ({
+            ...record.get("p").properties,
+            _id: `${record.get("p").identity}`,
+          }));
+      } catch (error) {
+        console.error("Error in searchInMyPosts resolver:", error.message);
+        throw new Error(`Error in searchInMyPosts: ${error.message}`);
+      }
+    },
+    getAllMyPostsSortedByDate: async (parent, args) => {
+      try {
+        const { page = 0, limit = 10, isDESC = false, userId } = args;
+
+        if (!userId) {
+          throw new Error(
+            `Are you send userId? userId is required, userId value is ${userId}. please check userId value before send`
+          );
+        }
+
+        const posts = await NeodeObject?.cypher(
+          `MATCH (u:User) -[:ADMIN_OF] -> (c:Company)
+          MATCH (c:Company) -[:HAS_A_POST]-> (p:PositionPost)
+          WHERE ID(u) = $userId
+          RETURN p ORDER BY p.CreatedDate ${isDESC ? "DESC" : "ASC"}`,
+          { userId }
+        );
+
+        return posts.records
+          .slice(page * limit, (page + 1) * limit)
+          .map((record) => ({
+            ...record.get("p").properties,
+            _id: `${record.get("p").identity}`,
+          }));
+      } catch (error) {
+        console.error(
+          "Error in getAllMyPostsSortedByDate resolver:",
+          error.message
+        );
+        throw new Error(`Error in getAllMyPostsSortedByDate: ${error.message}`);
+      }
+    },
+    getTeam: async (parent, args) => {
+      try {
+        const { teamId } = args;
+
+        if (!teamId) {
+          throw new Error(
+            `Are you send teamId? teamId is required, teamId value is ${teamId}. please check teamId value before send`
+          );
+        }
+
+        const team = await NeodeObject?.cypher(
+          `MATCH (t:Team) WHERE ID(t) = $teamId
+           MATCH (u:User) -[:in_team]-> (t)
+           RETURN t,u`,
+          { teamId }
+        );
+
+        return {
+          ...team.records[0].get("t").properties,
+          _id: `${team.records[0].get("t").identity}`,
+          members: team.records.map((record) => ({
+            ...record.get("u").properties,
+            _id: `${record.get("u").identity}`,
+          })),
+        };
+      } catch (error) {
+        console.error("Error in getTeam resolver:", error.message);
+        throw new Error(`Error in getTeam: ${error.message}`);
       }
     },
   },
@@ -1675,12 +1879,6 @@ const resolvers = {
           );
         }
 
-        if (!companyId) {
-          throw new Error(
-            `Are you send companyId? companyId is required, companyId value is ${companyId}. please check companyId value before send`
-          );
-        }
-
         const team = await NeodeObject?.findById("Team", teamId);
 
         if (!team) {
@@ -1907,6 +2105,45 @@ const resolvers = {
         return updatedPositionPost.toJson();
       } catch (error) {
         console.error("Error in updatePositionPost resolver:", error.message);
+        throw error;
+      }
+    },
+    applyToPost: async (parent, args) => {
+      try {
+        const { positionPostId, userId } = args;
+
+        if (!positionPostId) {
+          throw new Error(
+            `Are you send positionPostId? positionPostId is required, positionPostId value is ${positionPostId}. please check positionPostId value before send`
+          );
+        }
+
+        if (!userId) {
+          throw new Error(
+            `Are you send userId? userId is required, userId value is ${userId}. please check userId value before send`
+          );
+        }
+
+        const user = await NeodeObject?.findById("User", userId);
+
+        if (!user) {
+          throw new Error("User not found");
+        }
+
+        const positionPost = await NeodeObject?.findById(
+          "PositionPost",
+          positionPostId
+        );
+
+        if (!positionPost) {
+          throw new Error("Position post not found");
+        }
+
+        await user.relateTo(positionPost, "apply_to");
+
+        return true;
+      } catch (error) {
+        console.error("Error in applyToPost resolver:", error.message);
         throw error;
       }
     },
