@@ -253,7 +253,7 @@ const typeDefs = gql`
   }
 
   type Query {
-    getAIChat(chatId: Int!): AIChat
+    getAIChat(chatId: Int!, page: Int, limit: Int): AIChat
     getOldAIChats(userId: Int!): [AIChat]
     logout(userId: Int!): Boolean
     getUser(userId: Int!): UserType
@@ -329,12 +329,12 @@ const typeDefs = gql`
       limit: Int
       isDESC: Boolean!
       userId: Int!
-    )
+    ): [PositionPost]
     getTeam(teamId: Int!): Team
   }
 
   type Mutation {
-    sendAIMessage(message: String!, fileName: String!, chatId: Int!): AIMessage
+    sendAIMessage(message: String!, fileName: String!, AIchatId: Int!): AIMessage
     createNewAIChat(userId: Int!): AIChat
     createNewUser(user: UserInput!): UserType
     forgetPassword(email: String!): Boolean

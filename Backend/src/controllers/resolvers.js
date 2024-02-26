@@ -53,27 +53,31 @@ const resolvers = {
      */
     getAIChat: async (parent, args) => {
       try {
-        const { chatId } = args;
+        const { chatId, page = 0, limit = 50 } = args;
 
         if (!chatId) {
           throw new Error("ChatID is null");
         }
 
         // this query get chat by chatId with all messages.
-        const cypherQuery =
-          "MATCH (chat:AIChat)-[:HAS_A]->(message:AIMessage) WHERE ID(chat) = $chatId RETURN chat, collect(message) as messages";
+        const cypherQuery = `MATCH (chat:AIChat)-[:HAS_A]->(message:AIMessage) 
+           WHERE ID(chat) = $chatId 
+           RETURN chat, collect(message) as messages`;
         const result = await NeodeObject.cypher(cypherQuery, { chatId });
 
-        if (result.records.length === 0) {
+        if (result?.records?.length === 0) {
           throw new Error("Chat not found");
         }
 
         return {
-          ...result.records[0].get("chat").properties,
+          ...result?.records[0]?.get("chat").properties,
           id: chatId,
-          Messages: result.records[0]
-            .get("messages")
-            .map((message) => message.properties),
+          Messages: result.records
+            .slice(page * limit, (page + 1) * limit)
+            .map((message) => ({
+              ...message.get("messages").properties,
+              _id: message.get("messages").identity,
+            })),
         };
       } catch (error) {
         console.error("Error fetching AIChat:", error.message);
@@ -1250,7 +1254,7 @@ const resolvers = {
         // ########################################################
 
         // this int args from to check if chat already exist or create new
-        const { chatId } = args;
+        const { AIchatId } = args;
 
         if (message === null || fileName === null) {
           throw new Error("Message or fileName is null");
@@ -1276,8 +1280,8 @@ const resolvers = {
         // Create AIChat and AIMessage nodes
         // I save it in database to get it when user need it from old chats
         const [chat, createdMessage] = await Promise.all([
-          chatId
-            ? NeodeObject.findById("AIChat", chatId)
+          AIchatId
+            ? NeodeObject.findById("AIChat", AIchatId)
             : NeodeObject.create("AIChat", {}),
           NeodeObject.create("AIMessage", {
             Question: message,
