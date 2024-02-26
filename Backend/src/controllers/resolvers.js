@@ -7,6 +7,7 @@ const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
 const Tokens = require("../mysqlModels/Tokens");
 
+// this is a website company email to send emails for users.
 const myEmail = "202007723@bethlehem.edu";
 
 const transporter = nodemailer.createTransport({
@@ -17,6 +18,14 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+/**
+ * Send an email with the given email, subject, and text.
+ *
+ * @param {Object} email - the recipient's email address
+ * @param {string} subject - the subject of the email
+ * @param {string} text - the content of the email
+ * @return {Promise} a promise that resolves when the email is sent
+ */
 const sendEmail = async ({ email, subject, text }) => {
   const mailOptions = {
     from: myEmail,
@@ -355,6 +364,13 @@ const resolvers = {
         throw new Error(`Error in getCompany: ${error.message}`);
       }
     },
+    /**
+     * A function to retrieve all companies where a user works.
+     *
+     * @param {Object} parent - The parent object
+     * @param {Object} args - The arguments object with userId, page, and limit
+     * @return {Promise<Array>} An array of company records
+     */
     getAllUserWorksCompanies: async (parent, args) => {
       try {
         const { userId, page = 0, limit = 6 } = args;
@@ -388,6 +404,14 @@ const resolvers = {
         throw new Error(`Error in getCompany: ${error.message}`);
       }
     },
+    /**
+     * A function to filter works companies based on given parameters.
+     *
+     * @param {Object} parent - The parent object
+     * @param {Object} args - The arguments object with userId, filterType,
+     * desc, page, and limit properties
+     * @return {Promise} A promise that resolves to an array of filtered companies
+     */
     filterWorksCompanies: async (parent, args) => {
       try {
         const {
@@ -428,6 +452,13 @@ const resolvers = {
         throw new Error(`Error in getCompany: ${error.message}`);
       }
     },
+    /**
+     * An asynchronous function to search for companies associated with a user.
+     *
+     * @param {object} parent - the parent object
+     * @param {object} args - the arguments object containing userId, word, page, and limit
+     * @return {array} an array of companies that match the search criteria
+     */
     searchInWorksCompanies: async (parent, args) => {
       try {
         // eslint-disable-next-line object-curly-newline
@@ -462,6 +493,13 @@ const resolvers = {
         throw new Error(`Error in getCompany: ${error.message}`);
       }
     },
+    /**
+     * Retrieves project notes based on the provided projectId.
+     *
+     * @param {Object} parent - The parent object
+     * @param {Object} args - The arguments object containing projectId
+     * @return {Object} The retrieved project notes and associated tasks
+     */
     getProjectNotes: async (parent, args) => {
       try {
         const { projectId } = args;
@@ -493,6 +531,14 @@ const resolvers = {
         throw new Error(`Error in getCompany: ${error.message}`);
       }
     },
+    /**
+     * Get profile statistics for a user.
+     *
+     * @param {Object} parent - The parent object
+     * @param {Object} args - The arguments object with userId
+     * @return {Object} An object containing statistics for the user's projects,
+     * teams, tasks, and companies
+     */
     getProfileStatistics: async (parent, args) => {
       try {
         const { userId } = args;
@@ -546,6 +592,13 @@ const resolvers = {
         throw new Error(`Error in getCompany: ${error.message}`);
       }
     },
+    /**
+     * A function to fetch the skills of a user based on the provided user ID.
+     *
+     * @param {Object} parent - The parent object
+     * @param {Object} args - The arguments object containing userId
+     * @return {Array} An array of skills associated with the user
+     */
     getUserSkills: async (parent, args) => {
       try {
         const { userId } = args;
@@ -572,6 +625,13 @@ const resolvers = {
         throw new Error(`Error in getCompany: ${error.message}`);
       }
     },
+    /**
+     * Get user's social media accounts based on userId.
+     *
+     * @param {Object} parent - The parent object
+     * @param {Object} args - The arguments object with userId
+     * @return {Array} Array of social media accounts
+     */
     getUserSocialMediaAccounts: async (parent, args) => {
       try {
         const { userId } = args;
@@ -601,6 +661,13 @@ const resolvers = {
         throw new Error(`Error in getCompany: ${error.message}`);
       }
     },
+    /**
+     * Asynchronously deletes a social media account.
+     *
+     * @param {object} parent - The parent object
+     * @param {object} args - The arguments object containing the id of the social media account
+     * @return {boolean} true if the account was successfully deleted
+     */
     deleteSocialMediaAccounts: async (parent, args) => {
       try {
         const { id } = args;
@@ -628,6 +695,14 @@ const resolvers = {
         throw new Error(`Error in getCompany: ${error.message}`);
       }
     },
+    /**
+     * A function to retrieve projects with optional pagination.
+     *
+     * @param {Object} parent - The parent object
+     * @param {Object} args - The arguments object containing page and limit
+     * @return {Promise} A promise that resolves to a subset of projects
+     * based on the provided page and limit
+     */
     getProjects: async (parent, args) => {
       try {
         const { page = 0, limit = 6 } = args;
@@ -642,6 +717,13 @@ const resolvers = {
         throw new Error(`Error in getCompany: ${error.message}`);
       }
     },
+    /**
+     * A function to retrieve project requirements.
+     *
+     * @param {object} parent - the parent object
+     * @param {object} args - the arguments object containing projectId
+     * @return {Promise} an array of project requirements
+     */
     getProjectRequirements: async (parent, args) => {
       try {
         const { projectId } = args;
@@ -669,6 +751,13 @@ const resolvers = {
         throw new Error(`Error in getCompany: ${error.message}`);
       }
     },
+    /**
+     * Retrieves project applies based on the provided arguments.
+     *
+     * @param {Object} parent - the parent object
+     * @param {Object} args - the arguments object containing projectId, page, and limit
+     * @return {Object} an object containing Applies and NumberOfApplies
+     */
     getProjectApplies: async (parent, args) => {
       try {
         const { projectId, page = 0, limit = 6 } = args;
@@ -701,6 +790,13 @@ const resolvers = {
         throw new Error(`Error in getCompany: ${error.message}`);
       }
     },
+    /**
+     * Search for projects based on a given word, page, and limit.
+     *
+     * @param {Object} parent - The parent object
+     * @param {Object} args - The arguments object containing word, page, and limit
+     * @return {Array} An array of projects that match the search criteria
+     */
     searchInProjects: async (parent, args) => {
       try {
         const { word, page = 0, limit = 6 } = args;
@@ -731,6 +827,13 @@ const resolvers = {
         throw new Error(`Error in getCompany: ${error.message}`);
       }
     },
+    /**
+     * A function to user to apply for a project for a company.
+     *
+     * @param {Object} parent - The parent object
+     * @param {Object} args - The arguments object containing projectId and companyId
+     * @return {boolean} Whether the application was successful
+     */
     applyForProject: async (parent, args) => {
       try {
         const { projectId, companyId } = args;
@@ -767,6 +870,13 @@ const resolvers = {
         throw new Error(`Error in getCompany: ${error.message}`);
       }
     },
+    /**
+     * Asynchronously retrieves a task along with its associated task steps.
+     *
+     * @param {Object} parent - The parent object
+     * @param {Object} args - The arguments object containing the taskId
+     * @return {Object} An object containing the retrieved task and its associated task steps
+     */
     getTask: async (parent, args) => {
       try {
         const { taskId } = args;
@@ -799,6 +909,13 @@ const resolvers = {
         throw new Error(`Error in getCompany: ${error.message}`);
       }
     },
+    /**
+     * Fetches company details and related entities such as teams, projects, and comments.
+     *
+     * @param {Object} parent - The parent object
+     * @param {Object} args - The arguments object containing companyId
+     * @return {Object} The company details along with its comments, project, and teams
+     */
     getCompany: async (parent, args) => {
       try {
         const { companyId } = args;
@@ -859,6 +976,13 @@ const resolvers = {
         throw new Error(`Error in getCompany: ${error.message}`);
       }
     },
+    /**
+     * Asynchronously handles the company taking a project.
+     *
+     * @param {object} parent - The parent object
+     * @param {object} args - The arguments object with companyId and projectId
+     * @return {boolean} Indicates if the company successfully took the project
+     */
     companyTakeProject: async (parent, args) => {
       try {
         const { companyId, projectId } = args;
@@ -903,6 +1027,13 @@ const resolvers = {
         throw new Error(`Error in getCompany: ${error.message}`);
       }
     },
+    /**
+     * Retrieves tasks for a specific user, with optional pagination.
+     *
+     * @param {object} parent - The parent object
+     * @param {object} args - The arguments object containing userId, page, and limit
+     * @return {object[]} An array of tasks with associated user and company information
+     */
     getUserTasks: async (parent, args) => {
       try {
         const { userId, page = 0, limit = 6 } = args;
@@ -945,6 +1076,13 @@ const resolvers = {
         console.error("Error in getTasks resolver:", error.message);
       }
     },
+    /**
+     * Asynchronous function to retrieve teams of a company based on provided parameters.
+     *
+     * @param {Object} parent - The parent object
+     * @param {Object} args - The arguments object containing companyId, page, and limit
+     * @return {Array} An array of team records based on the provided page and limit
+     */
     getMyCompanyTeams: async (parent, args) => {
       try {
         const { companyId, page = 0, limit = 6 } = args;
@@ -978,6 +1116,13 @@ const resolvers = {
         throw new Error(`Error in getMyCompanyTeams: ${error.message}`);
       }
     },
+    /**
+     * Asynchronously retrieves contact messages from user to website owners.
+     *
+     * @param {Object} parent - The parent object
+     * @param {Object} args - The arguments object with optional page and limit properties
+     * @return {Array} An array of contact messages based on the specified page and limit
+     */
     getContactMessages: async (parent, args) => {
       try {
         const { page = 0, limit = 6 } = args;
@@ -996,6 +1141,13 @@ const resolvers = {
         throw new Error(`Error in getContactMessages: ${error.message}`);
       }
     },
+    /**
+     * Get all posts from other companies.
+     *
+     * @param {Object} parent - The parent object
+     * @param {Object} args - The arguments object with userId, page, and limit
+     * @return {Array} An array of posts for the specified user
+     */
     getAllPosts: async (parent, args) => {
       try {
         // userId is required to doesn't get user posts (my posts)
@@ -1030,6 +1182,13 @@ const resolvers = {
         throw new Error(`Error in getAllPosts: ${error.message}`);
       }
     },
+    /**
+     * Asynchronous function to search for position posts based on specified criteria.
+     *
+     * @param {Object} parent - The parent object
+     * @param {Object} args - The input arguments including page, limit, word, and userId
+     * @return {Array} An array of position posts matching the specified criteria
+     */
     searchInPositionPosts: async (parent, args) => {
       try {
         const { page = 0, limit = 10, word, userId } = args;
@@ -1074,6 +1233,13 @@ const resolvers = {
         throw new Error(`Error in searchInPositionPosts: ${error.message}`);
       }
     },
+    /**
+     * A function to retrieve all posts sorted by date desc or asc.
+     *
+     * @param {Object} parent - The parent object
+     * @param {Object} args - The arguments object including page, limit, isDESC, and userId
+     * @return {Array} An array of posts sorted by date
+     */
     getAllPostsSortedByDate: async (parent, args) => {
       try {
         const { page = 0, limit = 10, isDESC = false, userId } = args;
@@ -1107,6 +1273,13 @@ const resolvers = {
         throw new Error(`Error in getAllPostsSortedByDate: ${error.message}`);
       }
     },
+    /**
+     * Get all posts for a specific user, who created it.
+     *
+     * @param {object} parent - The parent object
+     * @param {object} args - The arguments object with page, limit, and userId
+     * @return {array} An array of post objects
+     */
     getAllMyPosts: async (parent, args) => {
       try {
         const { page = 0, limit = 10, userId } = args;
@@ -1136,6 +1309,13 @@ const resolvers = {
         throw new Error(`Error in getAllMyPosts: ${error.message}`);
       }
     },
+    /**
+     * Asynchronous function to search in user posts based on provided criteria.
+     *
+     * @param {object} parent - The parent object
+     * @param {object} args - The arguments object containing page, limit, word, and userId
+     * @return {array} An array of posts matching the search criteria
+     */
     searchInMyPosts: async (parent, args) => {
       try {
         const { page = 0, limit = 10, word, userId } = args;
@@ -1171,6 +1351,13 @@ const resolvers = {
         throw new Error(`Error in searchInMyPosts: ${error.message}`);
       }
     },
+    /**
+     * Retrieves all of the user's posts sorted by date in desc or asc order.
+     *
+     * @param {Object} parent - The parent object.
+     * @param {Object} args - The arguments object including page, limit, isDESC, and userId.
+     * @return {Array} An array of post objects sorted by date.
+     */
     getAllMyPostsSortedByDate: async (parent, args) => {
       try {
         const { page = 0, limit = 10, isDESC = false, userId } = args;
@@ -1203,6 +1390,13 @@ const resolvers = {
         throw new Error(`Error in getAllMyPostsSortedByDate: ${error.message}`);
       }
     },
+    /**
+     * Async function to get a team with all its members.
+     *
+     * @param {Object} parent - The parent object
+     * @param {Object} args - The arguments object
+     * @return {Object} The team object
+     */
     getTeam: async (parent, args) => {
       try {
         const { teamId } = args;
@@ -1677,6 +1871,13 @@ const resolvers = {
         console.error("Error in createPositionPost resolver:", error.message);
       }
     },
+    /**
+     * Add a user to a team with a specified role.
+     *
+     * @param {Object} parent - The parent object
+     * @param {Object} args - The arguments object containing userId, teamId, and role
+     * @return {boolean} true if the user was successfully added to the team, false otherwise
+     */
     addUserToTeam: async (parent, args) => {
       try {
         const { userId, teamId, role } = args;
@@ -1706,6 +1907,13 @@ const resolvers = {
         return false;
       }
     },
+    /**
+     * Asynchronous function to create a project note.
+     *
+     * @param {Object} parent - The parent object
+     * @param {Object} args - The arguments object with projectNote and projectId
+     * @return {Object} The newly created project note in JSON format
+     */
     createProjectNote: async (parent, args) => {
       try {
         const { projectNote, projectId } = args;
@@ -1740,6 +1948,13 @@ const resolvers = {
         console.error("Error in createProjectNote resolver:", error.message);
       }
     },
+    /**
+     * Asynchronous function to create a project note task.
+     *
+     * @param {Object} parent - The parent object
+     * @param {Object} args - The arguments object containing projectNoteTask and projectNoteId
+     * @return {Object} The newly created project note task
+     */
     createProjectNoteTask: async (parent, args) => {
       try {
         const { projectNoteTask, projectNoteId } = args;
@@ -1780,6 +1995,13 @@ const resolvers = {
         );
       }
     },
+    /**
+     * Asynchronous function to create a new user account in his profile.
+     *
+     * @param {Object} parent - The parent object
+     * @param {Object} args - The arguments object with socialMediaAccount and userId
+     * @return {Object} The newly created social media link in JSON format
+     */
     createNewSocialMediaLink: async (parent, args) => {
       try {
         const { socialMediaAccount, userId } = args;
@@ -1811,6 +2033,14 @@ const resolvers = {
         );
       }
     },
+    /**
+     * Asynchronous function to create a task for a user.
+     *
+     * @param {Object} parent - The parent object
+     * @param {Object} args - The arguments object containing task, userId,
+     * userCreateTaskId, and companyId
+     * @return {Object} The newly created task in JSON format
+     */
     createTaskForUser: async (parent, args) => {
       try {
         const { task, userId, userCreateTaskId, companyId } = args;
@@ -1867,6 +2097,13 @@ const resolvers = {
         console.error("Error in createTaskForUser resolver:", error.message);
       }
     },
+    /**
+     * Asynchronously creates a task for a team.
+     *
+     * @param {Object} parent - The parent object
+     * @param {Object} args - The arguments containing task, teamId, and userId
+     * @return {Object} The newly created task in JSON format
+     */
     createTaskForTeam: async (parent, args) => {
       try {
         const { task, teamId, userId } = args;
@@ -1907,6 +2144,13 @@ const resolvers = {
         throw error;
       }
     },
+    /**
+     * Updates a task with the given task ID, task, and task steps.
+     *
+     * @param {object} parent - The parent object
+     * @param {object} args - The arguments containing taskId, task, and taskSteps
+     * @return {object} The updated task in JSON format
+     */
     updateTask: async (parent, args) => {
       try {
         const { taskId, task, taskSteps } = args;
@@ -1937,6 +2181,13 @@ const resolvers = {
         throw error;
       }
     },
+    /**
+     * Asynchronously updates a task step.
+     *
+     * @param {Object} parent - The parent object
+     * @param {Object} args - The arguments object with taskStepId and taskStep
+     * @return {Object} The updated task step in JSON format
+     */
     updateTaskStep: async (parent, args) => {
       try {
         const { taskStepId, taskStep } = args;
@@ -1958,6 +2209,13 @@ const resolvers = {
         throw error;
       }
     },
+    /**
+     * Asynchronously creates a comment for a company from company profile.
+     *
+     * @param {Object} parent - The parent object
+     * @param {Object} args - The arguments object containing comment and companyId
+     * @return {Object} The newly created comment
+     */
     createCompanyComment: async (parent, args) => {
       try {
         const { comment, companyId } = args;
@@ -1984,6 +2242,13 @@ const resolvers = {
         throw error;
       }
     },
+    /**
+     * Asynchronous function to update a company.
+     *
+     * @param {Object} parent - The parent object
+     * @param {Object} args - The arguments object containing companyId and company
+     * @return {Object} The updated company object
+     */
     updateCompany: async (parent, args) => {
       try {
         const { companyId, company } = args;
@@ -2005,6 +2270,13 @@ const resolvers = {
         throw error;
       }
     },
+    /**
+     * Update a project with the given ID and data.
+     *
+     * @param {Object} parent - The parent object
+     * @param {Object} args - The arguments object with projectId and project
+     * @return {Object} The updated project object
+     */
     updateProject: async (parent, args) => {
       try {
         const { projectId, project } = args;
@@ -2030,6 +2302,13 @@ const resolvers = {
         throw error;
       }
     },
+    /**
+     * Asynchronous function to create a task step.
+     *
+     * @param {object} parent - The parent object
+     * @param {object} args - The arguments object with taskId and taskStep
+     * @return {object} The newly created task step in JSON format
+     */
     createTaskStep: async (parent, args) => {
       try {
         const { taskId, taskStep } = args;
@@ -2056,6 +2335,13 @@ const resolvers = {
         throw error;
       }
     },
+    /**
+     * Asynchronously replays a contact message.
+     *
+     * @param {Object} parent - The parent object
+     * @param {Object} args - The arguments object containing contactMessageId and message
+     * @return {Promise} A Promise that resolves when the contact message is replayed
+     */
     replayContactMessage: async (parent, args) => {
       try {
         const { contactMessageId, message } = args;
@@ -2087,6 +2373,13 @@ const resolvers = {
         throw new Error(`Error in replayContactMessage: ${error.message}`);
       }
     },
+    /**
+     * Asynchronously updates the position post.
+     *
+     * @param {object} parent - The parent object
+     * @param {object} args - The arguments object containing positionPostId and positionPost
+     * @return {object} The updated position post in JSON format
+     */
     updatePositionPost: async (parent, args) => {
       try {
         const { positionPostId, positionPost } = args;
@@ -2112,6 +2405,13 @@ const resolvers = {
         throw error;
       }
     },
+    /**
+     * A function to apply to a post.
+     *
+     * @param {Object} parent - The parent object
+     * @param {Object} args - The arguments object containing positionPostId and userId
+     * @return {boolean} true if the operation is successful
+     */
     applyToPost: async (parent, args) => {
       try {
         const { positionPostId, userId } = args;
