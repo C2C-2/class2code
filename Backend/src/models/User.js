@@ -11,13 +11,16 @@ module.exports = {
   },
   Password: "string",
   Country: "string",
-  IsActive: "boolean",
+  IsActive: {
+    type: "boolean",
+    default: true,
+  },
   CreatedBy: "int",
   CreateDate: {
     type: "string",
     default: () => new Date().toString(),
   },
-  Rate: "int",
+  Rate: "float",
   DateOfBirth: "string",
   Gender: "string",
   Work: "string",

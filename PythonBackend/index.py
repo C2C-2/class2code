@@ -40,7 +40,7 @@ env_values = dotenv_values("./app.env")
 os.environ["OPENAI_API_KEY"] = env_values["OPENAI_API_KEY"]
 
 # Assuming you have a module `llm` defined, and a function `load_qa_chain` that uses this `llm`
-llm = OpenAI(model_name="text-davinci-003", temperature=0.5)
+llm = OpenAI(model_name="gpt-3.5-turbo", temperature=0.5)
 chain = load_qa_chain(llm)
 embeddings = OpenAIEmbeddings()
 

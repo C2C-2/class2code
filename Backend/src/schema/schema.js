@@ -238,7 +238,7 @@ const typeDefs = gql`
     FirstName: String
     LastName: String
     Email: String
-    Password: String
+    Password: String!
     Country: String
     IsActive: Boolean
     CreatedBy: Int
@@ -249,7 +249,6 @@ const typeDefs = gql`
     Work: String
     Bio: String
     LastTimeOnline: String
-    AIChats: [AIChat]
   }
 
   type Query {
@@ -331,10 +330,15 @@ const typeDefs = gql`
       userId: Int!
     ): [PositionPost]
     getTeam(teamId: Int!): Team
+    deleteMessage(messageId: Int!): Boolean
   }
 
   type Mutation {
-    sendAIMessage(message: String!, fileName: String!, AIchatId: Int!): AIMessage
+    sendAIMessage(
+      message: String!
+      fileName: String!
+      AIchatId: Int!
+    ): AIMessage
     createNewAIChat(userId: Int!): AIChat
     createNewUser(user: UserInput!): UserType
     forgetPassword(email: String!): Boolean

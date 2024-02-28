@@ -69,7 +69,8 @@ const resolvers = {
         }
 
         // this query get chat by chatId with all messages.
-        const cypherQuery = `MATCH (chat:AIChat)-[:HAS_A]->(message:AIMessage) 
+        const cypherQuery = `
+           MATCH (chat:AIChat)-[:HAS_A]->(message:AIMessage) 
            WHERE ID(chat) = $chatId 
            RETURN chat, collect(message) as messages`;
         const result = await NeodeObject.cypher(cypherQuery, { chatId });
@@ -80,12 +81,13 @@ const resolvers = {
 
         return {
           ...result?.records[0]?.get("chat").properties,
-          id: chatId,
-          Messages: result.records
+          _id: chatId,
+          Messages: result?.records[0]
+            ?.get("messages")
             .slice(page * limit, (page + 1) * limit)
             .map((message) => ({
-              ...message.get("messages").properties,
-              _id: message.get("messages").identity,
+              ...message.properties,
+              _id: message.identity.low,
             })),
         };
       } catch (error) {
@@ -1427,6 +1429,40 @@ const resolvers = {
         throw new Error(`Error in getTeam: ${error.message}`);
       }
     },
+    /**
+     * Delete a message by its messageId.
+     *
+     * @param {Object} parent - The parent object
+     * @param {Object} args - The arguments object
+     * @param {string} args.messageId - The ID of the message to be deleted
+     * @return {boolean} true if the message is deleted successfully, otherwise an error is thrown
+     */
+    deleteMessage: async (parent, args) => {
+      try {
+        const { messageId } = args;
+
+        if (!messageId) {
+          throw new Error(
+            `Are you send messageId? messageId is required, messageId value is ${messageId}. please check messageId value before send`
+          );
+        }
+
+        const message = await NeodeObject?.find("Message", messageId);
+
+        if (!message) {
+          throw new Error(
+            `Are you send messageId? messageId is required, messageId value is ${messageId}. please check messageId value before send`
+          );
+        }
+
+        await NeodeObject?.delete(message);
+
+        return true;
+      } catch (error) {
+        console.error("Error in deleteMessage resolver:", error.message);
+        throw new Error(`Error in deleteMessage: ${error.message}`);
+      }
+    },
   },
   Mutation: {
     /* this to send message to AI module and get answer about a project from
@@ -1450,8 +1486,16 @@ const resolvers = {
         // this int args from to check if chat already exist or create new
         const { AIchatId } = args;
 
-        if (message === null || fileName === null) {
-          throw new Error("Message or fileName is null");
+        if (!message) {
+          throw new Error(
+            `Are you send message? message is required, message value is ${message}. please check message value before send`
+          );
+        }
+
+        if (!fileName) {
+          throw new Error(
+            `Are you send fileName? fileName is required, fileName value is ${fileName}. please check fileName value before send`
+          );
         }
 
         // Base64 encode the credentials
@@ -1483,15 +1527,11 @@ const resolvers = {
           }),
         ]);
 
-        if (chat === null || createdMessage === null) {
-          throw new Error("Chat or createdMessage is null");
-        }
-
         // Relate AIMessage to AIChat
         await chat.relateTo(createdMessage, "has_a");
 
         return {
-          id: createdMessage.identity().toString(),
+          _id: createdMessage.identity().toString(),
           ...createdMessage.properties(),
         };
       } catch (error) {
@@ -1557,19 +1597,23 @@ const resolvers = {
           Password: bcrypt.hashSync(user.Password, 10),
         };
 
-        let User = NeodeObject?.create("User", newUser);
+        let createdUser = await NeodeObject?.create("User", newUser);
 
-        if (User === false) {
-          User = NeodeObject?.create("User", newUser);
+        if (!createdUser) {
+          createdUser = NeodeObject?.create("User", newUser);
 
-          if (User === false) {
+          if (createdUser === false) {
             throw new Error("something wrong in system please try again");
           }
         }
 
-        return User.toJson();
+        return createdUser?.toJson();
       } catch (error) {
-        throw new Error("An error occurred while processing the request");
+        console.error("Error in createNewUser resolver:", error.message);
+        throw new Error(
+          "An error occurred while processing the request",
+          error
+        );
       }
     },
     /**
@@ -1605,6 +1649,36 @@ const resolvers = {
         });
 
         return "Password reset email sent successfully";
+      } catch (error) {
+        throw new Error(`An error occurred: ${error.message}`);
+      }
+    },
+    /**
+     * Update user information.
+     *
+     * @param {Object} parent - the parent object
+     * @param {Object} args - the arguments object with userId and user
+     * @return {Promise} a Promise that resolves when the user is updated
+     */
+    updateUser: async (parent, args) => {
+      try {
+        const { userId, user } = args;
+
+        if (!userId) {
+          throw new Error("UserID is required");
+        }
+
+        const [User] = await Promise.all([
+          NeodeObject?.findById("User", userId),
+        ]);
+
+        if (!User) {
+          throw new Error("User not found");
+        }
+
+        const updateUser = await User.update(user);
+
+        return updateUser.toJson();
       } catch (error) {
         throw new Error(`An error occurred: ${error.message}`);
       }
