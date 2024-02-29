@@ -2,8 +2,8 @@ const { gql } = require("apollo-server");
 
 const typeDefs = gql`
   type integer {
-    low: Int
-    high: Int
+    low: Float
+    high: Float
   }
 
   type AIMessage {
@@ -26,7 +26,7 @@ const typeDefs = gql`
   }
 
   input CommentInput {
-    Value: String
+    Value: String!
     CreatedDate: String
   }
 
@@ -55,10 +55,10 @@ const typeDefs = gql`
   }
 
   input CompanyInput {
-    CompanyName: String
-    CompanyDescription: String
-    Domain: String
-    Rate: Int
+    CompanyName: String!
+    CompanyDescription: String!
+    Domain: String!
+    Rate: Float
   }
 
   type ContactMessage {
@@ -68,7 +68,7 @@ const typeDefs = gql`
   }
 
   input ContactMessageInput {
-    Message: String
+    Message: String!
   }
 
   type Education {
@@ -87,8 +87,8 @@ const typeDefs = gql`
   }
 
   input MessageInput {
-    userId: Int
-    MessageContent: String
+    userId: Int!
+    MessageContent: String!
   }
 
   type PositionPost {
@@ -99,7 +99,7 @@ const typeDefs = gql`
   }
 
   input PositionPostInput {
-    Content: String
+    Content: String!
   }
 
   type Project {
@@ -110,9 +110,9 @@ const typeDefs = gql`
   }
 
   input ProjectInput {
-    ProjectName: String
-    ProjectDescription: String
-    FileName: String
+    ProjectName: String!
+    ProjectDescription: String!
+    FileName: String!
   }
 
   type ProjectNoteTask {
@@ -122,8 +122,8 @@ const typeDefs = gql`
   }
 
   input ProjectNoteTaskInput {
-    Title: String
-    Description: String
+    Title: String!
+    Description: String!
   }
 
   type ProjectNote {
@@ -133,7 +133,7 @@ const typeDefs = gql`
   }
 
   input ProjectNoteInput {
-    Title: String
+    Title: String!
   }
 
   type ProjectRequirement {
@@ -142,7 +142,7 @@ const typeDefs = gql`
   }
 
   input ProjectRequirementInput {
-    Value: String
+    Value: String!
   }
 
   type Skill {
@@ -151,7 +151,7 @@ const typeDefs = gql`
   }
 
   input SkillInput {
-    Skill: String
+    Skill: String!
   }
 
   type SocialMediaLink {
@@ -161,8 +161,8 @@ const typeDefs = gql`
   }
 
   input SocialMediaLinkInput {
-    PlatformName: String
-    Link: String
+    PlatformName: String!
+    Link: String!
   }
 
   type Task {
@@ -178,12 +178,12 @@ const typeDefs = gql`
   }
 
   input TaskInput {
-    TaskName: String
-    TaskStatus: String
-    StartDate: String
-    EndDate: String
-    Priority: Int
-    Comments: String
+    TaskName: String!
+    TaskStatus: String!
+    StartDate: String!
+    EndDate: String!
+    Priority: Int!
+    Comments: String!
     IsMarked: Boolean
     CreateDate: String
   }
@@ -195,8 +195,8 @@ const typeDefs = gql`
   }
 
   input TaskStepInput {
-    Description: String
-    Number: Int
+    Description: String!
+    Number: Int!
   }
 
   type Team {
@@ -208,27 +208,27 @@ const typeDefs = gql`
   }
 
   input TeamInput {
-    TeamName: String
+    TeamName: String!
     IsDeleted: Boolean
-    TeamRole: String
+    TeamRole: String!
     CreateDate: String
   }
 
   input UserInput {
-    Username: String
-    FirstName: String
-    LastName: String
-    Email: String
-    Password: String
-    Country: String
+    Username: String!
+    FirstName: String!
+    LastName: String!
+    Email: String!
+    Password: String!
+    Country: String!
     IsActive: Boolean
-    CreatedBy: Int
+    CreatedBy: Int!
     CreateDate: String
-    Rate: Float
-    DateOfBirth: String
-    Gender: String
-    Work: String
-    Bio: String
+    Rate: Float!
+    DateOfBirth: String!
+    Gender: String!
+    Work: String!
+    Bio: String!
     LastTimeOnline: String
   }
 
@@ -343,10 +343,11 @@ const typeDefs = gql`
     createNewUser(user: UserInput!): UserType
     forgetPassword(email: String!): Boolean
     updateUser(userId: Int!, user: UserInput!): UserType
-    createNewProject(
-      project: ProjectInput!
-      requirements: [ProjectRequirementInput!]
-    ): Project
+    createNewProject(project: ProjectInput!): Project
+    createProjectRequirement(
+      projectId: Int!
+      requirement: ProjectRequirementInput!
+    ): ProjectRequirement
     createNewTeam(team: TeamInput!, companyId: Int!): Team
     createNewChat(userId: Int!, chat: ChatInput!): Chat
     sendMessage(message: MessageInput!, chatId: Int!): Message

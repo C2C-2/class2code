@@ -1,6 +1,9 @@
 module.exports = {
   TeamName: "string",
-  IsDeleted: "boolean",
+  IsDeleted: {
+    type: "boolean",
+    default: false,
+  },
   CreateDate: {
     type: "string",
     default: () => new Date().toString(),

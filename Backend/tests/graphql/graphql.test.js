@@ -5,7 +5,7 @@ const assert = require("assert");
 const request = require("supertest");
 const { app } = require("../../app");
 
-// describe("AIChat API Tests", () => {
+// describe("Create AIChat API Tests", () => {
 //   it("Should create a new AI chat for a valid user ID", () => {
 //     const userId = 2; // Replace with a valid user ID
 //     const mutation = `
@@ -65,7 +65,7 @@ const { app } = require("../../app");
 //   });
 // });
 
-// describe("User API Tests", () => {
+// describe("Create User API Tests (create)", () => {
 //   it("Should create a new user with valid input data", (done) => {
 //     const mutation = `
 //     mutation {
@@ -127,12 +127,42 @@ const { app } = require("../../app");
 //           data.createNewUser.Bio,
 //           "A passionate individual in the field of technology."
 //         );
-//         done();
+
+//         const userId = data.createNewUser._id;
+
+//         const mutation1 = `
+//           mutation {
+//             createNewChat(userId: ${userId}, chat: {
+//               IsDeleted: false,
+//               CreatedDate: "2024-02-26T12:00:00Z",
+//             }) {
+//               IsDeleted
+//               CreatedDate
+//             }
+//           }
+//         `;
+
+//         request(app)
+//           .post("/graphql")
+//           .send({ query: mutation1 })
+//           .expect(200)
+//           .end((err1, res1) => {
+//             if (err1) return done(err1);
+
+//             const chat = res1.body.data;
+//             assert.strictEqual(chat.createNewChat.IsDeleted, false);
+//             assert.strictEqual(
+//               chat.createNewChat.CreatedDate,
+//               "2024-02-26T12:00:00Z"
+//             );
+
+//             done();
+//           });
 //       });
 //   });
 // });
 
-// describe("User API Tests", () => {
+// describe("Update User API Tests (update)", () => {
 //   it("Should update an existing user with valid input data", (done) => {
 //     const userId = 67; // Replace with an existing user ID
 
@@ -208,3 +238,107 @@ const { app } = require("../../app");
 //       });
 //   });
 // });
+
+// describe("Project API Tests", () => {
+//   it("Should create a new project with valid input data", (done) => {
+//     const mutation = `
+//         mutation {
+//           createNewProject(
+//             project: {
+//                 ProjectName: "Sample Project",
+//                 ProjectDescription: "This is a sample project description.",
+//                 FileName: "sample.txt",
+//               }
+//           ) {
+//             _id
+//             ProjectName
+//             ProjectDescription
+//             FileName
+//           }
+//         }
+//       `;
+
+//     request(app)
+//       .post("/graphql")
+//       .send({ query: mutation })
+//       .expect(200)
+//       .end((err, res) => {
+//         if (err) return done(err);
+//         const { data } = res.body;
+//         assert.ok(data.createNewProject._id);
+//         assert.strictEqual(data.createNewProject.ProjectName, "Sample Project");
+//         assert.strictEqual(
+//           data.createNewProject.ProjectDescription,
+//           "This is a sample project description."
+//         );
+//         assert.strictEqual(data.createNewProject.FileName, "sample.txt");
+
+//         const projectId = data.createNewProject._id;
+
+//         const mutation1 = `
+//           mutation {
+//             createProjectRequirement(projectId: ${projectId}, requirement: {
+//              Value: "Sample Requirement",
+//             }) {
+//               Value
+//             }
+//          }
+//         `;
+
+//         request(app)
+//           .post("/graphql")
+//           .send({ query: mutation1 })
+//           .expect(200)
+//           .end((err1, res1) => {
+//             if (err1) return done(err1);
+//             console.log(res1.body);
+//             assert.strictEqual(
+//               res1.body.data.createProjectRequirement.Value,
+//               "Sample Requirement"
+//             );
+//             done();
+//           });
+//       });
+//   });
+// });
+
+// describe("Create Team API Tests", () => {
+//   it("Should create a new team with valid input data", (done) => {
+//     const companyId = 26;
+
+//     const mutation = `
+//       mutation {
+//         createNewTeam(team: {
+//           TeamName: "Test Team",
+//           IsDeleted: false,
+//           TeamRole: "Developer",
+//           CreateDate: "2024-02-26T12:00:00Z",
+//         }, companyId: ${companyId}) {
+//           TeamName
+//           IsDeleted
+//           TeamRole
+//           CreateDate
+//         }
+//       }
+//     `;
+
+//     request(app)
+//       .post("/graphql")
+//       .send({ query: mutation })
+//       .expect(200)
+//       .end((err, res) => {
+//         if (err) return done(err);
+
+//         const { data } = res.body;
+//         assert.strictEqual(data.createNewTeam.TeamName, "Test Team");
+//         assert.strictEqual(data.createNewTeam.IsDeleted, false);
+//         assert.strictEqual(data.createNewTeam.TeamRole, "Developer");
+//         assert.strictEqual(
+//           data.createNewTeam.CreateDate,
+//           "2024-02-26T12:00:00Z"
+//         );
+//         done();
+//       });
+//   });
+// });
+

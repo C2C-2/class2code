@@ -5,7 +5,10 @@ module.exports = {
   EndDate: "string",
   Priority: "int",
   Comments: "string",
-  IsMarked: "boolean",
+  IsMarked: {
+    type: "boolean",
+    default: false,
+  },
   CreateDate: {
     type: "string",
     default: () => new Date().toString(),

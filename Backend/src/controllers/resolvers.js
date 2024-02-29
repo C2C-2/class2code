@@ -1692,7 +1692,7 @@ const resolvers = {
      */
     createNewProject: async (parent, args) => {
       try {
-        const { project, requirements } = args;
+        const { project } = args;
 
         if (!project) {
           throw new Error(
@@ -1700,21 +1700,57 @@ const resolvers = {
           );
         }
 
-        const newProject = await NeodeObject?.create("Project", project);
-
-        if (requirements) {
-          requirements.foreach(async (requirement) => {
-            const newRequirement = await NeodeObject?.create(
-              "ProjectRequirement",
-              requirement
-            );
-
-            await newProject.relateTo(newRequirement, "has_requirement");
-          });
-        }
+        const newProject = await NeodeObject?.create("Project", {
+          ...project,
+        });
 
         return newProject?.toJson();
       } catch (error) {
+        console.error("Error in createNewProject resolver:", error.message);
+        throw new Error(`An error occurred: ${error.message}`);
+      }
+    },
+    /**
+     * Asynchronously creates a project requirement.
+     *
+     * @param {Object} parent - The parent object
+     * @param {Object} args - The arguments object containing projectId and requirement
+     * @return {Object} The newly created project requirement
+     */
+    createProjectRequirement: async (parent, args) => {
+      try {
+        const { projectId, requirement } = args;
+
+        if (!requirement) {
+          throw new Error(
+            `Are you send requirements? requirements is required, requirements value is ${requirement}. please check requirements value before send`
+          );
+        }
+
+        if (!projectId) {
+          throw new Error(
+            `Are you send projectId? projectId is required, projectId value is ${projectId}. please check projectId value before send`
+          );
+        }
+
+        const project = await NeodeObject?.findById("Project", projectId);
+
+        if (!project) {
+          throw new Error(
+            `Are you send project? project is required, project value is ${project}. please check project value before send`
+          );
+        }
+
+        const newProjectRequirement = await NeodeObject?.create(
+          "ProjectRequirement",
+          { ...requirement }
+        );
+
+        await project.relateTo(newProjectRequirement, "has_requirement");
+
+        return newProjectRequirement.toJson();
+      } catch (error) {
+        console.error("Error in createProjectRequirements resolver:", error);
         throw new Error(`An error occurred: ${error.message}`);
       }
     },
@@ -1739,11 +1775,12 @@ const resolvers = {
         if (!company) {
           throw new Error("Company not found, please create one first");
         }
-        const teamCreated = await NeodeObject?.create("Team", team);
+        const teamCreated = await NeodeObject?.create("Team", { ...team });
         await company.relateTo(teamCreated, "has_a_team");
 
         return teamCreated.toJson();
       } catch (error) {
+        console.error("Error in createNewTeam resolver:", error);
         throw new Error(`An error occurred: ${error.message}`);
       }
     },
@@ -1764,7 +1801,7 @@ const resolvers = {
           );
         }
 
-        const chatCreated = await NeodeObject?.create("Chat", chat);
+        const chatCreated = await NeodeObject?.create("Chat", { ...chat });
         const user = await NeodeObject?.findById("User", userId);
 
         if (!user) {
