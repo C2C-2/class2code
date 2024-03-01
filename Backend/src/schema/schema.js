@@ -377,7 +377,7 @@ const typeDefs = gql`
       userCreateTaskId: Int!
       companyId: Int!
     ): Task
-    createTaskForTeam(task: TaskInput!, teamId: Int!, userId: Int!): TaskStep
+    createTaskForTeam(task: TaskInput!, teamId: Int!, userId: Int!): Task
     updateTask(
       taskId: Int!
       task: TaskInput!
