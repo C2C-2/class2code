@@ -232,13 +232,13 @@ const typeDefs = gql`
     LastTimeOnline: String
   }
 
-  type UserType {
+  type User {
     _id: ID
     Username: String
     FirstName: String
     LastName: String
     Email: String
-    Password: String!
+    Password: String
     Country: String
     IsActive: Boolean
     CreatedBy: Int
@@ -249,17 +249,22 @@ const typeDefs = gql`
     Work: String
     Bio: String
     LastTimeOnline: String
+    MyCompanies: [Company]
+    WorkCompanies: [Company]
+    Skills: [Skill]
+    Accounts: [SocialMediaLink]
+    Tasks: [Task]
+    Posts: [PositionPost]
   }
 
   type Query {
     getAIChat(chatId: Int!, page: Int, limit: Int): AIChat
     getOldAIChats(userId: Int!): [AIChat]
     logout(userId: Int!): Boolean
-    getUser(userId: Int!): UserType
+    getUser(userId: Int!, page: Int, limit: Int): User
     deleteTeam(teamId: Int!): Boolean
     deleteCompany(companyId: Int!): Boolean
     deleteSkill(skillId: Int!): Boolean
-    getAllUserCompanies(userId: Int!, page: Int, limit: Int): [Company]
     filterMyCompanies(
       userId: Int!
       filterType: String!
@@ -273,7 +278,6 @@ const typeDefs = gql`
       page: Int!
       limit: Int!
     ): [Company]
-    getAllUserWorksCompanies(userId: Int!, page: Int, limit: Int): [Company]
     filterWorksCompanies(
       userId: Int!
       filterType: String!
@@ -288,9 +292,7 @@ const typeDefs = gql`
       limit: Int
     ): [Company]
     getProjectNotes(projectId: Int!): ProjectNote
-    getProfileStatistics(userId: Int!): UserType
-    getUserSkills(userId: Int!): [Skill]
-    getUserSocialMediaAccounts(userId: Int!): [SocialMediaLink]
+    getProfileStatistics(userId: Int!): User
     deleteSocialMediaAccounts(id: Int!): Boolean
     getProjects(page: Int, limit: Int): [Project]
     getProjectRequirements(projectId: Int!): [ProjectRequirement]
@@ -300,7 +302,6 @@ const typeDefs = gql`
     getTask(taskId: Int!): Task
     getCompany(companyId: Int!): Company
     companyTakeProject(companyId: Int!, projectId: Int!): Boolean
-    getUserTasks(userId: Int!, page: Int, limit: Int): [Task]
     getMyCompanyTeams(companyId: Int!, page: Int, limit: Int): [Team]
     getContactMessages(page: Int, limit: Int): [ContactMessage]
     getAllPosts(userId: Int!, page: Int, limit: Int): [PositionPost]
@@ -316,7 +317,6 @@ const typeDefs = gql`
       isDESC: Boolean!
       userId: Int!
     ): [PositionPost]
-    getAllMyPosts(userId: Int!, page: Int, limit: Int): [PositionPost]
     searchInMyPosts(
       page: Int
       limit: Int
@@ -340,9 +340,9 @@ const typeDefs = gql`
       AIchatId: Int!
     ): AIMessage
     createNewAIChat(userId: Int!): AIChat
-    createNewUser(user: UserInput!): UserType
+    createNewUser(user: UserInput!): User
     forgetPassword(email: String!): Boolean
-    updateUser(userId: Int!, user: UserInput!): UserType
+    updateUser(userId: Int!, user: UserInput!): User
     createNewProject(project: ProjectInput!): Project
     createProjectRequirement(
       projectId: Int!
@@ -378,11 +378,7 @@ const typeDefs = gql`
       companyId: Int!
     ): Task
     createTaskForTeam(task: TaskInput!, teamId: Int!, userId: Int!): Task
-    updateTask(
-      taskId: Int!
-      task: TaskInput!
-      taskSteps: [TaskStepInput!]
-    ): Task
+    updateTask(taskId: Int!, task: TaskInput!): Task
     updateTaskStep(taskStepId: Int!, taskStep: TaskStepInput!): TaskStep
     createCompanyComment(comment: CommentInput!, companyId: Int!): Comment
     updateCompany(companyId: Int!, company: CompanyInput!): Company

@@ -812,42 +812,42 @@ describe("Create Task For Team API Tests", () => {
   });
 });
 
-// describe("Update Task API Tests", () => {
-//   it("Should update a task with valid input data", (done) => {
-//     const taskInput = {
-//       TaskName: "Updated Task Name",
-//       TaskStatus: "In Progress",
-//     };
+describe("Update Task API Tests", () => {
+  it("Should update a task with valid input data", (done) => {
+    const taskInput = {
+      TaskName: "Updated Task Name",
+      TaskStatus: "In Progress",
+    };
 
-//     const mutation = `
-//         mutation {
-//           updateTask(taskId: ${taskId}, task: {
-//             TaskName: ${taskInput.TaskName},
-//             TaskStatus: ${taskInput.TaskStatus},
-//           }) {
-//             _id
-//             TaskName
-//             TaskStatus
-//           }
-//         }
-//       `;
+    const mutation = `
+        mutation {
+          updateTask(taskId: ${taskId}, task: {
+            TaskName: ${taskInput.TaskName},
+            TaskStatus: ${taskInput.TaskStatus},
+          }) {
+            _id
+            TaskName
+            TaskStatus
+          }
+        }
+      `;
 
-//     request(app)
-//       .post("/graphql")
-//       .send({ query: mutation })
-//       .expect(200)
-//       .end((err, res) => {
-//         if (err) return done(err);
+    request(app)
+      .post("/graphql")
+      .send({ query: mutation })
+      .expect(200)
+      .end((err, res) => {
+        if (err) return done(err);
 
-//         const { data } = res.body;
-//         assert(data.updateTask._id);
-//         assert.strictEqual(data.updateTask.TaskName, taskInput.TaskName);
-//         assert.strictEqual(data.updateTask.TaskStatus, taskInput.TaskStatus);
+        const { data } = res.body;
+        assert(data.updateTask._id);
+        assert.strictEqual(data.updateTask.TaskName, taskInput.TaskName);
+        assert.strictEqual(data.updateTask.TaskStatus, taskInput.TaskStatus);
 
-//         done();
-//       });
-//   });
-// });
+        done();
+      });
+  });
+});
 
 describe("Update Task Step API Tests", () => {
   it("Should update a task step with valid input data", (done) => {

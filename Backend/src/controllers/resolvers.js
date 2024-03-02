@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable object-curly-newline */
 /* eslint-disable consistent-return */
 /* eslint-disable indent */
@@ -70,9 +71,10 @@ const resolvers = {
 
         // this query get chat by chatId with all messages.
         const cypherQuery = `
-           MATCH (chat:AIChat)-[:HAS_A]->(message:AIMessage) 
+           MATCH (chat:AIChat)
            WHERE ID(chat) = $chatId 
-           RETURN chat, collect(message) as messages`;
+           RETURN chat`;
+
         const result = await NeodeObject.cypher(cypherQuery, { chatId });
 
         if (result?.records?.length === 0) {
@@ -82,18 +84,16 @@ const resolvers = {
         return {
           ...result?.records[0]?.get("chat").properties,
           _id: chatId,
-          Messages: result?.records[0]
-            ?.get("messages")
-            .slice(page * limit, (page + 1) * limit)
-            .map((message) => ({
-              ...message.properties,
-              _id: message.identity.low,
-            })),
+          page,
+          limit,
         };
       } catch (error) {
         console.error("Error fetching AIChat:", error.message);
         throw error;
       }
+    },
+    getOldAIChats: async (parent, args) => {
+      const { userId } = args;
     },
     /**
      * A function that handles the logout process.
@@ -136,7 +136,7 @@ const resolvers = {
     getUser: async (parent, args) => {
       try {
         // this int args from client with user id value
-        const { userId } = args;
+        const { userId, page = 0, limit = 50 } = args;
 
         if (!userId) {
           throw new Error(
@@ -149,7 +149,7 @@ const resolvers = {
           throw new Error("User not found");
         }
 
-        return result.toJson();
+        return { ...result.toJson(), page, limit };
       } catch (error) {
         console.error("Error in getUser resolver:", error.message);
         throw new Error(`Error in getCompany: ${error.message}`);
@@ -249,43 +249,6 @@ const resolvers = {
       }
     },
     /**
-     * A function to get all companies associated with a user.
-     *
-     * @param {Object} parent - The parent object
-     * @param {Object} args - The arguments object containing userId
-     * @return {Array} An array of companies associated with the user
-     */
-    getAllUserCompanies: async (parent, args) => {
-      try {
-        const { userId, page = 0, limit = 6 } = args;
-
-        if (!userId) {
-          throw new Error(
-            `Are you send userId? userId is required, userId value is ${userId}. please check userId value before send`
-          );
-        }
-
-        const user = await NeodeObject?.cypher(
-          `
-          MATCH (user:User) -[r:ADMIN_OF]-> (company:Company) where ID(user) = $userId return user,r,company
-          `,
-          { userId }
-        );
-
-        if (!user) {
-          throw new Error("User not found");
-        }
-
-        return user.records.slice((page - 1) * limit, limit).map((record) => ({
-          _id: `${record.get("company").identity}`,
-          ...record.get("company").properties,
-        }));
-      } catch (error) {
-        console.error("Error in getAllUserCompanies resolver:", error.message);
-        throw new Error(`Error in getCompany: ${error.message}`);
-      }
-    },
-    /**
      * Asynchronously filters companies based on user ID, filter type, and sorting order.
      *
      * @param {Object} parent - The parent object
@@ -363,46 +326,6 @@ const resolvers = {
           }));
       } catch (error) {
         console.error("Error in searchInMyCompanies resolver:", error.message);
-        throw new Error(`Error in getCompany: ${error.message}`);
-      }
-    },
-    /**
-     * A function to retrieve all companies where a user works.
-     *
-     * @param {Object} parent - The parent object
-     * @param {Object} args - The arguments object with userId, page, and limit
-     * @return {Promise<Array>} An array of company records
-     */
-    getAllUserWorksCompanies: async (parent, args) => {
-      try {
-        const { userId, page = 0, limit = 6 } = args;
-
-        if (!userId) {
-          throw new Error(
-            `Are you send userId? userId is required, userId value is ${userId}. please check userId value before send`
-          );
-        }
-
-        const companies = await NeodeObject?.cypher(
-          `
-          MATCH (u:User) - [:IN_TEAM] -> (t:Team) WHERE ID(u) = $userId
-          MATCH (c:Company) -[:has_a_team]-> (t) RETURN c
-          `,
-          { userId }
-        );
-
-        if (!companies) {
-          throw new Error("User not found");
-        }
-
-        return companies.records
-          .slice((page - 1) * limit, limit)
-          .map((record) => ({
-            _id: `${record.get("c").identity}`,
-            ...record.get("c").properties,
-          }));
-      } catch (error) {
-        console.error("Error in getAllUserCompanies resolver:", error.message);
         throw new Error(`Error in getCompany: ${error.message}`);
       }
     },
@@ -591,75 +514,6 @@ const resolvers = {
         };
       } catch (error) {
         console.error("Error in getProfileInfo resolver:", error.message);
-        throw new Error(`Error in getCompany: ${error.message}`);
-      }
-    },
-    /**
-     * A function to fetch the skills of a user based on the provided user ID.
-     *
-     * @param {Object} parent - The parent object
-     * @param {Object} args - The arguments object containing userId
-     * @return {Array} An array of skills associated with the user
-     */
-    getUserSkills: async (parent, args) => {
-      try {
-        const { userId } = args;
-
-        if (!userId) {
-          throw new Error(
-            `Are you send userId? userId is required, userId value is ${userId}. please check userId value before send`
-          );
-        }
-
-        const skills = await NeodeObject?.cypher(
-          `
-          MATCH (u:User) -[:HAS_A_SKILL]-> (s:Skill) WHERE ID(u) = $userId
-          RETURN s
-          `
-        );
-
-        return skills.records.map((record) => ({
-          ...record.get("s").properties,
-          _id: `${record.get("s").identity}`,
-        }));
-      } catch (error) {
-        console.error("Error in getUserSkills resolver:", error.message);
-        throw new Error(`Error in getCompany: ${error.message}`);
-      }
-    },
-    /**
-     * Get user's social media accounts based on userId.
-     *
-     * @param {Object} parent - The parent object
-     * @param {Object} args - The arguments object with userId
-     * @return {Array} Array of social media accounts
-     */
-    getUserSocialMediaAccounts: async (parent, args) => {
-      try {
-        const { userId } = args;
-
-        if (!userId) {
-          throw new Error(
-            `Are you send userId? userId is required, userId value is ${userId}. please check userId value before send`
-          );
-        }
-
-        const socialMediaAccounts = await NeodeObject?.cypher(
-          `
-          MATCH (u:User) -[:HAS_A_SOCIAL_MEDIA]-> (s:SocialMediaAccount) WHERE ID(u) = $userId
-          RETURN s
-          `
-        );
-
-        return socialMediaAccounts.records.map((record) => ({
-          ...record.get("s").properties,
-          _id: `${record.get("s").identity}`,
-        }));
-      } catch (error) {
-        console.error(
-          "Error in getUserSocialMediaAccounts resolver:",
-          error.message
-        );
         throw new Error(`Error in getCompany: ${error.message}`);
       }
     },
@@ -1030,55 +884,6 @@ const resolvers = {
       }
     },
     /**
-     * Retrieves tasks for a specific user, with optional pagination.
-     *
-     * @param {object} parent - The parent object
-     * @param {object} args - The arguments object containing userId, page, and limit
-     * @return {object[]} An array of tasks with associated user and company information
-     */
-    getUserTasks: async (parent, args) => {
-      try {
-        const { userId, page = 0, limit = 6 } = args;
-
-        if (!userId) {
-          throw new Error(
-            `Are you send userId? userId is required, userId value is ${userId}. please check userId value before send`
-          );
-        }
-
-        const tasks = await NeodeObject?.cypher(
-          `MATCH (user:User) -[:HAS_A_TASK] -> (task:Task)
-           MATCH (crater:User) - [:CREATE_TASK] -> (task)
-           MATCH (task) - [:IN_COMPANY] -> (company:Company)
-           WHERE ID(user) = $userId
-           RETURN task, crater, company
-          `,
-          { userId }
-        );
-
-        if (!tasks) {
-          throw new Error("Tasks not found");
-        }
-
-        return tasks.records
-          .slice(page * limit, (page + 1) * limit)
-          .map((record) => ({
-            ...record.get("task").properties,
-            _id: `${record.get("task").identity}`,
-            Crater: {
-              ...record.get("crater").properties,
-              _id: `${record.get("crater").identity}`,
-            },
-            InCompany: {
-              ...record.get("company").properties,
-              _id: `${record.get("company").identity}`,
-            },
-          }));
-      } catch (error) {
-        console.error("Error in getTasks resolver:", error.message);
-      }
-    },
-    /**
      * Asynchronous function to retrieve teams of a company based on provided parameters.
      *
      * @param {Object} parent - The parent object
@@ -1273,42 +1078,6 @@ const resolvers = {
         );
 
         throw new Error(`Error in getAllPostsSortedByDate: ${error.message}`);
-      }
-    },
-    /**
-     * Get all posts for a specific user, who created it.
-     *
-     * @param {object} parent - The parent object
-     * @param {object} args - The arguments object with page, limit, and userId
-     * @return {array} An array of post objects
-     */
-    getAllMyPosts: async (parent, args) => {
-      try {
-        const { page = 0, limit = 10, userId } = args;
-
-        if (!userId) {
-          throw new Error(
-            `Are you send userId? userId is required, userId value is ${userId}. please check userId value before send`
-          );
-        }
-
-        const posts = await NeodeObject?.cypher(
-          `MATCH (u:User) -[:ADMIN_OF] -> (c:Company)
-          MATCH (c:Company) -[:HAS_A_POST]-> (p:PositionPost)
-          WHERE ID(u) = $userId
-          RETURN p`,
-          { userId }
-        );
-
-        return posts.records
-          .slice(page * limit, (page + 1) * limit)
-          .map((record) => ({
-            ...record.get("p").properties,
-            _id: `${record.get("p").identity}`,
-          }));
-      } catch (error) {
-        console.error("Error in getAllMyPosts resolver:", error.message);
-        throw new Error(`Error in getAllMyPosts: ${error.message}`);
       }
     },
     /**
@@ -2265,7 +2034,7 @@ const resolvers = {
      */
     updateTask: async (parent, args) => {
       try {
-        const { taskId, task, taskSteps } = args;
+        const { taskId, task } = args;
 
         if (!taskId) {
           throw new Error(
@@ -2275,17 +2044,6 @@ const resolvers = {
         const updatedTask = await NeodeObject?.findById("Task", taskId).then(
           (t) => t.update(task)
         );
-
-        // delete task steps
-        await NeodeObject.cypher(
-          `MATCH (task:Task)-[r:HAS_A]->(taskSteps:TaskStep) where Id(task) 
-           = ${taskId} detach delete taskSteps`
-        );
-
-        // ### check if possible to remove task steps
-        if (taskSteps) {
-          await updatedTask.relateTo(taskSteps, "has_a");
-        }
 
         return updatedTask.toJson();
       } catch (error) {
@@ -2562,6 +2320,164 @@ const resolvers = {
         console.error("Error in applyToPost resolver:", error.message);
         throw error;
       }
+    },
+  },
+  AIChat: {
+    Messages: async (parent) => {
+      const chatId = parent._id;
+      const { page, limit } = parent;
+
+      if (!chatId) {
+        throw new Error("ChatID is null");
+      }
+
+      // this query get chat by chatId with all messages.
+      const cypherQuery = `
+           MATCH (chat:AIChat)-[:HAS_A]->(messages:AIMessage) 
+           WHERE ID(chat) = $chatId 
+           RETURN messages`;
+      const result = await NeodeObject.cypher(cypherQuery, { chatId });
+
+      return result?.records
+        ?.slice(page * limit, (page + 1) * limit)
+        .map((record) => ({
+          ...record.get("messages").properties,
+          id: record.get("messages").identity,
+        }));
+    },
+  },
+  User: {
+    MyCompanies: async (parent) => {
+      const userId = parent._id;
+      const { page, limit } = parent;
+
+      if (!userId) {
+        throw new Error("UserID is null");
+      }
+
+      const cypherQuery = `
+           MATCH (user:User)-[:ADMIN_OF]->(companies:Company)
+           WHERE ID(user) = $userId
+           RETURN companies`;
+
+      const result = await NeodeObject.cypher(cypherQuery, { userId });
+
+      return result?.records
+        ?.slice(page * limit, (page + 1) * limit)
+        ?.map((record) => ({
+          ...record.get("companies").properties,
+          id: record.get("companies").identity,
+        }));
+    },
+    WorkCompanies: async (parent) => {
+      const userId = parent._id;
+      const { page, limit } = parent;
+
+      if (!userId) {
+        throw new Error("UserID is null");
+      }
+
+      const cypherQuery = `
+           MATCH (user:User)-[:WORK_ON]-> (companies:Company)
+           WHERE ID(user) = $userId
+           RETURN companies`;
+
+      const result = await NeodeObject.cypher(cypherQuery, { userId });
+
+      return result?.records
+        ?.slice(page * limit, (page + 1) * limit)
+        ?.map((record) => ({
+          ...record.get("companies").properties,
+          id: record.get("companies").identity,
+        }));
+    },
+    Skills: async (parent) => {
+      const userId = parent._id;
+      const { page, limit } = parent;
+
+      if (!userId) {
+        throw new Error("UserID is null");
+      }
+
+      const cypherQuery = `
+           MATCH (user:User)-[:HAS_A_SKILL]->(skills:Skill)
+           WHERE ID(user) = $userId
+           RETURN skills`;
+
+      const result = await NeodeObject.cypher(cypherQuery, { userId });
+
+      return result?.records
+        ?.slice(page * limit, (page + 1) * limit)
+        ?.map((record) => ({
+          ...record.get("skills").properties,
+          id: record.get("skills").identity,
+        }));
+    },
+    Accounts: async (parent) => {
+      const userId = parent._id;
+      const { page, limit } = parent;
+
+      if (!userId) {
+        throw new Error("UserID is null");
+      }
+
+      const cypherQuery = `
+           MATCH (user:User)-[:HAS_A_SOCIAL_MEDIA]->(accounts:Account)
+           WHERE ID(user) = $userId
+           RETURN accounts`;
+
+      const result = await NeodeObject.cypher(cypherQuery, { userId });
+
+      return result?.records
+        ?.slice(page * limit, (page + 1) * limit)
+        ?.map((record) => ({
+          ...record.get("accounts").properties,
+          id: record.get("accounts").identity,
+        }));
+    },
+    Tasks: async (parent) => {
+      const userId = parent._id;
+      const { page, limit } = parent;
+
+      if (!userId) {
+        throw new Error("UserID is null");
+      }
+
+      const cypherQuery = `
+           MATCH (user:User)-[:HAS_A_TASK]->(tasks:Task)
+           WHERE ID(user) = $userId
+           RETURN tasks`;
+
+      const result = await NeodeObject.cypher(cypherQuery, { userId });
+
+      return result?.records
+        ?.slice(page * limit, (page + 1) * limit)
+        ?.map((record) => ({
+          ...record.get("tasks").properties,
+          id: record.get("tasks").identity,
+        }));
+    },
+    Posts: async (parent) => {
+      const userId = parent._id;
+      const { page, limit } = parent;
+
+      if (!userId) {
+        throw new Error("UserID is null");
+      }
+
+      const cypherQuery = `
+           MATCH (user:User)-[:ADMIN_OF]->(companies:Company)-[:HAS_A_POST]->(posts:PositionPost)
+           WHERE ID(user) = $userId
+           RETURN posts`;
+
+      const result = await NeodeObject.cypher(cypherQuery, { userId });
+
+      return result?.records
+        ?.slice(page * limit, (page + 1) * limit)
+        ?.map((record) => ({
+          ...record.get("posts").properties,
+          id: record.get("posts").identity,
+        }));
     },
   },
 };
