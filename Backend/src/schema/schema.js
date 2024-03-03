@@ -52,6 +52,7 @@ const typeDefs = gql`
     Teams: [Team]
     Project: Project
     Comments: [Comment]
+    Posts: [PositionPost]
   }
 
   input CompanyInput {
@@ -73,6 +74,12 @@ const typeDefs = gql`
 
   type Education {
     _id: ID
+    Title: String
+    Description: String
+    FileName: String
+  }
+
+  input EducationInput {
     Title: String
     Description: String
     FileName: String
@@ -107,6 +114,9 @@ const typeDefs = gql`
     ProjectName: String
     ProjectDescription: String
     FileName: String
+    Notes: [ProjectNote]
+    Requirements: [ProjectRequirement]
+    Applies: [Company]
   }
 
   input ProjectInput {
@@ -255,11 +265,15 @@ const typeDefs = gql`
     Accounts: [SocialMediaLink]
     Tasks: [Task]
     Posts: [PositionPost]
+    Chats: [Chat]
+    Educations: [Education]
+    AIChats: [AIChat]
+    Friends: [User]
+    CreatedTasks: [Task]
   }
 
   type Query {
     getAIChat(chatId: Int!, page: Int, limit: Int): AIChat
-    getOldAIChats(userId: Int!): [AIChat]
     logout(userId: Int!): Boolean
     getUser(userId: Int!, page: Int, limit: Int): User
     deleteTeam(teamId: Int!): Boolean
@@ -291,18 +305,15 @@ const typeDefs = gql`
       page: Int
       limit: Int
     ): [Company]
-    getProjectNotes(projectId: Int!): ProjectNote
     getProfileStatistics(userId: Int!): User
     deleteSocialMediaAccounts(id: Int!): Boolean
     getProjects(page: Int, limit: Int): [Project]
-    getProjectRequirements(projectId: Int!): [ProjectRequirement]
+    getProject(projectId: Int!): Project
     searchInProjects(page: Int, limit: Int, word: String!): [Project]
     applyForProject(projectId: Int!, companyId: Int!): Boolean
-    getProjectApplies(projectId: Int!, page: Int, limit: Int): Int
     getTask(taskId: Int!): Task
     getCompany(companyId: Int!): Company
-    companyTakeProject(companyId: Int!, projectId: Int!): Boolean
-    getMyCompanyTeams(companyId: Int!, page: Int, limit: Int): [Team]
+    takeProjectByCompany(companyId: Int!, projectId: Int!): Boolean
     getContactMessages(page: Int, limit: Int): [ContactMessage]
     getAllPosts(userId: Int!, page: Int, limit: Int): [PositionPost]
     searchInPositionPosts(
@@ -331,6 +342,7 @@ const typeDefs = gql`
     ): [PositionPost]
     getTeam(teamId: Int!): Team
     deleteMessage(messageId: Int!): Boolean
+    deleteEducation(educationId: Int!): Boolean
   }
 
   type Mutation {
@@ -390,6 +402,7 @@ const typeDefs = gql`
       positionPost: PositionPostInput!
     ): PositionPost
     applyToPost(postId: Int!, userId: Int!): Boolean
+    createEducation(education: EducationInput!, userId: Int!): Education
   }
 `;
 

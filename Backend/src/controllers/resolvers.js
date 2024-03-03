@@ -69,20 +69,14 @@ const resolvers = {
           throw new Error("ChatID is null");
         }
 
-        // this query get chat by chatId with all messages.
-        const cypherQuery = `
-           MATCH (chat:AIChat)
-           WHERE ID(chat) = $chatId 
-           RETURN chat`;
-
-        const result = await NeodeObject.cypher(cypherQuery, { chatId });
+        const result = await NeodeObject.findById("AIChat", chatId);
 
         if (result?.records?.length === 0) {
           throw new Error("Chat not found");
         }
 
         return {
-          ...result?.records[0]?.get("chat").properties,
+          ...result?.toJson(),
           _id: chatId,
           page,
           limit,
@@ -91,9 +85,6 @@ const resolvers = {
         console.error("Error fetching AIChat:", error.message);
         throw error;
       }
-    },
-    getOldAIChats: async (parent, args) => {
-      const { userId } = args;
     },
     /**
      * A function that handles the logout process.
@@ -419,44 +410,6 @@ const resolvers = {
       }
     },
     /**
-     * Retrieves project notes based on the provided projectId.
-     *
-     * @param {Object} parent - The parent object
-     * @param {Object} args - The arguments object containing projectId
-     * @return {Object} The retrieved project notes and associated tasks
-     */
-    getProjectNotes: async (parent, args) => {
-      try {
-        const { projectId } = args;
-
-        if (!projectId) {
-          throw new Error(
-            `Are you send projectId? projectId is required, projectId value is ${projectId}. please check projectId value before send`
-          );
-        }
-
-        const notes = await NeodeObject?.cypher(
-          ` 
-          MATCH (p:Project) - [:HAS_NOTE] -> (n:ProjectNote) WHERE ID(p) = $projectId
-          MATCH (n) - [:HAS_TASK] -> (t:ProjectNoteTask)
-          RETURN n, t`,
-          { projectId }
-        );
-
-        return {
-          ...notes.records[0].get("n").properties,
-          _id: `${notes.records[0].get("n").identity}`,
-          Tasks: notes.records.map((record) => ({
-            _id: `${record.get("t").identity}`,
-            ...record.get("t").properties,
-          })),
-        };
-      } catch (error) {
-        console.error("Error in getProjectNotes resolver:", error.message);
-        throw new Error(`Error in getCompany: ${error.message}`);
-      }
-    },
-    /**
      * Get profile statistics for a user.
      *
      * @param {Object} parent - The parent object
@@ -574,13 +527,13 @@ const resolvers = {
       }
     },
     /**
-     * A function to retrieve project requirements.
+     * Asynchronous function to get a project.
      *
-     * @param {object} parent - the parent object
-     * @param {object} args - the arguments object containing projectId
-     * @return {Promise} an array of project requirements
+     * @param {object} parent - The parent object
+     * @param {object} args - The arguments object containing projectId
+     * @return {object} The project data in JSON format
      */
-    getProjectRequirements: async (parent, args) => {
+    getProject: async (parent, args) => {
       try {
         const { projectId } = args;
 
@@ -590,57 +543,9 @@ const resolvers = {
           );
         }
 
-        const project = await NeodeObject?.cypher(
-          ` MATCH (p:Project) -[:HAS_REQUIREMENT] -> (r:ProjectRequirement) 
-            WHERE ID(p) = $projectId
-            RETURN r
-          `,
-          { projectId }
-        );
+        const project = await NeodeObject?.findById("Project", projectId);
 
-        return project.records.map((record) => ({
-          ...record.get("r").properties,
-          _id: `${record.get("r").identity}`,
-        }));
-      } catch (error) {
-        console.error("Error in getProjects resolver:", error.message);
-        throw new Error(`Error in getCompany: ${error.message}`);
-      }
-    },
-    /**
-     * Retrieves project applies based on the provided arguments.
-     *
-     * @param {Object} parent - the parent object
-     * @param {Object} args - the arguments object containing projectId, page, and limit
-     * @return {Object} an object containing Applies and NumberOfApplies
-     */
-    getProjectApplies: async (parent, args) => {
-      try {
-        const { projectId, page = 0, limit = 6 } = args;
-
-        if (!projectId) {
-          throw new Error(
-            `Are you send projectId? projectId is required, projectId value is ${projectId}. please check projectId value before send`
-          );
-        }
-
-        const applies = await NeodeObject?.cypher(
-          ` MATCH (c:Company) -[:TAKE_A_PROJECT] -> (p:Project) 
-            WHERE ID(p) = $projectId
-            RETURN c
-          `,
-          { projectId }
-        );
-
-        return {
-          Applies: applies.records
-            .slice(page * limit, (page + 1) * limit)
-            .map((record) => ({
-              ...record.get("c").properties,
-              _id: `${record.get("c").identity}`,
-            })),
-          NumberOfApplies: applies.records.length,
-        };
+        return project.toJson();
       } catch (error) {
         console.error("Error in getProjects resolver:", error.message);
         throw new Error(`Error in getCompany: ${error.message}`);
@@ -784,26 +689,10 @@ const resolvers = {
 
         const company = await NeodeObject?.findById("Company", companyId);
 
-        const teams = await NeodeObject?.cypher(
-          `MATCH (c:Company) -[:HAS_A_TEAM] -> (t:Team)
-           WHERE ID(c) = $companyId
-           RETURN t
-          `,
-          { companyId }
-        );
-
         const project = await NeodeObject?.cypher(
           `MATCH (c:Company) -[:TAKE_A_PROJECT] -> (p:Project)
            WHERE ID(c) = $companyId
            RETURN p
-          `,
-          { companyId }
-        );
-
-        const comments = await NeodeObject?.cypher(
-          `MATCH (c:Company) -[:HAS_A_COMMENT] -> (cm:Comment)
-           WHERE ID(c) = $companyId
-           RETURN cm
           `,
           { companyId }
         );
@@ -814,18 +703,10 @@ const resolvers = {
 
         return {
           ...company.toJson(),
-          Comments: await comments.records.map((record) => ({
-            ...record.get("cm").properties,
-            _id: `${record.get("cm").identity}`,
-          })),
           Project: {
             ...project.records[0].get("p").properties,
             _id: `${project.records[0].get("p").identity}`,
           },
-          Teams: await teams.records.map((record) => ({
-            ...record.get("t").properties,
-            _id: `${record.get("t").identity}`,
-          })),
         };
       } catch (error) {
         console.error("Error in getCompany resolver:", error.message);
@@ -839,7 +720,7 @@ const resolvers = {
      * @param {object} args - The arguments object with companyId and projectId
      * @return {boolean} Indicates if the company successfully took the project
      */
-    companyTakeProject: async (parent, args) => {
+    takeProjectByCompany: async (parent, args) => {
       try {
         const { companyId, projectId } = args;
 
@@ -867,60 +748,17 @@ const resolvers = {
           throw new Error("Company already take a project");
         }
 
-        const company = await NeodeObject?.findById("Company", companyId);
-
-        if (!company) {
-          throw new Error("Company not found");
-        }
-
-        const project = await NeodeObject?.findById("Project", projectId);
-
-        await company.relateTo(project, "take_a_project");
+        await NeodeObject.writeCypher(
+          `MATCH (c:Company) WHERE ID(c) = $companyId
+           MATCH (p:Project) WHERE ID(p) = $projectId
+           CREATE (c) -[r:TAKE_A_PROJECT {Finished: false}] -> (p)`,
+          { companyId, projectId }
+        );
 
         return true;
       } catch (error) {
         console.error("Error in getCompany resolver:", error.message);
         throw new Error(`Error in getCompany: ${error.message}`);
-      }
-    },
-    /**
-     * Asynchronous function to retrieve teams of a company based on provided parameters.
-     *
-     * @param {Object} parent - The parent object
-     * @param {Object} args - The arguments object containing companyId, page, and limit
-     * @return {Array} An array of team records based on the provided page and limit
-     */
-    getMyCompanyTeams: async (parent, args) => {
-      try {
-        const { companyId, page = 0, limit = 6 } = args;
-
-        if (!companyId) {
-          throw new Error(
-            `Are you send companyId? companyId is required, companyId value is ${companyId}. please check companyId value before send`
-          );
-        }
-
-        const teams = await NeodeObject?.cypher(
-          `MATCH (c:Company) -[:HAS_A_TEAM] -> (t:Team)
-           WHERE ID(c) = $companyId
-           RETURN t
-          `,
-          { companyId }
-        );
-
-        if (!teams) {
-          throw new Error("Teams not found");
-        }
-
-        return teams.records
-          .slice(page * limit, (page + 1) * limit)
-          .map((record) => ({
-            ...record.get("t").properties,
-            _id: `${record.get("t").identity}`,
-          }));
-      } catch (error) {
-        console.error("Error in getMyCompanyTeams resolver:", error.message);
-        throw new Error(`Error in getMyCompanyTeams: ${error.message}`);
       }
     },
     /**
@@ -1230,6 +1068,32 @@ const resolvers = {
       } catch (error) {
         console.error("Error in deleteMessage resolver:", error.message);
         throw new Error(`Error in deleteMessage: ${error.message}`);
+      }
+    },
+    deleteEducation: async (parent, args) => {
+      try {
+        const { educationId } = args;
+
+        if (!educationId) {
+          throw new Error(
+            `Are you send educationId? educationId is required, educationId value is ${educationId}. please check educationId value before send`
+          );
+        }
+
+        const education = await NeodeObject?.find("Education", educationId);
+
+        if (!education) {
+          throw new Error(
+            `Are you send educationId? educationId is required, educationId value is ${educationId}. please check educationId value before send`
+          );
+        }
+
+        await NeodeObject?.delete(education);
+
+        return true;
+      } catch (error) {
+        console.error("Error in deleteEducation resolver:", error.message);
+        throw new Error(`Error in deleteEducation: ${error.message}`);
       }
     },
   },
@@ -2321,6 +2185,38 @@ const resolvers = {
         throw error;
       }
     },
+    createEducation: async (parent, args) => {
+      try {
+        const { education, userId } = args;
+
+        if (!education) {
+          throw new Error(
+            `Are you send education? education is required, education value is ${education}. please check education value before send`
+          );
+        }
+
+        if (!userId) {
+          throw new Error(
+            `Are you send userId? userId is required, userId value is ${userId}. please check userId value before send`
+          );
+        }
+
+        const educationNode = await NeodeObject?.create("Education", education);
+
+        const user = await NeodeObject?.findById("User", userId);
+
+        if (!user) {
+          throw new Error("User not found");
+        }
+
+        await user.relateTo(education, "learn_a");
+
+        return educationNode.toJson();
+      } catch (error) {
+        console.error("Error in createEducation resolver:", error.message);
+        throw error;
+      }
+    },
   },
   AIChat: {
     Messages: async (parent) => {
@@ -2457,7 +2353,7 @@ const resolvers = {
           id: record.get("tasks").identity,
         }));
     },
-    Posts: async (parent) => {
+    Chats: async (parent) => {
       const userId = parent._id;
       const { page, limit } = parent;
 
@@ -2466,18 +2362,196 @@ const resolvers = {
       }
 
       const cypherQuery = `
-           MATCH (user:User)-[:ADMIN_OF]->(companies:Company)-[:HAS_A_POST]->(posts:PositionPost)
+           MATCH (user:User)-[:HAS_A_CHAT]->(chats:Chat)
            WHERE ID(user) = $userId
-           RETURN posts`;
+           RETURN chats`;
 
       const result = await NeodeObject.cypher(cypherQuery, { userId });
 
       return result?.records
         ?.slice(page * limit, (page + 1) * limit)
         ?.map((record) => ({
-          ...record.get("posts").properties,
-          id: record.get("posts").identity,
+          ...record.get("chats").properties,
+          id: record.get("chats").identity,
         }));
+    },
+    Educations: async (parent) => {
+      const userId = parent._id;
+
+      if (!userId) {
+        throw new Error("UserID is null");
+      }
+
+      const cypherQuery = `
+           MATCH (user:User)-[:LEARN_A]->(educations:Education)
+           WHERE ID(user) = $userId
+           RETURN educations`;
+
+      const result = await NeodeObject.cypher(cypherQuery, { userId });
+
+      return result?.records?.map((record) => ({
+        ...record.get("educations").properties,
+        id: record.get("educations").identity,
+      }));
+    },
+    AIChats: async (parent) => {
+      const userId = parent._id;
+      const { page, limit } = parent;
+
+      if (!userId) {
+        throw new Error("UserID is null");
+      }
+
+      const cypherQuery = `
+           MATCH (user:User)-[:HAS_A_CHAT]->(chats:AIChat)
+           WHERE ID(user) = $userId
+           RETURN chats`;
+
+      const result = await NeodeObject.cypher(cypherQuery, { userId });
+
+      return result?.records
+        ?.slice(page * limit, (page + 1) * limit)
+        ?.map((record) => ({
+          ...record.get("chats").properties,
+          id: record.get("chats").identity,
+        }));
+    },
+    CreatedTasks: async (parent) => {
+      const userId = parent._id;
+
+      if (!userId) {
+        throw new Error("UserID is null");
+      }
+
+      const cypherQuery = `
+           MATCH (user:User)-[:CREATE_TASK]->(tasks:Task)
+           WHERE ID(user) = $userId
+           RETURN tasks`;
+
+      const result = await NeodeObject.cypher(cypherQuery, { userId });
+
+      return result?.records?.map((record) => ({
+        ...record.get("tasks").properties,
+        id: record.get("tasks").identity,
+      }));
+    },
+  },
+  Project: {
+    Notes: async (parent) => {
+      const projectId = parent._id;
+
+      if (!projectId) {
+        throw new Error("ProjectID is null");
+      }
+
+      const cypherQuery = `
+           MATCH (project:Project)-[:HAS_NOTE]->(notes:ProjectNote)
+           WHERE ID(project) = $projectId
+           RETURN notes`;
+
+      const result = await NeodeObject.cypher(cypherQuery, { projectId });
+
+      return result?.records?.map((record) => ({
+        ...record.get("notes").properties,
+        id: record.get("notes").identity,
+      }));
+    },
+    Requirements: async (parent) => {
+      const projectId = parent._id;
+
+      if (!projectId) {
+        throw new Error("ProjectID is null");
+      }
+
+      const cypherQuery = `
+           MATCH (project:Project)-[:HAS_REQUIREMENT]->(requirements:ProjectRequirement)
+           WHERE ID(project) = $projectId
+           RETURN requirements`;
+
+      const result = await NeodeObject.cypher(cypherQuery, { projectId });
+
+      return result?.records?.map((record) => ({
+        ...record.get("requirements").properties,
+        id: record.get("requirements").identity,
+      }));
+    },
+    Applies: async (parent) => {
+      const projectId = parent._id;
+
+      if (!projectId) {
+        throw new Error(`ProjectID is ${projectId}`);
+      }
+
+      const cypherQuery = `
+           MATCH (companies:Company)-[:TAKE_A_PROJECT]->(project:Project)
+           WHERE ID(project) = $projectId
+           RETURN companies`;
+
+      const result = await NeodeObject.cypher(cypherQuery, { projectId });
+
+      return result?.records?.map((record) => ({
+        ...record.get("companies").properties,
+        id: record.get("companies").identity,
+      }));
+    },
+  },
+  Company: {
+    Teams: async (parent) => {
+      const companyId = parent._id;
+
+      if (!companyId) {
+        throw new Error("CompanyID is null");
+      }
+
+      const cypherQuery = `
+           MATCH (company:Company)-[:HAS_A_TEAM]->(teams:Team)
+           WHERE ID(company) = $companyId
+           RETURN teams`;
+
+      const result = await NeodeObject.cypher(cypherQuery, { companyId });
+
+      return result?.records?.map((record) => ({
+        ...record.get("teams").properties,
+        id: record.get("teams").identity,
+      }));
+    },
+    Comments: async (parent) => {
+      const companyId = parent._id;
+
+      if (!companyId) {
+        throw new Error("CompanyID is null");
+      }
+
+      const cypherQuery = `
+           MATCH (company:Company)-[:HAS_A_COMMENT]->(comments:Comment)
+           WHERE ID(company) = $companyId
+           RETURN comments`;
+
+      const result = await NeodeObject.cypher(cypherQuery, { companyId });
+
+      return result?.records?.map((record) => ({
+        ...record.get("comments").properties,
+        id: record.get("comments").identity,
+      }));
+    },
+    Posts: async (parent) => {
+      const companyId = parent._id;
+
+      if (!companyId) {
+        throw new Error("CompanyID is null");
+      }
+
+      const cypherQuery = `
+           MATCH (company:Company)-[:HAS_A_POST]->(posts:PositionPost)
+           WHERE ID(company) = $companyId
+           RETURN posts`;
+
+      const result = await NeodeObject.cypher(cypherQuery, { companyId });
+
+      return result?.records?.map((record) => ({
+        ...record.get("posts").properties,
+        id: record.get("posts").identity,
+      }));
     },
   },
 };
