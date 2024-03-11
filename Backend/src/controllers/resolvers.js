@@ -2078,22 +2078,22 @@ const resolvers = {
      * Asynchronously updates the position post.
      *
      * @param {object} parent - The parent object
-     * @param {object} args - The arguments object containing positionPostId and positionPost
+     * @param {object} args - The arguments object containing postId and positionPost
      * @return {object} The updated position post in JSON format
      */
     updatePositionPost: async (parent, args) => {
       try {
-        const { positionPostId, positionPost } = args;
+        const { postId, positionPost } = args;
 
-        if (!positionPostId) {
+        if (!postId) {
           throw new Error(
-            `Are you send positionPostId? positionPostId is required, positionPostId value is ${positionPostId}. please check positionPostId value before send`
+            `Are you send postId? postId is required, postId value is ${postId}. please check postId value before send`
           );
         }
 
         const updatedPositionPost = await NeodeObject?.findById(
           "PositionPost",
-          positionPostId
+          postId
         ).then((p) => p.update(positionPost));
 
         if (!updatedPositionPost) {
@@ -2110,16 +2110,16 @@ const resolvers = {
      * A function to apply to a post.
      *
      * @param {Object} parent - The parent object
-     * @param {Object} args - The arguments object containing positionPostId and userId
+     * @param {Object} args - The arguments object containing postId and userId
      * @return {boolean} true if the operation is successful
      */
     applyToPost: async (parent, args) => {
       try {
-        const { positionPostId, userId } = args;
+        const { postId, userId } = args;
 
-        if (!positionPostId) {
+        if (!postId) {
           throw new Error(
-            `Are you send positionPostId? positionPostId is required, positionPostId value is ${positionPostId}. please check positionPostId value before send`
+            `Are you send postId? postId is required, postId value is ${postId}. please check postId value before send`
           );
         }
 
@@ -2137,7 +2137,7 @@ const resolvers = {
 
         const positionPost = await NeodeObject?.findById(
           "PositionPost",
-          positionPostId
+          postId
         );
 
         if (!positionPost) {
@@ -2176,11 +2176,11 @@ const resolvers = {
           throw new Error("User not found");
         }
 
-        await user.relateTo(education, "learn_a");
+        await user.relateTo(educationNode, "learn_a");
 
         return educationNode.toJson();
       } catch (error) {
-        console.error("Error in createEducation resolver:", error.message);
+        console.error("Error in createEducation resolver:", error);
         throw error;
       }
     },
@@ -2317,6 +2317,7 @@ const resolvers = {
         ?.slice(page * limit, (page + 1) * limit)
         ?.map((record) => ({
           ...record.get("tasks").properties,
+          Priority: record.get("tasks")?.properties?.Priority?.low,
           _id: record.get("tasks").identity.low,
           page,
           limit,
@@ -2331,7 +2332,7 @@ const resolvers = {
       }
 
       const cypherQuery = `
-           MATCH (user:User)-[:HAS_A_CHAT]->(chats:Chat)
+           MATCH (user:User)-[:CHAT_WITH]->(chats:Chat)
            WHERE ID(user) = $userId
            RETURN chats`;
 
@@ -2405,8 +2406,31 @@ const resolvers = {
 
       return result?.records?.map((record) => ({
         ...record.get("tasks").properties,
+        Priority: record.get("tasks")?.properties?.Priority?.low,
         _id: record.get("tasks").identity.low,
       }));
+    },
+    Posts: async (parent) => {
+      const userId = parent._id;
+      const { page, limit } = parent;
+
+      if (!userId) {
+        throw new Error("UserID is null");
+      }
+
+      const cypherQuery = `
+           MATCH (user:User)-[:APPLY_TO]->(posts:PositionPost)
+           WHERE ID(user) = $userId
+           RETURN posts`;
+
+      const result = await NeodeObject.cypher(cypherQuery, { userId });
+
+      return result?.records
+        ?.slice(page * limit, (page + 1) * limit)
+        ?.map((record) => ({
+          ...record.get("posts").properties,
+          _id: record.get("posts")?.identity?.low,
+        }));
     },
   },
   Project: {
@@ -2542,13 +2566,15 @@ const resolvers = {
 
       return result?.records?.map((record) => ({
         ...record.get("tasks").properties,
+        Priority: record.get("tasks")?.properties?.Priority?.low,
         id: record.get("tasks").identity,
       }));
     },
   },
   Chat: {
     Messages: async (parent) => {
-      const chatId = parent.id;
+      const chatId = parent._id;
+      const { page, limit } = parent;
 
       if (!chatId) {
         throw new Error("ChatID is null");
@@ -2561,15 +2587,18 @@ const resolvers = {
 
       const result = await NeodeObject.cypher(cypherQuery, { chatId });
 
-      return result?.records?.map((record) => ({
-        ...record.get("messages").properties,
-        id: record.get("messages").identity,
-      }));
+      return result?.records
+        ?.slice(page * limit, (page + 1) * limit)
+        ?.map((record) => ({
+          ...record.get("messages").properties,
+          userId: record.get("messages")?.properties?.userId?.low,
+          _id: record.get("messages").identity.low,
+        }));
     },
   },
   ProjectNote: {
     Tasks: async (parent) => {
-      const noteId = parent.id;
+      const noteId = parent._id;
 
       if (!noteId) {
         throw new Error("NoteID is null");
@@ -2590,7 +2619,7 @@ const resolvers = {
   },
   Task: {
     Steps: async (parent) => {
-      const taskId = parent.id;
+      const taskId = parent._id;
 
       if (!taskId) {
         throw new Error("TaskID is null");
@@ -2605,13 +2634,14 @@ const resolvers = {
 
       return result?.records?.map((record) => ({
         ...record.get("taskSteps").properties,
-        id: record.get("taskSteps").identity,
+        Number: record.get("taskSteps")?.properties?.Number?.low,
+        _id: record.get("taskSteps").identity.low,
       }));
     },
   },
   Team: {
     Tasks: async (parent) => {
-      const teamId = parent.id;
+      const teamId = parent._id;
 
       if (!teamId) {
         throw new Error("TeamID is null");
@@ -2626,12 +2656,13 @@ const resolvers = {
 
       return result?.records?.map((record) => ({
         ...record.get("tasks").properties,
+        Priority: record.get("tasks")?.properties?.Priority?.low,
         id: record.get("tasks").identity,
       }));
     },
 
     Members: async (parent) => {
-      const teamId = parent.id;
+      const teamId = parent._id;
 
       if (!teamId) {
         throw new Error("TeamID is null");

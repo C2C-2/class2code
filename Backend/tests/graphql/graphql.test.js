@@ -4,6 +4,8 @@
 const assert = require("assert");
 const request = require("supertest");
 const { app } = require("../../app");
+const { describe } = require("mocha");
+const { log } = require("console");
 
 const AIchatId = 40;
 const userId = 2;
@@ -1284,9 +1286,189 @@ const postId = 15;
 //         assert.ok(data.getUser._id);
 //         assert.equal(data.getUser._id, userId);
 //         assert.notStrictEqual(data.getUser.Accounts, null);
+
+//         done();
 //       });
 //   });
 // });
 
+// describe("get user chats", () => {
+//   it("Should get chats with valid user ID", (done) => {
+//     const query = `
+//         query Query($userId: Int!) {
+//             getUser(userId: $userId) {
+//               _id
+//               Chats {
+//                 CreatedDate
+//                 IsDeleted
+//                 Messages {
+//                   IsDeleted
+//                   CreatedDate
+//                   MessageContent
+//                   _id
+//                   userId
+//                 }
+//                 _id
+//               }
+//             }
+//           }`;
+
+//     request(app)
+//       .post("/graphql")
+//       .send({ query, variables: { userId } })
+//       .expect(200)
+//       .end((err, res) => {
+//         if (err) return done(err);
+
+//         const { data } = res.body;
+
+//         assert.ok(data.getUser._id);
+//         assert.equal(data.getUser._id, userId);
+//         assert.notStrictEqual(data.getUser.Chats, null);
+
+//         done();
+//       });
+//   });
+// });
+
+// describe("get user CreatedTasks", () => {
+//   it("Should get CreatedTasks with valid user ID", (done) => {
+//     const query = `
+//         query Query($userId: Int!) {
+//             getUser(userId: $userId) {
+//               _id
+//               CreatedTasks {
+//                 _id
+//                 TaskName
+//                 TaskStatus
+//                 StartDate
+//                 EndDate
+//                 Priority
+//                 Comments
+//                 IsMarked
+//                 CreateDate
+//                 Steps {
+//                   _id
+//                   Description
+//                   Number
+//                 }
+//               }
+//             }
+//           }`;
+
+//     request(app)
+//       .post("/graphql")
+//       .send({ query, variables: { userId } })
+//       .expect(200)
+//       .end((err, res) => {
+//         if (err) return done(err);
+
+//         const { data } = res.body;
+
+//         assert.ok(data.getUser._id);
+//         assert.equal(data.getUser._id, userId);
+//         assert.notStrictEqual(data.getUser.CreatedTasks, null);
+
+//         done();
+//       });
+//   });
+// });
+
+// describe("get user Educations", () => {
+//   it("Should get Educations with valid user ID", (done) => {
+//     const query = `
+//         query GetUser($userId: Int!) {
+//             getUser(userId: $userId) {
+//               _id
+//               Educations {
+//                 _id
+//                 Title
+//                 Description
+//                 FileName
+//               }
+//             }
+//           }`;
+
+//     request(app)
+//       .post("/graphql")
+//       .send({ query, variables: { userId } })
+//       .expect(200)
+//       .end((err, res) => {
+//         if (err) return done(err);
+
+//         const { data } = res.body;
+
+//         assert.ok(data.getUser._id);
+//         assert.equal(data.getUser._id, userId);
+//         assert.notStrictEqual(data.getUser.Educations, null);
+
+//         done();
+//       });
+//   });
+// });
+
+// describe("get user Companies", () => {
+//   it("Should get Companies with valid user ID", (done) => {
+//     const query = `
+//         query GetUser($userId: Int!) {
+//             getUser(userId: $userId) {
+//               MyCompanies {
+//                 _id
+//               }
+//               _id
+//             }
+//           }`;
+
+//     request(app)
+//       .post("/graphql")
+//       .send({ query, variables: { userId } })
+//       .expect(200)
+//       .end((err, res) => {
+//         if (err) return done(err);
+
+//         const { data } = res.body;
+
+//         assert.ok(data.getUser._id);
+//         assert.equal(data.getUser._id, userId);
+//         assert.notStrictEqual(data.getUser.MyCompanies, null);
+
+//         done();
+//       });
+//   });
+// });
+
+// describe("get user posts", () => {
+//   it("Should get posts with valid user ID", (done) => {
+//     const query = `
+//         query GetUser($userId: Int!) {
+//             getUser(userId: $userId) {
+//               _id
+//               Posts {
+//                 _id
+//                 Content
+//                 CreatedDate
+//                 IsDeleted
+//               }
+//             }
+//           }
+//         `;
+
+//     request(app)
+//       .post("/graphql")
+//       .send({ query, variables: { userId } })
+//       .expect(200)
+//       .end((err, res) => {
+//         if (err) return done(err);
+
+//         const { data } = res.body;
+
+//         assert.ok(data.getUser._id);
+//         assert.equal(data.getUser._id, userId);
+//         assert.notStrictEqual(data.getUser.Posts, null);
+
+//         done();
+//       });
+//   });
+// });
 
 // ### replayContactMessage manual.
