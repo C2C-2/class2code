@@ -6,8 +6,6 @@ const axios = require("axios");
 const base64 = require("base-64");
 const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
-const Tokens = require("../mysqlModels/Tokens");
-
 // this is a website company email to send emails for users.
 const myEmail = "202007723@bethlehem.edu";
 
@@ -76,7 +74,7 @@ const resolvers = {
         }
 
         return {
-          ...result?.toJson(),
+          ...result.properties(),
           _id: chatId,
           page,
           limit,
@@ -84,37 +82,6 @@ const resolvers = {
       } catch (error) {
         console.error("Error fetching AIChat:", error.message);
         throw error;
-      }
-    },
-    /**
-     * A function that handles the logout process.
-     *
-     * @param {Object} parent - The parent object
-     * @param {Object} args - The arguments object containing userId
-     * @return {Boolean} Returns true if the logout is successful, false otherwise
-     */
-    logout: async (parent, args) => {
-      try {
-        const { userId } = args;
-
-        if (userId === null) {
-          throw new Error(
-            `Are you send userId? UserID is required, userId value is ${userId}. please check userId value before send`
-          );
-        }
-
-        await Tokens.destroy({
-          where: {
-            userId,
-          },
-        }).catch(() => {
-          throw new Error("something wrong in system please try again");
-        });
-
-        return true;
-      } catch (error) {
-        console.error("Error in logout resolver:", error.message);
-        throw new Error(`Error in getCompany: ${error.message}`);
       }
     },
     /**
@@ -140,7 +107,7 @@ const resolvers = {
           throw new Error("User not found");
         }
 
-        return { ...result.toJson(), page, limit };
+        return { _id: userId, ...result.properties(), page, limit };
       } catch (error) {
         console.error("Error in getUser resolver:", error.message);
         throw new Error(`Error in getCompany: ${error.message}`);
@@ -2238,7 +2205,7 @@ const resolvers = {
         ?.slice(page * limit, (page + 1) * limit)
         .map((record) => ({
           ...record.get("messages").properties,
-          id: record.get("messages").identity,
+          _id: record.get("messages").identity.low,
         }));
     },
   },
@@ -2262,7 +2229,7 @@ const resolvers = {
         ?.slice(page * limit, (page + 1) * limit)
         ?.map((record) => ({
           ...record.get("companies").properties,
-          id: record.get("companies").identity,
+          _id: record.get("companies").identity.low,
         }));
     },
     WorkCompanies: async (parent) => {
@@ -2284,7 +2251,7 @@ const resolvers = {
         ?.slice(page * limit, (page + 1) * limit)
         ?.map((record) => ({
           ...record.get("companies").properties,
-          id: record.get("companies").identity,
+          _id: record.get("companies").identity.low,
         }));
     },
     Skills: async (parent) => {
@@ -2306,7 +2273,7 @@ const resolvers = {
         ?.slice(page * limit, (page + 1) * limit)
         ?.map((record) => ({
           ...record.get("skills").properties,
-          id: record.get("skills").identity,
+          _id: record.get("skills").identity.low,
         }));
     },
     Accounts: async (parent) => {
@@ -2318,7 +2285,7 @@ const resolvers = {
       }
 
       const cypherQuery = `
-           MATCH (user:User)-[:HAS_A_SOCIAL_MEDIA]->(accounts:Account)
+           MATCH (user:User)-[:HAS_A_SOCIAL_MEDIA]->(accounts:SocialMediaLink)
            WHERE ID(user) = $userId
            RETURN accounts`;
 
@@ -2328,7 +2295,7 @@ const resolvers = {
         ?.slice(page * limit, (page + 1) * limit)
         ?.map((record) => ({
           ...record.get("accounts").properties,
-          id: record.get("accounts").identity,
+          _id: record.get("accounts").identity.low,
         }));
     },
     Tasks: async (parent) => {
@@ -2350,7 +2317,9 @@ const resolvers = {
         ?.slice(page * limit, (page + 1) * limit)
         ?.map((record) => ({
           ...record.get("tasks").properties,
-          id: record.get("tasks").identity,
+          _id: record.get("tasks").identity.low,
+          page,
+          limit,
         }));
     },
     Chats: async (parent) => {
@@ -2372,7 +2341,9 @@ const resolvers = {
         ?.slice(page * limit, (page + 1) * limit)
         ?.map((record) => ({
           ...record.get("chats").properties,
-          id: record.get("chats").identity,
+          _id: record.get("chats").identity.low,
+          page,
+          limit,
         }));
     },
     Educations: async (parent) => {
@@ -2391,7 +2362,7 @@ const resolvers = {
 
       return result?.records?.map((record) => ({
         ...record.get("educations").properties,
-        id: record.get("educations").identity,
+        _id: record.get("educations").identity.low,
       }));
     },
     AIChats: async (parent) => {
@@ -2403,7 +2374,7 @@ const resolvers = {
       }
 
       const cypherQuery = `
-           MATCH (user:User)-[:HAS_A_CHAT]->(chats:AIChat)
+           MATCH (user:User)-[:CHAT_WITH_AI]->(chats:AIChat)
            WHERE ID(user) = $userId
            RETURN chats`;
 
@@ -2413,7 +2384,9 @@ const resolvers = {
         ?.slice(page * limit, (page + 1) * limit)
         ?.map((record) => ({
           ...record.get("chats").properties,
-          id: record.get("chats").identity,
+          _id: record.get("chats").identity.low,
+          page,
+          limit,
         }));
     },
     CreatedTasks: async (parent) => {
@@ -2432,7 +2405,7 @@ const resolvers = {
 
       return result?.records?.map((record) => ({
         ...record.get("tasks").properties,
-        id: record.get("tasks").identity,
+        _id: record.get("tasks").identity.low,
       }));
     },
   },
@@ -2551,6 +2524,129 @@ const resolvers = {
       return result?.records?.map((record) => ({
         ...record.get("posts").properties,
         id: record.get("posts").identity,
+      }));
+    },
+    Tasks: async (parent) => {
+      const companyId = parent._id;
+
+      if (!companyId) {
+        throw new Error("CompanyID is null");
+      }
+
+      const cypherQuery = `
+           MATCH (tasks:Task)-[:IN_COMPANY]->(company:Company)
+           WHERE ID(company) = $companyId
+           RETURN tasks`;
+
+      const result = await NeodeObject.cypher(cypherQuery, { companyId });
+
+      return result?.records?.map((record) => ({
+        ...record.get("tasks").properties,
+        id: record.get("tasks").identity,
+      }));
+    },
+  },
+  Chat: {
+    Messages: async (parent) => {
+      const chatId = parent.id;
+
+      if (!chatId) {
+        throw new Error("ChatID is null");
+      }
+
+      const cypherQuery = `
+           MATCH (chat:Chat)-[:HAS_A]->(messages:Message)
+           WHERE ID(chat) = $chatId
+           RETURN messages`;
+
+      const result = await NeodeObject.cypher(cypherQuery, { chatId });
+
+      return result?.records?.map((record) => ({
+        ...record.get("messages").properties,
+        id: record.get("messages").identity,
+      }));
+    },
+  },
+  ProjectNote: {
+    Tasks: async (parent) => {
+      const noteId = parent.id;
+
+      if (!noteId) {
+        throw new Error("NoteID is null");
+      }
+
+      const cypherQuery = `
+           MATCH (projectNote:ProjectNote)-[:HAS_TASK]->(tasks:ProjectNoteTask)
+           WHERE ID(projectNote) = $noteId
+           RETURN tasks`;
+
+      const result = await NeodeObject.cypher(cypherQuery, { noteId });
+
+      return result?.records?.map((record) => ({
+        ...record.get("tasks").properties,
+        id: record.get("tasks").identity,
+      }));
+    },
+  },
+  Task: {
+    Steps: async (parent) => {
+      const taskId = parent.id;
+
+      if (!taskId) {
+        throw new Error("TaskID is null");
+      }
+
+      const cypherQuery = `
+           MATCH (task:Task)-[:HAS_A]->(taskSteps:TaskStep)
+           WHERE ID(task) = $taskId
+           RETURN taskSteps`;
+
+      const result = await NeodeObject.cypher(cypherQuery, { taskId });
+
+      return result?.records?.map((record) => ({
+        ...record.get("taskSteps").properties,
+        id: record.get("taskSteps").identity,
+      }));
+    },
+  },
+  Team: {
+    Tasks: async (parent) => {
+      const teamId = parent.id;
+
+      if (!teamId) {
+        throw new Error("TeamID is null");
+      }
+
+      const cypherQuery = `
+           MATCH (team:Team)-[:HAS_A_TASK]->(tasks:Task)
+           WHERE ID(team) = $teamId
+           RETURN tasks`;
+
+      const result = await NeodeObject.cypher(cypherQuery, { teamId });
+
+      return result?.records?.map((record) => ({
+        ...record.get("tasks").properties,
+        id: record.get("tasks").identity,
+      }));
+    },
+
+    Members: async (parent) => {
+      const teamId = parent.id;
+
+      if (!teamId) {
+        throw new Error("TeamID is null");
+      }
+
+      const cypherQuery = `
+           MATCH (users:User)-[:IN_TEAM]->(team:Team)
+           WHERE ID(team) = $teamId
+           RETURN users`;
+
+      const result = await NeodeObject.cypher(cypherQuery, { teamId });
+
+      return result?.records?.map((record) => ({
+        ...record.get("users").properties,
+        id: record.get("users").identity,
       }));
     },
   },

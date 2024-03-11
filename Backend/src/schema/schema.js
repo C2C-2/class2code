@@ -34,6 +34,7 @@ const typeDefs = gql`
     _id: ID
     IsDeleted: Boolean
     CreatedDate: String
+    Messages: [Message]
   }
 
   input ChatInput {
@@ -53,6 +54,7 @@ const typeDefs = gql`
     Project: Project
     Comments: [Comment]
     Posts: [PositionPost]
+    Tasks: [Task]
   }
 
   input CompanyInput {
@@ -185,6 +187,7 @@ const typeDefs = gql`
     Comments: String
     IsMarked: Boolean
     CreateDate: String
+    Steps: [TaskStep]
   }
 
   input TaskInput {
@@ -215,6 +218,8 @@ const typeDefs = gql`
     IsDeleted: Boolean
     TeamRole: String
     CreateDate: String
+    Tasks: [Task]
+    Members: [User]
   }
 
   input TeamInput {
@@ -274,7 +279,6 @@ const typeDefs = gql`
 
   type Query {
     getAIChat(chatId: Int!, page: Int, limit: Int): AIChat
-    logout(userId: Int!): Boolean
     getUser(userId: Int!, page: Int, limit: Int): User
     deleteTeam(teamId: Int!): Boolean
     deleteCompany(companyId: Int!): Boolean
