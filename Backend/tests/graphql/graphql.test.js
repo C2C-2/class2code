@@ -11,7 +11,7 @@ const userId = 2;
 const companyId = 26;
 const chatId = 1;
 const teamId = 25;
-const projectId = 19;
+const projectId = 57;
 const projectNoteId = 27;
 const userCreateTaskId = 65;
 const taskId = 34;
@@ -48,34 +48,34 @@ const postId = 15;
 //   });
 // });
 
-// // describe("Send AI Message", () => {
-// //   it("Should create a new AI Message and link it with AI chat", () => {
-// //     const message = "can tell me about this project?";
-// //     const fileName = "file1.pdf";
-// //     const mutation = `
-// //       mutation {
-// //         sendAIMessage(message: "${message}", fileName: "${fileName}", AIchatId: ${AIchatId}) {
-// //           _id
-// //           Question
-// //           Answer
-// //           CreatedDate
-// //         }
-// //       }
-// //     `;
+// describe("Send AI Message", () => {
+//   it("Should create a new AI Message and link it with AI chat", () => {
+//     const message = "can tell me about this project?";
+//     const fileName = "file1.pdf";
+//     const mutation = `
+//       mutation {
+//         sendAIMessage(message: "${message}", fileName: "${fileName}", AIchatId: ${AIchatId}) {
+//           _id
+//           Question
+//           Answer
+//           CreatedDate
+//         }
+//       }
+//     `;
 
-// //     request(app)
-// //       .post("/graphql")
-// //       .send({ query: mutation })
-// //       .expect(200)
-// //       .end((err, res) => {
-// //         if (err) return assert.fail(err);
-// //         const aiChat = res.body.data.sendAIMessage;
-// //         assert.ok(aiChat._id); // Ensure an ID is returned for the sent message
-// //         assert.strictEqual(aiChat.Question, message); // Ensure the sent message matches the input
-// //         assert.notEqual(aiChat.Answer, null);
-// //       });
-// //   });
-// // });
+//     request(app)
+//       .post("/graphql")
+//       .send({ query: mutation })
+//       .expect(200)
+//       .end((err, res) => {
+//         if (err) return assert.fail(err);
+//         const aiChat = res.body.data.sendAIMessage;
+//         assert.ok(aiChat._id); // Ensure an ID is returned for the sent message
+//         assert.strictEqual(aiChat.Question, message); // Ensure the sent message matches the input
+//         assert.notEqual(aiChat.Answer, null);
+//       });
+//   });
+// });
 
 // describe("Create User API Tests (create)", () => {
 //   it("Should create a new user with valid input data", (done) => {
@@ -530,46 +530,44 @@ const postId = 15;
 //   });
 // });
 
-describe("Create Project Note API Tests", () => {
-  it("Should create a new project note with valid input data", (done) => {
-    const projectNoteInput = {
-      Title: "Test Project Note Title",
-    };
+// describe("Create Project Note API Tests", () => {
+//   it("Should create a new project note with valid input data", (done) => {
+//     const projectNoteInput = {
+//       Title: "Test Project Note Title",
+//     };
 
-    const mutation = `
-        mutation {
-          createProjectNote(projectNote: {
-            Title: ${projectNoteInput.Title},
-          }, projectId: ${projectId}) {
-            _id
-            Title
-            Tasks {
-              _id
-              TaskTitle
-              TaskDescription
-            }
-          }
-        }
-      `;
+//     const mutation = `
+//     mutation{
+//       createProjectNote(projectNote: {Title: "${projectNoteInput.Title}"}, projectId: ${projectId}) {
+//         Tasks {
+//           _id
+//           Title
+//           Description
+//         }
+//         Title
+//         _id
+//       }
+//     }
+//       `;
 
-    request(app)
-      .post("/graphql")
-      .send({ query: mutation })
-      .expect(200)
-      .end((err, res) => {
-        if (err) return done(err);
+//     request(app)
+//       .post("/graphql")
+//       .send({ query: mutation })
+//       .expect(200)
+//       .end((err, res) => {
+//         if (err) return done(err);
 
-        const { data } = res.body;
-        assert.ok(data.createProjectNote._id);
-        assert.strictEqual(
-          data.createProjectNote.Title,
-          projectNoteInput.Title
-        );
+//         const { data } = res.body;
+//         assert.ok(data.createProjectNote._id);
+//         assert.strictEqual(
+//           data.createProjectNote.Title,
+//           projectNoteInput.Title
+//         );
 
-        done();
-      });
-  });
-});
+//         done();
+//       });
+//   });
+// });
 
 // describe("Create Project Note Task API Tests", () => {
 //   it("Should create a new project note task with valid input data", (done) => {
@@ -581,8 +579,8 @@ describe("Create Project Note API Tests", () => {
 //     const mutation = `
 //         mutation {
 //           createProjectNoteTask(projectNoteTask: {
-//             Title: ${projectNoteTaskInput.Title},
-//             Description: ${projectNoteTaskInput.Description},
+//             Title: "${projectNoteTaskInput.Title}",
+//             Description: "${projectNoteTaskInput.Description}",
 //           }, projectNoteId: ${projectNoteId}) {
 //             _id
 //             Title
@@ -624,8 +622,8 @@ describe("Create Project Note API Tests", () => {
 //     const mutation = `
 //         mutation {
 //           createNewSocialMediaLink(socialMediaAccount: {
-//             PlatformName: ${socialMediaLinkInput.PlatformName},
-//             Link: ${socialMediaLinkInput.Link},
+//             PlatformName: "${socialMediaLinkInput.PlatformName}",
+//             Link: "${socialMediaLinkInput.Link}",
 //           }, userId: ${userId}) {
 //             _id
 //             PlatformName
@@ -672,12 +670,12 @@ describe("Create Project Note API Tests", () => {
 //     const mutation = `
 //         mutation {
 //           createTaskForUser(task: {
-//             TaskName: ${taskInput.TaskName},
-//             TaskStatus: ${taskInput.TaskStatus},
-//             StartDate: ${taskInput.StartDate},
-//             EndDate: ${taskInput.EndDate},
+//             TaskName: "${taskInput.TaskName}",
+//             TaskStatus: "${taskInput.TaskStatus}",
+//             StartDate: "${taskInput.StartDate}",
+//             EndDate: "${taskInput.EndDate}",
 //             Priority: ${taskInput.Priority},
-//             Comments: ${taskInput.Comments},
+//             Comments: "${taskInput.Comments}",
 //             IsMarked: ${taskInput.IsMarked},
 //           }, userId: ${userId}, userCreateTaskId: ${userCreateTaskId}, companyId: ${companyId}) {
 //             _id
@@ -736,12 +734,12 @@ describe("Create Project Note API Tests", () => {
 //     const mutation = `
 //         mutation {
 //           createTaskForTeam(task: {
-//             TaskName: ${taskInput.TaskName},
-//             TaskStatus: ${taskInput.TaskStatus},
-//             StartDate: ${taskInput.StartDate},
-//             EndDate: ${taskInput.EndDate},
+//             TaskName: "${taskInput.TaskName}",
+//             TaskStatus: "${taskInput.TaskStatus}",
+//             StartDate: "${taskInput.StartDate}",
+//             EndDate: "${taskInput.EndDate}",
 //             Priority: ${taskInput.Priority},
-//             Comments: ${taskInput.Comments},
+//             Comments: "${taskInput.Comments}",
 //             IsMarked: ${taskInput.IsMarked},
 //           }, teamId: ${teamId}, userId: ${userId}) {
 //             _id
@@ -790,17 +788,35 @@ describe("Create Project Note API Tests", () => {
 //     const taskInput = {
 //       TaskName: "Updated Task Name",
 //       TaskStatus: "In Progress",
+//       StartDate: "2024-02-23",
+//       EndDate: "2024-03-15",
+//       Priority: 3,
+//       Comments: "This is a sample task for testing purposes.",
+//       IsMarked: true,
+//       CreateDate: "2024-02-23T10:00:00Z",
 //     };
 
 //     const mutation = `
 //         mutation {
 //           updateTask(taskId: ${taskId}, task: {
-//             TaskName: ${taskInput.TaskName},
-//             TaskStatus: ${taskInput.TaskStatus},
+//             TaskName: "${taskInput.TaskName}",
+//             TaskStatus: "${taskInput.TaskStatus}",
+//             StartDate: "${taskInput.StartDate}",
+//             EndDate: "${taskInput.EndDate}",
+//             Priority: ${taskInput.Priority},
+//             Comments: "${taskInput.Comments}",
+//             IsMarked: ${taskInput.IsMarked},
+//             CreateDate: "${taskInput.CreateDate}",
 //           }) {
 //             _id
 //             TaskName
 //             TaskStatus
+//             StartDate
+//             EndDate
+//             Priority
+//             Comments
+//             IsMarked
+//             CreateDate
 //           }
 //         }
 //       `;
@@ -816,51 +832,56 @@ describe("Create Project Note API Tests", () => {
 //         assert(data.updateTask._id);
 //         assert.strictEqual(data.updateTask.TaskName, taskInput.TaskName);
 //         assert.strictEqual(data.updateTask.TaskStatus, taskInput.TaskStatus);
+//         assert.strictEqual(data.updateTask.StartDate, taskInput.StartDate);
+//         assert.strictEqual(data.updateTask.EndDate, taskInput.EndDate);
+//         assert.strictEqual(data.updateTask.Priority, taskInput.Priority);
+//         assert.strictEqual(data.updateTask.Comments, taskInput.Comments);
+//         assert.strictEqual(data.updateTask.IsMarked, taskInput.IsMarked);
 
 //         done();
 //       });
 //   });
 // });
 
-// describe("Update Task Step API Tests", () => {
-//   it("Should update a task step with valid input data", (done) => {
-//     const taskStepInput = {
-//       Description: "Updated Task Step Description",
-//       Number: 2,
-//     };
+describe("Update Task Step API Tests", () => {
+  it("Should update a task step with valid input data", (done) => {
+    const taskStepInput = {
+      Description: "Updated Task Step Description",
+      Number: 2,
+    };
 
-//     const mutation = `
-//         mutation {
-//           updateTaskStep(taskStepId: ${taskStepId}, taskStep:{
-//             Description: ${taskStepInput.Description},
-//             Number: ${taskStepInput.Number},
-//           }) {
-//             _id
-//             Description
-//             Number
-//           }
-//         }
-//       `;
+    const mutation = `
+        mutation {
+          updateTaskStep(taskStepId: ${taskStepId}, taskStep:{
+            Description: "${taskStepInput.Description}",
+            Number: ${taskStepInput.Number},
+          }) {
+            _id
+            Description
+            Number
+          }
+        }
+      `;
 
-//     request(app)
-//       .post("/graphql")
-//       .send({ query: mutation })
-//       .expect(200)
-//       .end((err, res) => {
-//         if (err) return done(err);
+    request(app)
+      .post("/graphql")
+      .send({ query: mutation })
+      .expect(200)
+      .end((err, res) => {
+        if (err) return done(err);
 
-//         const { data } = res.body;
-//         assert.ok(data.updateTaskStep._id);
-//         assert.strictEqual(
-//           data.updateTaskStep.Description,
-//           taskStepInput.Description
-//         );
-//         assert.strictEqual(data.updateTaskStep.Number, taskStepInput.Number);
+        const { data } = res.body;
+        assert.ok(data.updateTaskStep._id);
+        assert.strictEqual(
+          data.updateTaskStep.Description,
+          taskStepInput.Description
+        );
+        assert.strictEqual(data.updateTaskStep.Number, taskStepInput.Number);
 
-//         done();
-//       });
-//   });
-// });
+        done();
+      });
+  });
+});
 
 // describe("Create Company Comment API Tests", () => {
 //   it("Should create a new comment for a company with valid input data", (done) => {
@@ -872,8 +893,8 @@ describe("Create Project Note API Tests", () => {
 //     const mutation = `
 //         mutation {
 //           createCompanyComment(comment: {
-//             Value: ${commentInput.Value},
-//             CreatedDate: ${commentInput.CreatedDate},
+//             Value: "${commentInput.Value}",
+//             CreatedDate: "${commentInput.CreatedDate}",
 //           }, companyId: ${companyId}) {
 //             _id
 //             Value
@@ -914,9 +935,9 @@ describe("Create Project Note API Tests", () => {
 //     const mutation = `
 //         mutation {
 //           updateCompany(companyId: ${companyId}, company: {
-//             CompanyName: ${companyInput.CompanyName},
-//             CompanyDescription: ${companyInput.CompanyDescription},
-//             Domain: ${companyInput.Domain},
+//             CompanyName: "${companyInput.CompanyName}",
+//             CompanyDescription: "${companyInput.CompanyDescription}",
+//             Domain: "${companyInput.Domain}",
 //             Rate: ${companyInput.Rate},
 //           }) {
 //             _id
@@ -964,9 +985,9 @@ describe("Create Project Note API Tests", () => {
 //     const mutation = `
 //         mutation {
 //           updateProject(projectId: ${projectId}, project: {
-//             ProjectName: ${projectInput.ProjectName},
-//             ProjectDescription: ${projectInput.ProjectDescription},
-//             FileName: ${projectInput.FileName},
+//             ProjectName: "${projectInput.ProjectName}",
+//             ProjectDescription: "${projectInput.ProjectDescription}",
+//             FileName: "${projectInput.FileName}",
 //           }) {
 //             _id
 //             ProjectName
@@ -1010,7 +1031,7 @@ describe("Create Project Note API Tests", () => {
 //     const mutation = `
 //         mutation {
 //           createTaskStep(taskStep: {
-//             Description: ${taskStepInput.Description},
+//             Description: "${taskStepInput.Description}",
 //             Number: ${taskStepInput.Number},
 //           }, taskId: ${taskId}) {
 //             _id
@@ -1040,43 +1061,43 @@ describe("Create Project Note API Tests", () => {
 //   });
 // });
 
-// describe("Update Position Post API Tests", () => {
-//   it("Should update a position post with valid input data", (done) => {
-//     const positionPostInput = {
-//       Content: "Updated post content",
-//     };
+describe("Update Position Post API Tests", () => {
+  it("Should update a position post with valid input data", (done) => {
+    const positionPostInput = {
+      Content: "Updated post content",
+    };
 
-//     const mutation = `
-//         mutation {
-//           updatePositionPost(positionPostId: ${postId}, positionPost: {
-//             Content: ${positionPostInput.Content},
-//           }) {
-//             _id
-//             Content
-//             CreatedDate
-//             IsDeleted
-//           }
-//         }
-//       `;
+    const mutation = `
+        mutation {
+          updatePositionPost(positionPostId: ${postId}, positionPost: {
+            Content: "${positionPostInput.Content}",
+          }) {
+            _id
+            Content
+            CreatedDate
+            IsDeleted
+          }
+        }
+      `;
 
-//     request(app)
-//       .post("/graphql")
-//       .send({ query: mutation })
-//       .expect(200)
-//       .end((err, res) => {
-//         if (err) return done(err);
+    request(app)
+      .post("/graphql")
+      .send({ query: mutation })
+      .expect(200)
+      .end((err, res) => {
+        if (err) return done(err);
 
-//         const { data } = res.body;
-//         assert.ok(data.updatePositionPost._id);
-//         assert.strictEqual(
-//           data.updatePositionPost.Content,
-//           positionPostInput.Content
-//         );
+        const { data } = res.body;
+        assert.ok(data.updatePositionPost._id);
+        assert.strictEqual(
+          data.updatePositionPost.Content,
+          positionPostInput.Content
+        );
 
-//         done();
-//       });
-//   });
-// });
+        done();
+      });
+  });
+});
 
 // describe("Apply To a Post API Tests", () => {
 //   it("Should apply to a post with valid post and user IDs", (done) => {

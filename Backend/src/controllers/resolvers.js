@@ -1634,6 +1634,8 @@ const resolvers = {
       try {
         const { projectNote, projectId } = args;
 
+        console.log("projectNote", projectNote, "projectId", projectId);
+
         if (!projectNote) {
           throw new Error(
             `Are you send projectNote? projectNote is required, projectNote value is ${projectNote}. please check projectNote value before send`
@@ -1880,7 +1882,10 @@ const resolvers = {
           (t) => t.update({ ...task })
         );
 
-        return updatedTask.toJson();
+        return {
+          ...updatedTask.properties(),
+          _id: `${updatedTask?.identity()?.low}`,
+        };
       } catch (error) {
         console.error("Error in updateTask resolver:", error.message);
         throw error;
@@ -1906,9 +1911,16 @@ const resolvers = {
         const updatedTaskStep = await NeodeObject?.findById(
           "TaskStep",
           taskStepId
-        ).then((t) => t.update({ ...taskStep }));
+        ).then((t) => (t ? t.update({ ...taskStep }) : null));
 
-        return updatedTaskStep.toJson();
+        if (!updatedTaskStep) {
+          throw new Error("TaskStep not found");
+        }
+
+        return {
+          ...updatedTaskStep.properties(),
+          _id: `${updatedTaskStep?.identity()?.low}`,
+        };
       } catch (error) {
         console.error("Error in updateTaskStep resolver:", error.message);
         throw error;
@@ -2106,7 +2118,10 @@ const resolvers = {
           throw new Error("Position post not found");
         }
 
-        return updatedPositionPost.toJson();
+        return {
+          ...updatedPositionPost.properties(),
+          id: updatedPositionPost.identity().low,
+        };
       } catch (error) {
         console.error("Error in updatePositionPost resolver:", error.message);
         throw error;
