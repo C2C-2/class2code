@@ -1197,10 +1197,10 @@ const resolvers = {
           Password: bcrypt.hashSync(user.Password, 10),
         };
 
-        let createdUser = await NeodeObject?.create("User", newUser);
+        let createdUser = await NeodeObject?.create("User", { ...newUser });
 
         if (!createdUser) {
-          createdUser = NeodeObject?.create("User", newUser);
+          createdUser = NeodeObject?.create("User", { ...newUser });
 
           if (createdUser === false) {
             throw new Error("something wrong in system please try again");
@@ -1276,7 +1276,7 @@ const resolvers = {
           throw new Error("User not found");
         }
 
-        const updateUser = await User.update(user);
+        const updateUser = await User.update({ ...user });
 
         return updateUser.toJson();
       } catch (error) {
@@ -1439,7 +1439,9 @@ const resolvers = {
           throw new Error("Chat not found, please create one first");
         }
 
-        const messageCreated = await NeodeObject?.create("Message", message);
+        const messageCreated = await NeodeObject?.create("Message", {
+          ...message,
+        });
 
         await chat.relateTo(messageCreated, "has_a");
 
@@ -1471,11 +1473,15 @@ const resolvers = {
           throw new Error("User not found, please register first");
         }
 
-        const companyCreated = await NeodeObject?.create("Company", company);
+        const companyCreated = await NeodeObject?.create("Company", {
+          ...company,
+        });
 
         await user.relateTo(companyCreated, "admin_of");
 
-        return companyCreated.toJson();
+        return {
+          ...companyCreated.properties(),
+        };
       } catch (error) {
         throw new Error(`An error occurred: ${error.message}`);
       }
@@ -1503,7 +1509,7 @@ const resolvers = {
           throw new Error("User not found, please register first");
         }
 
-        const skillCreated = await NeodeObject?.create("Skill", skill);
+        const skillCreated = await NeodeObject?.create("Skill", { ...skill });
 
         await user.relateTo(skillCreated, "has_a_skill");
 
@@ -1535,10 +1541,9 @@ const resolvers = {
           throw new Error("User not found, please register first");
         }
 
-        const newContactMessage = await NeodeObject?.create(
-          "ContactMessage",
-          contactMessage
-        );
+        const newContactMessage = await NeodeObject?.create("ContactMessage", {
+          ...contactMessage,
+        });
 
         await user.relateTo(newContactMessage, "contact_us");
 
@@ -1573,7 +1578,7 @@ const resolvers = {
           throw new Error("Company not found, please create one first");
         }
 
-        const newPost = await NeodeObject?.create("PositionPost", post);
+        const newPost = await NeodeObject?.create("PositionPost", { ...post });
 
         await company.relateTo(newPost, "has_a_post");
 
@@ -1647,10 +1652,9 @@ const resolvers = {
           throw new Error("Project not found");
         }
 
-        const newProjectNote = await NeodeObject?.create(
-          "ProjectNote",
-          projectNote
-        );
+        const newProjectNote = await NeodeObject?.create("ProjectNote", {
+          ...projectNote,
+        });
 
         await project.relateTo(newProjectNote, "has_note");
 
@@ -1693,7 +1697,7 @@ const resolvers = {
 
         const newProjectNoteTask = await NeodeObject?.create(
           "ProjectNoteTask",
-          projectNoteTask
+          { ...projectNoteTask }
         );
 
         await projectNote.relateTo(newProjectNoteTask, "has_task");
@@ -1731,7 +1735,7 @@ const resolvers = {
 
         const newSocialMediaLink = await NeodeObject?.create(
           "SocialMediaLink",
-          socialMediaAccount
+          { ...socialMediaAccount }
         );
 
         await user.relateTo(newSocialMediaLink, "has_a_social_media");
@@ -1781,7 +1785,7 @@ const resolvers = {
           throw new Error("Company not found");
         }
 
-        const newTask = await NeodeObject?.create("Task", task);
+        const newTask = await NeodeObject?.create("Task", { ...task });
 
         if (!userCreateTaskId) {
           throw new Error(
@@ -1844,7 +1848,7 @@ const resolvers = {
           throw new Error("User not found");
         }
 
-        const newTask = await NeodeObject?.create("Task", task);
+        const newTask = await NeodeObject?.create("Task", { ...task });
 
         await team.relateTo(newTask, "has_a_task");
 
@@ -1873,7 +1877,7 @@ const resolvers = {
           );
         }
         const updatedTask = await NeodeObject?.findById("Task", taskId).then(
-          (t) => t.update(task)
+          (t) => t.update({ ...task })
         );
 
         return updatedTask.toJson();
@@ -1902,7 +1906,7 @@ const resolvers = {
         const updatedTaskStep = await NeodeObject?.findById(
           "TaskStep",
           taskStepId
-        ).then((t) => t.update(taskStep));
+        ).then((t) => t.update({ ...taskStep }));
 
         return updatedTaskStep.toJson();
       } catch (error) {
@@ -1933,7 +1937,7 @@ const resolvers = {
           throw new Error("Company not found");
         }
 
-        const newComment = await NeodeObject?.create("Comment", comment);
+        const newComment = await NeodeObject?.create("Comment", { ...comment });
 
         await company.relateTo(newComment, "has_a_comment");
 
@@ -1963,7 +1967,7 @@ const resolvers = {
         const updatedCompany = await NeodeObject?.findById(
           "Company",
           companyId
-        ).then((c) => c.update(company));
+        ).then((c) => c.update({ ...company }));
 
         return updatedCompany.toJson();
       } catch (error) {
@@ -1991,7 +1995,7 @@ const resolvers = {
         const updatedProject = await NeodeObject?.findById(
           "Project",
           projectId
-        ).then((p) => p.update(project));
+        ).then((p) => p.update({ ...project }));
 
         if (!updatedProject) {
           throw new Error("Project not found");
@@ -2026,7 +2030,9 @@ const resolvers = {
           throw new Error("Task not found");
         }
 
-        const newTaskStep = await NeodeObject?.create("TaskStep", taskStep);
+        const newTaskStep = await NeodeObject?.create("TaskStep", {
+          ...taskStep,
+        });
 
         await task.relateTo(newTaskStep, "has_a");
 
@@ -2094,7 +2100,7 @@ const resolvers = {
         const updatedPositionPost = await NeodeObject?.findById(
           "PositionPost",
           postId
-        ).then((p) => p.update(positionPost));
+        ).then((p) => p.update({ ...positionPost }));
 
         if (!updatedPositionPost) {
           throw new Error("Position post not found");
@@ -2168,7 +2174,9 @@ const resolvers = {
           );
         }
 
-        const educationNode = await NeodeObject?.create("Education", education);
+        const educationNode = await NeodeObject?.create("Education", {
+          ...education,
+        });
 
         const user = await NeodeObject?.findById("User", userId);
 

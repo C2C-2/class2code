@@ -46,7 +46,7 @@ const typeDefs = gql`
     _id: ID
     CompanyName: String
     CompanyDescription: String
-    Rate: integer
+    Rate: Float
     Domain: String
     IsDeleted: Boolean
     CreateDate: String

@@ -2,7 +2,7 @@ module.exports = {
   CompanyName: "string",
   CompanyDescription: "string",
   Rate: {
-    type: "int",
+    type: "float",
     default: 0,
   },
   Domain: "string",

@@ -3,9 +3,8 @@
 /* eslint-disable no-undef */
 const assert = require("assert");
 const request = require("supertest");
-const { app } = require("../../app");
 const { describe } = require("mocha");
-const { log } = require("console");
+const { app } = require("../../app");
 
 const AIchatId = 40;
 const userId = 2;
@@ -44,38 +43,39 @@ const postId = 15;
 //         if (err) return assert.fail(err);
 //         const aiChat = res.body.data.createNewAIChat;
 //         assert.ok(aiChat._id);
+//         assert.notStrictEqual(aiChat._id, null);
 //       });
 //   });
 // });
 
-// describe("Send AI Message", () => {
-//   it("Should create a new AI Message and link it with AI chat", () => {
-//     const message = "can tell me about this project?";
-//     const fileName = "file1.pdf";
-//     const mutation = `
-//       mutation {
-//         sendAIMessage(message: "${message}", fileName: "${fileName}", AIchatId: ${AIchatId}) {
-//           _id
-//           Question
-//           Answer
-//           CreatedDate
-//         }
-//       }
-//     `;
+// // describe("Send AI Message", () => {
+// //   it("Should create a new AI Message and link it with AI chat", () => {
+// //     const message = "can tell me about this project?";
+// //     const fileName = "file1.pdf";
+// //     const mutation = `
+// //       mutation {
+// //         sendAIMessage(message: "${message}", fileName: "${fileName}", AIchatId: ${AIchatId}) {
+// //           _id
+// //           Question
+// //           Answer
+// //           CreatedDate
+// //         }
+// //       }
+// //     `;
 
-//     request(app)
-//       .post("/graphql")
-//       .send({ query: mutation })
-//       .expect(200)
-//       .end((err, res) => {
-//         if (err) return assert.fail(err);
-//         const aiChat = res.body.data.sendAIMessage;
-//         assert.ok(aiChat._id); // Ensure an ID is returned for the sent message
-//         assert.strictEqual(aiChat.Question, message); // Ensure the sent message matches the input
-//         assert.notEqual(aiChat.Answer, null);
-//       });
-//   });
-// });
+// //     request(app)
+// //       .post("/graphql")
+// //       .send({ query: mutation })
+// //       .expect(200)
+// //       .end((err, res) => {
+// //         if (err) return assert.fail(err);
+// //         const aiChat = res.body.data.sendAIMessage;
+// //         assert.ok(aiChat._id); // Ensure an ID is returned for the sent message
+// //         assert.strictEqual(aiChat.Question, message); // Ensure the sent message matches the input
+// //         assert.notEqual(aiChat.Answer, null);
+// //       });
+// //   });
+// // });
 
 // describe("Create User API Tests (create)", () => {
 //   it("Should create a new user with valid input data", (done) => {
@@ -140,36 +140,7 @@ const postId = 15;
 //           "A passionate individual in the field of technology."
 //         );
 
-//         const user = data.createNewUser._id;
-
-//         const mutation1 = `
-//           mutation {
-//             createNewChat(userId: ${user}, chat: {
-//               IsDeleted: false,
-//               CreatedDate: "2024-02-26T12:00:00Z",
-//             }) {
-//               IsDeleted
-//               CreatedDate
-//             }
-//           }
-//         `;
-
-//         request(app)
-//           .post("/graphql")
-//           .send({ query: mutation1 })
-//           .expect(200)
-//           .end((err1, res1) => {
-//             if (err1) return done(err1);
-
-//             const chat = res1.body.data;
-//             assert.strictEqual(chat.createNewChat.IsDeleted, false);
-//             assert.strictEqual(
-//               chat.createNewChat.CreatedDate,
-//               "2024-02-26T12:00:00Z"
-//             );
-
-//             done();
-//           });
+//         done();
 //       });
 //   });
 // });
@@ -559,46 +530,46 @@ const postId = 15;
 //   });
 // });
 
-// describe("Create Project Note API Tests", () => {
-//   it("Should create a new project note with valid input data", (done) => {
-//     const projectNoteInput = {
-//       Title: "Test Project Note Title",
-//     };
+describe("Create Project Note API Tests", () => {
+  it("Should create a new project note with valid input data", (done) => {
+    const projectNoteInput = {
+      Title: "Test Project Note Title",
+    };
 
-//     const mutation = `
-//         mutation {
-//           createProjectNote(projectNote: {
-//             Title: ${projectNoteInput.Title},
-//           }, projectId: ${projectId}) {
-//             _id
-//             Title
-//             Tasks {
-//               _id
-//               TaskTitle
-//               TaskDescription
-//             }
-//           }
-//         }
-//       `;
+    const mutation = `
+        mutation {
+          createProjectNote(projectNote: {
+            Title: ${projectNoteInput.Title},
+          }, projectId: ${projectId}) {
+            _id
+            Title
+            Tasks {
+              _id
+              TaskTitle
+              TaskDescription
+            }
+          }
+        }
+      `;
 
-//     request(app)
-//       .post("/graphql")
-//       .send({ query: mutation })
-//       .expect(200)
-//       .end((err, res) => {
-//         if (err) return done(err);
+    request(app)
+      .post("/graphql")
+      .send({ query: mutation })
+      .expect(200)
+      .end((err, res) => {
+        if (err) return done(err);
 
-//         const { data } = res.body;
-//         assert.ok(data.createProjectNote._id);
-//         assert.strictEqual(
-//           data.createProjectNote.Title,
-//           projectNoteInput.Title
-//         );
+        const { data } = res.body;
+        assert.ok(data.createProjectNote._id);
+        assert.strictEqual(
+          data.createProjectNote.Title,
+          projectNoteInput.Title
+        );
 
-//         done();
-//       });
-//   });
-// });
+        done();
+      });
+  });
+});
 
 // describe("Create Project Note Task API Tests", () => {
 //   it("Should create a new project note task with valid input data", (done) => {
@@ -1470,5 +1441,3 @@ const postId = 15;
 //       });
 //   });
 // });
-
-// ### replayContactMessage manual.
