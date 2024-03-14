@@ -6,6 +6,8 @@ const axios = require("axios");
 const base64 = require("base-64");
 const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
+const Logging = require("../config/Logging");
+const backup = require("../config/Backup");
 // this is a website company email to send emails for users.
 const myEmail = "202007723@bethlehem.edu";
 
@@ -69,7 +71,7 @@ const resolvers = {
 
         const result = await NeodeObject.findById("AIChat", chatId);
 
-        if (result?.records?.length === 0) {
+        if (!result) {
           throw new Error("Chat not found");
         }
 
@@ -80,7 +82,7 @@ const resolvers = {
           limit,
         };
       } catch (error) {
-        console.error("Error fetching AIChat:", error.message);
+        Logging.error(`${new Date()}, in resolvers.js => getAIChat, ${error}`);
         throw error;
       }
     },
@@ -104,12 +106,16 @@ const resolvers = {
         const result = await NeodeObject.findById("User", userId);
 
         if (!result) {
+          Logging.warn(
+            `${new Date()}, in resolvers.js => getUser, User not found in database`,
+            userId
+          );
           throw new Error("User not found");
         }
 
         return { _id: userId, ...result.properties(), page, limit };
       } catch (error) {
-        console.error("Error in getUser resolver:", error.message);
+        Logging.error(`${new Date()}, in resolvers.js => getUser, ${error}`);
         throw new Error(`Error in getCompany: ${error.message}`);
       }
     },
@@ -137,7 +143,7 @@ const resolvers = {
         }
         return await team.delete();
       } catch (error) {
-        console.error("Error in deleteTeam resolver:", error.message);
+        Logging.error(`${new Date()}, in resolvers.js => deleteTeam, ${error}`);
         throw new Error(`Error in getCompany: ${error.message}`);
       }
     },
@@ -170,7 +176,9 @@ const resolvers = {
 
         return true;
       } catch (error) {
-        console.error("Error in deleteCompany resolver:", error.message);
+        Logging.error(
+          `${new Date()}, in resolvers.js => deleteCompany, ${error}`
+        );
         throw new Error(`Error in getCompany: ${error.message}`);
       }
     },
@@ -202,7 +210,9 @@ const resolvers = {
         await skill.delete();
         return true;
       } catch (error) {
-        console.error("Error in deleteSkill resolver:", error.message);
+        Logging.error(
+          `${new Date()}, in resolvers.js => deleteSkill, ${error}`
+        );
         throw new Error(`Error in getCompany: ${error.message}`);
       }
     },
@@ -246,7 +256,9 @@ const resolvers = {
             _id: `${record.get("companies").identity}`,
           }));
       } catch (error) {
-        console.error("Error in filterMyCompanies resolver:", error.message);
+        Logging.error(
+          `${new Date()}, in resolvers.js => filterMyCompanies, ${error}`
+        );
         throw new Error(`Error in getCompany: ${error.message}`);
       }
     },
@@ -283,7 +295,9 @@ const resolvers = {
             _id: `${record.get("companies").identity}`,
           }));
       } catch (error) {
-        console.error("Error in searchInMyCompanies resolver:", error.message);
+        Logging.error(
+          `${new Date()}, in resolvers.js => searchInMyCompanies, ${error}`
+        );
         throw new Error(`Error in getCompany: ${error.message}`);
       }
     },
@@ -331,7 +345,9 @@ const resolvers = {
             _id: `${record.get("c").identity}`,
           }));
       } catch (error) {
-        console.error("Error in filterMyCompanies resolver:", error.message);
+        Logging.error(
+          `${new Date()}, in resolvers.js => filterWorksCompanies, ${error}`
+        );
         throw new Error(`Error in getCompany: ${error.message}`);
       }
     },
@@ -372,7 +388,9 @@ const resolvers = {
             _id: `${record.get("c").identity}`,
           }));
       } catch (error) {
-        console.error("Error in searchInMyCompanies resolver:", error.message);
+        Logging.error(
+          `${new Date()}, in resolvers.js => searchInWorksCompanies, ${error}`
+        );
         throw new Error(`Error in getCompany: ${error.message}`);
       }
     },
@@ -433,7 +451,9 @@ const resolvers = {
             numberOfMyCompanies.records[0].get("myCompaniesCount"),
         };
       } catch (error) {
-        console.error("Error in getProfileInfo resolver:", error.message);
+        Logging.error(
+          `${new Date()}, in resolvers.js => getProfileStatistics, ${error}`
+        );
         throw new Error(`Error in getCompany: ${error.message}`);
       }
     },
@@ -454,19 +474,18 @@ const resolvers = {
           );
         }
 
-        // return skill object.
+        // return Account object.
         const account = await NeodeObject?.findById("SocialMediaLink", id);
 
         if (!account) {
-          throw new Error("Skill not found");
+          throw new Error("Account not found");
         }
 
         await account.delete();
         return true;
       } catch (error) {
-        console.error(
-          "Error in deleteUserSocialMediaAccounts resolver:",
-          error.message
+        Logging.error(
+          `${new Date()}, in resolvers.js => deleteUserSocialMediaAccounts, ${error}`
         );
         throw new Error(`Error in getCompany: ${error.message}`);
       }
@@ -489,7 +508,9 @@ const resolvers = {
           .toJson()
           .then((e) => e.slice(page * limit, (page + 1) * limit));
       } catch (error) {
-        console.error("Error in getProjects resolver:", error.message);
+        Logging.error(
+          `${new Date()}, in resolvers.js => getProjects, ${error}`
+        );
         throw new Error(`Error in getCompany: ${error.message}`);
       }
     },
@@ -514,7 +535,7 @@ const resolvers = {
 
         return project.toJson();
       } catch (error) {
-        console.error("Error in getProjects resolver:", error.message);
+        Logging.error(`${new Date()}, in resolvers.js => getProject, ${error}`);
         throw new Error(`Error in getCompany: ${error.message}`);
       }
     },
@@ -551,7 +572,9 @@ const resolvers = {
             _id: `${record.get("p").identity}`,
           }));
       } catch (error) {
-        console.error("Error in getProjects resolver:", error.message);
+        Logging.error(
+          `${new Date()}, in resolvers.js => searchInProjects, ${error}`
+        );
         throw new Error(`Error in getCompany: ${error.message}`);
       }
     },
@@ -581,6 +604,9 @@ const resolvers = {
         const project = await NeodeObject?.findById("Project", projectId);
 
         if (!project) {
+          Logging.warn(
+            `${new Date()}, in resolvers.js => applyForProject, project not found`
+          );
           throw new Error("Project not found");
         }
 
@@ -594,7 +620,9 @@ const resolvers = {
 
         return true;
       } catch (error) {
-        console.error("Error in getProjects resolver:", error.message);
+        Logging.error(
+          `${new Date()}, in resolvers.js => applyForProject, ${error}`
+        );
         throw new Error(`Error in getCompany: ${error.message}`);
       }
     },
@@ -616,6 +644,11 @@ const resolvers = {
         }
 
         const task = await NeodeObject?.findById("Task", taskId);
+
+        if (!task) {
+          throw new Error("Task not found");
+        }
+
         const taskSteps = await NeodeObject?.cypher(
           `MATCH (t:Task) -[:HAS_A] -> (ts:TaskStep)
            WHERE ID(t) = $taskId
@@ -626,14 +659,14 @@ const resolvers = {
 
         return {
           ...task?.properties,
-          _id: `${task?.identity}`,
+          _id: `${task?.identity()?.low}`,
           TaskSteps: taskSteps.records.map((record) => ({
             ...record.get("ts").properties,
             _id: `${record.get("ts").identity}`,
           })),
         };
       } catch (error) {
-        console.error("Error in getTask resolver:", error.message);
+        Logging.error(`${new Date()}, in resolvers.js => getTask, ${error}`);
         throw new Error(`Error in getCompany: ${error.message}`);
       }
     },
@@ -676,7 +709,7 @@ const resolvers = {
           },
         };
       } catch (error) {
-        console.error("Error in getCompany resolver:", error.message);
+        Logging.error(`${new Date()}, in resolvers.js => getCompany, ${error}`);
         throw new Error(`Error in getCompany: ${error.message}`);
       }
     },
@@ -724,7 +757,9 @@ const resolvers = {
 
         return true;
       } catch (error) {
-        console.error("Error in getCompany resolver:", error.message);
+        Logging.error(
+          `${new Date()}, in resolvers.js => takeProjectByCompany, ${error}`
+        );
         throw new Error(`Error in getCompany: ${error.message}`);
       }
     },
@@ -749,7 +784,9 @@ const resolvers = {
           .toJson()
           .then((data) => data.slice(page * limit, (page + 1) * limit));
       } catch (error) {
-        console.error("Error in getContactMessages resolver:", error.message);
+        Logging.error(
+          `${new Date()}, in resolvers.js => getContactMessages, ${error}`
+        );
         throw new Error(`Error in getContactMessages: ${error.message}`);
       }
     },
@@ -790,7 +827,9 @@ const resolvers = {
             _id: `${record.get("p").identity}`,
           }));
       } catch (error) {
-        console.error("Error in getAllPosts resolver:", error.message);
+        Logging.error(
+          `${new Date()}, in resolvers.js => getAllPosts, ${error}`
+        );
         throw new Error(`Error in getAllPosts: ${error.message}`);
       }
     },
@@ -828,6 +867,9 @@ const resolvers = {
         );
 
         if (!posts) {
+          Logging.warn(
+            `${new Date()}, in resolvers.js => searchInPositionPosts, posts not found`
+          );
           throw new Error("Posts not found");
         }
 
@@ -838,9 +880,8 @@ const resolvers = {
             _id: `${record.get("p").identity}`,
           }));
       } catch (error) {
-        console.error(
-          "Error in searchInPositionPosts resolver:",
-          error.message
+        Logging.error(
+          `${new Date()}, in resolvers.js => searchInPositionPosts, ${error}`
         );
         throw new Error(`Error in searchInPositionPosts: ${error.message}`);
       }
@@ -877,11 +918,9 @@ const resolvers = {
             _id: `${record.get("p").identity}`,
           }));
       } catch (error) {
-        console.error(
-          "Error in getAllPostsSortedByDate resolver:",
-          error.message
+        Logging.error(
+          `${new Date()}, in resolvers.js => getAllPostsSortedByDate, ${error}`
         );
-
         throw new Error(`Error in getAllPostsSortedByDate: ${error.message}`);
       }
     },
@@ -923,7 +962,9 @@ const resolvers = {
             _id: `${record.get("p").identity}`,
           }));
       } catch (error) {
-        console.error("Error in searchInMyPosts resolver:", error.message);
+        Logging.error(
+          `${new Date()}, in resolvers.js => searchInMyPosts, ${error}`
+        );
         throw new Error(`Error in searchInMyPosts: ${error.message}`);
       }
     },
@@ -959,9 +1000,8 @@ const resolvers = {
             _id: `${record.get("p").identity}`,
           }));
       } catch (error) {
-        console.error(
-          "Error in getAllMyPostsSortedByDate resolver:",
-          error.message
+        Logging.error(
+          `${new Date()}, in resolvers.js => getAllMyPostsSortedByDate, ${error}`
         );
         throw new Error(`Error in getAllMyPostsSortedByDate: ${error.message}`);
       }
@@ -999,7 +1039,7 @@ const resolvers = {
           })),
         };
       } catch (error) {
-        console.error("Error in getTeam resolver:", error.message);
+        Logging.error(`${new Date()}, in resolvers.js => getTeam, ${error}`);
         throw new Error(`Error in getTeam: ${error.message}`);
       }
     },
@@ -1033,7 +1073,9 @@ const resolvers = {
 
         return true;
       } catch (error) {
-        console.error("Error in deleteMessage resolver:", error.message);
+        Logging.error(
+          `${new Date()}, in resolvers.js => deleteMessage, ${error}`
+        );
         throw new Error(`Error in deleteMessage: ${error.message}`);
       }
     },
@@ -1059,7 +1101,9 @@ const resolvers = {
 
         return true;
       } catch (error) {
-        console.error("Error in deleteEducation resolver:", error.message);
+        Logging.error(
+          `${new Date()}, in resolvers.js => deleteEducation, ${error}`
+        );
         throw new Error(`Error in deleteEducation: ${error.message}`);
       }
     },
@@ -1130,12 +1174,22 @@ const resolvers = {
         // Relate AIMessage to AIChat
         await chat.relateTo(createdMessage, "has_a");
 
+        backup.info(
+          `MATCH (chat:AIChat) where ID(chat) = ${chat.identity().low}
+          Create (chat)-[r:has_a]->(message:AIMessage {Question: "${message}", Answer: "${
+            response.data
+          }", CreatedDate: datetime()})
+          RETURN message`
+        );
+
         return {
           _id: createdMessage.identity().toString(),
           ...createdMessage.properties(),
         };
       } catch (error) {
-        console.error("Error in sendMessage resolver:", error.message);
+        Logging.error(
+          `${new Date()}, in resolvers.js => sendAIMessage, ${error}`
+        );
         throw new Error("An error occurred while processing the request");
       }
     },
@@ -1169,9 +1223,17 @@ const resolvers = {
         // Relate AIChat to User
         await User.relateTo(AIChat, "chat_with_AI");
 
+        backup.info(
+          `CREATE (chat:AIChat {createdDate: datetime()}) - [:chat_with_AI]-> (user:User) 
+          where ID(user) = ${userId}
+          RETURN chat`
+        );
+
         return AIChat.toJson();
       } catch (error) {
-        console.error("Error in createNewAIChat resolver:", error.message);
+        Logging.error(
+          `${new Date()}, in resolvers.js => createNewAIChat, ${error}`
+        );
         throw new Error("An error occurred while processing the request");
       }
     },
@@ -1207,9 +1269,18 @@ const resolvers = {
           }
         }
 
+        backup.info(
+          `CREATE (user:User {createdDate: datetime(), ${Object.keys(newUser)
+            ?.map((key) => `${key}: "${newUser[key]}"`)
+            .join(", ")}})
+          RETURN user`
+        );
+
         return createdUser?.toJson();
       } catch (error) {
-        console.error("Error in createNewUser resolver:", error.message);
+        Logging.error(
+          `${new Date()}, in resolvers.js => createNewUser, ${error}`
+        );
         throw new Error(
           "An error occurred while processing the request",
           error
@@ -1250,6 +1321,9 @@ const resolvers = {
 
         return "Password reset email sent successfully";
       } catch (error) {
+        Logging.error(
+          `${new Date()}, in resolvers.js => forgetPassword, ${error}`
+        );
         throw new Error(`An error occurred: ${error.message}`);
       }
     },
@@ -1278,8 +1352,17 @@ const resolvers = {
 
         const updateUser = await User.update({ ...user });
 
+        backup.info(
+          `MATCH (user:User) where ID(user) = ${userId}
+          SET ${Object.keys(user)
+            ?.map((key) => `${key}: "${user[key]}"`)
+            .join(", ")}
+          RETURN user`
+        );
+
         return updateUser.toJson();
       } catch (error) {
+        Logging.error(`${new Date()}, in resolvers.js => updateUser, ${error}`);
         throw new Error(`An error occurred: ${error.message}`);
       }
     },
@@ -1304,9 +1387,20 @@ const resolvers = {
           ...project,
         });
 
+        backup.info(
+          `CREATE (project:Project {createdDate: datetime(), ${Object.keys(
+            project
+          )
+            ?.map((key) => `${key}: "${project[key]}"`)
+            .join(", ")}})
+          RETURN project`
+        );
+
         return newProject?.toJson();
       } catch (error) {
-        console.error("Error in createNewProject resolver:", error.message);
+        Logging.error(
+          `${new Date()}, in resolvers.js => createNewProject, ${error}`
+        );
         throw new Error(`An error occurred: ${error.message}`);
       }
     },
@@ -1348,9 +1442,22 @@ const resolvers = {
 
         await project.relateTo(newProjectRequirement, "has_requirement");
 
+        backup.info(
+          `CREATE (projectRequirement:ProjectRequirement {createdDate: datetime(), ${Object.keys(
+            requirement
+          )
+            ?.map((key) => `${key}: "${requirement[key]}"`)
+            .join(", ")}})
+          CREATE (project:Project) -[has_requirement:HAS_REQUIREMENT]-> (projectRequirement)
+          WHERE ID(project) = ${projectId}
+          RETURN projectRequirement;`
+        );
+
         return newProjectRequirement.toJson();
       } catch (error) {
-        console.error("Error in createProjectRequirements resolver:", error);
+        Logging.error(
+          `${new Date()}, in resolvers.js => createProjectRequirement, ${error}`
+        );
         throw new Error(`An error occurred: ${error.message}`);
       }
     },
@@ -1378,9 +1485,20 @@ const resolvers = {
         const teamCreated = await NeodeObject?.create("Team", { ...team });
         await company.relateTo(teamCreated, "has_a_team");
 
+        backup.info(
+          `CREATE (team:Team {createdDate: datetime(), ${Object.keys(team)
+            ?.map((key) => `${key}: "${team[key]}"`)
+            .join(", ")}})
+          CREATE (company:Company) -[has_a_team:HAS_A_TEAM]-> (team)
+          WHERE ID(company) = ${companyId}
+          RETURN team`
+        );
+
         return teamCreated.toJson();
       } catch (error) {
-        console.error("Error in createNewTeam resolver:", error);
+        Logging.error(
+          `${new Date()}, in resolvers.js => createNewTeam, ${error}`
+        );
         throw new Error(`An error occurred: ${error.message}`);
       }
     },
@@ -1410,8 +1528,20 @@ const resolvers = {
 
         await user.relateTo(chatCreated, "chat_with");
 
+        backup.info(
+          `CREATE (chat:Chat {createdDate: datetime(), ${Object.keys(chat)
+            ?.map((key) => `${key}: "${chat[key]}"`)
+            .join(", ")}})
+          CREATE (user:User) -[chat_with:CHAT_WITH]-> (chat)
+          WHERE ID(user) = ${userId}
+          RETURN chat`
+        );
+
         return chatCreated.toJson();
       } catch (error) {
+        Logging.error(
+          `${new Date()}, in resolvers.js => createNewChat, ${error}`
+        );
         throw new Error(`An error occurred: ${error.message}`);
       }
     },
@@ -1447,6 +1577,9 @@ const resolvers = {
 
         return messageCreated.toJson();
       } catch (error) {
+        Logging.error(
+          `${new Date()}, in resolvers.js => sendMessage, ${error}`
+        );
         throw new Error(`An error occurred: ${error.message}`);
       }
     },
@@ -1483,6 +1616,9 @@ const resolvers = {
           ...companyCreated.properties(),
         };
       } catch (error) {
+        Logging.error(
+          `${new Date()}, in resolvers.js => createNewCompany, ${error}`
+        );
         throw new Error(`An error occurred: ${error.message}`);
       }
     },
@@ -1515,6 +1651,9 @@ const resolvers = {
 
         return skillCreated.toJson();
       } catch (error) {
+        Logging.error(
+          `${new Date()}, in resolvers.js => createNewSkill, ${error}`
+        );
         throw new Error(`An error occurred: ${error.message}`);
       }
     },
@@ -1549,10 +1688,10 @@ const resolvers = {
 
         return newContactMessage.toJson();
       } catch (error) {
-        console.error(
-          "Error in createNewContactMessage resolver:",
-          error.message
+        Logging.error(
+          `${new Date()}, in resolvers.js => createNewContactMessage, ${error}`
         );
+        throw new Error(`An error occurred: ${error.message}`);
       }
     },
     /**
@@ -1584,7 +1723,11 @@ const resolvers = {
 
         return newPost.toJson();
       } catch (error) {
-        console.error("Error in createPositionPost resolver:", error.message);
+        Logging.error(
+          `${new Date()}, in resolvers.js => createPositionPost, ${error}`
+        );
+
+        throw new Error(`An error occurred: ${error.message}`);
       }
     },
     /**
@@ -1619,8 +1762,10 @@ const resolvers = {
 
         return true;
       } catch (error) {
-        console.error("Error in addUserToTeam resolver:", error.message);
-        return false;
+        Logging.error(
+          `${new Date()}, in resolvers.js => addUserToTeam, ${error}`
+        );
+        throw new Error(`An error occurred: ${error.message}`);
       }
     },
     /**
@@ -1633,8 +1778,6 @@ const resolvers = {
     createProjectNote: async (parent, args) => {
       try {
         const { projectNote, projectId } = args;
-
-        console.log("projectNote", projectNote, "projectId", projectId);
 
         if (!projectNote) {
           throw new Error(
@@ -1662,7 +1805,11 @@ const resolvers = {
 
         return newProjectNote.toJson();
       } catch (error) {
-        console.error("Error in createProjectNote resolver:", error.message);
+        Logging.error(
+          `${new Date()}, in resolvers.js => createProjectNote, ${error}`
+        );
+
+        throw new Error(`An error occurred: ${error.message}`);
       }
     },
     /**
@@ -1706,10 +1853,11 @@ const resolvers = {
 
         return newProjectNoteTask.toJson();
       } catch (error) {
-        console.error(
-          "Error in createProjectNoteTask resolver:",
-          error.message
+        Logging.error(
+          `${new Date()}, in resolvers.js => createProjectNoteTask, ${error}`
         );
+
+        throw new Error(`An error occurred: ${error.message}`);
       }
     },
     /**
@@ -1744,10 +1892,11 @@ const resolvers = {
 
         return newSocialMediaLink.toJson();
       } catch (error) {
-        console.error(
-          "Error in createNewSocialMediaLink resolver:",
-          error.message
+        Logging.error(
+          `${new Date()}, in resolvers.js => createNewSocialMediaLink, ${error}`
         );
+
+        throw new Error(`An error occurred: ${error.message}`);
       }
     },
     /**
@@ -1812,7 +1961,11 @@ const resolvers = {
 
         return newTask.toJson();
       } catch (error) {
-        console.error("Error in createTaskForUser resolver:", error.message);
+        Logging.error(
+          `${new Date()}, in resolvers.js => createTaskForUser, ${error}`
+        );
+
+        throw new Error(`An error occurred: ${error.message}`);
       }
     },
     /**
@@ -1858,8 +2011,11 @@ const resolvers = {
 
         return newTask.toJson();
       } catch (error) {
-        console.error("Error in createTaskForTeam resolver:", error.message);
-        throw error;
+        Logging.error(
+          `${new Date()}, in resolvers.js => createTaskForTeam, ${error}`
+        );
+
+        throw new Error(`An error occurred: ${error.message}`);
       }
     },
     /**
@@ -1887,8 +2043,8 @@ const resolvers = {
           _id: `${updatedTask?.identity()?.low}`,
         };
       } catch (error) {
-        console.error("Error in updateTask resolver:", error.message);
-        throw error;
+        Logging.error(`${new Date()}, in resolvers.js => updateTask, ${error}`);
+        throw new Error(`An error occurred: ${error.message}`);
       }
     },
     /**
@@ -1922,8 +2078,11 @@ const resolvers = {
           _id: `${updatedTaskStep?.identity()?.low}`,
         };
       } catch (error) {
-        console.error("Error in updateTaskStep resolver:", error.message);
-        throw error;
+        Logging.error(
+          `${new Date()}, in resolvers.js => updateTaskStep, ${error}`
+        );
+
+        throw new Error(`An error occurred: ${error.message}`);
       }
     },
     /**
@@ -1955,8 +2114,11 @@ const resolvers = {
 
         return newComment.toJson();
       } catch (error) {
-        console.error("Error in createCompanyComment resolver:", error.message);
-        throw error;
+        Logging.error(
+          `${new Date()}, in resolvers.js => createCompanyComment, ${error}`
+        );
+
+        throw new Error(`An error occurred: ${error.message}`);
       }
     },
     /**
@@ -1983,7 +2145,9 @@ const resolvers = {
 
         return updatedCompany.toJson();
       } catch (error) {
-        console.error("Error in updateCompany resolver:", error.message);
+        Logging.error(
+          `${new Date()}, in resolvers.js => updateCompany, ${error}`
+        );
         throw error;
       }
     },
@@ -2015,7 +2179,9 @@ const resolvers = {
 
         return updatedProject.toJson();
       } catch (error) {
-        console.error("Error in updateProject resolver:", error.message);
+        Logging.error(
+          `${new Date()}, in resolvers.js => updateProject, ${error}`
+        );
         throw error;
       }
     },
@@ -2050,7 +2216,9 @@ const resolvers = {
 
         return newTaskStep.toJson();
       } catch (error) {
-        console.error("Error in createTaskStep resolver:", error.message);
+        Logging.error(
+          `${new Date()}, in resolvers.js => createTaskStep, ${error}`
+        );
         throw error;
       }
     },
@@ -2088,7 +2256,9 @@ const resolvers = {
           text: message,
         });
       } catch (error) {
-        console.error("Error in replayContactMessage resolver:", error.message);
+        Logging.error(
+          `${new Date()}, in resolvers.js => replayContactMessage, ${error}`
+        );
         throw new Error(`Error in replayContactMessage: ${error.message}`);
       }
     },
@@ -2123,7 +2293,9 @@ const resolvers = {
           id: updatedPositionPost.identity().low,
         };
       } catch (error) {
-        console.error("Error in updatePositionPost resolver:", error.message);
+        Logging.error(
+          `${new Date()}, in resolvers.js => updatePositionPost, ${error}`
+        );
         throw error;
       }
     },
@@ -2169,7 +2341,9 @@ const resolvers = {
 
         return true;
       } catch (error) {
-        console.error("Error in applyToPost resolver:", error.message);
+        Logging.error(
+          `${new Date()}, in resolvers.js => applyToPost, ${error}`
+        );
         throw error;
       }
     },
@@ -2203,505 +2377,629 @@ const resolvers = {
 
         return educationNode.toJson();
       } catch (error) {
-        console.error("Error in createEducation resolver:", error);
+        Logging.error(
+          `${new Date()}, in resolvers.js => createEducation, ${error}`
+        );
         throw error;
       }
     },
   },
   AIChat: {
     Messages: async (parent) => {
-      const chatId = parent._id;
-      const { page, limit } = parent;
+      try {
+        const chatId = parent._id;
+        const { page, limit } = parent;
 
-      if (!chatId) {
-        throw new Error("ChatID is null");
-      }
+        if (!chatId) {
+          throw new Error("ChatID is null");
+        }
 
-      // this query get chat by chatId with all messages.
-      const cypherQuery = `
+        // this query get chat by chatId with all messages.
+        const cypherQuery = `
            MATCH (chat:AIChat)-[:HAS_A]->(messages:AIMessage) 
            WHERE ID(chat) = $chatId 
            RETURN messages`;
-      const result = await NeodeObject.cypher(cypherQuery, { chatId });
+        const result = await NeodeObject.cypher(cypherQuery, { chatId });
 
-      return result?.records
-        ?.slice(page * limit, (page + 1) * limit)
-        .map((record) => ({
-          ...record.get("messages").properties,
-          _id: record.get("messages").identity.low,
-        }));
+        return result?.records
+          ?.slice(page * limit, (page + 1) * limit)
+          .map((record) => ({
+            ...record.get("messages").properties,
+            _id: record.get("messages").identity.low,
+          }));
+      } catch (error) {
+        Logging.error(`${new Date()}, in resolvers.js => Messages, ${error}`);
+        throw error;
+      }
     },
   },
   User: {
     MyCompanies: async (parent) => {
-      const userId = parent._id;
-      const { page, limit } = parent;
+      try {
+        const userId = parent._id;
+        const { page, limit } = parent;
 
-      if (!userId) {
-        throw new Error("UserID is null");
-      }
+        if (!userId) {
+          throw new Error("UserID is null");
+        }
 
-      const cypherQuery = `
+        const cypherQuery = `
            MATCH (user:User)-[:ADMIN_OF]->(companies:Company)
            WHERE ID(user) = $userId
            RETURN companies`;
 
-      const result = await NeodeObject.cypher(cypherQuery, { userId });
+        const result = await NeodeObject.cypher(cypherQuery, { userId });
 
-      return result?.records
-        ?.slice(page * limit, (page + 1) * limit)
-        ?.map((record) => ({
-          ...record.get("companies").properties,
-          _id: record.get("companies").identity.low,
-        }));
+        return result?.records
+          ?.slice(page * limit, (page + 1) * limit)
+          ?.map((record) => ({
+            ...record.get("companies").properties,
+            _id: record.get("companies").identity.low,
+          }));
+      } catch (error) {
+        Logging.error(
+          `${new Date()}, in resolvers.js => MyCompanies, ${error}`
+        );
+        throw error;
+      }
     },
     WorkCompanies: async (parent) => {
-      const userId = parent._id;
-      const { page, limit } = parent;
+      try {
+        const userId = parent._id;
+        const { page, limit } = parent;
 
-      if (!userId) {
-        throw new Error("UserID is null");
-      }
+        if (!userId) {
+          throw new Error("UserID is null");
+        }
 
-      const cypherQuery = `
+        const cypherQuery = `
            MATCH (user:User)-[:WORK_ON]-> (companies:Company)
            WHERE ID(user) = $userId
            RETURN companies`;
 
-      const result = await NeodeObject.cypher(cypherQuery, { userId });
+        const result = await NeodeObject.cypher(cypherQuery, { userId });
 
-      return result?.records
-        ?.slice(page * limit, (page + 1) * limit)
-        ?.map((record) => ({
-          ...record.get("companies").properties,
-          _id: record.get("companies").identity.low,
-        }));
+        return result?.records
+          ?.slice(page * limit, (page + 1) * limit)
+          ?.map((record) => ({
+            ...record.get("companies").properties,
+            _id: record.get("companies").identity.low,
+          }));
+      } catch (error) {
+        Logging.error(
+          `${new Date()}, in resolvers.js => WorkCompanies, ${error}`
+        );
+        throw error;
+      }
     },
     Skills: async (parent) => {
-      const userId = parent._id;
-      const { page, limit } = parent;
+      try {
+        const userId = parent._id;
+        const { page, limit } = parent;
 
-      if (!userId) {
-        throw new Error("UserID is null");
-      }
+        if (!userId) {
+          throw new Error("UserID is null");
+        }
 
-      const cypherQuery = `
+        const cypherQuery = `
            MATCH (user:User)-[:HAS_A_SKILL]->(skills:Skill)
            WHERE ID(user) = $userId
            RETURN skills`;
 
-      const result = await NeodeObject.cypher(cypherQuery, { userId });
+        const result = await NeodeObject.cypher(cypherQuery, { userId });
 
-      return result?.records
-        ?.slice(page * limit, (page + 1) * limit)
-        ?.map((record) => ({
-          ...record.get("skills").properties,
-          _id: record.get("skills").identity.low,
-        }));
+        return result?.records
+          ?.slice(page * limit, (page + 1) * limit)
+          ?.map((record) => ({
+            ...record.get("skills").properties,
+            _id: record.get("skills").identity.low,
+          }));
+      } catch (error) {
+        Logging.error(`${new Date()}, in resolvers.js => Skills, ${error}`);
+        throw error;
+      }
     },
     Accounts: async (parent) => {
-      const userId = parent._id;
-      const { page, limit } = parent;
+      try {
+        const userId = parent._id;
+        const { page, limit } = parent;
 
-      if (!userId) {
-        throw new Error("UserID is null");
-      }
+        if (!userId) {
+          throw new Error("UserID is null");
+        }
 
-      const cypherQuery = `
+        const cypherQuery = `
            MATCH (user:User)-[:HAS_A_SOCIAL_MEDIA]->(accounts:SocialMediaLink)
            WHERE ID(user) = $userId
            RETURN accounts`;
 
-      const result = await NeodeObject.cypher(cypherQuery, { userId });
+        const result = await NeodeObject.cypher(cypherQuery, { userId });
 
-      return result?.records
-        ?.slice(page * limit, (page + 1) * limit)
-        ?.map((record) => ({
-          ...record.get("accounts").properties,
-          _id: record.get("accounts").identity.low,
-        }));
+        return result?.records
+          ?.slice(page * limit, (page + 1) * limit)
+          ?.map((record) => ({
+            ...record.get("accounts").properties,
+            _id: record.get("accounts").identity.low,
+          }));
+      } catch (error) {
+        Logging.error(`${new Date()}, in resolvers.js => Accounts, ${error}`);
+        throw error;
+      }
     },
     Tasks: async (parent) => {
-      const userId = parent._id;
-      const { page, limit } = parent;
+      try {
+        const userId = parent._id;
+        const { page, limit } = parent;
 
-      if (!userId) {
-        throw new Error("UserID is null");
-      }
+        if (!userId) {
+          throw new Error("UserID is null");
+        }
 
-      const cypherQuery = `
+        const cypherQuery = `
            MATCH (user:User)-[:HAS_A_TASK]->(tasks:Task)
            WHERE ID(user) = $userId
            RETURN tasks`;
 
-      const result = await NeodeObject.cypher(cypherQuery, { userId });
+        const result = await NeodeObject.cypher(cypherQuery, { userId });
 
-      return result?.records
-        ?.slice(page * limit, (page + 1) * limit)
-        ?.map((record) => ({
-          ...record.get("tasks").properties,
-          Priority: record.get("tasks")?.properties?.Priority?.low,
-          _id: record.get("tasks").identity.low,
-          page,
-          limit,
-        }));
+        return result?.records
+          ?.slice(page * limit, (page + 1) * limit)
+          ?.map((record) => ({
+            ...record.get("tasks").properties,
+            Priority: record.get("tasks")?.properties?.Priority?.low,
+            _id: record.get("tasks").identity.low,
+            page,
+            limit,
+          }));
+      } catch (error) {
+        Logging.error(`${new Date()}, in resolvers.js => Tasks, ${error}`);
+        throw error;
+      }
     },
     Chats: async (parent) => {
-      const userId = parent._id;
-      const { page, limit } = parent;
+      try {
+        const userId = parent._id;
+        const { page, limit } = parent;
 
-      if (!userId) {
-        throw new Error("UserID is null");
-      }
+        if (!userId) {
+          throw new Error("UserID is null");
+        }
 
-      const cypherQuery = `
+        const cypherQuery = `
            MATCH (user:User)-[:CHAT_WITH]->(chats:Chat)
            WHERE ID(user) = $userId
            RETURN chats`;
 
-      const result = await NeodeObject.cypher(cypherQuery, { userId });
+        const result = await NeodeObject.cypher(cypherQuery, { userId });
 
-      return result?.records
-        ?.slice(page * limit, (page + 1) * limit)
-        ?.map((record) => ({
-          ...record.get("chats").properties,
-          _id: record.get("chats").identity.low,
-          page,
-          limit,
-        }));
+        return result?.records
+          ?.slice(page * limit, (page + 1) * limit)
+          ?.map((record) => ({
+            ...record.get("chats").properties,
+            _id: record.get("chats").identity.low,
+            page,
+            limit,
+          }));
+      } catch (error) {
+        Logging.error(`${new Date()}, in resolvers.js => Chats, ${error}`);
+        throw error;
+      }
     },
     Educations: async (parent) => {
-      const userId = parent._id;
+      try {
+        const userId = parent._id;
 
-      if (!userId) {
-        throw new Error("UserID is null");
-      }
+        if (!userId) {
+          throw new Error("UserID is null");
+        }
 
-      const cypherQuery = `
+        const cypherQuery = `
            MATCH (user:User)-[:LEARN_A]->(educations:Education)
            WHERE ID(user) = $userId
            RETURN educations`;
 
-      const result = await NeodeObject.cypher(cypherQuery, { userId });
+        const result = await NeodeObject.cypher(cypherQuery, { userId });
 
-      return result?.records?.map((record) => ({
-        ...record.get("educations").properties,
-        _id: record.get("educations").identity.low,
-      }));
+        return result?.records?.map((record) => ({
+          ...record.get("educations").properties,
+          _id: record.get("educations").identity.low,
+        }));
+      } catch (error) {
+        Logging.error(`${new Date()}, in resolvers.js => Educations, ${error}`);
+        throw error;
+      }
     },
     AIChats: async (parent) => {
-      const userId = parent._id;
-      const { page, limit } = parent;
+      try {
+        const userId = parent._id;
+        const { page, limit } = parent;
 
-      if (!userId) {
-        throw new Error("UserID is null");
-      }
+        if (!userId) {
+          throw new Error("UserID is null");
+        }
 
-      const cypherQuery = `
+        const cypherQuery = `
            MATCH (user:User)-[:CHAT_WITH_AI]->(chats:AIChat)
            WHERE ID(user) = $userId
            RETURN chats`;
 
-      const result = await NeodeObject.cypher(cypherQuery, { userId });
+        const result = await NeodeObject.cypher(cypherQuery, { userId });
 
-      return result?.records
-        ?.slice(page * limit, (page + 1) * limit)
-        ?.map((record) => ({
-          ...record.get("chats").properties,
-          _id: record.get("chats").identity.low,
-          page,
-          limit,
-        }));
+        return result?.records
+          ?.slice(page * limit, (page + 1) * limit)
+          ?.map((record) => ({
+            ...record.get("chats").properties,
+            _id: record.get("chats").identity.low,
+            page,
+            limit,
+          }));
+      } catch (error) {
+        Logging.error(`${new Date()}, in resolvers.js => AIChats, ${error}`);
+        throw error;
+      }
     },
     CreatedTasks: async (parent) => {
-      const userId = parent._id;
+      try {
+        const userId = parent._id;
 
-      if (!userId) {
-        throw new Error("UserID is null");
-      }
+        if (!userId) {
+          throw new Error("UserID is null");
+        }
 
-      const cypherQuery = `
+        const cypherQuery = `
            MATCH (user:User)-[:CREATE_TASK]->(tasks:Task)
            WHERE ID(user) = $userId
            RETURN tasks`;
 
-      const result = await NeodeObject.cypher(cypherQuery, { userId });
+        const result = await NeodeObject.cypher(cypherQuery, { userId });
 
-      return result?.records?.map((record) => ({
-        ...record.get("tasks").properties,
-        Priority: record.get("tasks")?.properties?.Priority?.low,
-        _id: record.get("tasks").identity.low,
-      }));
+        return result?.records?.map((record) => ({
+          ...record.get("tasks").properties,
+          Priority: record.get("tasks")?.properties?.Priority?.low,
+          _id: record.get("tasks").identity.low,
+        }));
+      } catch (error) {
+        Logging.error(
+          `${new Date()}, in resolvers.js => CreatedTasks, ${error}`
+        );
+        throw error;
+      }
     },
     Posts: async (parent) => {
-      const userId = parent._id;
-      const { page, limit } = parent;
+      try {
+        const userId = parent._id;
+        const { page, limit } = parent;
 
-      if (!userId) {
-        throw new Error("UserID is null");
-      }
+        if (!userId) {
+          throw new Error("UserID is null");
+        }
 
-      const cypherQuery = `
+        const cypherQuery = `
            MATCH (user:User)-[:APPLY_TO]->(posts:PositionPost)
            WHERE ID(user) = $userId
            RETURN posts`;
 
-      const result = await NeodeObject.cypher(cypherQuery, { userId });
+        const result = await NeodeObject.cypher(cypherQuery, { userId });
 
-      return result?.records
-        ?.slice(page * limit, (page + 1) * limit)
-        ?.map((record) => ({
-          ...record.get("posts").properties,
-          _id: record.get("posts")?.identity?.low,
-        }));
+        return result?.records
+          ?.slice(page * limit, (page + 1) * limit)
+          ?.map((record) => ({
+            ...record.get("posts").properties,
+            _id: record.get("posts")?.identity?.low,
+          }));
+      } catch (error) {
+        Logging.error(`${new Date()}, in resolvers.js => Posts, ${error}`);
+        throw error;
+      }
     },
   },
   Project: {
     Notes: async (parent) => {
-      const projectId = parent._id;
+      try {
+        const projectId = parent._id;
 
-      if (!projectId) {
-        throw new Error("ProjectID is null");
-      }
+        if (!projectId) {
+          throw new Error("ProjectID is null");
+        }
 
-      const cypherQuery = `
+        const cypherQuery = `
            MATCH (project:Project)-[:HAS_NOTE]->(notes:ProjectNote)
            WHERE ID(project) = $projectId
            RETURN notes`;
 
-      const result = await NeodeObject.cypher(cypherQuery, { projectId });
+        const result = await NeodeObject.cypher(cypherQuery, { projectId });
 
-      return result?.records?.map((record) => ({
-        ...record.get("notes").properties,
-        id: record.get("notes").identity,
-      }));
+        return result?.records?.map((record) => ({
+          ...record.get("notes").properties,
+          id: record.get("notes").identity,
+        }));
+      } catch (error) {
+        Logging.error(`${new Date()}, in resolvers.js => Notes, ${error}`);
+        throw error;
+      }
     },
     Requirements: async (parent) => {
-      const projectId = parent._id;
+      try {
+        const projectId = parent._id;
 
-      if (!projectId) {
-        throw new Error("ProjectID is null");
-      }
+        if (!projectId) {
+          throw new Error("ProjectID is null");
+        }
 
-      const cypherQuery = `
+        const cypherQuery = `
            MATCH (project:Project)-[:HAS_REQUIREMENT]->(requirements:ProjectRequirement)
            WHERE ID(project) = $projectId
            RETURN requirements`;
 
-      const result = await NeodeObject.cypher(cypherQuery, { projectId });
+        const result = await NeodeObject.cypher(cypherQuery, { projectId });
 
-      return result?.records?.map((record) => ({
-        ...record.get("requirements").properties,
-        id: record.get("requirements").identity,
-      }));
+        return result?.records?.map((record) => ({
+          ...record.get("requirements").properties,
+          id: record.get("requirements").identity,
+        }));
+      } catch (error) {
+        Logging.error(
+          `${new Date()}, in resolvers.js => Requirements, ${error}`
+        );
+        throw error;
+      }
     },
     Applies: async (parent) => {
-      const projectId = parent._id;
+      try {
+        const projectId = parent._id;
 
-      if (!projectId) {
-        throw new Error(`ProjectID is ${projectId}`);
-      }
+        if (!projectId) {
+          throw new Error(`ProjectID is ${projectId}`);
+        }
 
-      const cypherQuery = `
+        const cypherQuery = `
            MATCH (companies:Company)-[:TAKE_A_PROJECT]->(project:Project)
            WHERE ID(project) = $projectId
            RETURN companies`;
 
-      const result = await NeodeObject.cypher(cypherQuery, { projectId });
+        const result = await NeodeObject.cypher(cypherQuery, { projectId });
 
-      return result?.records?.map((record) => ({
-        ...record.get("companies").properties,
-        id: record.get("companies").identity,
-      }));
+        return result?.records?.map((record) => ({
+          ...record.get("companies").properties,
+          id: record.get("companies").identity,
+        }));
+      } catch (error) {
+        Logging.error(`${new Date()}, in resolvers.js => Applies, ${error}`);
+        throw error;
+      }
     },
   },
   Company: {
     Teams: async (parent) => {
-      const companyId = parent._id;
+      try {
+        const companyId = parent._id;
 
-      if (!companyId) {
-        throw new Error("CompanyID is null");
-      }
+        if (!companyId) {
+          throw new Error("CompanyID is null");
+        }
 
-      const cypherQuery = `
+        const cypherQuery = `
            MATCH (company:Company)-[:HAS_A_TEAM]->(teams:Team)
            WHERE ID(company) = $companyId
            RETURN teams`;
 
-      const result = await NeodeObject.cypher(cypherQuery, { companyId });
+        const result = await NeodeObject.cypher(cypherQuery, { companyId });
 
-      return result?.records?.map((record) => ({
-        ...record.get("teams").properties,
-        id: record.get("teams").identity,
-      }));
+        return result?.records?.map((record) => ({
+          ...record.get("teams").properties,
+          id: record.get("teams").identity,
+        }));
+      } catch (error) {
+        Logging.error(`${new Date()}, in resolvers.js => Teams, ${error}`);
+        throw error;
+      }
     },
     Comments: async (parent) => {
-      const companyId = parent._id;
+      try {
+        const companyId = parent._id;
 
-      if (!companyId) {
-        throw new Error("CompanyID is null");
-      }
+        if (!companyId) {
+          throw new Error("CompanyID is null");
+        }
 
-      const cypherQuery = `
+        const cypherQuery = `
            MATCH (company:Company)-[:HAS_A_COMMENT]->(comments:Comment)
            WHERE ID(company) = $companyId
            RETURN comments`;
 
-      const result = await NeodeObject.cypher(cypherQuery, { companyId });
+        const result = await NeodeObject.cypher(cypherQuery, { companyId });
 
-      return result?.records?.map((record) => ({
-        ...record.get("comments").properties,
-        id: record.get("comments").identity,
-      }));
+        return result?.records?.map((record) => ({
+          ...record.get("comments").properties,
+          id: record.get("comments").identity,
+        }));
+      } catch (error) {
+        Logging.error(`${new Date()}, in resolvers.js => Comments, ${error}`);
+        throw error;
+      }
     },
     Posts: async (parent) => {
-      const companyId = parent._id;
+      try {
+        const companyId = parent._id;
 
-      if (!companyId) {
-        throw new Error("CompanyID is null");
-      }
+        if (!companyId) {
+          throw new Error("CompanyID is null");
+        }
 
-      const cypherQuery = `
+        const cypherQuery = `
            MATCH (company:Company)-[:HAS_A_POST]->(posts:PositionPost)
            WHERE ID(company) = $companyId
            RETURN posts`;
 
-      const result = await NeodeObject.cypher(cypherQuery, { companyId });
+        const result = await NeodeObject.cypher(cypherQuery, { companyId });
 
-      return result?.records?.map((record) => ({
-        ...record.get("posts").properties,
-        id: record.get("posts").identity,
-      }));
+        return result?.records?.map((record) => ({
+          ...record.get("posts").properties,
+          id: record.get("posts").identity,
+        }));
+      } catch (error) {
+        Logging.error(`${new Date()}, in resolvers.js => Posts, ${error}`);
+        throw error;
+      }
     },
     Tasks: async (parent) => {
-      const companyId = parent._id;
+      try {
+        const companyId = parent._id;
 
-      if (!companyId) {
-        throw new Error("CompanyID is null");
-      }
+        if (!companyId) {
+          throw new Error("CompanyID is null");
+        }
 
-      const cypherQuery = `
+        const cypherQuery = `
            MATCH (tasks:Task)-[:IN_COMPANY]->(company:Company)
            WHERE ID(company) = $companyId
            RETURN tasks`;
 
-      const result = await NeodeObject.cypher(cypherQuery, { companyId });
+        const result = await NeodeObject.cypher(cypherQuery, { companyId });
 
-      return result?.records?.map((record) => ({
-        ...record.get("tasks").properties,
-        Priority: record.get("tasks")?.properties?.Priority?.low,
-        id: record.get("tasks").identity,
-      }));
+        return result?.records?.map((record) => ({
+          ...record.get("tasks").properties,
+          Priority: record.get("tasks")?.properties?.Priority?.low,
+          id: record.get("tasks").identity,
+        }));
+      } catch (error) {
+        Logging.error(`${new Date()}, in resolvers.js => Tasks, ${error}`);
+        throw error;
+      }
     },
   },
   Chat: {
     Messages: async (parent) => {
-      const chatId = parent._id;
-      const { page, limit } = parent;
+      try {
+        const chatId = parent._id;
+        const { page, limit } = parent;
 
-      if (!chatId) {
-        throw new Error("ChatID is null");
-      }
+        if (!chatId) {
+          throw new Error("ChatID is null");
+        }
 
-      const cypherQuery = `
+        const cypherQuery = `
            MATCH (chat:Chat)-[:HAS_A]->(messages:Message)
            WHERE ID(chat) = $chatId
            RETURN messages`;
 
-      const result = await NeodeObject.cypher(cypherQuery, { chatId });
+        const result = await NeodeObject.cypher(cypherQuery, { chatId });
 
-      return result?.records
-        ?.slice(page * limit, (page + 1) * limit)
-        ?.map((record) => ({
-          ...record.get("messages").properties,
-          userId: record.get("messages")?.properties?.userId?.low,
-          _id: record.get("messages").identity.low,
-        }));
+        return result?.records
+          ?.slice(page * limit, (page + 1) * limit)
+          ?.map((record) => ({
+            ...record.get("messages").properties,
+            userId: record.get("messages")?.properties?.userId?.low,
+            _id: record.get("messages").identity.low,
+          }));
+      } catch (error) {
+        Logging.error(`${new Date()}, in resolvers.js => Messages, ${error}`);
+        throw error;
+      }
     },
   },
   ProjectNote: {
     Tasks: async (parent) => {
-      const noteId = parent._id;
+      try {
+        const noteId = parent._id;
 
-      if (!noteId) {
-        throw new Error("NoteID is null");
-      }
+        if (!noteId) {
+          throw new Error("NoteID is null");
+        }
 
-      const cypherQuery = `
+        const cypherQuery = `
            MATCH (projectNote:ProjectNote)-[:HAS_TASK]->(tasks:ProjectNoteTask)
            WHERE ID(projectNote) = $noteId
            RETURN tasks`;
 
-      const result = await NeodeObject.cypher(cypherQuery, { noteId });
+        const result = await NeodeObject.cypher(cypherQuery, { noteId });
 
-      return result?.records?.map((record) => ({
-        ...record.get("tasks").properties,
-        id: record.get("tasks").identity,
-      }));
+        return result?.records?.map((record) => ({
+          ...record.get("tasks").properties,
+          id: record.get("tasks").identity,
+        }));
+      } catch (error) {
+        Logging.error(`${new Date()}, in resolvers.js => Tasks, ${error}`);
+        throw error;
+      }
     },
   },
   Task: {
     Steps: async (parent) => {
-      const taskId = parent._id;
+      try {
+        const taskId = parent._id;
 
-      if (!taskId) {
-        throw new Error("TaskID is null");
-      }
+        if (!taskId) {
+          throw new Error("TaskID is null");
+        }
 
-      const cypherQuery = `
+        const cypherQuery = `
            MATCH (task:Task)-[:HAS_A]->(taskSteps:TaskStep)
            WHERE ID(task) = $taskId
            RETURN taskSteps`;
 
-      const result = await NeodeObject.cypher(cypherQuery, { taskId });
+        const result = await NeodeObject.cypher(cypherQuery, { taskId });
 
-      return result?.records?.map((record) => ({
-        ...record.get("taskSteps").properties,
-        Number: record.get("taskSteps")?.properties?.Number?.low,
-        _id: record.get("taskSteps").identity.low,
-      }));
+        return result?.records?.map((record) => ({
+          ...record.get("taskSteps").properties,
+          Number: record.get("taskSteps")?.properties?.Number?.low,
+          _id: record.get("taskSteps").identity.low,
+        }));
+      } catch (error) {
+        Logging.error(`${new Date()}, in resolvers.js => Steps, ${error}`);
+        throw error;
+      }
     },
   },
   Team: {
     Tasks: async (parent) => {
-      const teamId = parent._id;
+      try {
+        const teamId = parent._id;
 
-      if (!teamId) {
-        throw new Error("TeamID is null");
-      }
+        if (!teamId) {
+          throw new Error("TeamID is null");
+        }
 
-      const cypherQuery = `
+        const cypherQuery = `
            MATCH (team:Team)-[:HAS_A_TASK]->(tasks:Task)
            WHERE ID(team) = $teamId
            RETURN tasks`;
 
-      const result = await NeodeObject.cypher(cypherQuery, { teamId });
+        const result = await NeodeObject.cypher(cypherQuery, { teamId });
 
-      return result?.records?.map((record) => ({
-        ...record.get("tasks").properties,
-        Priority: record.get("tasks")?.properties?.Priority?.low,
-        id: record.get("tasks").identity,
-      }));
-    },
-
-    Members: async (parent) => {
-      const teamId = parent._id;
-
-      if (!teamId) {
-        throw new Error("TeamID is null");
+        return result?.records?.map((record) => ({
+          ...record.get("tasks").properties,
+          Priority: record.get("tasks")?.properties?.Priority?.low,
+          id: record.get("tasks").identity,
+        }));
+      } catch (error) {
+        Logging.error(`${new Date()}, in resolvers.js => Tasks, ${error}`);
+        throw error;
       }
+    },
+    Members: async (parent) => {
+      try {
+        const teamId = parent._id;
 
-      const cypherQuery = `
+        if (!teamId) {
+          throw new Error("TeamID is null");
+        }
+
+        const cypherQuery = `
            MATCH (users:User)-[:IN_TEAM]->(team:Team)
            WHERE ID(team) = $teamId
            RETURN users`;
 
-      const result = await NeodeObject.cypher(cypherQuery, { teamId });
+        const result = await NeodeObject.cypher(cypherQuery, { teamId });
 
-      return result?.records?.map((record) => ({
-        ...record.get("users").properties,
-        id: record.get("users").identity,
-      }));
+        return result?.records?.map((record) => ({
+          ...record.get("users").properties,
+          id: record.get("users").identity,
+        }));
+      } catch (error) {
+        Logging.error(`${new Date()}, in resolvers.js => Members, ${error}`);
+        throw error;
+      }
     },
   },
 };
