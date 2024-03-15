@@ -1575,6 +1575,17 @@ const resolvers = {
 
         await chat.relateTo(messageCreated, "has_a");
 
+        backup.info(
+          `CREATE (message:Message {createdDate: datetime(), ${Object.keys(
+            message
+          )
+            ?.map((key) => `${key}: "${message[key]}"`)
+            .join(", ")}})
+          CREATE (chat:Chat) -[has_a:HAS_A]-> (message)
+          WHERE ID(chat) = ${chatId}
+          RETURN message`
+        );
+
         return messageCreated.toJson();
       } catch (error) {
         Logging.error(
@@ -1611,6 +1622,17 @@ const resolvers = {
         });
 
         await user.relateTo(companyCreated, "admin_of");
+
+        backup.info(
+          `CREATE (company:Company {createdDate: datetime(), ${Object.keys(
+            company
+          )
+            ?.map((key) => `${key}: "${company[key]}"`)
+            .join(", ")}})
+          CREATE (user:User) -[admin_of:ADMIN_OF]-> (company)
+          WHERE ID(user) = ${userId}
+          RETURN company`
+        );
 
         return {
           ...companyCreated.properties(),
@@ -1649,6 +1671,15 @@ const resolvers = {
 
         await user.relateTo(skillCreated, "has_a_skill");
 
+        backup.info(
+          `CREATE (skill:Skill {createdDate: datetime(), ${Object.keys(skill)
+            ?.map((key) => `${key}: "${skill[key]}"`)
+            .join(", ")}})
+          CREATE (user:User) -[has_a_skill:HAS_A_SKILL]-> (skill)
+          WHERE ID(user) = ${userId}
+          RETURN skill`
+        );
+
         return skillCreated.toJson();
       } catch (error) {
         Logging.error(
@@ -1686,6 +1717,17 @@ const resolvers = {
 
         await user.relateTo(newContactMessage, "contact_us");
 
+        backup.info(
+          `CREATE (contactMessage:ContactMessage {createdDate: datetime(), ${Object.keys(
+            contactMessage
+          )
+            ?.map((key) => `${key}: "${contactMessage[key]}"`)
+            .join(", ")}})
+          CREATE (user:User) -[contact_us:CONTACT_US]-> (contactMessage)
+          WHERE ID(user) = ${userId}
+          RETURN contactMessage`
+        );
+
         return newContactMessage.toJson();
       } catch (error) {
         Logging.error(
@@ -1720,6 +1762,17 @@ const resolvers = {
         const newPost = await NeodeObject?.create("PositionPost", { ...post });
 
         await company.relateTo(newPost, "has_a_post");
+
+        backup.info(
+          `CREATE (post:PositionPost {createdDate: datetime(), ${Object.keys(
+            post
+          )
+            ?.map((key) => `${key}: "${post[key]}"`)
+            .join(", ")}})
+          CREATE (company:Company) -[has_a_post:HAS_A_POST]-> (post)
+          WHERE ID(company) = ${companyId}
+          RETURN post`
+        );
 
         return newPost.toJson();
       } catch (error) {
@@ -1758,6 +1811,12 @@ const resolvers = {
            MATCH (t:Team) WHERE ID(t) = $teamId
            CREATE (n) -[r:IN_TEAM {role: $role}] -> (t)`,
           { userId, teamId, role }
+        );
+
+        backup.info(
+          `MATCH (n:User) WHERE ID(n) = ${userId}
+           MATCH (t:Team) WHERE ID(t) = ${teamId}
+           CREATE (n) -[r:IN_TEAM {role: ${role}}] -> (t)`
         );
 
         return true;
@@ -1802,6 +1861,17 @@ const resolvers = {
         });
 
         await project.relateTo(newProjectNote, "has_note");
+
+        backup.info(
+          `CREATE (note:ProjectNote {createdDate: datetime(), ${Object.keys(
+            projectNote
+          )
+            ?.map((key) => `${key}: "${projectNote[key]}"`)
+            .join(", ")}})
+          CREATE (project:Project) -[has_note:HAS_NOTE]-> (note)
+          WHERE ID(project) = ${projectId}
+          RETURN note`
+        );
 
         return newProjectNote.toJson();
       } catch (error) {
@@ -1851,6 +1921,17 @@ const resolvers = {
 
         await projectNote.relateTo(newProjectNoteTask, "has_task");
 
+        backup.info(
+          `CREATE (task:ProjectNoteTask {createdDate: datetime(), ${Object.keys(
+            projectNoteTask
+          )
+            ?.map((key) => `${key}: "${projectNoteTask[key]}"`)
+            .join(", ")}})
+          CREATE (note:ProjectNote) -[has_task:HAS_TASK]-> (task)
+          WHERE ID(note) = ${projectNoteId}
+          RETURN task`
+        );
+
         return newProjectNoteTask.toJson();
       } catch (error) {
         Logging.error(
@@ -1889,6 +1970,17 @@ const resolvers = {
         );
 
         await user.relateTo(newSocialMediaLink, "has_a_social_media");
+
+        backup.info(
+          `CREATE (link:SocialMediaLink {createdDate: datetime(), ${Object.keys(
+            socialMediaAccount
+          )
+            ?.map((key) => `${key}: "${socialMediaAccount[key]}"`)
+            .join(", ")}})
+          CREATE (user:User) -[has_a_social_media:HAS_A_SOCIAL_MEDIA]-> (link)
+          WHERE ID(user) = ${userId}
+          RETURN link`
+        );
 
         return newSocialMediaLink.toJson();
       } catch (error) {
@@ -1959,6 +2051,19 @@ const resolvers = {
 
         await newTask.relateTo(company, "in_company");
 
+        backup.info(
+          `CREATE (task:Task {createdDate: datetime(), ${Object.keys(task)
+            ?.map((key) => `${key}: "${task[key]}"`)
+            .join(", ")}})
+          CREATE (user:User) -[has_a_task:HAS_A_TASK]-> (task)
+          CREATE (userCreateTask:User) -[create_task:CREATE_TASK]-> (task)
+          CREATE (company:Company) -[in_company:IN_COMPANY]-> (task)
+          WHERE ID(user) = ${userId}
+          AND ID(company) = ${companyId}
+          AND ID(userCreateTask) = ${userCreateTaskId}
+          RETURN task`
+        );
+
         return newTask.toJson();
       } catch (error) {
         Logging.error(
@@ -2009,6 +2114,17 @@ const resolvers = {
 
         await user.relateTo(newTask, "create_task");
 
+        backup.info(
+          `CREATE (task:Task {createdDate: datetime(), ${Object.keys(task)
+            ?.map((key) => `${key}: "${task[key]}"`)
+            .join(", ")}})
+          CREATE (team:Team) -[has_a_task:HAS_A_TASK]-> (task)
+          CREATE (user:User) -[create_task:CREATE_TASK]-> (task)
+          WHERE ID(team) = ${teamId}
+          AND ID(user) = ${userId}
+          RETURN task`
+        );
+
         return newTask.toJson();
       } catch (error) {
         Logging.error(
@@ -2036,6 +2152,17 @@ const resolvers = {
         }
         const updatedTask = await NeodeObject?.findById("Task", taskId).then(
           (t) => t.update({ ...task })
+        );
+
+        if (!updatedTask) {
+          throw new Error("Task not found");
+        }
+
+        backup.info(
+          `MATCH (t:Task) WHERE ID(t) = ${taskId}
+          SET t = {${Object.keys(task)
+            ?.map((key) => `${key}: "${task[key]}"`)
+            .join(", ")}} RETURN t`
         );
 
         return {
@@ -2072,6 +2199,13 @@ const resolvers = {
         if (!updatedTaskStep) {
           throw new Error("TaskStep not found");
         }
+
+        backup.info(
+          `MATCH (t:TaskStep) WHERE ID(t) = ${taskStepId}
+          SET t = {${Object.keys(taskStep)
+            ?.map((key) => `${key}: "${taskStep[key]}"`)
+            .join(", ")}} RETURN t`
+        );
 
         return {
           ...updatedTaskStep.properties(),
@@ -2112,6 +2246,16 @@ const resolvers = {
 
         await company.relateTo(newComment, "has_a_comment");
 
+        backup.info(
+          `CREATE (c:Comment { 
+            createdDate: datetime(), 
+            ${Object.keys(comment)
+              ?.map((key) => `${key}: "${comment[key]}"`)
+              .join(", ")} }) -[has_a_comment:HAS_A_COMMENT]-> (company:Company)
+          WHERE ID(company) = ${companyId}
+          RETURN c`
+        );
+
         return newComment.toJson();
       } catch (error) {
         Logging.error(
@@ -2142,6 +2286,17 @@ const resolvers = {
           "Company",
           companyId
         ).then((c) => c.update({ ...company }));
+
+        if (!updatedCompany) {
+          throw new Error("Company not found");
+        }
+
+        backup.info(
+          `MATCH (c:Company) WHERE ID(c) = ${companyId}
+          SET c = {${Object.keys(company)
+            ?.map((key) => `${key}: "${company[key]}"`)
+            .join(", ")}} RETURN c`
+        );
 
         return updatedCompany.toJson();
       } catch (error) {
@@ -2176,6 +2331,13 @@ const resolvers = {
         if (!updatedProject) {
           throw new Error("Project not found");
         }
+
+        backup.info(
+          `MATCH (p:Project) WHERE ID(p) = ${projectId}
+          SET p = {${Object.keys(project)
+            ?.map((key) => `${key}: "${project[key]}"`)
+            .join(", ")}} RETURN p`
+        );
 
         return updatedProject.toJson();
       } catch (error) {
@@ -2213,6 +2375,16 @@ const resolvers = {
         });
 
         await task.relateTo(newTaskStep, "has_a");
+
+        backup.info(
+          `CREATE (ts:TaskStep {
+            createdDate: datetime(),
+            ${Object.keys(taskStep)
+              ?.map((key) => `${key}: "${taskStep[key]}"`)
+              .join(", ")} }) -[has_a:HAS_A]-> (task:Task)
+          WHERE ID(task) = ${taskId}
+          RETURN ts`
+        );
 
         return newTaskStep.toJson();
       } catch (error) {
@@ -2288,6 +2460,14 @@ const resolvers = {
           throw new Error("Position post not found");
         }
 
+        backup.info(
+          `MATCH (pp:PositionPost)
+          WHERE ID(pp) = ${postId}
+          SET pp = {${Object.keys(positionPost)
+            ?.map((key) => `${key}: "${positionPost[key]}"`)
+            .join(", ")}} RETURN pp`
+        );
+
         return {
           ...updatedPositionPost.properties(),
           id: updatedPositionPost.identity().low,
@@ -2339,6 +2519,12 @@ const resolvers = {
 
         await user.relateTo(positionPost, "apply_to");
 
+        backup.info(
+          `MATCH (pp:PositionPost)
+          WHERE ID(pp) = ${postId}
+          SET pp = {isApplied: true} RETURN pp`
+        );
+
         return true;
       } catch (error) {
         Logging.error(
@@ -2374,6 +2560,17 @@ const resolvers = {
         }
 
         await user.relateTo(educationNode, "learn_a");
+
+        backup.info(
+          `CREATE (education:Education {
+            createdDate: datetime(),
+            ${Object.keys(education)
+              ?.map((key) => `${key}: "${education[key]}"`)
+              .join(", ")} })
+          CREATE (user:User)-[:LEARN_A]->(education)
+          WHERE ID(user) = ${userId}
+          RETURN education`
+        );
 
         return educationNode.toJson();
       } catch (error) {
