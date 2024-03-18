@@ -31,3 +31,6 @@
 {"level":"info","message":"🚀 Server ready at http://localhost:3000","service":"user-service"}
 {"level":"info","message":"🚀 Server ready at http://localhost:3000","service":"user-service"}
 {"level":"info","message":"🚀 Server ready at http://localhost:3000","service":"user-service"}
+{"level":"info","message":"🚀 Server ready at http://localhost:3000","service":"user-service"}
+{"level":"error","message":"Mon Mar 18 2024 19:43:07 GMT+0200 (Eastern European Standard Time), in resolvers.js => updateTaskStep, Error: TaskStep not found","service":"user-service"}
+{"level":"error","message":"Mon Mar 18 2024 19:43:07 GMT+0200 (Eastern European Standard Time), in resolvers.js => updatePositionPost, Error: Are you send postId? postId is required, postId value is undefined. please check postId value before send","service":"user-service"}
