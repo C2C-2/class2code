@@ -116,7 +116,7 @@ const resolvers = {
         return { _id: userId, ...result.properties(), page, limit };
       } catch (error) {
         Logging.error(`${new Date()}, in resolvers.js => getUser, ${error}`);
-        throw new Error(`Error in getCompany: ${error.message}`);
+        throw new Error(`Error in getUser: ${error.message}`);
       }
     },
     /**
@@ -141,10 +141,12 @@ const resolvers = {
         if (!team) {
           throw new Error("Team not found");
         }
-        return await team.delete();
+        await team.delete();
+
+        return true;
       } catch (error) {
         Logging.error(`${new Date()}, in resolvers.js => deleteTeam, ${error}`);
-        throw new Error(`Error in getCompany: ${error.message}`);
+        throw new Error(`Error in deleteTeam: ${error.message}`);
       }
     },
     /**
@@ -179,7 +181,7 @@ const resolvers = {
         Logging.error(
           `${new Date()}, in resolvers.js => deleteCompany, ${error}`
         );
-        throw new Error(`Error in getCompany: ${error.message}`);
+        throw new Error(`Error in deleteCompany: ${error.message}`);
       }
     },
     /**
@@ -213,7 +215,7 @@ const resolvers = {
         Logging.error(
           `${new Date()}, in resolvers.js => deleteSkill, ${error}`
         );
-        throw new Error(`Error in getCompany: ${error.message}`);
+        throw new Error(`Error in deleteSkill: ${error.message}`);
       }
     },
     /**
@@ -259,7 +261,7 @@ const resolvers = {
         Logging.error(
           `${new Date()}, in resolvers.js => filterMyCompanies, ${error}`
         );
-        throw new Error(`Error in getCompany: ${error.message}`);
+        throw new Error(`Error in filterMyCompanies: ${error.message}`);
       }
     },
     /**
@@ -298,7 +300,7 @@ const resolvers = {
         Logging.error(
           `${new Date()}, in resolvers.js => searchInMyCompanies, ${error}`
         );
-        throw new Error(`Error in getCompany: ${error.message}`);
+        throw new Error(`Error in searchInMyCompanies: ${error.message}`);
       }
     },
     /**
@@ -348,7 +350,7 @@ const resolvers = {
         Logging.error(
           `${new Date()}, in resolvers.js => filterWorksCompanies, ${error}`
         );
-        throw new Error(`Error in getCompany: ${error.message}`);
+        throw new Error(`Error in filterWorksCompanies: ${error.message}`);
       }
     },
     /**
@@ -391,7 +393,7 @@ const resolvers = {
         Logging.error(
           `${new Date()}, in resolvers.js => searchInWorksCompanies, ${error}`
         );
-        throw new Error(`Error in getCompany: ${error.message}`);
+        throw new Error(`Error in searchInWorksCompanies: ${error.message}`);
       }
     },
     /**
@@ -454,7 +456,7 @@ const resolvers = {
         Logging.error(
           `${new Date()}, in resolvers.js => getProfileStatistics, ${error}`
         );
-        throw new Error(`Error in getCompany: ${error.message}`);
+        throw new Error(`Error in getProfileStatistics: ${error.message}`);
       }
     },
     /**
@@ -487,7 +489,7 @@ const resolvers = {
         Logging.error(
           `${new Date()}, in resolvers.js => deleteUserSocialMediaAccounts, ${error}`
         );
-        throw new Error(`Error in getCompany: ${error.message}`);
+        throw new Error(`Error in deleteSocialMediaAccounts: ${error.message}`);
       }
     },
     /**
@@ -511,7 +513,7 @@ const resolvers = {
         Logging.error(
           `${new Date()}, in resolvers.js => getProjects, ${error}`
         );
-        throw new Error(`Error in getCompany: ${error.message}`);
+        throw new Error(`Error in deleteSocialMediaAccounts: ${error.message}`);
       }
     },
     /**
@@ -536,7 +538,7 @@ const resolvers = {
         return project.toJson();
       } catch (error) {
         Logging.error(`${new Date()}, in resolvers.js => getProject, ${error}`);
-        throw new Error(`Error in getCompany: ${error.message}`);
+        throw new Error(`Error in getProject: ${error.message}`);
       }
     },
     /**
@@ -575,7 +577,7 @@ const resolvers = {
         Logging.error(
           `${new Date()}, in resolvers.js => searchInProjects, ${error}`
         );
-        throw new Error(`Error in getCompany: ${error.message}`);
+        throw new Error(`Error in searchInProjects: ${error.message}`);
       }
     },
     /**
@@ -618,12 +620,19 @@ const resolvers = {
 
         await company.relateTo(project, "TAKE_A_PROJECT");
 
+        backup.info(
+          `MATCH (c:Company) WHERE ID(c) = ${companyId}
+          MATCH (p:Project) WHERE ID(p) = ${projectId}
+          Create (c)-[:TAKE_A_PROJECT]->(p)
+          )}`
+        );
+
         return true;
       } catch (error) {
         Logging.error(
           `${new Date()}, in resolvers.js => applyForProject, ${error}`
         );
-        throw new Error(`Error in getCompany: ${error.message}`);
+        throw new Error(`Error in applyForProject: ${error.message}`);
       }
     },
     /**
@@ -649,25 +658,13 @@ const resolvers = {
           throw new Error("Task not found");
         }
 
-        const taskSteps = await NeodeObject?.cypher(
-          `MATCH (t:Task) -[:HAS_A] -> (ts:TaskStep)
-           WHERE ID(t) = $taskId
-           RETURN ts
-          `,
-          { taskId }
-        );
-
         return {
           ...task?.properties,
           _id: `${task?.identity()?.low}`,
-          TaskSteps: taskSteps.records.map((record) => ({
-            ...record.get("ts").properties,
-            _id: `${record.get("ts").identity}`,
-          })),
         };
       } catch (error) {
         Logging.error(`${new Date()}, in resolvers.js => getTask, ${error}`);
-        throw new Error(`Error in getCompany: ${error.message}`);
+        throw new Error(`Error in getTask: ${error.message}`);
       }
     },
     /**
@@ -689,24 +686,13 @@ const resolvers = {
 
         const company = await NeodeObject?.findById("Company", companyId);
 
-        const project = await NeodeObject?.cypher(
-          `MATCH (c:Company) -[:TAKE_A_PROJECT] -> (p:Project)
-           WHERE ID(c) = $companyId
-           RETURN p
-          `,
-          { companyId }
-        );
-
         if (!company) {
           throw new Error("Company not found");
         }
 
         return {
-          ...company.toJson(),
-          Project: {
-            ...project.records[0].get("p").properties,
-            _id: `${project.records[0].get("p").identity}`,
-          },
+          ...company.properties(),
+          _id: `${company.identity().low}`,
         };
       } catch (error) {
         Logging.error(`${new Date()}, in resolvers.js => getCompany, ${error}`);
@@ -760,7 +746,7 @@ const resolvers = {
         Logging.error(
           `${new Date()}, in resolvers.js => takeProjectByCompany, ${error}`
         );
-        throw new Error(`Error in getCompany: ${error.message}`);
+        throw new Error(`Error in takeProjectByCompany: ${error.message}`);
       }
     },
     /**
@@ -3061,6 +3047,30 @@ const resolvers = {
         }));
       } catch (error) {
         Logging.error(`${new Date()}, in resolvers.js => Tasks, ${error}`);
+        throw error;
+      }
+    },
+    Project: async (parent) => {
+      try {
+        const companyId = parent._id;
+
+        if (!companyId) {
+          throw new Error("CompanyID is null");
+        }
+
+        const cypherQuery = `
+        MATCH (c:Company) -[:TAKE_A_PROJECT] -> (p:Project)
+        WHERE ID(c) = $companyId
+        RETURN p`;
+
+        const result = await NeodeObject.cypher(cypherQuery, { companyId });
+
+        return result?.records?.map((record) => ({
+          ...record.get("p").properties,
+          id: record.get("p").identity,
+        }));
+      } catch (error) {
+        Logging.error(`${new Date()}, in resolvers.js => Project, ${error}`);
         throw error;
       }
     },

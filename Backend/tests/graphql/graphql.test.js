@@ -14,9 +14,11 @@ const teamId = 25;
 const projectId = 57;
 const projectNoteId = 27;
 const userCreateTaskId = 65;
-const taskId = 34;
+const taskId = 71;
 const taskStepId = 123;
 const postId = 15;
+const skillId = 185;
+const accountId = 68;
 
 // describe("Create AIChat API Tests", () => {
 //   it("Should create a new AI chat for a valid user ID", () => {
@@ -1458,6 +1460,205 @@ describe("Update Position Post API Tests", () => {
 //         assert.equal(data.getUser._id, userId);
 //         assert.notStrictEqual(data.getUser.Posts, null);
 
+//         done();
+//       });
+//   });
+// });
+
+// describe("get all projects", () => {
+//   it("Should get all projects", (done) => {
+//     const query = `
+//     query{
+//       getProjects {
+//         _id
+//         FileName
+//       }
+//         }
+//         `;
+
+//     request(app)
+//       .post("/graphql")
+//       .send({ query })
+//       .expect(200)
+//       .end((err, res) => {
+//         if (err) return done(err);
+//         const { data } = res.body;
+//         assert.notStrictEqual(data.getProjects, null);
+//         done();
+//       });
+//   });
+// });
+
+// describe("get project by id", () => {
+//   it("Should get project by id", (done) => {
+//     const query = `
+//     query{
+//       getProject(projectId: ${projectId}) {
+//         _id
+//         FileName
+//       }
+//         }
+//         `;
+
+//     request(app)
+//       .post("/graphql")
+//       .send({ query })
+//       .expect(200)
+//       .end((err, res) => {
+//         if (err) return done(err);
+//         const { data } = res.body;
+//         assert.equal(data.getProject._id, projectId);
+//         done();
+//       });
+//   });
+// });
+
+// describe("apply for project", () => {
+//   it("Should apply for project and return true", (done) => {
+//     const query = `
+//     query{
+//       applyForProject(projectId: ${projectId}, companyId: ${companyId})
+//         }
+//         `;
+
+//     request(app)
+//       .post("/graphql")
+//       .send({ query })
+//       .expect(200)
+//       .end((err, res) => {
+//         if (err) return done(err);
+//         const { data } = res.body;
+//         assert.strictEqual(data.applyForProject, true);
+//         done();
+//       });
+//   });
+// });
+
+// describe("get task by id", () => {
+//   it("Should get task by id", (done) => {
+//     const query = `
+//     query{
+//       getTask(taskId: ${taskId}) {
+//         _id
+//       }
+//     }
+//         `;
+
+//     request(app)
+//       .post("/graphql")
+//       .send({ query })
+//       .expect(200)
+//       .end((err, res) => {
+//         if (err) return done(err);
+//         const { data } = res.body;
+//         assert.equal(data.getTask._id, taskId);
+//         done();
+//       });
+//   });
+// });
+
+describe("get company by id", () => {
+  it("Should get company by id", (done) => {
+    const query = `
+    query{
+      getTask(taskId: ${taskId}) {
+        _id
+      }
+    }
+        `;
+
+    request(app)
+      .post("/graphql")
+      .send({ query })
+      .expect(200)
+      .end((err, res) => {
+        if (err) return done(err);
+        const { data } = res.body;
+        assert.equal(data.getTask._id, taskId);
+        done();
+      });
+  });
+});
+
+// describe("delete team", () => {
+//   it("Should delete team", (done) => {
+//     const query = `
+//     query{
+//       deleteTeam(teamId: ${teamId})
+//     }
+//         `;
+
+//     request(app)
+//       .post("/graphql")
+//       .send({ query, variables: { userId } })
+//       .expect(200)
+//       .end((err, res) => {
+//         if (err) return done(err);
+//         const { data } = res.body;
+//         assert.equal(data.deleteTeam, true);
+//         done();
+//       });
+//   });
+// });
+
+// describe("delete company", () => {
+//   it("Should delete company", (done) => {
+//     const query = `
+//     query{
+//       deleteCompany(companyId: ${companyId})
+//         }
+//         `;
+
+//     request(app)
+//       .post("/graphql")
+//       .send({ query, variables: { userId } })
+//       .expect(200)
+//       .end((err, res) => {
+//         if (err) return done(err);
+//         const { data } = res.body;
+//         assert.equal(data.deleteCompany, true);
+//         done();
+//       });
+//   });
+// });
+
+// describe("delete skill", () => {
+//   it("Should delete skill", (done) => {
+//     const query = `
+//     query{
+//       deleteSkill(skillId: ${skillId})
+//         }
+//         `;
+
+//     request(app)
+//       .post("/graphql")
+//       .send({ query, variables: { userId } })
+//       .expect(200)
+//       .end((err, res) => {
+//         if (err) return done(err);
+//         const { data } = res.body;
+//         assert.equal(data.deleteSkill, true);
+//         done();
+//       });
+//   });
+// });
+
+// describe("delete Account", () => {
+//   it("Should delete Account", (done) => {
+//     const query = `
+//     query{
+//       deleteSocialMediaAccounts(id: ${accountId})
+//         }
+//         `;
+
+//     request(app)
+//       .post("/graphql")
+//       .send({ query })
+//       .expect(200)
+//       .end((err, res) => {
+//         if (err) return done(err);
+//         const { data } = res.body;
+//         assert.equal(data.deleteSocialMediaAccounts, true);
 //         done();
 //       });
 //   });
