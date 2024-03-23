@@ -1,7 +1,7 @@
 import "@mantine/core/styles.css";
 import { MantineProvider } from "@mantine/core";
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
-import Ss from "./pages/SecondSignup/Ss";
+import Chat from "./pages/chat/Chat";
 function App() {
   const client = new ApolloClient({
     cache: new InMemoryCache(),
@@ -10,7 +10,7 @@ function App() {
   return (
     <ApolloProvider client={client}>
       <MantineProvider>
-        <Ss />
+        <Chat />
       </MantineProvider>
     </ApolloProvider>
   );
