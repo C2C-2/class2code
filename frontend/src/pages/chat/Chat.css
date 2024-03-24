@@ -1,0 +1,40 @@
+:root {
+  --dark: #283739;
+  --green: #388e3c;
+}
+
+.chat {
+  background-color: #f4f4f4;
+}
+.chat_chats {
+  height: 90vh;
+  gap: 1vw;
+}
+
+.chat_chats_head {
+  border-bottom: 1px solid var(--dark);
+  padding: 2vw 0vw ;
+  border-color: rgb(40, 55, 57, 0.2);
+}
+
+.chat_chats_head h4 {
+  color: var(--dark);
+}
+
+.chat > div {
+  border: 1px solid white;
+  border-radius: 3%;
+}
+
+.return-back-btn {
+  background-color: var(--dark);
+  width: 20%;
+}
+
+.plus {
+  background-color: var(--green);
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  padding: 6px;
+}
