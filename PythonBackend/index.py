@@ -99,7 +99,7 @@ def read_and_answer():
         file_bytes = blob.download_as_bytes()
 
         # Store the file_bytes in Redis with a time-to-live (TTL) of 1 hour (3600 seconds)
-        r.set(filename, file_bytes)
+        r.setex(filename, 3600, file_bytes)
 
     # Read file in-memory and splitting
     pdf_text = readPdfFromBytes(file_bytes)
