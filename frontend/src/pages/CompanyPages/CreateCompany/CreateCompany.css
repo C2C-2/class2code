@@ -1,0 +1,157 @@
+.CreateCompany {
+    align-items: flex-end;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+}
+
+.CreateCompanySideBar {
+    width: 15%;
+    height: 100%;
+    background: var(--white-100, #FFF);
+    box-shadow: 0px 6px 4px 0px rgba(0, 0, 0, 0.03);
+}
+
+.CreateComp {
+    width: 85%;
+    height: 100%;
+    display: flex;
+    align-items: flex-end;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.Part1CreateCompany {
+    width: 100%;
+    height: 10%;
+}
+
+.Part2CreateCompany {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 90%;
+    gap: 30px
+}
+
+.CreateCompanyButtonBack {
+    width: 93%;
+}
+
+.CreateCompanyInputs {
+    width: 90%;
+    height: 90%;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+}
+
+.Part1Inputs {
+    display: flex;
+    width: 55%;
+    height: 100%;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.GeneralInformation {
+    width: 60%;
+    height: 9%;
+    color: var(--light, rgba(0, 0, 0, 0.60));
+    font-family: Roboto;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.InputsCreateCompanyAll {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 90%;
+    align-items: flex-start;
+
+}
+
+.InputOverAll {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    height: 30%;
+}
+
+.TextPartCompany {
+    color: var(--dark, #283739);
+    font-family: "Open Sans";
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
+    letter-spacing: 0.25px;
+}
+
+.TextInput {
+    display: flex;
+    padding: 15px 11px;
+    align-items: center;
+    width: 100%;
+    border-radius: 5px;
+    border: 1px solid var(--line, #EAEAEA);
+    background: #FAFAFA;
+    color: var(--light, rgba(0, 0, 0, 0.60));
+    font-family: "Open Sans";
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+    letter-spacing: 0.15px;
+}
+
+.Part2Teams {
+    width: 45%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 20px;
+
+
+}
+
+.TextTeamCreateCompany {
+    width: 75%;
+    color: var(--light, rgba(0, 0, 0, 0.60));
+    font-family: Roboto;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.InputOverAllTeam {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 75%;
+    height: 20%;
+}
+
+.AddTeamsCreateCompany {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 75%;
+    height: 60%;
+}
+
+.ButtonCreateCompany {
+    width: 75%;
+    height: 20%;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+}

@@ -1,0 +1,12 @@
+.label {
+    color: var(--dark, #283739);
+
+    /* material-theme/label/medium 14 */
+    font-family: "Open Sans";
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
+    /* 142.857% */
+    letter-spacing: 0.25px;
+}

@@ -1,0 +1,323 @@
+.ProjectPageAll {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+}
+
+.ProjectPageMain {
+    width: 85%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.ProjectPageCenter {
+    width: 100%;
+    height: 90%;
+    display: flex;
+    flex-direction: row;
+}
+
+.ProjectPagePart1 {
+    width: 60%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding-left: 40px;
+    padding-top: 30px;
+    gap: 20px;
+    padding-bottom: 10px;
+}
+
+.ProjectPageTitle {
+    display: flex;
+    width: 100%;
+    height: 30%;
+    border-radius: 14.01px;
+    background: var(--GreenLight, rgba(131, 194, 157, 0.20));
+    flex-direction: row;
+    align-items: center;
+    padding-left: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-right: 20px;
+    gap: 10px;
+}
+
+.ProjectPageImg {
+    width: 170px;
+    height: 170px;
+}
+
+.ProjectPageTitleContent {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 60%;
+}
+
+.PTTop {
+    display: flex;
+    flex-direction: row;
+    height: 60%;
+    width: 100%;
+}
+
+.PTText {
+
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    justify-content: flex-end;
+    width: 50%;
+    height: 93%;
+
+}
+
+.PTSpan1 {
+    color: #1A1A1A;
+    font-feature-settings: 'clig'off;
+    font-family: Poppins;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.PTSpan2 {
+    color: #1A1A1A;
+    font-feature-settings: 'clig'off;
+    font-family: Poppins;
+    font-size: 22px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+}
+
+.PTParagraph {
+    width: 95%;
+    color: #1A1A1A;
+    font-feature-settings: 'clig'off, 'liga'off;
+    font-family: Poppins;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.PTSvg {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 40%;
+}
+
+.ProjectPageUnder {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 65%;
+    border-radius: var(--16, 16px);
+    border: 1px solid var(--30, #388E3C);
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 15px;
+
+    gap: 15px;
+}
+
+.ProjectUnderTime {
+    display: flex;
+    flex-direction: row;
+    height: 10%;
+    width: 100%;
+}
+
+.TimeAll {
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+    width: 50%;
+    align-items: center;
+    gap: 2px;
+}
+
+.TimeText {
+    color: var(--dark, #283739);
+    font-feature-settings: 'clig'off, 'liga'off;
+    font-family: Roboto;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 20px;
+}
+
+.ProjectUnderText {
+    display: flex;
+    flex-direction: column;
+    height: 75%;
+    width: 100%;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.ProjectUnderName {
+    width: 100%;
+    height: 10%;
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+
+.ProjectNameText {
+    color: #000;
+    font-family: "Open Sans";
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
+    letter-spacing: 0.25px;
+}
+
+.ProjectNameText1 {
+    color: var(--dark, #283739);
+    font-family: "Open Sans";
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
+    letter-spacing: 0.25px;
+}
+
+.ProjectUnderDetails {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 35%;
+    gap: 5px;
+}
+
+.ProjectDetailsText {
+    color: #000;
+    font-family: "Open Sans";
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
+    letter-spacing: 0.25px;
+}
+
+.ProjectDetailsParagraph {
+    width: 95%;
+    color: var(--light, rgba(0, 0, 0, 0.60));
+    font-family: "Open Sans";
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
+    letter-spacing: 0.25px;
+}
+
+.ProjectUnderRequirements {
+    display: flex;
+    flex-direction: row;
+    height: 50%;
+    width: 100%;
+    gap: 20px;
+}
+
+.ProjectRequirementsText {
+    color: #000;
+    text-align: center;
+    font-family: "Open Sans";
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    letter-spacing: 0.14px;
+    text-transform: capitalize;
+}
+
+.ProjectRequirementsCard {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 70%;
+    height: 100%;
+    gap: 10px;
+}
+
+.ProjectUnderButton {
+    width: 100%;
+    height: 15%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.ProjectPagePart2 {
+    width: 40%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    padding-right: 40px;
+    padding-top: 30px;
+    padding-bottom: 13px;
+}
+
+.Part2AllProjectPage {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 70%;
+    padding-left: 20px;
+    border-radius: 16px;
+    border: 1px solid var(--30, #388E3C);
+    background: var(--white-100, #FFF);
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+    gap: 20px;
+}
+
+.ProjectPagePart2Title {
+    width: 100%;
+    height: 10%;
+    display: flex;
+    flex-direction: row;
+    padding-top: 10px;
+    padding-right: 20px;
+    padding-bottom: 10px;
+    justify-content: space-between;
+}
+
+.CompanyWorkOnText {
+    color: var(--DMV-Black, #23262F);
+    font-family: Manrope;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 40.028px;
+
+}
+
+.ViewAllButton {
+    border: none;
+    background-color: #FFF;
+    color: var(--link, #36C);
+    font-family: Inter;
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 24.017px;
+}
+.ProjectPagePart2Content{
+    padding-left: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    height: 90%;
+    width: 90%;
+}

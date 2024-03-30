@@ -1,0 +1,63 @@
+.Comments {
+    height: 27%;
+    width: 100%;
+    border-radius: var(--0, 8px);
+    background: #F8F0FC;
+    display: flex;
+    flex-direction: column;
+}
+
+.Comments1 {
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: row;
+    padding-left: 20px;
+    padding-top: 10px;
+    gap: 13px;
+    align-items: center;
+    width: 90%;
+}
+.CommentsProfileButton{
+    border: none;
+    background-color: transparent;
+}
+.ComText {
+    color: var(--Dark-Blue, #334253);
+    font-feature-settings: 'clig'off, 'liga'off;
+    font-family: Rubik;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    border: none;
+    background-color: transparent;
+}
+
+.ComText1 {
+    color: var(--Grayish-Blue, #67727E);
+    font-feature-settings: 'clig'off, 'liga'off;
+    font-family: Rubik;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+}
+
+.Comments2{
+    padding-left: 20px;
+    padding-top: 10px;
+    gap: 13px;
+    align-items: center;
+    width: 90%;
+}
+.Para1{
+    padding-left: 10px;
+    color: var(--Grayish-Blue, #67727E);
+    font-feature-settings: 'clig' off, 'liga' off;
+    /* Body (M) */
+    font-family: Rubik;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px; /* 150% */ 
+}

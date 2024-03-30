@@ -1,0 +1,104 @@
+.MainMyCompanies {
+    justify-content: center;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+}
+
+
+.MyCompanies {
+    width: 85%;
+    height: 100%;
+    display: flex;
+    align-items: flex-end;
+    flex-direction: column;
+    gap: 30px;
+    scroll-snap-type: y mandatory;
+}
+
+
+.Part2My {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: center;
+    height: 90%;
+    gap: 20px;
+}
+
+.ButtonBack {
+    width: 96.3%;
+}
+
+.SearchMy {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    height: 20%;
+    gap: 30px;
+
+}
+
+.SearchPart {
+    width: 100%;
+    height: 30%;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    flex-direction: row;
+}
+
+.TextPart {
+    display: flex;
+    padding: 10px;
+    width: 40%;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    gap: 10px;
+    flex-shrink: 0;
+    border-radius: var(--12, 12px) var(--0, 0px) var(--0, 0px) var(--12, 12px);
+    border: 1px solid rgba(56, 142, 60, 0.40);
+    background: var(--white-100, #FFF);
+}
+
+.SvgPart {
+    display: flex;
+    height: 100%;
+    padding: 0px 12.831px;
+    justify-content: center;
+    align-items: center;
+    gap: 6.843px;
+    border-radius: var(--0, 0px) var(--12, 12px) var(--12, 12px) var(--0, 0px);
+    background: var(--30, #388E3C);
+}
+
+.ButtonPart {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 20px;
+    width: 80%;
+    height: 70%;
+}
+
+.Part3My{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 90%;
+    height: 100%;
+    scroll-snap-type: y mandatory;
+}
+.Part31{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    justify-content: flex-start;
+    height: 100%;
+    gap: 150px;
+}

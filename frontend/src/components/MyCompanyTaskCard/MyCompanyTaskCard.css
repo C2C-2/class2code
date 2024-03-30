@@ -1,0 +1,156 @@
+.MyCompanyTaskCardAll {
+    width: 30%;
+    height: 50%;
+    display: flex;
+    flex-direction: column;
+    border: none;
+    background-color: transparent;
+}
+
+.MyCompanyTaskCardMain {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.MyCompanyTaskCardDesign {
+    padding-top: 20px;
+    padding-bottom: 15px;
+    width: 100%;
+    height: 100%;
+    border-radius: var(--16, 16px);
+    background: #F9F9F9;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-right: 15px;
+    padding-left: 20px;
+    align-items: flex-start;
+}
+
+.MyCompanyTaskCardName {
+    display: flex;
+    height: 15% !important;
+    padding-left: 30px;
+    align-items: center;
+    justify-content: center;
+    width: 35%;
+    transform: translate(0px, 5px);
+
+}
+
+.MyCompanyTaskCardName1 {
+    display: flex;
+    border-radius: var(--4, 4px);
+    background: #973FCF;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.MyCompanyTaskCardText {
+    color: var(--white-100, #FFF);
+    font-family: Inter;
+    font-size: 10px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+}
+
+.MyCompanyTaskCardEditButton {
+    width: 100%;
+    height: 9%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.MyCompanyTaskCardEditButtonText {
+    color: #0D062D;
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: normal;
+    letter-spacing: -1.045px;
+    border: none;
+    background-color: transparent;
+}
+
+.MyCompanyTaskCardCenter {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 35%;
+    align-items: center;
+}
+
+.MyCompanyTaskCardCenterPart1 {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 85%;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.MyCompanyTaskCardCenterPart1Text1 {
+    color: #0D062D;
+    font-family: Inter;
+    font-size: 16.798px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+}
+
+.MyCompanyTaskCardCenterPart1Text2 {
+    color: #787486;
+    font-family: Inter;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+
+}
+
+.MyCompanyTaskCardCenterPart2Text1 {
+    color: var(--black-100, #1C1C1C);
+    font-feature-settings: 'cv11'on, 'cv01'on, 'ss01'on;
+
+    /* 24 Semibold */
+    font-family: Inter;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 36px;
+    /* 150% */
+}
+
+.MyCompanyTaskCardCenterParagraph {
+    height: 20%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.MyCompanyTaskCardCenterParagraphText {
+    width: 100%;
+    color: #787486;
+    font-family: Inter;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+.MyCompanyTaskCardCenterCardOther{
+    display: flex;
+    justify-content: flex-end;
+    flex-direction: row;
+    width: 100%;
+    height: 15%;
+    gap: 10px;
+}

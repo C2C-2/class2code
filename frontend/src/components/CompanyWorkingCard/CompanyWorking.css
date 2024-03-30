@@ -1,0 +1,130 @@
+.CompanyWorkingAll {
+    width: 20%;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    height: 40%;
+}
+
+.CompanyWorkingDesign {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    padding-top: 30px;
+    padding-left: 25px;
+    padding-right: 25px;
+    padding-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+    border-radius: 8px;
+    border: 1px solid rgba(0, 0, 0, 0.10);
+    background: var(--Neutral-colors-100, #FFF);
+    box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.20);
+}
+
+.CompanyWorkingPart1 {
+    width: 100%;
+    height: 60%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.PartTitle {
+    height: 50%;
+    width: 95%;
+    flex-direction: column;
+    display: flex;
+    gap: 2px;
+}
+
+.Title1 {
+    color: #000;
+    font-family: Inter;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 24px;
+}
+
+.Title2 {
+    color: var(--light, rgba(0, 0, 0, 0.60));
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 20px;
+}
+
+.PartParagraph {
+    height: 50%;
+    width: 95%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.ParaCompanyWorking {
+    color: var(--light, rgba(0, 0, 0, 0.60));
+    font-feature-settings: 'clig'off, 'liga'off;
+    font-family: Inter;
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+}
+
+.CompanyWorkingPart2 {
+    width: 100%;
+    height: 40%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 20px;
+}
+
+.LineCompanyWorking {
+    width: 100%;
+    height: 1px;
+    border: 1px solid rgb(0, 0, 0);
+}
+
+.PartImage {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+.PartTextUnder {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 90%;
+    height: 100%;
+}
+
+.Partu1 {
+    color: var(--orange, #FFA789);
+    font-family: Roboto;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.Partu2 {
+    color: rgba(0, 0, 0, 0.80);
+    font-family: Roboto;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 20px;
+    /* 125% */
+}

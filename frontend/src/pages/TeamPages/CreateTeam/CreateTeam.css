@@ -1,0 +1,145 @@
+.CreateTeamAll {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+}
+
+.CreateTeamMain {
+    width: 85%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.CreateTeamContent {
+    width: 100%;
+    height: 90%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(242, 249, 241, 0.40);
+    backdrop-filter: blur(6px);
+}
+
+.CreateTeamCenter {
+    width: 45%;
+    height: 75%;
+    border-radius: var(--12, 12px);
+    border: 1px solid rgba(0, 0, 0, 0.10);
+    background: var(--white-100, #FFF);
+    box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.20);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding-left: 30px;
+    padding-right: 30px;
+    padding-top: 30px;
+    padding-bottom: 15px;
+    gap: 15px;
+}
+
+.CreateTeamHeader {
+    color: var(--dark, #283739);
+    font-family: "Open Sans";
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 52px;
+    height: 15%;
+}
+
+.InputsAll {
+    display: flex;
+    width: 100%;
+    align-items: flex-start;
+    flex-direction: column;
+    height: 50%;
+    gap: 10px
+}
+
+.CreateTeamDataInput {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 50%;
+    height: 100%;
+    gap: 5px;
+}
+.CreateTeamLabel{
+    color: var(--dark, #283739);
+    font-family: Inter;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+}
+.CreateTeamTextInput{
+    display: flex;
+    height: 50%;
+    padding-left: 5px;
+    width: 100%;
+    border-radius: 5px;
+    border: 1px solid var(--line, #EAEAEA);
+    background: #FAFAFA;
+    color: var(--light, rgba(0, 0, 0, 0.60));
+    font-family: "Open Sans";
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+    letter-spacing: 0.15px; 
+}
+
+.CreateTeamInput1 {
+    display: flex;
+    flex-direction: row;
+    height: 50%;
+    align-items: flex-start;
+    width: 100%;
+    gap: 30px;
+}
+
+.CreateTeamInput2 {
+    display: flex;
+    flex-direction: row;
+    height: 50%;
+    align-items: flex-start;
+    width: 100%;
+    gap: 30px;
+}
+.CreateTeamRoleUser{
+    display: flex;
+    flex-direction: row;
+    height: 40%;
+    width: 100%;
+    align-items: flex-start;
+    gap: 30px;
+
+}
+.CreateTeamUsers{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    height: 100%;
+    width: 50%;
+    gap: 10px;
+}
+.CreateTeamRoles{
+    display: flex;
+    width: 50%;
+    height: 100%;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+}
+.CreateTeamButton{
+    width: 100%; 
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    height: 15%;
+ }
+

@@ -1,0 +1,249 @@
+.DashboardAll {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+}
+
+.DashboardMain {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    height: 100%;
+    width: 85%;
+}
+
+.DashboardCenter {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 95%;
+    padding-top: 50px;
+    padding-right: 20px;
+    align-items: flex-start;
+    gap: 30px;
+}
+
+.DashboardTexts {
+    display: flex;
+    flex-direction: column;
+    height: 10%;
+    width: 100%;
+    align-items: flex-start;
+    gap: 5px;
+}
+
+.DashboardTexts1 {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.DashboardTexts1Part1 {
+    color: var(--dark, #283739);
+    text-align: center;
+    font-family: Montserrat;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 133.9%;
+    /* 32.136px */
+    letter-spacing: 2.16px;
+}
+
+.DashboardTexts1Part2 {
+    color: var(--30, #388E3C);
+    font-family: Montserrat;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 133.9%;
+    letter-spacing: 2.16px;
+}
+
+.DashboardTexts2 {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+}
+
+.DashboardTexts2Part1 {
+    color: #8C8C8C;
+    font-family: Poppins;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    width: 27%;
+}
+
+.DashboardTexts2Part2 {
+    width: 60%;
+    background: rgba(40, 55, 57, 0.50);
+    height: 1px;
+}
+
+.DashboardClasses {
+    display: flex;
+    flex-direction: row;
+    height: 20%;
+    width: 100%;
+    gap: 65px;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.DashboardMyProjects {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    height: 100%;
+    width: 18%;
+    padding: var(--24, 24px);
+    border-radius: var(--16, 16px);
+    border: 1px solid rgba(56, 142, 60, 0.20);
+    background: var(--light, #F2F9F1);
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+}
+
+.DashboardMyProjects1 {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    height: 50%;
+}
+
+.DashboardMyProjects1Text {
+    color: var(--black-100, #1C1C1C);
+    font-feature-settings: 'cv11'on, 'cv01'on, 'ss01'on;
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 20px;
+}
+
+.DashboardMyProjects2 {
+    color: var(--black-100, #1C1C1C);
+    font-feature-settings: 'cv11'on, 'cv01'on, 'ss01'on;
+    font-family: Inter;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 36px;
+}
+
+.DashboardTotalTasks {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    height: 100%;
+    width: 18%;
+    padding: var(--24, 24px);
+    border-radius: var(--16, 16px);
+    background: #FFF4E6;
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+    border: none;
+}
+
+.DashboardMyCompanies {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    height: 100%;
+    width: 18%;
+    padding: var(--24, 24px);
+    border-radius: var(--16, 16px);
+    background: #E3FAFC;
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+    border: none;
+}
+
+.DashboardProjectFinished {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    height: 100%;
+    width: 18%;
+    padding: var(--24, 24px);
+    border-radius: var(--16, 16px);
+    border: 1px solid rgba(56, 142, 60, 0.30);
+    background: #F8F0FC;
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+}
+
+.DashboardUnder {
+    display: flex;
+    padding-top: 10px;
+    flex-direction: column;
+    height: 70%;
+    width: 100%;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+.DashboardUnderPart1 {
+    height: 10%;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 20px;
+}
+
+.DashboardUnderPart1Text1 {
+    color: var(--Neutral-Brainstorming-Black, #121212);
+    font-family: Inter;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 28px;
+}
+
+.DashboardUnderPart1Text2 {
+    color: var(--Brainstorming-Black-Tints-300, #B3B3B3);
+    font-family: Inter;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
+}
+
+.DashboardUnderPart2 {
+    height: 90%;
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.TableDesign {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.TableDesignText1 {
+    color: var(--Brainstorming-Black-Tints-900, #1A1A1A);
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 16px;
+}
+
+.TableDesignText2 {
+    color: var(--Brainstorming-Black-Tints-300, #B3B3B3);
+    font-family: Inter;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: 18px;
+}
+.TableProfile{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}

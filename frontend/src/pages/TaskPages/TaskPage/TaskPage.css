@@ -1,0 +1,246 @@
+.TaskPageAll {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+}
+
+.TaskPageCenter {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 85%;
+    align-items: flex-start;
+}
+
+.TaskPageMain {
+    display: flex;
+    flex-direction: row;
+    height: 90%;
+    width: 100%;
+    align-items: center;
+}
+
+.TaskPageButtonBack {
+    height: 90%;
+    width: 8%;
+    flex-direction: column;
+    display: flex;
+    align-items: flex-end;
+}
+
+.TaskPageContent {
+    height: 77%;
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+}
+
+.TaskPageContentPart1 {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 15%;
+    width: 80%;
+    background-color: #fdfdfd;
+    border-radius: 10px;
+    border: 2px solid #F5F6F7;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.TSCP1 {
+    width: 55%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 20px;
+}
+
+.ArrowDesign {
+    display: flex;
+    width: 35px;
+    height: 35px;
+    padding: 3px;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+    border-radius: 100px;
+    border: 2px solid var(--Grey-Blue-97, #F5F6F7);
+    background: var(--30, #388E3C);
+    box-shadow: 0px 2px 5px 0px rgba(38, 51, 77, 0.03);
+}
+
+.ArrowDesignTrue {
+    display: flex;
+    width: 30px;
+    height: 30px;
+    padding: 3px;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+    border-radius: 100px;
+    border: 2px solid var(--Grey-Blue-97, #F5F6F7);
+    background: var(--30, #388E3C);
+    box-shadow: 0px 2px 5px 0px rgba(38, 51, 77, 0.03);
+}
+
+.TaskPageArrow {
+    color: #fff;
+    height: 20px;
+    width: 20px;
+}
+
+.TaskPageArrowTrue {
+    color: #fff;
+    height: 17px;
+    width: 17px;
+}
+
+.TaskPageText1Part1 {
+    color: var(--Grey-Blue-60, #6B7A99);
+    font-feature-settings: 'clig'off, 'liga'off;
+    font-family: Roboto;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 20px;
+}
+
+.TaskPageText2Part1 {
+    color: var(--Grey-Blue-80, #ADB8CC);
+    font-feature-settings: 'clig'off, 'liga'off;
+    font-family: Roboto;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 20px;
+}
+
+.TSCP2 {
+    width: 47%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 20px;
+}
+
+.TaskPageTimes {
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+    width: 35%;
+    align-items: center;
+    gap: 5px;
+}
+
+.TaskPageContentPart2 {
+    width: 80%;
+    height: 85%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    border-radius: 10px;
+    border: 2px solid #F5F6F7;
+    background: #FFF;
+    gap: 20px;
+}
+
+.TaskPagePart2TitleAll {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 10%;
+    align-items: flex-start;
+}
+
+.TaskPageContentPart2Title {
+    padding-left: 20px;
+    padding-top: 10px;
+    padding-right: 30px;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+}
+
+.TaskPageTitle1 {
+    display: flex;
+    flex-direction: row;
+    width: 80%;
+    height: 100%;
+    align-items: center;
+    gap: 20px;
+}
+
+.TaskPageTitle2 {
+
+    display: flex;
+    flex-direction: column;
+    width: 20%;
+    height: 100%;
+    align-items: flex-end;
+    justify-content: center;
+}
+
+.TaskPageLine {
+    width: 100%;
+    border: 1.5px solid #e4eef8;
+}
+
+.TaskPageContentPart3 {
+    width: 80%;
+    height: 20%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 30px;
+    justify-content: flex-start;
+}
+
+.TaskPageButton1 {
+    width: 20%;
+    height: 80%;
+    padding: var(--12, 12px) var(--24, 24px);
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    border: none;
+    border-radius: var(--8, 8px);
+    background: var(--yello, #F4CE14);
+}
+
+.TaskPageButton1Text {
+    color: var(--dark, #283739);
+    font-family: "Open Sans";
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: normal;
+}
+
+.TaskPageButton2 {
+    width: 20%;
+    height: 80%;
+    padding: var(--12, 12px) var(--24, 24px);
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    border: none;
+    border-radius: var(--8, 8px);
+    background: var(--30, #388E3C);
+}
+
+.TaskPageButton2Text {
+    color: var(--white-100, #FFF);
+    font-family: "Open Sans";
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: normal;
+}

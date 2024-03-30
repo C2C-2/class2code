@@ -1,0 +1,16 @@
+.DashboardStatusCardAll {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 20px;
+}
+
+.DashboardStatusCardText {
+    color: var(--Brainstorming-Black-Tints-600, #666);
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
+    /* 166.667% */
+}

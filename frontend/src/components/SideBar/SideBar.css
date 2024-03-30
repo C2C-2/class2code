@@ -1,0 +1,280 @@
+.MainSide {
+    align-items: flex-start;
+    background-color: #ffffff;
+    border: 0.5px solid #e3e0e0;
+    border-radius: 10px;
+    background: var(--white-100, #FFF);
+    display: flex ;
+    flex-direction: column;
+    gap: 15px;
+    height: 100%;
+    width: 15%;
+/* Adjust width as needed */
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    overflow-y: auto; 
+  
+}
+
+.Profile {
+    height: 10%;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.PartPro {
+    padding-top: 30px;
+    width: 100%;
+    padding-left: 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+
+.ProImg {
+    height: 44px;
+    width: 44px;
+}
+
+.TextSide {
+    align-items: flex-start;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    flex-grow: 1;
+    gap: 4px;
+}
+
+.T1 {
+    color: #757575;
+    font-family: "Inter-Medium", Helvetica;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.4px;
+    line-height: 12px;
+}
+
+.T2 {
+    color: #000000;
+    font-family: "Inter-Medium", Helvetica;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0;
+    line-height: 20px;
+}
+
+.LineSide {
+    width: 98%;
+    height: 1px;
+    border: 1.2px solid #00000099;
+}
+
+.Sections {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 60%;
+    align-items: center;
+    gap: 20px;
+}
+
+.MainSection {
+    align-items: flex-start;
+    display: flex;
+    gap: 8px;
+    padding: 0px 12px;
+    width: 90%;
+}
+
+.MainText {
+    color: #757575;
+    font-family: "Inter-Medium", Helvetica;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.4px;
+    line-height: 12px;
+    white-space: nowrap;
+}
+
+.OtherSection {
+    display: flex;
+    width: 80%;
+    align-items: flex-start;
+    flex-direction: row;
+    gap: 12px;
+}
+
+
+.SvgImg {
+    height: 20px;
+    width: 20px;
+}
+
+.DashText {
+    color: #757575;
+    flex: 1;
+    font-family: "Inter-Medium", Helvetica;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: -0.28px;
+    line-height: 20px;
+    padding-top: 2px;
+}
+
+.PostText {
+    color: #757575;
+    font-family: "Inter-Medium", Helvetica;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: -0.28px;
+    line-height: 20px;
+}
+
+.ChatText {
+    color: #757575;
+    font-family: "Inter-Medium", Helvetica;
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: -0.28px;
+    line-height: 20px;
+}
+
+.AvailableText {
+    color: #757575;
+    font-family: "Inter-Medium", Helvetica;
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: -0.28px;
+    line-height: 20px;
+}
+
+.SectionTeam {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    height: 25%;
+    width: 100%;
+}
+
+.SectionText {
+    align-items: center;
+    background-color: var(--variable-collection-light);
+    border-radius: 8px;
+    display: flex;
+    gap: 12px;
+    padding: 10px 12px;
+    width: 90%;
+}
+
+.TeamText {
+    color: #757575;
+    flex: 1;
+    font-family: "Inter-Medium", Helvetica;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: -0.28px;
+    line-height: 20px;
+}
+
+.icon-chevron {
+    height: 16px;
+    width: 16px;
+}
+
+.SubSection {
+    align-items: flex-start;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    position: relative;
+    width: 55%;
+}
+
+.Subs {
+    align-items: center;
+    border-radius: 8px;
+    display: flex;
+    gap: 12px;
+    padding: 8px 12px;
+    position: relative;
+    width: 172px;
+}
+
+.SubsUnder {
+    align-items: center;
+    border-radius: 8px;
+    display: flex;
+    gap: 12px;
+    padding: 2px 12px;
+    position: relative;
+    height: 0%;
+    width: 172px;
+}
+
+.SubText {
+    color: #757575;
+    flex: 1;
+    font-family: "Inter-Medium", Helvetica;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: -0.24px;
+    line-height: 16px;
+    margin-top: -1px;
+}
+
+.Arrow {
+    border-bottom-style: solid;
+    border-bottom-width: 2px;
+    border-color: #F6F6F6;
+    border-left-style: solid;
+    border-left-width: 2px;
+    border-radius: 0px 0px 0px 8px;
+    height: 8px;
+    left: -13px;
+    position: absolute;
+    top: 12px;
+    width: 13px;
+}
+.Arrow1 {
+    border-bottom-style: solid;
+    border-bottom-width: 2px;
+    border-color: #F6F6F6;
+    border-left-style: solid;
+    border-left-width: 2px;
+    border-radius: 0px 0px 0px 8px;
+    height: 8px;
+    left: -13px;
+    position: absolute;
+    width: 13px;
+}
+
+.lineSub {
+    background-color: #F6F6F6;
+    height: 55px;
+    left: -13px;
+    position: absolute;
+    top: 0;
+    width: 2px;
+}
+.lineSubComp {
+    background-color: #F6F6F6;
+    height: 120px;
+    left: -13px;
+    position: absolute;
+    top: 0;
+    width: 2px;
+}
+
+.SettingsSide{
+    background-color: aquamarine;
+    height: 28%; 
+    width: 100%;
+}

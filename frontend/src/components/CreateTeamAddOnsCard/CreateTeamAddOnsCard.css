@@ -1,0 +1,26 @@
+.CreateTeamAddOnsCardAll {
+    align-items: center;
+    display: flex;
+    height: 20%;
+    gap: 10px;
+    justify-content: space-between;
+    border-radius: 15px;
+    border: 1px solid var(--line, #EAEAEA);
+    background-color: #E7F5FF;
+    padding-left: 10px;
+    padding-right: 10px;
+    width: 100%;
+    border: none;
+}
+
+.CreateTeamAddOnsCardText {
+    color: var(--dark, #283739);
+    font-feature-settings: 'clig'off, 'liga'off;
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
+    /* 142.857% */
+
+}

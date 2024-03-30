@@ -1,0 +1,375 @@
+.SignUpFigmaMain {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+
+
+.SignUpFigmaPart1 {
+    width: 42%;
+    height: 95% !important;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 25px;
+
+}
+
+.SignUpFigmaMainImage {
+    width: 95%;
+    height: 10%;
+}
+
+
+
+.SignUpFigmaImageMain {
+    width: 60px;
+    height: 60px;
+}
+
+.SignUpFigmaSecond {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    gap: 30px;
+    height: 80%;
+    width: 90%;
+
+}
+
+.SignUpFigmaMainImage2 {
+    height: 40%;
+    width: 75%;
+}
+
+.SignUpFigmaImage2 {
+    height: 250px;
+    width: 400px;
+}
+
+
+.SignUpFigmaTexts {
+    width: 90%;
+    height: 60%;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    gap: 26px;
+    justify-content: center;
+}
+
+.SignUpFigmaText-Create {
+    width: 80%;
+    color: var(--30, #388E3C);
+    font-family: "Nunito Sans";
+    font-size: 34px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: normal;
+}
+
+.SignUpFigmaText-Para {
+    color: #00000099;
+    text-align: center;
+    font-family: Inter;
+    font-size: 20px;
+    font-weight: 400;
+    letter-spacing: 0;
+    line-height: 40px;
+    text-align: center;
+    width: 95%;
+}
+
+.SignUpFigmaUnder {
+    color: var(--dark, #283739);
+    font-family: Inter;
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: normal;
+    height: 0%;
+    width: 100%;
+}
+
+.SignUpFigmabox {
+    height: 100%;
+    width: 1px;
+    background: rgba(0, 0, 0, 0.60);
+}
+
+.SignUpFigmabox .SignUpFigmaline {
+    height: 100%;
+    background: rgba(0, 0, 0, 0.60);
+}
+
+.SignUpFigmaPart2Second {
+    width: 55%;
+    height: 95% !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.SignUpFigmaTop {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    width: 80%;
+    height: 15%;
+}
+
+.SignUpFigmaSecondLogo {
+    width: 48px;
+    height: 48px;
+}
+
+.SignUpFigmatext-3 {
+    color: #000000bd;
+    font-family: Montserrat;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 72px;
+    /* 300% */
+    letter-spacing: -0.36px;
+}
+
+.SignUpFigmaMainTop {
+    align-items: center;
+    display: inline-flex;
+    gap: 12px;
+    padding: 0px 10px;
+    width: 83%;
+    ;
+}
+
+.SignUpFigmaline-2 {
+    width: 82%;
+    height: 1px;
+    background: #00000099;
+}
+
+
+.SignUpFigmaMid {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 8px;
+    padding: 0px 10px;
+    width: 68%;
+    height: 10%;
+}
+
+.SignUpFigmaMidSign {
+    color: #000000;
+    font-family: "Montserrat-ExtraBold", Helvetica;
+    font-size: 25px;
+    font-weight: 800;
+    letter-spacing: -0.54px;
+    line-height: normal;
+}
+
+.SignUpFigmaMidEnter {
+    color: #00000099;
+    font-family: "Montserrat-Light", Helvetica;
+    font-size: 17px;
+    font-weight: 300;
+    letter-spacing: -0.3px;
+    line-height: normal;
+    padding-left: 4px;
+}
+
+.SignUpFigmaLink {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    flex-direction: column;
+    width: 78%;
+    height: 15%;
+    gap: 12px;
+}
+
+.SignUpFigmaSocial {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    gap: 10px;
+    width: 90%;
+    height: 55%;
+}
+
+.SignUpFigmaSocial {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.SignUpFigmaAround {
+    display: flex;
+    width: 122px;
+    height: 48px;
+    padding: 11px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    border-radius: 15px;
+    border: 1px solid var(--Neutral-Colors-500, #E0E0E9);
+    background: var(--Neutral-Colors-White, #FFF);
+    box-shadow: 0px 18px 30px 0px rgba(131, 119, 198, 0.11);
+}
+
+.SignUpFigmaLineAll {
+    height: 25%;
+    align-items: flex-end;
+    display: flex;
+    position: relative;
+    width: 84%;
+}
+
+.SignUpFigmaLineOr {
+    width: 50%;
+    height: 1px;
+    border-radius: var(--0, 0px);
+    background: #00000099;
+}
+
+.SignUpFigmaOrClass {
+    display: flex;
+    width: 100%;
+    align-items: flex-end;
+    gap: var(--4, 4px);
+}
+
+.SignUpFigmaOr {
+    color: rgba(0, 0, 0, 0.80);
+    font-family: Montserrat;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    letter-spacing: -0.18px;
+}
+
+.SignUpFigmaInputs {
+    width: 78%;
+    height: 50%;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.SignUpFigmaPacks {
+    align-items: flex-start;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    position: relative;
+    width: 85%;
+}
+
+.SignUpFigmaPack1 {
+    color: var(--gray-3);
+    font-family: "Nunito Sans-SemiBold", Helvetica;
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: 0;
+    line-height: normal;
+    margin-top: -1px;
+    position: relative;
+    width: fit-content;
+}
+
+.SignUpFigmaPack2 {
+    align-items: center;
+    border: 1px solid;
+    border-color: #ded2d9;
+    border-radius: 5px;
+    display: flex;
+    flex: 0 0 auto;
+    gap: 13px;
+    padding: 13px 10px;
+    position: relative;
+    width: 100%;
+    background-color: #FFF;
+    color: #000;
+    font-family: "Nunito Sans-Regular", Helvetica;
+}
+
+.SignUpFigmaSignButton {
+padding-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 81%;
+    gap: 30px;
+    height: 20%;
+}
+
+.SignUpFigmaUnderSign {
+    align-items: center;
+    background: var(--blue, #164B60);
+    border-radius: 6px;
+    display: flex;
+    gap: 13px;
+    justify-content: center;
+    padding: 13px 10px 12px;
+    height: 90%;
+    width: 82%;
+}
+
+.SignUpFigmatext-sign {
+    color: #ffffff;
+    font-family: "Nunito Sans-ExtraBold", Helvetica;
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: 0;
+    line-height: normal;
+    margin-top: -1px;
+    position: relative;
+    width: fit-content;
+}
+
+.SignUpFigmaUnderLogin {
+    align-items: center;
+    display: inline-flex;
+    flex: 0 0 auto;
+    gap: 10px;
+    justify-content: center;
+    position: relative;
+}
+
+.SignUpFigmatext-Already {
+    color: var(--gray-3);
+    font-family: "Nunito Sans-Regular", Helvetica;
+    font-size: 18px;
+    font-weight: 400;
+    letter-spacing: 0;
+    line-height: normal;
+    margin-top: -1px;
+    position: relative;
+    width: fit-content;
+}
+
+.SignUpFigmatext-LogIn {
+    color: var(--variable-collection-link);
+    font-family: "Nunito Sans-SemiBold", Helvetica;
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: 0;
+    line-height: normal;
+    margin-top: -1px;
+    position: relative;
+    text-decoration: underline;
+    width: fit-content;
+}

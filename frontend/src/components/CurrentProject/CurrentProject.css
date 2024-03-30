@@ -1,0 +1,26 @@
+.ProjectAll {
+    width: 80%;
+    height: 40%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: var(--12, 12px) var(--16, 16px);
+    align-items: center;
+    border-radius: 5px;
+    border: 1px solid #FFF0F6;
+    background: var(--lite-blue, #E7F5FF);
+}
+
+.PA1 {
+    color: var(--dark, #283739);
+    font-family: "Open Sans";
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+    letter-spacing: 0.15px;
+}
+.ProjectAllButtonSvg{
+    border: none;
+    background-color: transparent;
+}

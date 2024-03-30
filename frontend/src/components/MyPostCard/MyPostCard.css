@@ -1,0 +1,97 @@
+.MyPostsCardAll {
+    width: 30%;
+    height: 50%;
+    border-radius: 10px;
+    background: var(--white-100, #FFF);
+    box-shadow: 0px 20px 60px 0px rgba(0, 0, 0, 0.20);
+    padding-left: 30px;
+    padding-right: 30px;
+    display: flex;
+    flex-direction: column;
+    padding-top: 15px;
+}
+
+.MyPostsCardDesign {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    align-items: flex-start;
+    gap: 15px;
+}
+
+.MyPostsCardProfile {
+    display: flex;
+    flex-direction: row;
+    width: 60%;
+    height: 30%;
+    gap: 20px;
+}
+
+.MyPostsCardImg {
+    width: 50px;
+    height: 50px;
+}
+
+.MyPostsCardImgText {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.MyImgText1 {
+    color: #000;
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    letter-spacing: -0.42px;
+}
+
+.MyImgText2 {
+    color: #8E8E8E;
+    font-family: Inter;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    letter-spacing: -0.48px;
+}
+
+.MyPostsCardPost {
+    width: 100%;
+    height: 20%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.MyParagraphPost {
+    color: #000;
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 100%;
+    letter-spacing: -0.6px;
+}
+.MyPostsCardTime{
+    width: 95%;
+    height: 40%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+.MyPostTime{
+    color: #8E8E8E;
+    font-family: Inter;
+    font-size: 10px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    letter-spacing: -0.42px; 
+}
+

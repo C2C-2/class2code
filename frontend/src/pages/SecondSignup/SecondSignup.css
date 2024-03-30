@@ -1,3 +1,270 @@
-/* .mainCenterDiv{
-    background-color: black;
-} */
+.SecondSignupAll {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+}
+
+.SecondSignupMain {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  align-items: center;
+  gap: 15px;
+  padding-bottom: 10px;
+}
+
+.SecondSignupCenter {
+  display: flex;
+  height: 90%;
+  width: 85%;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: var(--24, 24px);
+  border-radius: 14px;
+  border: 1px solid rgba(0, 0, 0, 0.10);
+  background: var(--white-100, #FFF);
+  box-shadow: 0px 20px 60px 0px rgba(0, 0, 0, 0.20);
+  gap: 15px;
+}
+
+.SecondSignupCenterTop {
+  width: 100%;
+  height: 25%;
+  display: flex;
+  flex-direction: row;
+  padding: var(--12, 12px) 32px;
+  justify-content: space-between;
+  border-radius: var(--16, 16px);
+  background: #FFF4E6;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+}
+
+.SecondSignupCenterTopPart1 {
+  justify-content: center;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 50%;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.SecondSignupCenterTopPart1Text1 {
+  color: var(--dark, #283739);
+  font-family: Inter;
+  font-size: 32px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  letter-spacing: -0.64px;
+}
+
+.SecondSignupCenterTopPart1Text2 {
+  color: rgba(0, 0, 0, 0.40);
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  letter-spacing: -0.28px;
+}
+
+.SecondSignupContent {
+  justify-content: space-between;
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 80%;
+  align-items: flex-start;
+}
+
+.SecondSignupContentPart1 {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  height: 100%;
+  width: 50%;
+}
+
+.SecondSignupUpload {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  height: 30%;
+  width: 100%;
+  gap: 5px;
+}
+
+.SecondSignupUploadText {
+  color: var(--dark, #283739);
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+}
+
+.SecondSignupUploadBox {
+  display: flex;
+  flex-direction: row;
+  height: 60%;
+  width: 100%;
+  align-items: center;
+  border-radius: 7.624px;
+  border: 0.762px dashed rgba(0, 0, 0, 0.25);
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  padding: 12.198px 18.297px 12.198px 24.396px;
+  justify-content: space-between;
+}
+
+.SecondSignupUploadBoxText {
+  width: 60%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.SecondSignupUploadBoxText1 {
+  color: #000;
+  font-family: Abel;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.SecondSignupUploadBoxText2 {
+  color: rgba(0, 0, 0, 0.40);
+  font-family: Abel;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.SecondSignupInputs {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding-bottom: 30px;
+  gap: 10px;
+  width: 100%;
+  height: 70%;
+}
+
+.SecondSignupPacks {
+  height: 25%;
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.SecondSignupLabelText {
+  color: var(--dark);
+  font-family: "Nunito Sans-SemiBold", Helvetica;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0;
+  line-height: normal;
+  margin-top: -1px;
+  position: relative;
+  width: fit-content;
+}
+
+.SecondSignupInputText {
+  height: 60%;
+  align-items: center;
+  align-self: stretch;
+  border: 1px solid;
+  border-color: #ded2d9;
+  border-radius: 5px;
+  box-shadow: 0px 4px 4px #00000014;
+  display: flex;
+  flex: 0 0 auto;
+  gap: 13px;
+  padding: 13px 10px;
+  width: 100%;
+}
+
+.SecondSignupContentPart2 {
+  padding-top: 10px;
+  height: 100%;
+  width: 35%;
+  gap: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+
+}
+
+.SecondSignupContentPart2Design {
+  padding-top: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
+  height: 90%;
+  width: 100%;
+  gap: 20px;
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--12, 12px);
+  border: 1px solid rgba(40, 55, 57, 0.30);
+  box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.20);
+  padding-bottom: 20px;
+}
+
+.SecondSignupContentPart2Text1 {
+  color: var(--light, rgba(0, 0, 0, 0.60));
+  font-family: Inter;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.SecondSignupContentPart2Card {
+  width: 100%;
+  height: 70%;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.SecondSignupContentPart2ButtonAdd {
+  width: 100%;
+  height: 10%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.SecondSignupContentPart2ButtonFinish {
+  width: 100%;
+  height: 10%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.SecondSignupButtonFinish {
+  height: 100%;
+  width: 30%;
+  border-radius: var(--8, 8px);
+  background: var(--dark, #283739);
+  border: none;
+  box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.20);
+}
+
+.SecondSignupButtonFinishText {
+  color: var(--white, var(--white-100, #FFF));
+  font-family: Inter;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+}

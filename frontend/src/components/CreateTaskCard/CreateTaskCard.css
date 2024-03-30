@@ -1,0 +1,27 @@
+.CreateTaskCardAll {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    height: 20%;
+    gap: 10px;
+    justify-content: space-between;
+    border-radius: 15px;
+    border: 1px solid var(--line, #EAEAEA);
+    background-color: #83C29D33;
+    padding-left: 10px;
+    padding-right: 10px;
+    width: 100%;
+    border: none;
+}
+
+.CreateTaskCardText {
+    color: var(--light, rgba(0, 0, 0, 0.60));
+    font-feature-settings: 'clig'off, 'liga'off;
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
+    /* 142.857% */
+
+}
