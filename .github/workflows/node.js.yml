@@ -26,11 +26,14 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-    - run: |
-          cd .\Backend\
-          npm start
-          
-    - run: |
-          cd .\Backend\
-          npm test
+    - name: Install dependencies and start the application
+      run: |
+        cd Backend
+        npm install
+        npm start
+      
+    - name: Run tests
+      run: |
+        cd Backend
+        npm test
 
