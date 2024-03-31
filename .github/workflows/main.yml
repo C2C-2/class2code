@@ -13,7 +13,7 @@ on:
 jobs:
   # Contains a single job called "build"
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
       # Checks out repository under $GITHUB_WORKSPACE, so job can access it
       - uses: actions/checkout@v2
