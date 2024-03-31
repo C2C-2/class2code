@@ -28,7 +28,9 @@ jobs:
         cache: 'npm'
     - run: |
           cd .\Backend\
-          ls
           npm start
+          
+    - run: |
+          cd .\Backend\
           npm test
 
