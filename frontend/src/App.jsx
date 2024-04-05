@@ -1,6 +1,7 @@
 import "@mantine/core/styles.css";
 import { MantineProvider } from "@mantine/core";
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
+<<<<<<< HEAD
 import SecondSignup from "./pages/SecondSignup/SecondSignup"
 import SignUpFigma from "./pages/SignUp/SignUpFigma";
 import LogInFigma from "./pages/LogIn/LogInFigma";
@@ -42,6 +43,9 @@ import HomePage2 from "./pages/OtherPages/Home/HomePage2/HomePage2";
 import HomePage from "./pages/OtherPages/Home/HomePage";
 import FAQQuestion from "./pages/OtherPages/FAQQuestion/FAQQuestion";
 import LightDarkMode from "./components/NavBar/Light_DarkMode/LightDarkMode";
+=======
+import Chat from "./pages/chat/Chat";
+>>>>>>> main
 function App() {
   const client = new ApolloClient({
     cache: new InMemoryCache(),
@@ -50,6 +54,7 @@ function App() {
   return (
     <ApolloProvider client={client}>
       <MantineProvider>
+<<<<<<< HEAD
         {/* <AIChat/> */}
         {/* <ShowAllPosts/> */}
         {/* <AddPost/> */}
@@ -78,6 +83,9 @@ function App() {
         {/* <SignUpFigma/> */}
         {/* <LogInFigma/> */}
         {/* <SecondSignup/> */}
+=======
+        <Chat />
+>>>>>>> main
       </MantineProvider>
     </ApolloProvider>
   );

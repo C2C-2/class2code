@@ -40,7 +40,7 @@ env_values = dotenv_values("./app.env")
 os.environ["OPENAI_API_KEY"] = env_values["OPENAI_API_KEY"]
 
 # Assuming you have a module `llm` defined, and a function `load_qa_chain` that uses this `llm`
-llm = OpenAI(model_name="text-davinci-003", temperature=0.5)
+llm = OpenAI(model_name="gpt-3.5-turbo", temperature=0.5)
 chain = load_qa_chain(llm)
 embeddings = OpenAIEmbeddings()
 
@@ -99,7 +99,7 @@ def read_and_answer():
         file_bytes = blob.download_as_bytes()
 
         # Store the file_bytes in Redis with a time-to-live (TTL) of 1 hour (3600 seconds)
-        r.set(filename, file_bytes)
+        r.setex(filename, 3600, file_bytes)
 
     # Read file in-memory and splitting
     pdf_text = readPdfFromBytes(file_bytes)

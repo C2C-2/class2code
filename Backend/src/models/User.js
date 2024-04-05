@@ -1,27 +1,30 @@
 module.exports = {
+  id: {
+    type: "uuid",
+    primary: true,
+  },
   Username: {
     type: "string",
     unique: true,
   },
   FirstName: "string",
   LastName: "string",
-  Email: {
-    type: "string",
-    unique: true,
-  },
-  Password: "string",
   Country: "string",
-  IsActive: "boolean",
+  IsActive: {
+    type: "boolean",
+    default: true,
+  },
   CreatedBy: "int",
   CreateDate: {
     type: "string",
     default: () => new Date().toString(),
   },
-  Rate: "int",
+  Rate: "float",
   DateOfBirth: "string",
   Gender: "string",
   Work: "string",
   Bio: "string",
+  ImageUrl: "string",
   LastTimeOnline: "string",
   chat_with_AI: {
     type: "relationship",
@@ -125,6 +128,13 @@ module.exports = {
     type: "relationship",
     target: "Company",
     relationship: "ADMIN_OF",
+    direction: "out",
+    eager: true,
+  },
+  work_on: {
+    type: "relationship",
+    target: "Project",
+    relationship: "WORK_ON",
     direction: "out",
     eager: true,
   },

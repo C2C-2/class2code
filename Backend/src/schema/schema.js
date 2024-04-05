@@ -2,8 +2,8 @@ const { gql } = require("apollo-server");
 
 const typeDefs = gql`
   type integer {
-    low: Int
-    high: Int
+    low: Float
+    high: Float
   }
 
   type AIMessage {
@@ -25,14 +25,18 @@ const typeDefs = gql`
     CreatedDate: String
   }
 
-  type Chat {
-    _id: ID
-    IsDeleted: Boolean
+  input CommentInput {
+    Value: String!
     CreatedDate: String
   }
 
+  type Chat {
+    _id: ID
+    CreatedDate: String
+    Messages: [Message]
+  }
+
   input ChatInput {
-    IsDeleted: Boolean
     CreatedDate: String
   }
 
@@ -40,17 +44,21 @@ const typeDefs = gql`
     _id: ID
     CompanyName: String
     CompanyDescription: String
-    Rate: integer
+    Rate: Float
     Domain: String
-    IsDeleted: Boolean
     CreateDate: String
+    Teams: [Team]
+    Project: Project
+    Comments: [Comment]
+    Posts: [PositionPost]
+    Tasks: [Task]
   }
 
   input CompanyInput {
-    CompanyName: String
-    CompanyDescription: String
-    Domain: String
-    Rate: Int
+    CompanyName: String!
+    CompanyDescription: String!
+    Domain: String!
+    Rate: Float
   }
 
   type ContactMessage {
@@ -60,11 +68,17 @@ const typeDefs = gql`
   }
 
   input ContactMessageInput {
-    Message: String
+    Message: String!
   }
 
   type Education {
     _id: ID
+    Title: String
+    Description: String
+    FileName: String
+  }
+
+  input EducationInput {
     Title: String
     Description: String
     FileName: String
@@ -75,23 +89,21 @@ const typeDefs = gql`
     userId: Int
     MessageContent: String
     CreatedDate: String
-    IsDeleted: Boolean
   }
 
   input MessageInput {
-    userId: Int
-    MessageContent: String
+    userId: String!
+    MessageContent: String!
   }
 
   type PositionPost {
     _id: ID
     Content: String
     CreatedDate: String
-    IsDeleted: Boolean
   }
 
   input PositionPostInput {
-    Content: String
+    Content: String!
   }
 
   type Project {
@@ -99,12 +111,15 @@ const typeDefs = gql`
     ProjectName: String
     ProjectDescription: String
     FileName: String
+    Notes: [ProjectNote]
+    Requirements: [ProjectRequirement]
+    Applies: [Company]
   }
 
   input ProjectInput {
-    ProjectName: String
-    ProjectDescription: String
-    FileName: String
+    ProjectName: String!
+    ProjectDescription: String!
+    FileName: String!
   }
 
   type ProjectNoteTask {
@@ -114,8 +129,8 @@ const typeDefs = gql`
   }
 
   input ProjectNoteTaskInput {
-    Title: String
-    Description: String
+    Title: String!
+    Description: String!
   }
 
   type ProjectNote {
@@ -125,12 +140,16 @@ const typeDefs = gql`
   }
 
   input ProjectNoteInput {
-    Title: String
+    Title: String!
   }
 
   type ProjectRequirement {
     _id: ID
     Value: String
+  }
+
+  input ProjectRequirementInput {
+    Value: String!
   }
 
   type Skill {
@@ -139,13 +158,18 @@ const typeDefs = gql`
   }
 
   input SkillInput {
-    Skill: String
+    Skill: String!
   }
 
   type SocialMediaLink {
     _id: ID
     PlatformName: String
     Link: String
+  }
+
+  input SocialMediaLinkInput {
+    PlatformName: String!
+    Link: String!
   }
 
   type Task {
@@ -158,6 +182,18 @@ const typeDefs = gql`
     Comments: String
     IsMarked: Boolean
     CreateDate: String
+    Steps: [TaskStep]
+  }
+
+  input TaskInput {
+    TaskName: String!
+    TaskStatus: String!
+    StartDate: String!
+    EndDate: String!
+    Priority: Int!
+    Comments: String!
+    IsMarked: Boolean
+    CreateDate: String
   }
 
   type TaskStep {
@@ -166,41 +202,46 @@ const typeDefs = gql`
     Number: Int
   }
 
+  input TaskStepInput {
+    Description: String!
+    Number: Int!
+  }
+
   type Team {
     _id: ID
     TeamName: String
-    IsDeleted: Boolean
     TeamRole: String
     CreateDate: String
+    Tasks: [Task]
+    Members: [User]
   }
 
   input TeamInput {
-    TeamName: String
-    IsDeleted: Boolean
-    TeamRole: String
+    TeamName: String!
+    TeamRole: String!
     CreateDate: String
   }
 
   input UserInput {
-    Username: String
-    FirstName: String
-    LastName: String
-    Email: String
-    Password: String
-    Country: String
+    id: ID
+    Username: String!
+    FirstName: String!
+    LastName: String!
+    Country: String!
     IsActive: Boolean
-    CreatedBy: Int
+    CreatedBy: Int!
     CreateDate: String
-    Rate: Float
-    DateOfBirth: String
-    Gender: String
-    Work: String
-    Bio: String
+    Rate: Float!
+    DateOfBirth: String!
+    Gender: String!
+    Work: String!
+    Bio: String!
     LastTimeOnline: String
+    ImageUrl: String
   }
 
-  type UserType {
-    _id: ID
+  type User {
+    id: ID
     Username: String
     FirstName: String
     LastName: String
@@ -216,72 +257,133 @@ const typeDefs = gql`
     Work: String
     Bio: String
     LastTimeOnline: String
+    ImageUrl: String
+    MyCompanies: [Company]
+    WorkCompanies: [Company]
+    Skills: [Skill]
+    Accounts: [SocialMediaLink]
+    Tasks: [Task]
+    Posts: [PositionPost]
+    Chats: [Chat]
+    Educations: [Education]
     AIChats: [AIChat]
+    Friends: [User]
+    CreatedTasks: [Task]
   }
 
-  input File {
-    filename: String!
-    mimetype: String!
+  type UserStatistics {
+    NumberOfProjects: Int
+    NumberOfTeams: Int
+    NumberOfTasks: Int
+    NumberOfMyCompanies: Int
   }
 
   type Query {
-    getAIChat(chatId: Int!): AIChat
-    getOldAIChats(userId: Int!): [AIChat]
-    logout(userId: Int!): Boolean
-    getUser(userId: Int!): UserType
+    getAIChat(chatId: Int!, page: Int, limit: Int): AIChat
+    getUser(userId: String!, page: Int, limit: Int): User
     deleteTeam(teamId: Int!): Boolean
     deleteCompany(companyId: Int!): Boolean
     deleteSkill(skillId: Int!): Boolean
-    getAllUserCompanies(userId: Int!, page: Int, limit: Int): [Company]
     filterMyCompanies(
-      userId: Int!
-      filterType: String!
+      userId: String!
+      filterType: String
       desc: Boolean
       page: Int
       limit: Int
     ): [Company]
     searchInMyCompanies(
-      userId: Int!
+      userId: String!
       word: String!
-      page: Int!
-      limit: Int!
+      page: Int
+      limit: Int
     ): [Company]
-    getAllUserWorksCompanies(userId: Int!, page: Int, limit: Int): [Company]
     filterWorksCompanies(
-      userId: Int!
-      filterType: String!
+      userId: String!
+      filterType: String
       desc: Boolean
       page: Int
       limit: Int
     ): [Company]
     searchInWorksCompanies(
-      userId: Int!
+      userId: String!
       word: String!
       page: Int
       limit: Int
     ): [Company]
-    getProjectNotes(projectId: Int!): ProjectNote
+    getProfileStatistics(userId: String!): UserStatistics
+    deleteSocialMediaAccounts(id: Int!): Boolean
+    getProjects(page: Int, limit: Int): [Project]
+    getProject(projectId: Int!, page: Int, limit: Int): Project
+    searchInProjects(page: Int, limit: Int, word: String!): [Project]
+    getTask(taskId: Int!): Task
+    getCompany(companyId: Int!): Company
+    getContactMessages(page: Int, limit: Int): [ContactMessage]
+    getAllPosts(userId: String!, page: Int, limit: Int): [PositionPost]
+    searchInPositionPosts(
+      page: Int
+      limit: Int
+      word: String!
+      userId: String!
+    ): [PositionPost]
+    getAllPostsSortedByDate(
+      page: Int
+      limit: Int
+      isDESC: Boolean
+      userId: String!
+    ): [PositionPost]
+    searchInMyPosts(
+      page: Int
+      limit: Int
+      word: String!
+      userId: String!
+    ): [PositionPost]
+    getAllMyPostsSortedByDate(
+      page: Int
+      limit: Int
+      isDESC: Boolean
+      userId: String!
+    ): [PositionPost]
+    getTeam(teamId: Int!): Team
+    deleteEducation(educationId: Int!): Boolean
+    deleteUserFromTeam(userId: String!, teamId: Int!): Boolean
+    deletePost(postId: Int!): Boolean
+    deleteUser(userId: String!): Boolean
+    deleteAIChat(AIchatId: Int!): Boolean
+    deleteTask(taskId: Int!): Boolean
+    deleteTaskStep(taskStepId: Int!): Boolean
+    deleteCompanyComment(commentId: Int!): Boolean
+    deleteProjectRequirement(projectRequirementId: Int!): Boolean
+    deleteProjectNote(projectNoteId: Int!): Boolean
+    deleteProjectNoteTask(projectNoteTaskId: Int!): Boolean
   }
 
   type Mutation {
-    sendAIMessage(message: String!, fileName: String!, chatId: Int!): AIMessage
-    createNewAIChat(userId: Int!): AIChat
-    createNewUser(user: UserInput!): UserType
+    sendAIMessage(
+      message: String!
+      fileName: String!
+      AIchatId: Int!
+    ): AIMessage
+    createNewAIChat(userId: String!): AIChat
+    createNewUser(user: UserInput!): User
     forgetPassword(email: String!): Boolean
-    updateUser(userId: Int!, user: UserInput!): UserType
-    createNewProject(project: ProjectInput!): Project
-    createNewTeam(team: TeamInput!, companyId: Int): Team
-    createNewChat(userId: Int!, chat: ChatInput!): Chat
-    sendMessage(message: MessageInput!, chatId: Int!): Message
-    createNewCompany(company: CompanyInput!, userId: Int!): Company
-    createNewSkill(skill: SkillInput!, userId: Int!): Skill
+    updateUser(userId: String!, user: UserInput!): User
+    createNewProject(project: ProjectInput!, page: Int, limit: Int): Project
+    createProjectRequirement(
+      projectId: Int!
+      requirement: ProjectRequirementInput!
+    ): ProjectRequirement
+    createNewTeam(team: TeamInput!, companyId: Int!): Team
+    createNewCompany(company: CompanyInput!, userId: String!): Company
+    createNewSkill(skill: SkillInput!, userId: String!): Skill
     createNewContactMessage(
       contactMessage: ContactMessageInput!
-      userId: Int!
+      userId: String!
     ): ContactMessage
-    createPositionPost(post: PositionPostInput!, companyId: Int!): PositionPost
-    addUserToTeam(teamId: Int!, userId: Int!): Boolean
-    uploadUserImage(image: File!): Boolean
+    createPositionPost(
+      post: PositionPostInput!
+      companyId: Int!
+    ): PositionPost
+    addUserToTeam(teamId: Int!, userId: String!, role: String!): Boolean
     createProjectNote(
       projectNote: ProjectNoteInput!
       projectId: Int!
@@ -290,6 +392,36 @@ const typeDefs = gql`
       projectNoteTask: ProjectNoteTaskInput!
       projectNoteId: Int!
     ): ProjectNoteTask
+    createNewSocialMediaLink(
+      socialMediaAccount: SocialMediaLinkInput!
+      userId: String!
+    ): SocialMediaLink
+    createTaskForUser(
+      task: TaskInput!
+      userId: String!
+      userCreateTaskId: String!
+      companyId: Int!
+    ): Task
+    createTaskForTeam(task: TaskInput!, teamId: Int!, userId: String!): Task
+    updateTask(taskId: Int!, task: TaskInput!): Task
+    updateTaskStep(taskStepId: Int!, taskStep: TaskStepInput!): TaskStep
+    createCompanyComment(comment: CommentInput!, companyId: Int!): Comment
+    updateCompany(
+      companyId: Int!
+      company: CompanyInput!
+    ): Company
+    updateProject(projectId: Int!, project: ProjectInput!, page: Int, limit: Int): Project
+    createTaskStep(taskStep: TaskStepInput!, taskId: Int!): TaskStep
+    replayContactMessage(contactMessageId: Int!, message: String!): Boolean
+    updatePositionPost(
+      positionPostId: Int!
+      positionPost: PositionPostInput!
+    ): PositionPost
+    applyToPost(postId: Int!, userId: String!): Boolean
+    createEducation(education: EducationInput!, userId: String!): Education
+    applyForProject(projectId: Int!, companyId: Int!): Boolean
+    updateEducation(educationId: Int!, education: EducationInput!): Education
+    updateTeam(teamId: Int!, team: TeamInput!): Team
   }
 `;
 

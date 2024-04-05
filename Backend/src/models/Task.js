@@ -5,7 +5,10 @@ module.exports = {
   EndDate: "string",
   Priority: "int",
   Comments: "string",
-  IsMarked: "boolean",
+  IsMarked: {
+    type: "boolean",
+    default: false,
+  },
   CreateDate: {
     type: "string",
     default: () => new Date().toString(),
@@ -15,6 +18,13 @@ module.exports = {
     target: "TaskStep",
     relationship: "HAS_A",
     direction: "out",
+    eager: true,
+  },
+  in_company: {
+    type: "relationship",
+    target: "Company",
+    relationship: "IN_COMPANY",
+    direction: "in",
     eager: true,
   },
 };
