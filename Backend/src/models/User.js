@@ -1,15 +1,14 @@
 module.exports = {
+  id: {
+    type: "uuid",
+    primary: true,
+  },
   Username: {
     type: "string",
     unique: true,
   },
   FirstName: "string",
   LastName: "string",
-  Email: {
-    type: "string",
-    unique: true,
-  },
-  Password: "string",
   Country: "string",
   IsActive: {
     type: "boolean",
@@ -25,6 +24,7 @@ module.exports = {
   Gender: "string",
   Work: "string",
   Bio: "string",
+  ImageUrl: "string",
   LastTimeOnline: "string",
   chat_with_AI: {
     type: "relationship",

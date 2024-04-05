@@ -1,9 +1,54 @@
-import React from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { FaPlus, FaArrowLeft, FaDotCircle, FaPaperPlane } from "react-icons/fa";
 import { Button, Text, TextInput } from '@mantine/core';
 import './Chat.css';
+import { write, read } from '../../config/firebase.js';
 
 const Chat = () => {
+
+    const [oldChats, setOldChats] = React.useState([]);
+
+    const [chat, setChat] = React.useState([]);
+
+    const createChat = () => {
+
+    }
+
+    const search = (name) => {
+
+    }
+
+    const fetchData = useCallback(
+        () => {
+            const fetchOldChats = async () => {
+                await read('users/' + user._id, (data: {
+                    chats: [
+                        {
+                            lastMessage: {
+                                content: string,
+                                timestamp: string
+                                senderId: number
+                            }
+                        }
+                    ]
+                }) => {
+                    console.log(data);
+                    setOldChats(data?.chats || []);
+                });
+            };
+
+            fetchOldChats();
+
+
+        },
+        [],
+    )
+
+    useEffect(() => {
+        fetchData();
+    }, [fetchData]);
+
+
     return (
         <div className='chat d-flex p-4 bg-light gap-4 justify-content-center'>
             <div className='chat_chats d-flex flex-column col-4 shadow bg-white'>
@@ -21,12 +66,20 @@ const Chat = () => {
                         size="md"
                     />
                     <div className='chat_chats_body_chats d-flex flex-column gap-1'>
+                        {/* {oldChats.map((chat, index) => (
+                            <ChatItem
+                                key={index}
+                                lastMessage={chat.lastMessage.content}
+                                image="https://i.pravatar.cc/300"
+                            />
+                        ))} */}
                         <ChatItem userName="User 1" lastMessage="Last message" image="https://i.pravatar.cc/300" />
                         <ChatItem userName="User 2" lastMessage="Last message" image="https://i.pravatar.cc/300" />
                         <ChatItem userName="User 3" lastMessage="Last message" image="https://i.pravatar.cc/300" />
                         <ChatItem userName="User 4" lastMessage="Last message" image="https://i.pravatar.cc/300" />
                         <ChatItem userName="User 5" lastMessage="Last message" image="https://i.pravatar.cc/300" />
                         <ChatItem userName="User 6" lastMessage="Last message" image="https://i.pravatar.cc/300" />
+
                     </div>
                 </div>
             </div>
@@ -66,7 +119,7 @@ const Chat = () => {
     )
 }
 
-const ChatItem = ({ userName, lastMessage, image }: { userName: string, lastMessage: string, image: string }) => {
+const ChatItem = ({ userName = "User", lastMessage, image }: { userName: string, lastMessage: string, image: string }) => {
     return (
         <div className='d-flex chat_item gap-4 align-content-center'>
             <img src={image} alt={`${userName}`} />
