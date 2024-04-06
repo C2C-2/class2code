@@ -1,4 +1,4 @@
-import React from "react";
+import { useEffect, useState } from "react";
 import "./ProjectPage.css";
 import SideBar from "../../../components/SideBar/SideBar";
 import NavBar from "../../../components/NavBar/NavBar";
@@ -8,14 +8,30 @@ import ProjectRequirements from "../../../components/ProjectRequirements/Project
 import { Button } from "@mantine/core";
 import CompanyWorkOnCard from "../../../components/CompanyWorkOnCard/CompanyWorkOnCard";
 function ProjectPage() {
+  const [receivedData, setReceivedData] = useState("");
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  useEffect(() => {
+    setIsDarkMode(receivedData === "dark");
+  }, [receivedData]);
+  const receiveDataFromChild = (data) => {
+    setReceivedData(data);
+  };
+  useEffect(() => {
+    document.getElementById("man").style.backgroundColor =
+      receivedData === "light" ? "#fff" : "#000";
+  }, [receivedData]);
   return (
-    <div className="ProjectPageAll">
+    <div className="ProjectPageAll" id="man">
       <SideBar />
       <div className="ProjectPageMain">
-        <NavBar />
+        <NavBar sendDataToParent={receiveDataFromChild}/>
         <div className="ProjectPageCenter">
           <div className="ProjectPagePart1">
-            <div className="ProjectPageTitle">
+            <div className={`${
+                  isDarkMode
+                    ? "ProjectPageTitleDark"
+                    : "ProjectPageTitle"
+                }`}>
               <img
                 src={ProjectImg}
                 alt="ProjectImg"
@@ -24,8 +40,16 @@ function ProjectPage() {
               <div className="ProjectPageTitleContent">
                 <div className="PTTop">
                   <div className="PTText">
-                    <span className="PTSpan1">Hi, Vanshika Pandey</span>
-                    <span className="PTSpan2">Project Name</span>
+                    <span className={`${
+                  isDarkMode
+                    ? "PTSpan1Dark"
+                    : "PTSpan1"
+                }`}>Hi, Vanshika Pandey</span>
+                    <span className={`${
+                  isDarkMode
+                    ? "PTSpan2Dark"
+                    : "PTSpan2"
+                }`}>Project Name</span>
                   </div>
                   <div className="PTSvg">
                     <svg
@@ -85,7 +109,11 @@ function ProjectPage() {
                     </svg>
                   </div>
                 </div>
-                <p className="PTParagraph">
+                <p className={`${
+                  isDarkMode
+                    ? "PTParagraphDark"
+                    : "PTParagraph"
+                }`}>
                   Project activity will be updated here. Click on the name
                   section to set your configuration.
                 </p>
@@ -98,8 +126,14 @@ function ProjectPage() {
                     xmlns="http://www.w3.org/2000/svg"
                     width="31"
                     height="31"
+                    
                     viewBox="0 0 31 31"
                     fill="none"
+                    className={`${
+                      isDarkMode
+                        ? "TimeAllSvg"
+                        : ""
+                    }`}
                   >
                     <path
                       fill-rule="evenodd"
@@ -108,21 +142,45 @@ function ProjectPage() {
                       fill="#283739"
                     />
                   </svg>
-                  <span className="TimeText">End Date: Sep 22, 9pm</span>
+                  <span className={`${
+                  isDarkMode
+                    ? "TimeTextDark"
+                    : "TimeText"
+                }`}>End Date: Sep 22, 9pm</span>
                 </div>
                 <div className="TimeAll">
                   <img src={Alram} alt="Alram" />
-                  <span className="TimeText">Start Date: Sep 22, 9pm</span>
+                  <span className={`${
+                  isDarkMode
+                    ? "TimeTextDark"
+                    : "TimeText"
+                }`}>Start Date: Sep 22, 9pm</span>
                 </div>
               </div>
               <div className="ProjectUnderText">
                 <div className="ProjectUnderName">
-                  <span className="ProjectNameText">Project Name:</span>
-                  <span className="ProjectNameText1">UPX</span>
+                  <span className={`${
+                  isDarkMode
+                    ? "ProjectNameTextDark"
+                    : "ProjectNameText"
+                }`}>Project Name:</span>
+                  <span className={`${
+                  isDarkMode
+                    ? "ProjectNameText1Dark"
+                    : "ProjectNameText1"
+                }`}>UPX</span>
                 </div>
                 <div className="ProjectUnderDetails">
-                  <span className="ProjectDetailsText">Project Details :</span>
-                  <p className="ProjectDetailsParagraph">
+                  <span className={`${
+                  isDarkMode
+                    ? "ProjectDetailsTextDark"
+                    : "ProjectDetailsText"
+                }`}>Project Details :</span>
+                  <p className={`${
+                  isDarkMode
+                    ? "ProjectDetailsParagraphDark"
+                    : "ProjectDetailsParagraph"
+                }`}>
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
                     do eiusmod tempor incididunt ut labore et dolore magna
                     aliqua. Ut enim ad minim veniam, quis nostrud exercitation
@@ -130,13 +188,17 @@ function ProjectPage() {
                   </p>
                 </div>
                 <div className="ProjectUnderRequirements">
-                  <span className="ProjectRequirementsText">
+                  <span className={`${
+                  isDarkMode
+                    ? "ProjectRequirementsTextDark"
+                    : "ProjectRequirementsText"
+                }`}>
                     Project Requirements :
                   </span>
                   <div className="ProjectRequirementsCard">
-                    <ProjectRequirements />
-                    <ProjectRequirements />
-                    <ProjectRequirements />
+                    <ProjectRequirements color={receivedData} />
+                    <ProjectRequirements color={receivedData} />
+                    <ProjectRequirements color={receivedData} />
                   </div>
                 </div>
               </div>
@@ -148,17 +210,28 @@ function ProjectPage() {
             </div>
           </div>
           <div className="ProjectPagePart2">
-            <div className="Part2AllProjectPage">
+            <div className={`${
+          isDarkMode
+            ? "Part2AllProjectPageDark"
+            : "Part2AllProjectPage"
+        }`}>
               <div className="ProjectPagePart2Title">
-                <span className="CompanyWorkOnText">Company Work On</span>
-                <button className="ViewAllButton">View All</button>
+                <span className={`${
+          isDarkMode
+            ? "CompanyWorkOnTextDark"
+            : "CompanyWorkOnText"
+        }`}>Company Work On</span>
+                <button className={`${
+          isDarkMode
+            ? "ViewAllButtonDark"
+            : "ViewAllButton"
+        }`}>View All</button>
               </div>
               <div className="ProjectPagePart2Content">
-                <CompanyWorkOnCard/>
-                <CompanyWorkOnCard/>
-                <CompanyWorkOnCard/>
-                <CompanyWorkOnCard/>
-                <CompanyWorkOnCard/>
+                <CompanyWorkOnCard color={receivedData}/>
+                <CompanyWorkOnCard color={receivedData}/>
+                <CompanyWorkOnCard color={receivedData}/>
+                <CompanyWorkOnCard color={receivedData}/>
               </div>
             </div>
           </div>

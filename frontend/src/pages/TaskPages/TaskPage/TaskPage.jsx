@@ -1,15 +1,27 @@
-import React from "react";
+import { useEffect, useState } from "react";
 import "./TaskPage.css";
 import SideBar from "../../../components/SideBar/SideBar";
 import NavBar from "../../../components/NavBar/NavBar";
-import { Button, Input, TextInput, Checkbox } from "@mantine/core";
-import { GoArrowUp, GoCheck } from "react-icons/go";
+import { Button, Checkbox } from "@mantine/core";
+import { GoArrowUp } from "react-icons/go";
 function TaskPage() {
+  const [receivedData, setReceivedData] = useState("");
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  useEffect(() => {
+    setIsDarkMode(receivedData === "dark");
+  }, [receivedData]);
+  const receiveDataFromChild = (data) => {
+    setReceivedData(data);
+  };
+  useEffect(() => {
+    document.getElementById("man").style.backgroundColor =
+      receivedData === "light" ? "#fff" : "#000";
+  }, [receivedData]);
   return (
-    <div className="TaskPageAll">
+    <div className="TaskPageAll" id="man">
       <SideBar />
       <div className="TaskPageCenter">
-        <NavBar />
+        <NavBar sendDataToParent={receiveDataFromChild} />
         <div className="TaskPageMain">
           <div className="TaskPageButtonBack">
             <Button
@@ -43,7 +55,11 @@ function TaskPage() {
             </Button>
           </div>
           <div className="TaskPageContent">
-            <div className="TaskPageContentPart1">
+            <div   className={`${
+                  isDarkMode
+                    ? "TaskPageContentPart1 bg-black"
+                    : "TaskPageContentPart1"
+                }`}>
               <div className="TSCP1">
                 <div className="ArrowDesign">
                   <GoArrowUp className="TaskPageArrow" />
@@ -90,7 +106,11 @@ function TaskPage() {
                 </div>
               </div>
             </div>
-            <div className="TaskPageContentPart2">
+            <div  className={`${
+                  isDarkMode
+                    ? "TaskPageContentPart2 bg-black"
+                    : "TaskPageContentPart2"
+                }`}>
               <div className="TaskPagePart2TitleAll">
                 <div className="TaskPageContentPart2Title">
                   <div className="TaskPageTitle1">

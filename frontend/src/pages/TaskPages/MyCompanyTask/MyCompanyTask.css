@@ -7,21 +7,21 @@
 .MyCompanyTaskAllMain{
     display: flex;
     flex-direction: column;
-    width: 85%;
+    width: 100%;
     height: 100%;
-    align-items: flex-start;
+    align-items: flex-end;
 }
 .MyCompanyTaskAllCenter{
     display: flex;
     flex-direction: row;
     height: 90%;
-    width: 100%;
+    width: 85%;
     align-items: center;
     padding-right: 30px;
 }
 .MyCompanyTaskAllCenterButtonBack {
     height: 90%;
-    width: 7.5%;
+    width: 8.5%;
     flex-direction: column;
     display: flex;
     align-items: flex-end;

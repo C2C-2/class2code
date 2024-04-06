@@ -1,6 +1,5 @@
 import React from 'react';
-import './GreenBoxFile.css';
-
+import './GreenBox.css';
 const GreenBox2 = () => {
   return (
     <div className='BoxOverAll'>

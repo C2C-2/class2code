@@ -1,15 +1,27 @@
-import React from "react";
+import { useEffect, useState } from "react";
 import "./ShowAllPosts.css";
 import SideBar from "../../../components/SideBar/SideBar";
 import NavBar from "../../../components/NavBar/NavBar";
-import { Button, Input, TextInput } from "@mantine/core";
+import { Button } from "@mantine/core";
 import PostsCard from "../../../components/PostsCard/PostsCard";
 function ShowAllPosts() {
+  const [receivedData, setReceivedData] = useState("");
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  useEffect(() => {
+    setIsDarkMode(receivedData === "dark");
+  }, [receivedData]);
+  const receiveDataFromChild = (data) => {
+    setReceivedData(data);
+  };
+  useEffect(() => {
+    document.getElementById("man").style.backgroundColor =
+      receivedData === "light" ? "#fff" : "#000";
+  }, [receivedData]);
   return (
-    <div className="ShowAllPostsAll">
-      <SideBar />
+    <div className="ShowAllPostsAll" id="man">
+      <SideBar colorSide={receivedData} />
       <div className="ShowAllPostsMain">
-        <NavBar />
+        <NavBar sendDataToParent={receiveDataFromChild}/>
         <div className="ShowAllPostsContent">
           <div className="ShowAllPostsButtonBack">
             <Button
@@ -47,7 +59,11 @@ function ShowAllPosts() {
               <input
                 type="text"
                 placeholder="Search for Posts"
-                className="TextPartShowAllPosts"
+                className={`${
+                  isDarkMode
+                    ? "TextPartShowAllPostsDark"
+                    : "TextPartShowAllPosts"
+                }`}
               ></input>
               <button className="SvgPartShowAllPosts">
                 <svg
@@ -75,8 +91,8 @@ function ShowAllPosts() {
               </Button>
             </div>
             <div className="ShowAllPostsCards">
-              <PostsCard />
-              <PostsCard />
+              <PostsCard color={receivedData}/>
+              <PostsCard color={receivedData}/>
             </div>
           </div>
         </div>

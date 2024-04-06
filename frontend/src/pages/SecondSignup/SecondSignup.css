@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 .SecondSignupAll {
   width: 100%;
   height: 100%;
@@ -10,8 +10,8 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-  width: 100%;
-  align-items: center;
+  width:95%;
+  align-items: flex-end;
   gap: 15px;
   padding-bottom: 10px;
 }
@@ -19,9 +19,10 @@
 .SecondSignupCenter {
   display: flex;
   height: 90%;
-  width: 85%;
+  width:80%;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
+  padding-left: 20px;
   padding: var(--24, 24px);
   border-radius: 14px;
   border: 1px solid rgba(0, 0, 0, 0.10);
@@ -269,7 +270,7 @@
   font-weight: 700;
   line-height: normal;
 }
-=======
+
 .main {
   height: 100vh;
 }
@@ -295,4 +296,3 @@
 .skills {
   overflow: scroll;
 }
->>>>>>> main

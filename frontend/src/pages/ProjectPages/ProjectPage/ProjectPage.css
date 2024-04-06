@@ -6,14 +6,15 @@
 }
 
 .ProjectPageMain {
-    width: 85%;
+    width: 100%;
     height: 100%;
     display: flex;
     flex-direction: column;
+    align-items: flex-end;
 }
 
 .ProjectPageCenter {
-    width: 100%;
+    width: 85%;
     height: 90%;
     display: flex;
     flex-direction: row;
@@ -36,6 +37,20 @@
     height: 30%;
     border-radius: 14.01px;
     background: var(--GreenLight, rgba(131, 194, 157, 0.20));
+    flex-direction: row;
+    align-items: center;
+    padding-left: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-right: 20px;
+    gap: 10px;
+}
+.ProjectPageTitleDark {
+    display: flex;
+    width: 100%;
+    height: 30%;
+    border-radius: 14.01px;
+    background: var(--GreenLight, rgba(55, 170, 103, 0.447));
     flex-direction: row;
     align-items: center;
     padding-left: 20px;
@@ -84,9 +99,27 @@
     font-weight: 400;
     line-height: normal;
 }
+.PTSpan1Dark {
+    color: #fff;
+    font-feature-settings: 'clig'off;
+    font-family: Poppins;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
 
 .PTSpan2 {
     color: #1A1A1A;
+    font-feature-settings: 'clig'off;
+    font-family: Poppins;
+    font-size: 22px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+}
+.PTSpan2Dark {
+    color: #fff;
     font-feature-settings: 'clig'off;
     font-family: Poppins;
     font-size: 22px;
@@ -105,6 +138,17 @@
     font-weight: 400;
     line-height: normal;
 }
+.PTParagraphDark {
+    width: 95%;
+    color: #fff;
+    font-feature-settings: 'clig'off, 'liga'off;
+    font-family: Poppins;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
 
 .PTSvg {
     display: flex;
@@ -124,7 +168,6 @@
     padding-left: 20px;
     padding-right: 20px;
     padding-top: 15px;
-
     gap: 15px;
 }
 
@@ -153,6 +196,18 @@
     font-weight: 700;
     line-height: 20px;
 }
+.TimeTextDark {
+    color: var(--white, #d9d7d7);
+    font-feature-settings: 'clig'off, 'liga'off;
+    font-family: Roboto;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 20px;
+}
+.TimeAllSvg{
+    color: #fff !important;
+}
 
 .ProjectUnderText {
     display: flex;
@@ -180,9 +235,27 @@
     line-height: 20px;
     letter-spacing: 0.25px;
 }
+.ProjectNameTextDark {
+    color: #fff;
+    font-family: "Open Sans";
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
+    letter-spacing: 0.25px;
+}
 
 .ProjectNameText1 {
     color: var(--dark, #283739);
+    font-family: "Open Sans";
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
+    letter-spacing: 0.25px;
+}
+.ProjectNameText1Dark {
+    color: var(--white, #fff);
     font-family: "Open Sans";
     font-size: 14px;
     font-style: normal;
@@ -208,10 +281,29 @@
     line-height: 20px;
     letter-spacing: 0.25px;
 }
+.ProjectDetailsTextDark {
+    color: #fff;
+    font-family: "Open Sans";
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
+    letter-spacing: 0.25px;
+}
 
 .ProjectDetailsParagraph {
     width: 95%;
-    color: var(--light, rgba(0, 0, 0, 0.60));
+    color:  rgba(0, 0, 0, 0.60);
+    font-family: "Open Sans";
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
+    letter-spacing: 0.25px;
+}
+.ProjectDetailsParagraphDark {
+    width: 95%;
+    color:  #fff;
     font-family: "Open Sans";
     font-size: 14px;
     font-style: normal;
@@ -230,6 +322,17 @@
 
 .ProjectRequirementsText {
     color: #000;
+    text-align: center;
+    font-family: "Open Sans";
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    letter-spacing: 0.14px;
+    text-transform: capitalize;
+}
+.ProjectRequirementsTextDark {
+    color: #fff;
     text-align: center;
     font-family: "Open Sans";
     font-size: 14px;
@@ -280,6 +383,19 @@
     box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
     gap: 20px;
 }
+.Part2AllProjectPageDark {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 70%;
+    padding-left: 20px;
+    border-radius: 16px;
+    border: 1px solid var(--30, #388E3C);
+    background: var(--white-100, #030303);
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+    gap: 20px;
+}
+
 
 .ProjectPagePart2Title {
     width: 100%;
@@ -299,13 +415,30 @@
     font-style: normal;
     font-weight: 700;
     line-height: 40.028px;
-
+}
+.CompanyWorkOnTextDark {
+    color: var(--DMV-Black, #c6c9d2);
+    font-family: Manrope;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 40.028px;
 }
 
 .ViewAllButton {
     border: none;
     background-color: #FFF;
-    color: var(--link, #36C);
+    color:  #36C;
+    font-family: Inter;
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 24.017px;
+}
+.ViewAllButtonDark {
+    border: none;
+    background-color: #050505;
+    color:  #36C;
     font-family: Inter;
     font-size: 15px;
     font-style: normal;

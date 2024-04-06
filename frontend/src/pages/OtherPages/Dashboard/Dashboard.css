@@ -10,14 +10,14 @@
     flex-direction: column;
     align-items: flex-end;
     height: 100%;
-    width: 85%;
+    width: 100%;
 }
 
 .DashboardCenter {
     display: flex;
     flex-direction: column;
     height: 100%;
-    width: 95%;
+    width: 80%;
     padding-top: 50px;
     padding-right: 20px;
     align-items: flex-start;
@@ -201,6 +201,18 @@
     font-weight: 600;
     line-height: 28px;
 }
+.DashboardUnderPart1Text1Dark {
+    color: var(--Neutral-Brainstorming-Black, #ffffff);
+    font-family: Inter;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 28px;
+}
+.DashboardUnderPart2TableDark{
+    background-color: #000;
+}
+
 
 .DashboardUnderPart1Text2 {
     color: var(--Brainstorming-Black-Tints-300, #B3B3B3);
@@ -234,8 +246,24 @@
     line-height: 16px;
 }
 
+.TableDesignText1Dark {
+    color: #fff;
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 16px;
+}
 .TableDesignText2 {
     color: var(--Brainstorming-Black-Tints-300, #B3B3B3);
+    font-family: Inter;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: 18px;
+}
+.TableDesignText2Dark {
+    color: #c0c0c0;
     font-family: Inter;
     font-size: 12px;
     font-style: normal;

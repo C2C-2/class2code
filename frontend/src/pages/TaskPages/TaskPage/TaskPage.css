@@ -9,21 +9,21 @@
     display: flex;
     flex-direction: column;
     height: 100%;
-    width: 85%;
-    align-items: flex-start;
+    width: 100%;
+    align-items: flex-end;
 }
 
 .TaskPageMain {
     display: flex;
     flex-direction: row;
     height: 90%;
-    width: 100%;
+    width: 85%;
     align-items: center;
 }
 
 .TaskPageButtonBack {
     height: 90%;
-    width: 8%;
+    width: 7.5%;
     flex-direction: column;
     display: flex;
     align-items: flex-end;

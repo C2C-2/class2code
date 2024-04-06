@@ -1,7 +1,7 @@
 import React from "react";
 import "./AvailableProjectCard.css";
 import RequirementNeed from "../RequirementNeed/RequirementNeed";
-function AvailableProjectsCard(props) {
+function AvailableProjectsCard({colorProp}) {
   return (
     <button className="AvailableProjectAll">
       <div className="AvailableProjectDesign">
@@ -13,7 +13,7 @@ function AvailableProjectsCard(props) {
         <div className="PartTextAvailableProject">
           <div className="PartTitleAvailableProject">
             <span className="T1Project">Restaurant System</span>
-            <span className="T2Project">{props.count} Apply</span>
+            <span className="T2Project">25 Apply</span>
           </div>
           <div className="ParagraphAvailableProject">
             <p className="P1Project">
@@ -26,7 +26,7 @@ function AvailableProjectsCard(props) {
         <div className="RequirementsAvailableProject">
           <span className="TextRequirements">Requirements</span>
           <div className="ReqNeed">
-            <RequirementNeed />
+            <RequirementNeed colorProps={colorProp} />
             <RequirementNeed />
           </div>
         </div>

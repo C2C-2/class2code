@@ -1,6 +1,5 @@
 import React from "react";
 import "./SecondSignup.css";
-<<<<<<< HEAD
 import { useState } from "react";
 import { FileButton, Button, Group, Text } from "@mantine/core";
 import upload from "./feather_upload-cloud.png";
@@ -8,6 +7,7 @@ import Young from "./young man sitting with laptop and waving.png";
 import GreenBox2 from "../../components/GreenBox/GreenBox2";
 import SideBar from "../../components/SideBar/SideBar";
 import NavBar from "../../components/NavBar/NavBar";
+
 const SecondSignup = () => {
   const [files, setFiles] = useState([]);
   return (
@@ -129,10 +129,7 @@ const SecondSignup = () => {
               </div>
             </div>
           </div>
-=======
-import YoungMan from "./images/yongMan.svg";
-import GreenBox from "../../components/greenBox/GreenBox";
-const SecondSignup = () => {
+{/* const SecondSignup = () => {
   const skills = [
     "frontend",
     "backend",
@@ -160,8 +157,7 @@ const SecondSignup = () => {
         <div className="skills">
           {skills.map((skill, i) => {
             return <GreenBox key={i} title={skill} />;
-          })}
->>>>>>> main
+          })} */}
         </div>
       </div>
     </div>

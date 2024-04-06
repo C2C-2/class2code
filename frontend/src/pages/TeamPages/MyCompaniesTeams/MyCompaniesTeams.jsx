@@ -1,15 +1,27 @@
-import React from "react";
+import { useEffect, useState } from "react";
 import "./MyCompaniesTeams.css";
 import SideBar from "../../../components/SideBar/SideBar";
 import NavBar from "../../../components/NavBar/NavBar";
 import { Button, Input, TextInput } from "@mantine/core";
 import MyCompaniesTeamsCard from "../../../components/MyCompaniesTeamsCard/MyCompaniesTeamsCard";
 function MyCompaniesTeams() {
+  const [receivedData, setReceivedData] = useState("");
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  useEffect(() => {
+    setIsDarkMode(receivedData === "dark");
+  }, [receivedData]);
+  const receiveDataFromChild = (data) => {
+    setReceivedData(data);
+  };
+  useEffect(() => {
+    document.getElementById("man").style.backgroundColor =
+      receivedData === "light" ? "#fff" : "#000";
+  }, [receivedData]);
   return (
-    <div className="MyCompaniesTeamsAll">
+    <div className="MyCompaniesTeamsAll" id="man">
       <SideBar />
       <div className="MyCompaniesTeamsMain">
-        <NavBar />
+        <NavBar sendDataToParent={receiveDataFromChild} />
         <div className="MyCompaniesTeamsCenter">
           <div className="MyCompaniesTeamsCenterButtonBack">
             <Button
@@ -48,21 +60,24 @@ function MyCompaniesTeams() {
                 <span className="MyCompaniesTeamsContentButtonText">Date</span>
               </button>
               <button className="MyCompaniesTeamsContentButtonsDesign">
-                <span className="MyCompaniesTeamsContentButtonText">Priority</span>
+                <span className="MyCompaniesTeamsContentButtonText">
+                  Priority
+                </span>
               </button>
               <button className="MyCompaniesTeamsContentButtonsDesign">
                 <span className="MyCompaniesTeamsContentButtonText">Late</span>
               </button>
               <button className="MyCompaniesTeamsContentButtonsDesign1">
-                <span className="MyCompaniesTeamsContentButtonText">In Progress</span>
+                <span className="MyCompaniesTeamsContentButtonText">
+                  In Progress
+                </span>
               </button>
             </div>
             <div className="MyCompaniesTeamsContentCard">
-              <MyCompaniesTeamsCard/>
-              <MyCompaniesTeamsCard/>
-              <MyCompaniesTeamsCard/>
+              <MyCompaniesTeamsCard color={receivedData} />
+              <MyCompaniesTeamsCard color={receivedData} />
+              <MyCompaniesTeamsCard color={receivedData} />
             </div>
-            
           </div>
         </div>
       </div>

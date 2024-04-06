@@ -1,7 +1,6 @@
 import "@mantine/core/styles.css";
 import { MantineProvider } from "@mantine/core";
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
-<<<<<<< HEAD
 import SecondSignup from "./pages/SecondSignup/SecondSignup"
 import SignUpFigma from "./pages/SignUp/SignUpFigma";
 import LogInFigma from "./pages/LogIn/LogInFigma";
@@ -38,13 +37,11 @@ import Dashboard from "./pages/OtherPages/Dashboard/Dashboard"
 import NotFound from "./pages/OtherPages/NotFound/NotFound";
 import ForgetPassword from "./pages/OtherPages/ForgetPassword/ForgetPassword";
 import ContactUs from "./pages/OtherPages/ContactUs/ContactUs";
-import HomePage1 from "./pages/OtherPages/Home/HomePage1/HomePage1";
-import HomePage2 from "./pages/OtherPages/Home/HomePage2/HomePage2";
 import HomePage from "./pages/OtherPages/Home/HomePage";
 import FAQQuestion from "./pages/OtherPages/FAQQuestion/FAQQuestion";
 import LightDarkMode from "./components/NavBar/Light_DarkMode/LightDarkMode";
 
-import Chat from "./pages/chat/Chat";
+
 function App() {
   const client = new ApolloClient({
     cache: new InMemoryCache(),
@@ -53,9 +50,10 @@ function App() {
   return (
     <ApolloProvider client={client}>
       <MantineProvider>
-
         {/* <AIChat/> */}
         {/* <ShowAllPosts/> */}
+        {/* <NewSideBar/> */}
+        {/* <SideBarFigma/> */}
         {/* <AddPost/> */}
         {/* <ShowMyPost/> */}
         {/* <ProjectPage/> */}
@@ -69,9 +67,7 @@ function App() {
         {/* <NotFound/> */}
         {/* <ForgetPassword/> */}
         {/* <ContactUs/> */}
-        {/* <HomePage1/> */}
         {/* <FAQQuestion/> */}
-        {/* <HomePage2/> */}
         {/* <HomePage/> */}
         {/* <MyCompanies/> */}
         {/* <OtherCompanyProfile/> */}
@@ -82,10 +78,10 @@ function App() {
         {/* <SignUpFigma/> */}
         {/* <LogInFigma/> */}
         {/* <SecondSignup/> */}
-        <Chat />
       </MantineProvider>
     </ApolloProvider>
   );
 }
+
 
 export default App;

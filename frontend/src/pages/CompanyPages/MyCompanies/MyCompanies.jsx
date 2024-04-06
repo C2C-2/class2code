@@ -1,17 +1,23 @@
-import React from "react";
-import "./MyCompanies.css";
-import { IconArrowLeft } from "@tabler/icons-react";
-import { Button, Input, TextInput } from "@mantine/core";
+import "./LightMyCompanies.css";
+import { useEffect, useState } from "react";
+import { Button } from "@mantine/core";
 import SideBar from "C:/Users/osama/Desktop/class2code/frontend/src/components/SideBar/SideBar.jsx";
 import NavBar from "C:/Users/osama/Desktop/class2code/frontend/src/components/NavBar/NavBar.jsx";
 import MyCompaniesCard from "../../../components/MyCompaniesCard/MyCompaniesCard";
 function MyCompanies() {
-  const icon = <IconArrowLeft size={18} />;
+  const [receivedData, setReceivedData] = useState("");
+  const receiveDataFromChild = (data) => {
+    setReceivedData(data);
+  };
+  useEffect(() => {
+    document.getElementById("man").style.backgroundColor =
+      receivedData === "light" ? "#fff" : "#000";
+  }, [receivedData]);
   return (
-    <div className="MainMyCompanies">
-        <SideBar />
+    <div className="MainMyCompanies" id="man">
+      <SideBar />
       <div className="MyCompanies">
-          <NavBar />
+        <NavBar sendDataToParent={receiveDataFromChild} />
         <div className="Part2My">
           <div className="ButtonBack">
             <Button
@@ -69,21 +75,34 @@ function MyCompanies() {
               </span>
             </div>
             <div className="ButtonPart">
-            <Button variant="filled" color="#388E3C" w={100}>New</Button>
-            <Button variant="filled" c="black" color="rgba(222, 224, 222, 1)" w={100}>Date</Button>
-            <Button variant="filled" c="black" color="rgba(222, 224, 222, 1)" w={100}>Rate</Button>
+              <Button variant="filled" color="#388E3C" w={100}>
+                New
+              </Button>
+              <Button
+                variant="filled"
+                c="black"
+                color="rgba(222, 224, 222, 1)"
+                w={100}
+              >
+                Date
+              </Button>
+              <Button
+                variant="filled"
+                c="black"
+                color="rgba(222, 224, 222, 1)"
+                w={100}
+              >
+                Rate
+              </Button>
             </div>
           </div>
           <div className="Part3My">
             <div className="Part31">
-          <MyCompaniesCard/>  
-          <MyCompaniesCard/> 
-          <MyCompaniesCard/> 
+              <MyCompaniesCard colorProp={receivedData} />
+              <MyCompaniesCard />
+              <MyCompaniesCard />
+            </div>
           </div>
-        
-          
-        </div>
-        
         </div>
       </div>
     </div>

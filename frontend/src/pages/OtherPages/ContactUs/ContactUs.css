@@ -22,6 +22,14 @@
     font-weight: 700;
     line-height: normal;
 }
+.ContactUsCenterText1Dark{
+    color: #fff;
+    font-family: Poppins;
+    font-size: 35px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+}
 .ContactUsCenterText2{
     color: var(--30, #388E3C);
     font-family: Poppins;

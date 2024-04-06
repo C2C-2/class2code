@@ -1,55 +1,62 @@
-.ShowMyPostAll {
+.MainMyCompanies {
+    justify-content: center;
+    display: flex;
+    flex-direction: row;
+    
+    width: 100%;
+    height: 100%;
+}
+
+
+.MyCompanies {
     width: 100%;
     height: 100%;
     display: flex;
-    flex-direction: row;
-}
-
-.ShowMyPostMain {
-    height: 100%;
-    width: 90%;
-    display: flex;
-    align-items: flex-end;
+   align-items: flex-end;
     flex-direction: column;
+    gap: 30px;
+    scroll-snap-type: y mandatory;
 }
 
-.ShowMyPostContent {
+
+.Part2My {
     width: 85%;
-    height: 90%;
     display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: flex-end;
-}
-.ShowMyPostButtonBack{
-    height: 90%;
-    width: 11%;
     flex-direction: column;
-    display: flex;
     align-items: flex-end;
-
+    justify-content: center;
+    height: 90%;
+    gap: 20px;
 }
-.ShowMyPostData{
-    width: 94%;
-    height: 80%;
+
+.ButtonBack {
+    width: 96.3%;
+}
+
+.SearchMy {
     display: flex;
     flex-direction: column;
+    align-items: center;
+    width: 100%;
+    height: 20%;
     gap: 30px;
 
 }
-.SearchPartShowMyPost{
-    width: 90%;
-    height: 8.9%;
+
+.SearchPart {
+    width: 100%;
+    height: 41%; 
     align-items: center;
     justify-content: center;
     display: flex;
     flex-direction: row;
 }
 
-.TextPartShowMyPost{
+.TextPart {
     display: flex;
     padding: 10px;
-    width: 50%;
+    outline: none;
+    width: 40%;
     justify-content: center;
     align-items: center;
     text-align: center;
@@ -59,22 +66,8 @@
     border: 1px solid rgba(56, 142, 60, 0.40);
     background: var(--white-100, #FFF);
 }
-.TextPartShowMyPostDark{
-    display: flex;
-    padding: 10px;
-    width: 50%;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    gap: 10px;
-    flex-shrink: 0;
-    border-radius: var(--12, 12px) var(--0, 0px) var(--0, 0px) var(--12, 12px);
-    border: 1px solid rgba(56, 142, 60, 0.40);
-    background: var(--white-100, #000000);
-}
 
-
-.SvgPartShowMyPost{
+.SvgPart {
     display: flex;
     height: 100%;
     padding: 0px 12.831px;
@@ -83,23 +76,31 @@
     gap: 6.843px;
     border-radius: var(--0, 0px) var(--12, 12px) var(--12, 12px) var(--0, 0px);
     background: var(--30, #388E3C);
-    border: none;
 }
 
-.ShowMyPostButtons{
+.ButtonPart {
     display: flex;
     flex-direction: row;
-    justify-content: flex-end;
-    width: 20%;
-    height: 8%;
+    align-items: center;
     gap: 20px;
+    width: 80%;
+    height: 70%;
 }
-.ShowMyPostCards{
-    width: 100%;
+
+.Part3My{
     display: flex;
-    height: 80%;
+    flex-direction: column;
+    align-items: center;
+    width: 90%;
+    height: 100%;
+    scroll-snap-type: y mandatory;
+}
+.Part31{
+    display: flex;
     flex-direction: row;
-    align-items: flex-start;
+    align-items: center;
+    width: 100%;
     justify-content: flex-start;
-    gap: 30px;
+    height: 100%;
+    gap: 150px;
 }

@@ -1,16 +1,27 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import "./AvailableProjects.css";
 import SideBar from "../../../components/SideBar/SideBar";
 import NavBar from "../../../components/NavBar/NavBar";
 import AvailableProjectCard from "../../../components/AvailableProjectsCard/AvailableProjectsCard";
 import { Button } from "@mantine/core";
 function AvailableProjects() {
-  const [counter, setCounter] = useState(0);
+  const [receivedData, setReceivedData] = useState("");
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  useEffect(() => {
+    setIsDarkMode(receivedData === "dark");
+  }, [receivedData]);
+  const receiveDataFromChild = (data) => {
+    setReceivedData(data);
+  };
+  useEffect(() => {
+    document.getElementById("man").style.backgroundColor =
+      receivedData === "light" ? "#fff" : "#000";
+  }, [receivedData]);
   return (
-    <div className="AvailableProjectsAll">
-      <SideBar />
+    <div className="AvailableProjectsAll" id="man">
+      <SideBar colorSide={receivedData}/>
       <div className="AvailableProjectCenter">
-        <NavBar />
+        <NavBar sendDataToParent={receiveDataFromChild} />
 
         <div className="AvailableProjectMain">
           <div className="ButtonBackAvailableProject">
@@ -49,7 +60,11 @@ function AvailableProjects() {
               <input
                 type="text"
                 placeholder="Search for Projects"
-                className="TextPartAvailableProject"
+                className={`${
+                  isDarkMode
+                    ? "TextPartAvailableProjectDark"
+                    : "TextPartAvailableProject"
+                }`}
               ></input>
               <button className="SvgPartAvailableProject">
                 <svg
@@ -69,7 +84,7 @@ function AvailableProjects() {
               </button>
             </div>
             <div className="AvailableProjectCardAll">
-              <AvailableProjectCard count={counter} />
+              <AvailableProjectCard colorProp={receivedData} />
               <AvailableProjectCard />
               <AvailableProjectCard />
               <AvailableProjectCard />

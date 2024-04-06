@@ -9,6 +9,18 @@
     display: flex;
     flex-direction: row;
 }
+.CompanyWorkOnCardDark {
+    border: none;
+    width: 100%;
+    height: 10%;
+    align-items: center;
+    gap: 20px;
+    border-radius: 10.007px;
+    border:1px solid #fff;
+    background: var(--black, #070707);
+    display: flex;
+    flex-direction: row;
+}
 .CompanyWorkOnCardTexts{
     display: flex;
     flex-direction: column;
@@ -22,8 +34,24 @@
     font-weight: 500;
     line-height: normal;
 }
+.CompanyWorkOnCardText1Dark{
+    color: var(--white, #cdcbcb);
+    font-family: Poppins;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}
 .CompanyWorkOnCardText2{
-    color: var(--light, rgba(0, 0, 0, 0.60));
+    color: var(--black, rgba(0, 0, 0, 0.60));
+    font-family: Poppins;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+.CompanyWorkOnCardText2Dark{
+    color: var(--white, rgba(136, 135, 135, 0.6));
     font-family: Poppins;
     font-size: 12px;
     font-style: normal;

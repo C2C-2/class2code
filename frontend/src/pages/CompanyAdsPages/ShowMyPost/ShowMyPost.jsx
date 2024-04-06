@@ -1,17 +1,29 @@
-import React from "react";
+import { useEffect, useState } from "react";
 import "./ShowMyPost.css";
 import SideBar from "../../../components/SideBar/SideBar";
 import NavBar from "../../../components/NavBar/NavBar";
-import { Button, Input, TextInput } from "@mantine/core";
+import { Button } from "@mantine/core";
 import MyPostCard from "../../../components/MyPostCard/MyPostCard";
 function ShowMyPost() {
+  const [receivedData, setReceivedData] = useState("");
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  useEffect(() => {
+    setIsDarkMode(receivedData === "dark");
+  }, [receivedData]);
+  const receiveDataFromChild = (data) => {
+    setReceivedData(data);
+  };
+  useEffect(() => {
+    document.getElementById("man").style.backgroundColor =
+      receivedData === "light" ? "#fff" : "#000";
+  }, [receivedData]);
   return (
-    <div className="ShowAllPostsAll">
-      <SideBar />
-      <div className="ShowAllPostsMain">
-        <NavBar />
-        <div className="ShowAllPostsContent">
-          <div className="ShowAllPostsButtonBack">
+    <div className="ShowMyPostAll" id="man">
+      <SideBar colorSide={receivedData} />
+      <div className="ShowMyPostMain">
+        <NavBar sendDataToParent={receiveDataFromChild} />
+        <div className="ShowMyPostContent">
+          <div className="ShowMyPostButtonBack">
             <Button
               justify="center "
               variant="filled"
@@ -47,7 +59,11 @@ function ShowMyPost() {
               <input
                 type="text"
                 placeholder="Search for Posts"
-                className="TextPartShowMyPost"
+                className={`${
+                  isDarkMode
+                    ? "TextPartShowMyPostDark"
+                    : "TextPartShowMyPost"
+                }`}
               ></input>
               <button className="SvgPartShowMyPost">
                 <svg
@@ -70,14 +86,14 @@ function ShowMyPost() {
               <Button variant="filled" color="#EE7214" w={150}>
                 My Posts
               </Button>
-              <Button variant="filled" color="rgba(202, 204, 202, 1)" w={70}>
+              <Button variant="filled" color="rgba(202, 204, 202, 1)" w={75}>
                 <span style={{ color: "#000000" }}>Date</span>
               </Button>
             </div>
             <div className="ShowMyPostCards">
-              <MyPostCard />
-              <MyPostCard />
-              <MyPostCard />
+              <MyPostCard color={receivedData} />
+              <MyPostCard color={receivedData} />
+              <MyPostCard color={receivedData} />
             </div>
           </div>
         </div>

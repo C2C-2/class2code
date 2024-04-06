@@ -24,3 +24,16 @@
     border: none;
     background-color: #83C29D33;
 }
+.ProjectRequirementsTextCardDark {
+    overflow: hidden;
+    color: var(--white, #a5bbbe);
+    font-feature-settings: 'cv11'on, 'cv01'on, 'ss01'on;
+    text-overflow: ellipsis;
+    font-family: Inter;
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 18px;
+    border: none;
+    background-color: #83C29D33;
+}

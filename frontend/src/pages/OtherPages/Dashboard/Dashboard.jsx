@@ -1,4 +1,4 @@
-import React from "react";
+import { useEffect, useState } from "react"
 import "./Dashboard.css";
 import SideBar from "../../../components/SideBar/SideBar";
 import NavBar from "../../../components/NavBar/NavBar";
@@ -6,11 +6,23 @@ import DashboardStatusCard from "../../../components/DashboardStatusCard/Dashboa
 import DashboardProfileCard from "../../../components/DashboardProfileCard/DashboardProfileCard";
 import { Button } from "@mantine/core";
 function Dashboard() {
+  const [receivedData, setReceivedData] = useState("");
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  useEffect(() => {
+    setIsDarkMode(receivedData === "dark");
+  }, [receivedData]);
+  const receiveDataFromChild = (data) => {
+    setReceivedData(data);
+  };
+  useEffect(() => {
+    document.getElementById("man").style.backgroundColor =
+      receivedData === "light" ? "#fff" : "#000";
+  }, [receivedData]);
   return (
-    <div className="DashboardAll">
+    <div className="DashboardAll" id="man">
       <SideBar />
       <div className="DashboardMain">
-        <NavBar />
+        <NavBar sendDataToParent={receiveDataFromChild}/>
         <div className="DashboardCenter">
           <div className="DashboardTexts">
             <span className="DashboardTexts1">
@@ -102,59 +114,140 @@ function Dashboard() {
           </div>
           <div className="DashboardUnder">
             <div className="DashboardUnderPart1">
-              <span className="DashboardUnderPart1Text1">New Tasks</span>
+              <span  className={`${
+                  isDarkMode
+                    ? "DashboardUnderPart1Text1Dark"
+                    : "DashboardUnderPart1Text1"
+                }`}>New Tasks</span>
               <span className="DashboardUnderPart1Text2">32 Tasks</span>
             </div>
             <div className="DashboardUnderPart2">
-              <table className="table table-hover">
+              <table 
+               className={`table table-hover ${
+                isDarkMode
+                  ? "bg-dark"
+                  : "bg-white"
+              }`}>
                 <thead>
                   <tr>
-                    <th scope="col" className="text-secondary">
+                    <th scope="col" className= {`text-secondary ${
+                isDarkMode
+                  ? "bg-black"
+                  : "bg-bg-white"
+              }`}>
                       Tasks
                     </th>
-                    <th scope="col" className="text-secondary">
+                    <th scope="col" className= {`text-secondary ${
+                isDarkMode
+                  ? "bg-black"
+                  : "bg-bg-white"
+              }`}>
                       Deadline
                     </th>
-                    <th scope="col" className="text-secondary">
+                    <th scope="col" className= {`text-secondary ${
+                isDarkMode
+                  ? "bg-black"
+                  : "bg-bg-white"
+              }`}>
                       Leader + Team
                     </th>
-                    <th scope="col" className="text-secondary">
+                    <th scope="col" className= {`text-secondary ${
+                isDarkMode
+                  ? "bg-black"
+                  : "bg-bg-white"
+              }`}>
                       Company
                     </th>
-                    <th scope="col" className="text-secondary">
+                    <th scope="col" className= {`text-secondary ${
+                isDarkMode
+                  ? "bg-black"
+                  : "bg-bg-white"
+              }`}>
                       Status
                     </th>
-                    <th></th>
+                    <th className= {`text-secondary ${
+                isDarkMode
+                  ? "bg-black"
+                  : "bg-white"
+              }`}></th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td>
-                      <div className="TableDesign">
-                        <span className="TableDesignText1 text-dark">
+                  <tr >
+                    <td className= {` ${
+                isDarkMode
+                  ? "bg-black"
+                  : "bg-white"
+              }`}>
+                      <div className= {`TableDesign ${
+                isDarkMode
+                  ? "bg-black"
+                  : "bg-white"
+              }`}>
+                        <span className= {` ${
+                isDarkMode
+                  ? "TableDesignText1Dark text-white"
+                  : "TableDesignText1 text-dark"
+              }`}>
                           New Dashboard
                         </span>
-                        <span className="TableDesignText2">Toyota</span>
+                        <span className={` ${
+                isDarkMode
+                  ? "TableDesignText2Dark text-white"
+                  : "TableDesignText2 text-dark"
+              }`}>Toyota</span>
                       </div>
                     </td>
-                    <td>
-                      <div className="TableDesign">
-                        <span className="TableDesignText1 text-dark justify-content-center">
+                    <td className= {` ${
+                isDarkMode
+                  ? "bg-black"
+                  : "bg-white"
+              }`}>
+                      <div className= {`TableDesign ${
+                isDarkMode
+                  ? "bg-black"
+                  : "bg-white"
+              }`}>
+                        <span className= {`TableDesignText1 justify-content-center ${
+                isDarkMode
+                  ? "TableDesignText1Dark text-white"
+                  : " TableDesignText1 text-dark"
+              }`}>
                           Mar 24, 2015
                         </span>
-                        <span className="TableDesignText2">In 6 Days</span>
+                        <span  className={` ${
+                isDarkMode
+                  ? "TableDesignText2Dark text-white"
+                  : "TableDesignText2 text-dark"
+              }`}>In 6 Days</span>
                       </div>
                     </td>
-                    <td>
+                    <td className= {` ${
+                isDarkMode
+                  ? "bg-black"
+                  : "bg-white"
+              }`}>
                       <div className="align-items-center">
-                        <DashboardProfileCard />
+                        <DashboardProfileCard color={receivedData} />
                       </div>
                     </td>
-                    <td className="text-dark fs-6 pt-3">Company1</td>
-                    <td className=" pt-3 align-items-center">
+                    <td className= {` ${
+                isDarkMode
+                  ? "text-white fs-6 pt-3 bg-black"
+                  : " text-dark fs-6 pt-3 bg-white"
+              }`}>Company1</td>
+                    <td className= {` ${
+                isDarkMode
+                  ? " pt-3 align-items-center bg-black"
+                  : "pt-3 align-items-center bg-white"
+              }`}>
                       <DashboardStatusCard />
                     </td>
-                    <td>
+                    <td  className= {` ${
+                isDarkMode
+                  ? "bg-black"
+                  : "bg-white"
+              }`}>
                       <Button variant="filled" color="#EE7214" w={100} h={40}>
                         Start
                       </Button>

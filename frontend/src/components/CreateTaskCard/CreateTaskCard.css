@@ -7,7 +7,22 @@
     justify-content: space-between;
     border-radius: 15px;
     border: 1px solid var(--line, #EAEAEA);
-    background-color: #83C29D33;
+    background-color: #63f09d7c;
+    padding-left: 10px;
+    padding-right: 10px;
+    width: 100%;
+    border: none;
+}
+.CreateTaskCardAllDark {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    height: 20%;
+    gap: 10px;
+    justify-content: space-between;
+    border-radius: 15px;
+    border: 1px solid var(--line, #EAEAEA);
+    background-color: #2b6a45a8;
     padding-left: 10px;
     padding-right: 10px;
     width: 100%;
@@ -15,13 +30,20 @@
 }
 
 .CreateTaskCardText {
-    color: var(--light, rgba(0, 0, 0, 0.60));
+    color:  rgba(0, 0, 0, 0.60);
     font-feature-settings: 'clig'off, 'liga'off;
     font-family: Inter;
     font-size: 14px;
     font-style: normal;
     font-weight: 400;
     line-height: 20px;
-    /* 142.857% */
-
+}
+.CreateTaskCardTextDark {
+    color: #fff;
+    font-feature-settings: 'clig'off, 'liga'off;
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
 }

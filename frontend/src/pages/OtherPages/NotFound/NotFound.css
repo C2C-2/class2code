@@ -27,7 +27,17 @@
 }
 .NotFoundText2{
     width: 32%;
-    color: var(--light, rgba(0, 0, 0, 0.60));
+    color:  rgba(0, 0, 0, 0.60);
+    text-align: center;
+    font-family: ABeeZee;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;  
+}
+.NotFoundText2Dark{
+    width: 32%;
+    color: #a9a8a8;
     text-align: center;
     font-family: ABeeZee;
     font-size: 18px;

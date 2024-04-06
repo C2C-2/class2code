@@ -1,20 +1,48 @@
-import React from "react";
+import { useEffect, useState } from "react";
 import "./AddPost.css";
 import SideBar from "../../../components/SideBar/SideBar";
 import NavBar from "../../../components/NavBar/NavBar";
-import { Button, Input } from "@mantine/core";
+import { Button } from "@mantine/core";
 function AddPost() {
+  const [receivedData, setReceivedData] = useState("");
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  useEffect(() => {
+    setIsDarkMode(receivedData === "dark");
+  }, [receivedData]);
+  const receiveDataFromChild = (data) => {
+    setReceivedData(data);
+  };
+  useEffect(() => {
+    document.getElementById("man").style.backgroundColor =
+      receivedData === "light" ? "#fff" : "#000";
+  }, [receivedData]);
   return (
-    <div className="AddPostAll">
+    <div className="AddPostAll" id="man">
       <SideBar />
       <div className="AddPostMain">
-        <NavBar />
-        <div className="AddPostCenter">
-          <div className="AddPostContent">
-            <span className="AddPostHeader">Add Post</span>
+        <NavBar  sendDataToParent={receiveDataFromChild}/>
+        <div   className={`${
+                  isDarkMode
+                    ? "AddPostCenterDark"
+                    : "AddPostCenter"
+                }`}>
+          <div   className={`${
+                  isDarkMode
+                    ? "AddPostContentDark"
+                    : "AddPostContent"
+                }`}>
+            <span className={`${
+                  isDarkMode
+                    ? "AddPostHeaderDark"
+                    : "AddPostHeader"
+                }`}>Add Post</span>
             <div className="AddPostAllInput">
             <div className="AddPostInput">
-                  <span className="TextPartLabel">Company</span>
+                  <span className={`${
+                  isDarkMode
+                    ? "TextPartLabelDark"
+                    : "TextPartLabel"
+                }`}>Company</span>
                   <input
                     type="text"
                     placeholder="Company A"
@@ -22,7 +50,11 @@ function AddPost() {
                   />
                 </div>
                 <div className="AddPostInputPost">
-                  <span className="TextPartLabel">Post</span>
+                  <span   className={`${
+                  isDarkMode
+                    ? "TextPartLabelDark"
+                    : "TextPartLabel"
+                }`}>Post</span>
                   <input
                     type="text"
                     placeholder="New Content"

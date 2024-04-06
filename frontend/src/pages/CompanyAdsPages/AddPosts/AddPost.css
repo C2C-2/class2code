@@ -6,22 +6,32 @@
 }
 
 .AddPostMain {
-    width: 85%;
+    width: 100%;
     height: 100%;
     display: flex;
     flex-direction: column;
+    align-items: flex-end;
 }
 
 .AddPostCenter {
-    width: 100%;
+    width: 85%;
     height: 90%;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     background: rgba(242, 249, 241, 0.40);
-    backdrop-filter: blur(6px);
 }
+.AddPostCenterDark {
+    width: 85%;
+    height: 90%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(47, 47, 47, 0.4);
+}
+
 
 .AddPostContent {
     width: 45%;
@@ -39,9 +49,35 @@
    padding-bottom: 15px;
     gap: 15px;
 }
+.AddPostContentDark {
+    width: 45%;
+    height: 60%;
+    border-radius: var(--12, 12px);
+    border: 1px solid rgba(0, 0, 0, 0.10);
+    background: var(--white-100, #000);
+    box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.20);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+   padding-left: 30px;
+   padding-right: 30px;
+   padding-top: 30px;
+   padding-bottom: 15px;
+    gap: 15px;
+}
+
 
 .AddPostHeader {
     color: var(--dark, #283739);
+    font-family: "Open Sans";
+    font-size: 25px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 52px;
+    height: 15%;
+}
+.AddPostHeaderDark {
+    color: var(--white, #d4dcdd);
     font-family: "Open Sans";
     font-size: 25px;
     font-style: normal;
@@ -68,6 +104,15 @@
 
 .TextPartLabel {
     color: #283739;
+    font-family: "Open Sans";
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
+    letter-spacing: 0.25px;
+}
+.TextPartLabelDark {
+    color: var(--white, #d4dcdd);
     font-family: "Open Sans";
     font-size: 14px;
     font-style: normal;

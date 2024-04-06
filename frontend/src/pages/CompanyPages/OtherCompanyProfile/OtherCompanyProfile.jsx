@@ -1,6 +1,7 @@
 import React from "react";
 import "./OtherCompanyProfile.css";
-import { Button, Input, TextInput } from "@mantine/core";
+import { useEffect, useState } from "react";
+import { Button } from "@mantine/core";
 import { IconArrowLeft } from "@tabler/icons-react";
 import SideBar from "../../../components/SideBar/SideBar";
 import NavBar from "../../../components/NavBar/NavBar";
@@ -8,12 +9,24 @@ import CommentComp from "../../../components/Comments/CommentComp";
 import CurrentProject from "../../../components/CurrentProject/CurrentProject";
 import TeamOther from "../../../components/TeamOther/TeamOther";
 function OtherCompanyProfile() {
+  const [receivedData, setReceivedData] = useState("");
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  useEffect(() => {
+    setIsDarkMode(receivedData === "dark");
+  }, [receivedData]);
+  const receiveDataFromChild = (data) => {
+    setReceivedData(data);
+  };
+  useEffect(() => {
+    document.getElementById("man").style.backgroundColor =
+      receivedData === "light" ? "#fff" : "#000";
+  }, [receivedData]);
   const icon = <IconArrowLeft size={18} />;
   return (
-    <div className="OtherProfileCompany">
+    <div className="OtherProfileCompany" id="man">
         <SideBar />
       <div className="OtherCompany">
-          <NavBar />
+          <NavBar sendDataToParent={receiveDataFromChild} />
         <div className="Part2OtherProfile">
           <div className="OtherProfileButtonBack">
             <Button
@@ -111,11 +124,19 @@ function OtherCompanyProfile() {
             </div>
             <div className="Part2UnderOther">
               <div className="CurrentProjects">
-                <div className="CP1">Current Projects</div>
+                <div className={`${
+                  isDarkMode
+                    ? "CP1Dark"
+                    : "CP1"
+                }`}>Current Projects</div>
                 <CurrentProject/>
               </div>
               <div className="TeamAll">
-                <div className="TA1">Teams</div>
+                <div className={`${
+                  isDarkMode
+                    ? "TA1Dark"
+                    : "TA1"
+                }`}>Teams</div>
                 <TeamOther/>
                 <TeamOther/>
               </div>

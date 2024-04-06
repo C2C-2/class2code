@@ -4,11 +4,22 @@
     align-items: center;
     gap: 10px;
     border-radius: 12px;
-    background: var(--light, #a4d69e);
+    background:  #b3ebad;
 }
 
 .ReqTextCard {
     background: var(--light, #F2F9F1);
+    font-family: Catamaran;
+    font-size: 12px;
+    border: none;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    border: none;
+    background-color: transparent;
+}
+.ReqTextCardDark {
+    background: var(--light, #040404);
     font-family: Catamaran;
     font-size: 12px;
     border: none;

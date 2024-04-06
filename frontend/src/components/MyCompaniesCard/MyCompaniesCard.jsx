@@ -1,18 +1,39 @@
 import React from "react";
 import "./MyCompaniesCard.css";
+import { useEffect, useState } from "react";
 import Profile from "./Rectangle.png";
-export default function MyCompaniesCard() {
+export default function MyCompaniesCard({colorProp}) {
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  useEffect(() => {
+    setIsDarkMode(colorProp === "dark");
+  }, [colorProp]);
   return (
     <button className="MyCompaniesCardMainOverMy">
-      <div className="MyCompaniesCardOverAllMy">
+      <div
+        className={`${
+          isDarkMode
+            ? "MyCompaniesCardOverAllMyDark-mode"
+            : "MyCompaniesCardOverAllMy"
+        }`}
+      >
         <div className="MyCompaniesCardAllItemMy">
           <div className="MyCompaniesCardtextPartMy">
-            <span className="MyCompaniesCardT1My">Company Name</span>
-            <span className="MyCompaniesCardT2My">
+            <span
+              className={`${
+                isDarkMode ? "MyCompaniesCardT1MyDark" : "MyCompaniesCardT1My"
+              }`}
+            >
+              Company Name
+            </span>
+            <span  className={`${
+                isDarkMode ? "MyCompaniesCardT2MyDark" : "MyCompaniesCardT2My"
+              }`}>
               Wore these with my training tee and pods to a graduation bbq and
               the young bucks was all over it. Love the look and feel.
             </span>
-            <span className="MyCompaniesCardT3">9.6</span>
+            <span className={`${
+                isDarkMode ? "MyCompaniesCardT3Dark" : "MyCompaniesCardT3"
+              }`}>9.6</span>
           </div>
           <div className="MyCompaniesCardImgPartMy">
             <hr className="MyCompaniesCardLineMy"></hr>
@@ -20,7 +41,9 @@ export default function MyCompaniesCard() {
               <img src={Profile} alt="Profile" />
               <div className="MyCompaniesCardTextsOver">
                 <span className="MyCompaniesCardTe1">Ultraboost 19 Shoes</span>
-                <span className="MyCompaniesCardTe2">Sallie Butler</span>
+                <span className={`${
+                isDarkMode ? "MyCompaniesCardTe2Dark" : "MyCompaniesCardTe2"
+              }`}>Sallie Butler</span>
               </div>
             </div>
             <button className="MyCompaniesCardRemove">

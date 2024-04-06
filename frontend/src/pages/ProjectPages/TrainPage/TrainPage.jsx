@@ -1,14 +1,28 @@
 import React from "react";
 import "./TrainPage.css";
+import { useState, useEffect } from "react";
 import SideBar from "../../../components/SideBar/SideBar";
 import NavBar from "../../../components/NavBar/NavBar";
-import { Button, Input, TextInput } from "@mantine/core";
+
+import { Button } from "@mantine/core";
 function TrainPage() {
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [receivedData, setReceivedData] = useState("");
+  const receiveDataFromChild = (data) => {
+    setReceivedData(data);
+  };
+  useEffect(() => {
+    document.getElementById("man").style.backgroundColor =
+      receivedData === "light" ? "#fff" : "#000";
+  }, [receivedData]);
+  useEffect(() => {
+    setIsDarkMode(receivedData === "dark");
+  }, [receivedData]);
   return (
-    <div className="TrainPageAll">
-        <SideBar />
+    <div className="TrainPageAll" id="man">
+      <SideBar />
       <div className="TrainPageMain">
-          <NavBar />
+        <NavBar sendDataToParent={receiveDataFromChild} />
         <div className="TrainPageCenter">
           <div className="TrainPageButtonBack">
             <Button
@@ -50,16 +64,20 @@ function TrainPage() {
             <div className="TrainPageTexts">
               <div className="TrainPageText1">
                 <div className="TextAllTrain">
-                  <span className="TPT">Sed ut perspiciatis</span>
-                  <p className="PTP">
+                  <span className={`${isDarkMode ? "TPTDark" : "TPT"}`}>
+                    Sed ut perspiciatis
+                  </span>
+                  <p className={`${isDarkMode ? "PTPDark" : "PTP"}`}>
                     Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut
                     odit aut fugit, sed quia consequuntur magni dolores eos qui
                     ratione voluptatem sequi nesciunt. Neque porro quisquam est.
                   </p>
                 </div>
                 <div className="TextAllTrain">
-                  <span className="TPT">Lorem ipsum dolor</span>
-                  <p className="PTP1">
+                  <span className={`${isDarkMode ? "TPTDark" : "TPT"}`}>
+                    Lorem ipsum dolor
+                  </span>
+                  <p className={`${isDarkMode ? "PTPDark" : "PTP"}`}>
                     Amet, consectetur adipiscing elit, sed do eiusmod tempor
                     incididunt ut labore et dolore magna aliqua. Ut enim ad
                     minim veniam, quis nostrud exercitation ullamco laboris
@@ -69,8 +87,10 @@ function TrainPage() {
               </div>
               <div className="TrainPageText1">
                 <div className="TextAllTrain">
-                  <span className="TPT">Nemo enim ipsam</span>
-                  <p className="PTP">
+                  <span className={`${isDarkMode ? "TPTDark" : "TPT"}`}>
+                    Nemo enim ipsam
+                  </span>
+                  <p className={`${isDarkMode ? "PTPDark" : "PTP"}`}>
                     Consequuntur magni dolores eos qui ratione voluptatem sequi
                     nesciunt. Neque porro quisquam est, qui dolorem ipsum quia
                     dolor sit amet, consectetur, adipisci velit, sed quia non
@@ -78,8 +98,10 @@ function TrainPage() {
                   </p>
                 </div>
                 <div className="TextAllTrain">
-                  <span className="TPT">Tempor incididunt</span>
-                  <p className="PTP1">
+                  <span className={`${isDarkMode ? "TPTDark" : "TPT"}`}>
+                    Tempor incididunt
+                  </span>
+                  <p className={`${isDarkMode ? "PTPDark" : "PTP"}`}>
                     Eos qui ratione voluptatem sequi nesciunt. Neque porro
                     quisquam est, qui dolorem ipsum quia dolor sit amet,
                     consectetur, adipisci velit, sed quia non numquam eius modi
@@ -89,7 +111,9 @@ function TrainPage() {
               </div>
             </div>
             <div className="ButtonOk">
-            <Button variant="filled" color="#388E3C" w={100}>Ok</Button>
+              <Button variant="filled" color="#388E3C" w={100}>
+                Ok
+              </Button>
             </div>
           </div>
         </div>

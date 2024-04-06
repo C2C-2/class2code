@@ -1,9 +1,21 @@
-import React from 'react'
+import { useState,useEffect } from "react";
 import "./CreateTaskCard.css"
-function CreateTaskCard() {
+function CreateTaskCard({color}) {
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  useEffect(() => {
+    setIsDarkMode(color === "dark");
+  }, [color]);
   return (
-    <button className='CreateTaskCardAll'>
-    <div className='CreateTaskCardText'>
+    <button className={`${
+      isDarkMode
+        ? "CreateTaskCardAllDark"
+        : "CreateTaskCardAll"
+    }`}>
+    <div className={`${
+      isDarkMode
+        ? "CreateTaskCardTextDark"
+        : "CreateTaskCardText"
+    }`}>
     Step1 ...
     </div>
     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="20" viewBox="0 0 18 20" fill="none">

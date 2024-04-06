@@ -20,6 +20,18 @@ background-color: transparent;
     border: 1px solid rgba(0, 0, 0, 0.06);
     box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.20);
 }
+.MyCompaniesCardOverAllMyDark-mode{
+    width: 100%;
+    display: flex;
+    height: 100%;
+    padding: var(--16, 16px) 32px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: var(--16, 16px);
+    border: 1px solid #fff;
+    box-shadow: 0px 5px 10px 0px rgba(165, 184, 208, 0.2);
+}
 
 .MyCompaniesCardAllItemMy {
     width: 100%;
@@ -50,17 +62,34 @@ background-color: transparent;
     font-weight: 700;
     line-height: normal;
 }
+.MyCompaniesCardT1MyDark{
+    color:#fff;
+    font-family: Roboto;
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+}
 
 .MyCompaniesCardT2My {
     width: 100%;
-    color: var(--light, rgba(0, 0, 0, 0.60));
+    color:  rgba(0, 0, 0, 0.60);
     text-align: center;
     font-family: Roboto;
     font-size: 14px;
     font-style: normal;
     font-weight: 400;
     line-height: 20px;
-
+}
+.MyCompaniesCardT2MyDark {
+    width: 100%;
+    color:  #909090;
+    text-align: center;
+    font-family: Roboto;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
 }
 
 .MyCompaniesCardT3 {
@@ -72,6 +101,16 @@ background-color: transparent;
     line-height: 100%;
     /* 37.795px */
 }
+.MyCompaniesCardT3Dark {
+    color: #fff;
+    font-family: Poppins;
+    font-size: 37.795px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 100%;
+    /* 37.795px */
+}
+
 
 .MyCompaniesCardImgPartMy {
     height: 35%;
@@ -116,6 +155,15 @@ background-color: transparent;
 
 .MyCompaniesCardTe2 {
     color: rgba(0, 0, 0, 0.80);
+    font-family: Roboto;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 20px;
+    /* 125% */
+}
+.MyCompaniesCardTe2Dark {
+    color: #9c9c9c;
     font-family: Roboto;
     font-size: 16px;
     font-style: normal;

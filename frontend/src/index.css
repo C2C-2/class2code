@@ -1,11 +1,10 @@
-<<<<<<< HEAD
-#root{
-    height: 100%;
+
+#root{height: 100%;
     width: 100%;
 }
 
 
-=======
+
 :root {
   --dark: rgba(40, 55, 57, 1);
   --light: rgba(244, 244, 244, 1);
@@ -22,4 +21,4 @@
   --variable-collection-orange: rgba(255, 167, 137, 1);
   --variable-collection-pur: rgba(117, 49, 136, 1);
 }
->>>>>>> main
+

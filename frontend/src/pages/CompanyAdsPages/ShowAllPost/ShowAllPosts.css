@@ -7,14 +7,14 @@
 
 .ShowAllPostsMain {
     height: 100%;
-    width: 85%;
+    width: 100%;
     display: flex;
     align-items: flex-end;
     flex-direction: column;
 }
 
 .ShowAllPostsContent {
-    width: 100%;
+    width: 85%;
     height: 90%;
     display: flex;
     flex-direction: row;
@@ -56,11 +56,25 @@
     text-align: center;
     gap: 10px;
     flex-shrink: 0;
+    outline: none;
     border-radius: var(--12, 12px) var(--0, 0px) var(--0, 0px) var(--12, 12px);
     border: 1px solid rgba(56, 142, 60, 0.40);
     background: var(--white-100, #FFF);
 }
-
+.TextPartShowAllPostsDark{
+    display: flex;
+    padding: 10px;
+    width: 60%;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    gap: 10px;
+    flex-shrink: 0;
+    outline: none;
+    border-radius: var(--12, 12px) var(--0, 0px) var(--0, 0px) var(--12, 12px);
+    border: 1px solid rgba(56, 142, 60, 0.40);
+    background: var(--white-100, #000);
+}
 .SvgPartShowAllPosts{
     display: flex;
     height: 100%;

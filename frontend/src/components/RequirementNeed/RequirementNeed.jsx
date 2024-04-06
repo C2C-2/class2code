@@ -1,9 +1,18 @@
-import React from "react";
+
 import "./RequirementNeed.css";
-function RequirementNeed() {
+import { useState,useEffect } from "react";
+function RequirementNeed({colorProps}) {
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  useEffect(() => {
+    setIsDarkMode(colorProps === "dark");
+  }, [colorProps]);
   return (
     <div className="ReqNeedAllCard">
-      <button className="ReqTextCard">React</button>
+      <button    className={`${
+          isDarkMode
+            ? "ReqTextCardDark"
+            : "ReqTextCard"
+        }`}>React</button>
     </div>
   );
 }

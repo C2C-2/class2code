@@ -1,3 +1,6 @@
+import "./NewNavBar.css";
+import MainLogo from "./logo2 2.png";
+import { useState, useEffect } from "react";
 import {
   ActionIcon,
   useMantineColorScheme,
@@ -6,46 +9,42 @@ import {
 import { IconSun, IconMoon } from "@tabler/icons-react";
 import clsx from "clsx";
 import classes from "./Light_DarkMode/LightDarkMode.module.css";
-import "./NavBar.css";
-import { useEffect ,useState } from "react";
-import MainLogo from "./logo2 2.png";
 import ProfileLogo from "./Profile.png";
-// import LightDarkMode from "./Light_DarkMode/LightDarkMode";
-function NavBar({sendDataToParent}) {
+function NewNavBar({ sendDataToParent }) {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const { setColorScheme } = useMantineColorScheme();
   const computedColorScheme = useComputedColorScheme("light", {
     getInitialValueInEffect: true,
   });
-sendDataToParent(computedColorScheme)
-useEffect(() => {
-  setIsDarkMode(computedColorScheme === "dark");
-}, [computedColorScheme]); 
+  sendDataToParent(computedColorScheme);
+  useEffect(() => {
+    setIsDarkMode(computedColorScheme === "dark");
+  }, [computedColorScheme]);
 
   return (
-    <div className="MainNav" 
+    <div
+      className="NewMainNav"
       style={{
-        backgroundColor:  computedColorScheme=== "dark" ? "#000" : "#fff"
-      }}>
-      <div className={`${
-                isDarkMode ? "NavDark" : "Nav"
-              }`}>
-        <div className="TopImage">
-          <img className="NavMainLogo" alt="Logo" src={MainLogo} />
-          <span  className={`${
-                isDarkMode ? "NavTextBarDark" : "NavTextBar"
-              }`}>Class2Code</span>
+        backgroundColor: computedColorScheme === "dark" ? "#000" : "#fff",
+      }}
+    >
+      <div className={`${isDarkMode ? "NewNavDark" : "NewNav"}`}>
+        <div className="NewTopImage">
+          <img className="NewNavMainLogo" alt="Logo" src={MainLogo} />
+          <span className={`${isDarkMode ? "NewNavTextBarDark" : "NewNavTextBar"}`}>
+            Class2Code
+          </span>
         </div>
-        <div className="TopPartNavBar">
-          <span className="BackSearch">
-            <button className="ButtonSvg">
+        <div className="NewTopPartNavBar">
+          <span className="NewBackSearch">
+            <button className="NewButtonSvg">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="11"
                 height="13"
                 viewBox="0 0 11 13"
                 fill="none"
-                className="Svg"
+                className="NewSvg"
               >
                 <circle
                   cx="5"
@@ -68,11 +67,11 @@ useEffect(() => {
             <input
               type="text"
               placeholder="Search"
-              className="TextSearch"
+              className="NewTextSearch"
             ></input>
           </span>
-          <div className="Svg">
-            <button className="ButtonSvg">
+          <div className="NewSvg">
+            <button className="NewButtonSvg">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
@@ -101,7 +100,7 @@ useEffect(() => {
             <ActionIcon
               onClick={() =>
                 setColorScheme(
-                  computedColorScheme === "light" ? "dark": "light" 
+                  computedColorScheme === "light" ? "dark" : "light"
                 )
               }
               variant="transparent"
@@ -118,7 +117,7 @@ useEffect(() => {
                 stroke={1.5}
               />
             </ActionIcon>
-            <button className="ButtonSvg">
+            <button className="NewButtonSvg">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
@@ -144,8 +143,8 @@ useEffect(() => {
                 </defs>
               </svg>
             </button>
-            <button className="ButtonSvg">
-              <img className="ProfileLogo" alt="Logo" src={ProfileLogo} />
+            <button className="NewButtonSvg">
+              <img className="NewProfileLogo" alt="Logo" src={ProfileLogo} />
             </button>
           </div>
         </div>
@@ -154,4 +153,4 @@ useEffect(() => {
   );
 }
 
-export default NavBar;
+export default NewNavBar;

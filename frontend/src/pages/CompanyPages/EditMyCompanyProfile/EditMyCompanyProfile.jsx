@@ -1,17 +1,29 @@
-import React from "react";
+import{useState,useEffect} from "react";
 import "./EditMyCompanyProfile.css";
 import SideBar from "../../../components/SideBar/SideBar";
 import NavBar from "../../../components/NavBar/NavBar";
-import { Button, Input, TextInput } from "@mantine/core";
+import { Button} from "@mantine/core";
 import CurrentProject from "../../../components/CurrentProject/CurrentProject";
 import TeamOther from "../../../components/TeamOther/TeamOther";
 import EditTeamMyCompanyProfile from "../../../components/EditTeamMyCompanyProfile/EditTeamMyCompanyProfile";
 function EditMyCompanyProfile() {
+  const [receivedData, setReceivedData] = useState("");
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  useEffect(() => {
+    setIsDarkMode(receivedData === "dark");
+  }, [receivedData]);
+  const receiveDataFromChild = (data) => {
+    setReceivedData(data);
+  };
+  useEffect(() => {
+    document.getElementById("man").style.backgroundColor =
+      receivedData === "light" ? "#fff" : "#000";
+  }, [receivedData]);
   return (
-    <div className="EditMyCompanyProfileAll">
+    <div className="EditMyCompanyProfileAll" id="man">
       <SideBar />
       <div className="MainEditMyCompanyProfile">
-        <NavBar />
+        <NavBar sendDataToParent={receiveDataFromChild} />
         <div className="CenterEditMyCompanyProfile">
           <div className="AllEditMyCompanyProfile">
             <div className="EditMyCompanyProfileButtonBack">
@@ -90,7 +102,11 @@ function EditMyCompanyProfile() {
               <div className="ContentEditMyCompanyProfile">
                 <div className="Part1EditMyCompanyProfile">
                   <div className="DescriptionText">
-                    <div className="DU1">Description</div>
+                    <div className={`${
+                  isDarkMode
+                    ? "DU1Dark"
+                    : "DU1"
+                }`}>Description</div>
                     <div className="DU2">
                       <p className="ParaD">
                         Lorem ipsum dolor sit amet, consectetur adipiscing elit,
@@ -101,22 +117,32 @@ function EditMyCompanyProfile() {
                     </div>
                   </div>
                   <div className="InputsTextEditMyCompanyProfile">
-                    <div className="GeneralInformation">
+                    <div className={`${
+                  isDarkMode
+                    ? "GeneralInformationDark"
+                    : "GeneralInformation"
+                }`}>
                       General Information
                     </div>
                     <div className="InputsMyCompanyProfile">
                       <div className="InputOverAll">
-                        <span className="TextPartCmopany">Name</span>
+                        <span className={`${
+                  isDarkMode
+                    ? "TextPartCompanyDark"
+                    : "TextPartCompany"
+                }`}>Name</span>
                         <input
                           type="text"
                           placeholder="Company Name"
                           className="TextInput"
-                          value="Name"
-                          readOnly
-                        />
+                          />
                       </div>
                       <div className="InputOverAll">
-                        <span className="TextPartCompany">Domain</span>
+                        <span className={`${
+                  isDarkMode
+                    ? "TextPartCompanyDark"
+                    : "TextPartCompany"
+                }`}>Domain</span>
                         <input
                           type="text"
                           placeholder="Domain"
@@ -130,7 +156,11 @@ function EditMyCompanyProfile() {
                       </Button>
                       <Button
                         variant="transparent"
-                        color="#283739"
+                        color={`${
+                          isDarkMode
+                            ? "#fff"
+                            : "#000"
+                        }`}
                         w={105}
                         h={30}
                         size="compact-md"
@@ -143,9 +173,17 @@ function EditMyCompanyProfile() {
                 </div>
                 <div className="Part2EditUnderOther">
                   <div className="EditCurrentProjects">
-                    <div className="EditCP1">Current Projects</div>
+                    <div className={`${
+                  isDarkMode
+                    ? "EditCP1Dark"
+                    : "EditCP1"
+                }`}>Current Projects</div>
                     <div className="ChangeProject">
-                      <span className="ChangeProjectText">Change Project</span>
+                      <span className={`${
+                  isDarkMode
+                    ? "ChangeProjectTextDark"
+                    : "ChangeProjectText"
+                }`}>Change Project</span>
                       <div className="ChangeProjectDivs">
                         <span className="TextChange">Project A</span>
                       </div>
@@ -155,12 +193,20 @@ function EditMyCompanyProfile() {
                     </div>
                   </div>
                   <div className="PartTeams">
-                    <div className="EditTeams">Teams</div>
+                    <div className={`${
+                  isDarkMode
+                    ? "EditTeamsDark"
+                    : "EditTeams"
+                }`} >Teams</div>
                     <div className="CreateTeam">
-                      <span className="ChangeTeamText">Create Team</span>
-                      <div className="ChangeTeamDivs">
+                      <span className={`${
+                  isDarkMode
+                    ? "ChangeTeamTextDark"
+                    : "ChangeTeamText"
+                }`} >Create Team</span>
+                      <button className="ChangeTeamDivs">
                         <span className="TextChange">Create Team</span>
-                      </div>
+                      </button>
                     </div>
                     <div className="EditCurrentTeams">
                       <EditTeamMyCompanyProfile />

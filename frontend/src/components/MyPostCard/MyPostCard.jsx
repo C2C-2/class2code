@@ -1,20 +1,36 @@
-import React from 'react'
+import { useState,useEffect } from "react";
 import "./MyPostCard.css"
 import Profile from "./Ellipse 1.png";
 import { Button } from '@mantine/core';
-function MyPostCard() {
+function MyPostCard({color}) {
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  useEffect(() => {
+    setIsDarkMode(color === "dark");
+  }, [color]);
   return (
-    <div className="MyPostsCardAll">
-    <div className="MyPostsCardDesign">
+    <div  className={`${
+      isDarkMode
+        ? "MyPostsCardAllDark"
+        : "MyPostsCardAll"
+    }`}>
+    <div className="MyPostsCardDesign ">
       <div className="MyPostsCardProfile">
         <img src={Profile} alt="Profile" className="MyPostsCardImg" />
         <div className="MyPostsCardImgText">
-          <span className="MyImgText1">John Kappa</span>
+          <span className={`${
+      isDarkMode
+        ? "MyImgText1Dark"
+        : "MyImgText1"
+    }`}>John Kappa</span>
           <span className="MyImgText2">Company Name</span>
         </div>
       </div>
       <div className="MyPostsCardPost">
-        <p className="MyParagraphPost">
+        <p className={`${
+          isDarkMode
+            ? "MyParagraphPostDark"
+            : "MyParagraphPost"
+        }`}>
           This is the original component. Edit me to make global changes to
           all. 🎉
         </p>

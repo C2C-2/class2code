@@ -1,14 +1,26 @@
-import React from "react";
+import { useEffect, useState } from "react";
 import "./FAQQuestion.css";
 import SideBar from "../../../components/SideBar/SideBar";
 import NavBar from "../../../components/NavBar/NavBar";
 import { Button } from "@mantine/core";
 function FAQQuestion() {
+  const [receivedData, setReceivedData] = useState("");
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  useEffect(() => {
+    setIsDarkMode(receivedData === "dark");
+  }, [receivedData]);
+  const receiveDataFromChild = (data) => {
+    setReceivedData(data);
+  };
+  useEffect(() => {
+    document.getElementById("man").style.backgroundColor =
+      receivedData === "light" ? "#fff" : "#000";
+  }, [receivedData]);
   return (
-    <div className="FAQQuestionAll">
+    <div className="FAQQuestionAll" id="man">
       <SideBar />
       <div className="FAQQuestionMain">
-        <NavBar />
+        <NavBar sendDataToParent={receiveDataFromChild} />
         <div className="FAQQuestionCenter">
           <div className="FAQQuestionCenterButtonBack">
             <Button
@@ -42,57 +54,33 @@ function FAQQuestion() {
             </Button>
           </div>
           <div className="FAQQuestionCenterContent">
-            <span className="FAQQuestionCenterContentText1">FAQs </span>
-            <hr className="FAQQuestionCenterContentLine" />
+            <span
+              className={`${
+                isDarkMode
+                  ? "FAQQuestionCenterContentText1Dark"
+                  : "FAQQuestionCenterContentText1"
+              }`}
+            >
+              FAQs{" "}
+            </span>
+            <hr
+              className={`${
+                isDarkMode
+                  ? "FAQQuestionCenterContentLineDark"
+                  : "FAQQuestionCenterContentLine"
+              }`}
+            />
             <div className="FAQQuestionCenterContentDivText">
-              <span className="FAQQuestionCenterContentText2">
+              <span
+                className={`${
+                  isDarkMode
+                    ? "FAQQuestionCenterContentText2Dark"
+                    : "FAQQuestionCenterContentText2"
+                }`}
+              >
                 What is Webflow and why is it the best website builder?
               </span>
-              <button  className="FAQQuestionCenterContentButton">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="23"
-                height="24"
-                viewBox="0 0 23 24"
-                fill="none"
-              >
-                <ellipse
-                  cx="11.8408"
-                  cy="12.0001"
-                  rx="11.1572"
-                  ry="12"
-                  fill="#F2F1FA"
-                />
-                <path
-                  d="M11.8398 7.6801V16.3201"
-                  stroke="#388E3C"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-                <path
-                  d="M7.82422 12.0001H15.8574"
-                  stroke="#388E3C"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </svg>
-              </button >
-            </div>
-            <hr className="FAQQuestionCenterContentLine" />
-            <div className="FAQQuestionCenterContentDivText">
-              <span className="FAQQuestionCenterContentText3">
-                What is your favorite template from BRIX Templates?
-              </span>
-              <div className="FAQQuestionCenterContentDivTextInside">
-                <span className="FAQQuestionCenterContentText4">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit id
-                  venenatis pretium risus euismod dictum egestas orci netus
-                  feugiat ut egestas ut sagittis tincidunt phasellus elit etiam
-                  cursus orci in. Id sed montes.
-                </span>
-                <button className="FAQQuestionCenterContentButton1">
+              <button className="FAQQuestionCenterContentButton">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="23"
@@ -105,106 +93,192 @@ function FAQQuestion() {
                     cy="12.0001"
                     rx="11.1572"
                     ry="12"
-                    fill="#EB5757"
+                    fill="#F2F1FA"
                   />
                   <path
-                    d="M7.82422 16.3203L15.8574 7.68034L7.82422 16.3203Z"
-                    fill="#EB5757"
-                  />
-                  <path
-                    d="M7.82422 16.3203L15.8574 7.68034"
-                    stroke="white"
+                    d="M11.8398 7.6801V16.3201"
+                    stroke="#388E3C"
                     stroke-width="2"
                     stroke-linecap="round"
                     stroke-linejoin="round"
                   />
                   <path
-                    d="M15.8574 16.3203L7.82422 7.68034L15.8574 16.3203Z"
-                    fill="#EB5757"
-                  />
-                  <path
-                    d="M15.8574 16.3203L7.82422 7.68034"
-                    stroke="white"
+                    d="M7.82422 12.0001H15.8574"
+                    stroke="#388E3C"
                     stroke-width="2"
                     stroke-linecap="round"
                     stroke-linejoin="round"
                   />
                 </svg>
+              </button>
+            </div>
+            <hr
+              className={`${
+                isDarkMode
+                  ? "FAQQuestionCenterContentLineDark"
+                  : "FAQQuestionCenterContentLine"
+              }`}
+            />
+            <div className="FAQQuestionCenterContentDivText">
+              <span
+                className={`${
+                  isDarkMode
+                    ? "FAQQuestionCenterContentText3Dark"
+                    : "FAQQuestionCenterContentText3"
+                }`}
+              >
+                What is your favorite template from BRIX Templates?
+              </span>
+              <div className="FAQQuestionCenterContentDivTextInside">
+                <span
+                  className={`${
+                    isDarkMode
+                      ? "FAQQuestionCenterContentText4Dark"
+                      : "FAQQuestionCenterContentText4"
+                  }`}
+                >
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit id
+                  venenatis pretium risus euismod dictum egestas orci netus
+                  feugiat ut egestas ut sagittis tincidunt phasellus elit etiam
+                  cursus orci in. Id sed montes.
+                </span>
+                <button className="FAQQuestionCenterContentButton1">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="23"
+                    height="24"
+                    viewBox="0 0 23 24"
+                    fill="none"
+                  >
+                    <ellipse
+                      cx="11.8408"
+                      cy="12.0001"
+                      rx="11.1572"
+                      ry="12"
+                      fill="#EB5757"
+                    />
+                    <path
+                      d="M7.82422 16.3203L15.8574 7.68034L7.82422 16.3203Z"
+                      fill="#EB5757"
+                    />
+                    <path
+                      d="M7.82422 16.3203L15.8574 7.68034"
+                      stroke="white"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                    <path
+                      d="M15.8574 16.3203L7.82422 7.68034L15.8574 16.3203Z"
+                      fill="#EB5757"
+                    />
+                    <path
+                      d="M15.8574 16.3203L7.82422 7.68034"
+                      stroke="white"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
                 </button>
               </div>
             </div>
-            <hr className="FAQQuestionCenterContentLine" />
+            <hr
+              className={`${
+                isDarkMode
+                  ? "FAQQuestionCenterContentLineDark"
+                  : "FAQQuestionCenterContentLine"
+              }`}
+            />
             <div className="FAQQuestionCenterContentDivText">
-              <span className="FAQQuestionCenterContentText2">
-              How do you clone a Webflow Template?
+              <span
+                className={`${
+                  isDarkMode
+                    ? "FAQQuestionCenterContentText2Dark"
+                    : "FAQQuestionCenterContentText2"
+                }`}
+              >
+                How do you clone a Webflow Template?
               </span>
               <button className="FAQQuestionCenterContentButton">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="23"
-                height="24"
-                viewBox="0 0 23 24"
-                fill="none"
-              >
-                <ellipse
-                  cx="11.8408"
-                  cy="12.0001"
-                  rx="11.1572"
-                  ry="12"
-                  fill="#F2F1FA"
-                />
-                <path
-                  d="M11.8398 7.6801V16.3201"
-                  stroke="#388E3C"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-                <path
-                  d="M7.82422 12.0001H15.8574"
-                  stroke="#388E3C"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </svg>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="23"
+                  height="24"
+                  viewBox="0 0 23 24"
+                  fill="none"
+                >
+                  <ellipse
+                    cx="11.8408"
+                    cy="12.0001"
+                    rx="11.1572"
+                    ry="12"
+                    fill="#F2F1FA"
+                  />
+                  <path
+                    d="M11.8398 7.6801V16.3201"
+                    stroke="#388E3C"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    d="M7.82422 12.0001H15.8574"
+                    stroke="#388E3C"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
               </button>
             </div>
-            <hr className="FAQQuestionCenterContentLine" />
+            <hr
+              className={`${
+                isDarkMode
+                  ? "FAQQuestionCenterContentLineDark"
+                  : "FAQQuestionCenterContentLine"
+              }`}
+            />
             <div className="FAQQuestionCenterContentDivText">
-              <span className="FAQQuestionCenterContentText2">
-              Why is BRIX Templates the best Webflow agency?
+              <span
+                className={`${
+                  isDarkMode
+                    ? "FAQQuestionCenterContentText2Dark"
+                    : "FAQQuestionCenterContentText2"
+                }`}
+              >
+                Why is BRIX Templates the best Webflow agency?
               </span>
               <button className="FAQQuestionCenterContentButton">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="23"
-                height="24"
-                viewBox="0 0 23 24"
-                fill="none"
-              >
-                <ellipse
-                  cx="11.8408"
-                  cy="12.0001"
-                  rx="11.1572"
-                  ry="12"
-                  fill="#F2F1FA"
-                />
-                <path
-                  d="M11.8398 7.6801V16.3201"
-                  stroke="#388E3C"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-                <path
-                  d="M7.82422 12.0001H15.8574"
-                  stroke="#388E3C"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </svg>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="23"
+                  height="24"
+                  viewBox="0 0 23 24"
+                  fill="none"
+                >
+                  <ellipse
+                    cx="11.8408"
+                    cy="12.0001"
+                    rx="11.1572"
+                    ry="12"
+                    fill="#F2F1FA"
+                  />
+                  <path
+                    d="M11.8398 7.6801V16.3201"
+                    stroke="#388E3C"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    d="M7.82422 12.0001H15.8574"
+                    stroke="#388E3C"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
               </button>
             </div>
             <hr className="FAQQuestionCenterContentLine" />

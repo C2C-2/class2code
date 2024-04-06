@@ -1,7 +1,11 @@
-import React from "react";
+import { useState, useEffect } from "react";
 import "./MyCompaniesTeamsCard.css";
 import Profile from "./Frame.png";
-function MyCompaniesTeamsCard() {
+function MyCompaniesTeamsCard({ color }) {
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  useEffect(() => {
+    setIsDarkMode(color === "dark");
+  }, [color]);
   return (
     <button className="MyCompaniesTeamsCardAll">
       <div className="MyCompaniesTeamsCardMain">
@@ -10,15 +14,43 @@ function MyCompaniesTeamsCard() {
             <span className="MyCompaniesTeamsCardText">Company Name</span>
           </span>
         </div>
-        <div className="MyCompaniesTeamsCardDesign">
+        <div
+          className={`${
+            isDarkMode
+              ? "MyCompaniesTeamsCardDesignDark"
+              : "MyCompaniesTeamsCardDesign"
+          }`}
+        >
           <div className="MyCompaniesTeamsCardPart1">
-            <span className="MyCompaniesTeamsCardPartText">
+            <span
+              className={`${
+                isDarkMode
+                  ? "MyCompaniesTeamsCardPartTextDark"
+                  : "MyCompaniesTeamsCardPartText"
+              }`}
+            >
               Technical Debt Reduction
             </span>
-            <span className="MyCompaniesTeamsCardPartNumber">5</span>
+            <span
+              className={`${
+                isDarkMode
+                  ? "MyCompaniesTeamsCardPartNumberDark"
+                  : "MyCompaniesTeamsCardPartNumber"
+              }`}
+            >
+              5
+            </span>
           </div>
           <div className="MyCompaniesTeamsCardPart2">
-            <button className="MyCompaniesTeamsCardPart2Text">Team Name</button>
+            <button
+              className={`${
+                isDarkMode
+                  ? "MyCompaniesTeamsCardPart2TextDark"
+                  : "MyCompaniesTeamsCardPart2Text"
+              }`}
+            >
+              Team Name
+            </button>
             <div className="MyCompaniesTeamsCardPart2Under">
               <div className="MyCompaniesTeamsCardPart2UnderProfile">
                 <img
@@ -26,7 +58,13 @@ function MyCompaniesTeamsCard() {
                   alt="Profile"
                   className="MyCompaniesTeamsCardPart2UnderProfileImg"
                 />
-                <button className="MyCompaniesTeamsCardPart2UnderProfileText">
+                <button
+                  className={`${
+                    isDarkMode
+                      ? "MyCompaniesTeamsCardPart2UnderProfileTextDark"
+                      : "MyCompaniesTeamsCardPart2UnderProfileText"
+                  }`}
+                >
                   Lead Name
                 </button>
               </div>

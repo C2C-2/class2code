@@ -1,15 +1,28 @@
-import React from "react";
+import { useState,useEffect } from "react";
 import "./MyCompanyTask.css";
 import SideBar from "../../../components/SideBar/SideBar";
 import NavBar from "../../../components/NavBar/NavBar";
 import { Button } from "@mantine/core";
 import MyCompanyTaskCard from "../../../components/MyCompanyTaskCard/MyCompanyTaskCard";
+
 function MyCompanyTask() {
+  const [receivedData, setReceivedData] = useState("");
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  useEffect(() => {
+    setIsDarkMode(receivedData === "dark");
+  }, [receivedData]);
+  const receiveDataFromChild = (data) => {
+    setReceivedData(data);
+  };
+  useEffect(() => {
+    document.getElementById("man").style.backgroundColor =
+      receivedData === "light" ? "#fff" : "#000";
+  }, [receivedData]);
   return (
-    <div className="MyCompanyTaskAll">
-      <SideBar />
+    <div className="MyCompanyTaskAll" id="man">
+      <SideBar colorSide={receivedData} />
       <div className="MyCompanyTaskAllMain">
-        <NavBar />
+        <NavBar sendDataToParent={receiveDataFromChild} />
         <div className="MyCompanyTaskAllCenter">
           <div className="MyCompanyTaskAllCenterButtonBack">
           <Button

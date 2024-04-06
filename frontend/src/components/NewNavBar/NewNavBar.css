@@ -1,49 +1,51 @@
-.MainNav {
+.NewMainNav {
     height: 10%;
     width: 100%;
 }
 
-.Nav {
-    width: 87%;
+.NewNav {
+    width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: row;
+    background: var(--white-100, #FFF);
     box-shadow: 0px 6px 4px 0px rgba(0, 0, 0, 0.03);
     position: fixed;
     top: 0;
-    left: 15%;
+    left:0%;
     right: 0;
     z-index: 1000;
 }
-.NavDark {
-    width: 87%;
+.NewNavDark {
+    width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: row;
-    box-shadow: 0px 6px 4px 0px rgba(224, 223, 223, 0.07);
+    background: var(--white-100, #000);
+    box-shadow: 0px 6px 4px 0px rgba(239, 239, 239, 0.086);
     position: fixed;
     top: 0;
-    left: 15%;
+    left:0%;
     right: 0;
     z-index: 1000;
 }
 
-.TopImage {
-    width: 60%;
+.NewTopImage {
+    width: 90%;
     padding-left: 50px;
     align-items: center;
     display: inline-flex;
     gap: 12px;
 }
 
-.NavMainLogo {
+.NewNavMainLogo {
     width: 45px;
     height: 45px;
 }
 
-.NavTextBar {
+.NewNavTextBar {
     color: #000;
     font-family: Montserrat;
     font-style: normal;
@@ -52,7 +54,7 @@
     line-height: 72px;
     letter-spacing: -0.36px;
 }
-.NavTextBarDark {
+.NewNavTextBarDark {
     color: #fff;
     font-family: Montserrat;
     font-style: normal;
@@ -62,7 +64,7 @@
     letter-spacing: -0.36px;
 }
 
-.TopPartNavBar {
+.NewTopPartNavBar {
     width: 40%;
     height: 100%;
     display: flex;
@@ -73,7 +75,7 @@
 }
 
 
-.BackSearch {
+.NewBackSearch {
     background-color: #f4f7fe;
     border-radius: 49px;
     height: 41px;
@@ -86,7 +88,7 @@
 
 }
 
-.TextSearch {
+.NewTextSearch {
     outline: none;
     color: #8e9ab9;
     font-family: "DM Sans-Regular", Helvetica;
@@ -99,7 +101,7 @@
     background-color: transparent;
 }
 
-.Svg {
+.NewSvg {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -107,13 +109,13 @@
     gap: 10px;
 }
 
-.ProfileLogo {
+.NewProfileLogo {
     width: 40px;
     height: 40px;
     border-radius: 50px;
 }
 
-.ButtonSvg {
+.NewButtonSvg {
     border: none;
     background-color: transparent;
 }
