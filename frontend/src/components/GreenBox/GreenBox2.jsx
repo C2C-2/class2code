@@ -1,5 +1,5 @@
 import React from 'react';
-import './GreenBox.css';
+import './GreenBoxFile.css';
 
 const GreenBox2 = () => {
   return (
