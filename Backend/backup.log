@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {"level":"info","message":"MATCH (n:User) WHERE ID(n) = 334\n           MATCH (t:Team) WHERE ID(t) = 343\n           MATCH (c:Company)-[cr:HAS_A_TEAM]->(t)\n           MATCH (c)-[cp:TAKE_A_PROJECT]->(p:Project)\n           CREATE (n) -[tr:IN_TEAM {role: \"s\"}] -> (t)\n           CREATE (n) -[wr:WORK_ON] -> (p)\n           RETURN t","service":"user-service"}
 {"level":"info","message":"CREATE (user:User {createdDate: datetime(), Username: \"example_username\", FirstName: \"John\", LastName: \"Doe\", Email: \"john.doe@example.com\", Password: \"$2b$10$LKVVsJzd3CBOsBMG5GTy0.EGXkXWKIF6bmz3R2THqWbjyw2xgHvRW\", Country: \"United States\", CreatedBy: \"1\", Rate: \"4.5\", DateOfBirth: \"1990-01-01\", Gender: \"Male\", Work: \"Software Developer\", Bio: \"A passionate individual in the field of technology.\", LastTimeOnline: \"2024-01-21T08:30:00Z\", ImageUrl: \"https://example.com/john-doe.jpg\"})\n          RETURN user","service":"user-service"}
 {"level":"info","message":"CREATE (user:User {createdDate: datetime(), Username: \"example_username\", FirstName: \"John\", LastName: \"Doe\", Email: \"john.doe@example.com\", Password: \"$2b$10$DIQv9PmLmKPHoUpjsvU1BeUT4imuU0VgzJuNEQLiZNy2IJYovc4Hm\", Country: \"United States\", CreatedBy: \"1\", Rate: \"4.5\", DateOfBirth: \"1990-01-01\", Gender: \"Male\", Work: \"Software Developer\", Bio: \"A passionate individual in the field of technology.\", LastTimeOnline: \"2024-01-21T08:30:00Z\", ImageUrl: \"https://example.com/john-doe.jpg\"})\n          RETURN user","service":"user-service"}
@@ -4736,3 +4737,5 @@
 {"level":"info","message":"MATCH (pr:ProjectRequirement) WHERE ID(pr) = 44 DETACH DELETE pr","service":"user-service"}
 {"level":"info","message":"MATCH (pn:ProjectNote) WHERE ID(pn) = 52 DETACH DELETE pn","service":"user-service"}
 {"level":"info","message":"MATCH (pnt:ProjectNoteTask) WHERE ID(pnt) = 53 DETACH DELETE pnt","service":"user-service"}
+=======
+>>>>>>> 86cc77f9 (push)

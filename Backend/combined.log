@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {"level":"info","message":"🚀 Server ready at http://localhost:3000","service":"user-service"}
 {"level":"info","message":"🚀 Server ready at http://localhost:3000","service":"user-service"}
 {"level":"info","message":"🚀 Server ready at http://localhost:3000","service":"user-service"}
@@ -1395,3 +1396,5 @@
 {"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
 {"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
 {"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
+=======
+>>>>>>> 86cc77f9 (push)
