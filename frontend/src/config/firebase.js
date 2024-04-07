@@ -1,7 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getDatabase } from "firebase/database";
-import { ref, set, onValue } from "firebase/database";
+import { child, getDatabase, push, ref, set, onValue, update } from "firebase/database";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCjlW-VgZ05J5gWwLRsfRuUjsETmJV5lJI",
@@ -22,6 +21,7 @@ const database = getDatabase(app);
 
 // Read data from the Realtime Database
 export function read(path, callback) {
+  console.log(path);
   const dbRef = ref(database, path);
   onValue(dbRef, (snapshot) => {
     const data = snapshot.val();
@@ -33,4 +33,14 @@ export function read(path, callback) {
 export function write(path, data) {
   const dbRef = ref(database, path);
   set(dbRef, data);
+}
+
+export function updateData(path, data) {
+  const newPostKey = push(child(ref(database), path)).key;
+
+  const updates = {};
+  updates[`${path}/` + newPostKey] = data;
+
+  update(ref(database), updates);
+  return newPostKey;
 }

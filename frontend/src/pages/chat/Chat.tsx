@@ -1,61 +1,115 @@
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback, useEffect, useRef } from 'react'
 import { FaPlus, FaArrowLeft, FaDotCircle, FaPaperPlane } from "react-icons/fa";
 import { Button, Text, TextInput } from '@mantine/core';
 import './Chat.css';
-import { write, read } from '../../config/firebase.js';
+import { write, read, updateData } from '../../config/firebase.js';
 
 const Chat = () => {
 
     const [oldChats, setOldChats] = React.useState([]);
+    const [messages, setMessages] = React.useState([]);
+    const [chatId, setChatId] = React.useState('');
+    const [message, setMessage] = React.useState('');
+    const [userId, setUserId] = React.useState(0);
+    const [userId2, setUserId2] = React.useState(2);
+    const listRef = useRef(null);
 
-    const [chat, setChat] = React.useState([]);
+    const fetchOldChats = () => {
+        read('users/' + userId, (data: {
+            chats: [
+                {
+                    lastMessage: {
+                        content: string,
+                        timestamp: string
+                        senderId: number
+                    }
+                }
+            ]
+        }) => {
+            setOldChats(data?.chats || []);
+        });
+    };
 
-    const createChat = () => {
+    const fetchChat = (chatId: string) => {
+        read('/chats/' + chatId, (data: {
+            messages: [
+                {
+                    content: string,
+                    timestamp: string
+                    senderId: number
+                }
+            ]
+        }) => {
+            setMessages(data?.messages || []);
+        });
+    };
 
-    }
 
-    const search = (name) => {
+    const sendMessage = async (chatId: string, e: { preventDefault: () => void; }) => {
+        e.preventDefault();
+        await updateData('/chats/' + chatId + '/messages', {
+            content: message,
+            timestamp: new Date().toISOString(),
+            senderId: userId
+        })
+
+        await write('/users/' + userId + '/chats/' + chatId, {
+            lastMessage: message,
+            timestamp: new Date().toISOString(),
+            senderId: userId
+        })
+
+        await write('/users/' + userId2 + '/chats/' + chatId, {
+            lastMessage: message,
+            timestamp: new Date().toISOString(),
+            senderId: userId
+        })
 
     }
 
     const fetchData = useCallback(
         () => {
-            const fetchOldChats = async () => {
-                await read('users/' + user._id, (data: {
-                    chats: [
-                        {
-                            lastMessage: {
-                                content: string,
-                                timestamp: string
-                                senderId: number
-                            }
-                        }
-                    ]
-                }) => {
-                    console.log(data);
-                    setOldChats(data?.chats || []);
-                });
-            };
-
             fetchOldChats();
-
-
         },
-        [],
+        [userId],
     )
+
+    useEffect(() => {
+        const newUserId = window.prompt("Enter Your Id");
+
+        if (newUserId) {
+            console.log(newUserId);
+            setUserId(parseInt(newUserId));
+        }
+    }, []);
 
     useEffect(() => {
         fetchData();
     }, [fetchData]);
 
+    useEffect(() => {
+        listRef.current?.scrollIntoView();
+    }, [messages]);
+
+    const createChat = async (e: { preventDefault: () => void; }) => {
+        e.preventDefault();
+        const key = await updateData(`/chats`, { name: "" });
+        await updateData(`/users/${userId}/chats/${key}`, { name: "" });
+        await updateData(`/users/${userId2}/chats/${key}`, { name: "" });
+    }
+
+    const search = (name: any) => {
+
+    }
+
 
     return (
-        <div className='chat d-flex p-4 bg-light gap-4 justify-content-center'>
+        <div className='messages d-flex p-4 bg-light gap-4 justify-content-center'>
             <div className='chat_chats d-flex flex-column col-4 shadow bg-white'>
                 <div className='chat_chats_head d-flex justify-content-between align-items-center'>
                     <Button leftSection={<FaArrowLeft size={16} />} variant="light" color="green" size="sm" radius="md">Back</Button>
                     <h4>Chats</h4>
-                    <Button variant="filled" color="green" className='add_chat' radius="xl"><FaPlus /></Button>
+                    <Button variant="filled" color="green" className='add_chat' radius="xl" onClick={createChat}><FaPlus /></Button>
                 </div>
                 <div className='chat_chats_body px-4 d-flex flex-column gap-3'>
                     <TextInput
@@ -66,20 +120,18 @@ const Chat = () => {
                         size="md"
                     />
                     <div className='chat_chats_body_chats d-flex flex-column gap-1'>
-                        {/* {oldChats.map((chat, index) => (
+                        {Object.values(oldChats)?.map((messages, index) => (
                             <ChatItem
+                                onClike={() => {
+                                    const chatId = Object.keys(oldChats)[index];
+                                    setChatId(chatId);
+                                    fetchChat(chatId)
+                                }}
                                 key={index}
-                                lastMessage={chat.lastMessage.content}
+                                lastMessage={messages.lastMessage}
                                 image="https://i.pravatar.cc/300"
                             />
-                        ))} */}
-                        <ChatItem userName="User 1" lastMessage="Last message" image="https://i.pravatar.cc/300" />
-                        <ChatItem userName="User 2" lastMessage="Last message" image="https://i.pravatar.cc/300" />
-                        <ChatItem userName="User 3" lastMessage="Last message" image="https://i.pravatar.cc/300" />
-                        <ChatItem userName="User 4" lastMessage="Last message" image="https://i.pravatar.cc/300" />
-                        <ChatItem userName="User 5" lastMessage="Last message" image="https://i.pravatar.cc/300" />
-                        <ChatItem userName="User 6" lastMessage="Last message" image="https://i.pravatar.cc/300" />
-
+                        ))}
                     </div>
                 </div>
             </div>
@@ -94,34 +146,36 @@ const Chat = () => {
                     </div>
                 </div>
                 <div className='chat_messages_body d-flex flex-column gap-4 px-3'>
-                    <MessageItem userName="User 1" message="Last message Highlight This, definitely THIS and also this! Last message Highlight This, definitely THIS and also this!" image="https://i.pravatar.cc/300" dir="ltr" />
-                    <MessageItem userName="User 1" message="Last message" image="https://i.pravatar.cc/300" dir="rtl" />
-                    <MessageItem userName="User 1" message="Last message" image="https://i.pravatar.cc/300" dir="ltr" />
-                    <MessageItem userName="User 1" message="Last message" image="https://i.pravatar.cc/300" dir="rtl" />
-                    <MessageItem userName="User 1" message="Last message" image="https://i.pravatar.cc/300" dir="ltr" />
-                    <MessageItem userName="User 1" message="Last message" image="https://i.pravatar.cc/300" dir="rtl" />
-                    <MessageItem userName="User 1" message="Last message" image="https://i.pravatar.cc/300" dir="ltr" />
-                    <MessageItem userName="User 1" message="Last message" image="https://i.pravatar.cc/300" dir="rtl" />
-                    <MessageItem userName="User 1" message="Last message" image="https://i.pravatar.cc/300" dir="ltr" />
-                    <MessageItem userName="User 1" message="Last message" image="https://i.pravatar.cc/300" dir="rtl" />
-                    <MessageItem userName="User 1" message="Last message" image="https://i.pravatar.cc/300" dir="ltr" />
-                    <MessageItem userName="User 1" message="Last message" image="https://i.pravatar.cc/300" dir="rtl" />
+                    {
+                        Object.values(messages)?.map((message, index) => (
+                            <MessageItem
+                                key={index}
+                                userName="User 1"
+                                message={message.content}
+                                image="https://i.pravatar.cc/300"
+                                dir={message.senderId === userId ? 'ltr' : 'rtl'}
+                            />
+                        ))
+                    }
+                    <div ref={listRef} />
                 </div>
-                <div className='chat_messages_send d-flex gap-3 w-100'>
+                <form className='chat_messages_send d-flex gap-3 w-100' onSubmit={(e) => sendMessage(chatId, e)}>
                     <TextInput
                         placeholder="Input placeholder"
                         className='w-100'
+                        value={message}
+                        onChange={(e) => setMessage(e.target.value)}
                     />
-                    <Button variant="filled" color="#388E3C" className='send' rightSection={<FaPaperPlane />}>Send &nbsp;</Button>
-                </div>
+                    <Button type='submit' variant="filled" color="#388E3C" className='send' rightSection={<FaPaperPlane />}>Send &nbsp;</Button>
+                </form>
             </div>
         </div>
     )
 }
 
-const ChatItem = ({ userName = "User", lastMessage, image }: { userName: string, lastMessage: string, image: string }) => {
+const ChatItem = ({ userName = "User", lastMessage, image, onClike }: { userName: string, lastMessage: string, image: string }) => {
     return (
-        <div className='d-flex chat_item gap-4 align-content-center'>
+        <div className='d-flex chat_item gap-4 align-content-center' onClick={onClike}>
             <img src={image} alt={`${userName}`} />
             <div className='d-flex flex-column'>
                 <Text fw={600} size="md">{userName}</Text>

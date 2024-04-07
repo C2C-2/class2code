@@ -1,4 +1,4 @@
-import "./GreenBoxFile";
+import "./GreenBoxFile.css";
 const GreenBox = ({ title }) => {
   console.log(title);
   return (

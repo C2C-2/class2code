@@ -40,6 +40,7 @@ import ContactUs from "./pages/OtherPages/ContactUs/ContactUs";
 import HomePage from "./pages/OtherPages/Home/HomePage";
 import FAQQuestion from "./pages/OtherPages/FAQQuestion/FAQQuestion";
 import LightDarkMode from "./components/NavBar/Light_DarkMode/LightDarkMode";
+import Chat from './pages/chat/Chat'
 
 
 function App() {
@@ -73,11 +74,12 @@ function App() {
         {/* <OtherCompanyProfile/> */}
         {/* <MyCompanyProfile/> */}
         {/* <EditMyCompanyProfile/> */}
-        <AvailableProjects/>
+        {/* <AvailableProjects/> */}
         {/* <TrainPage/> */}
         {/* <SignUpFigma/> */}
         {/* <LogInFigma/> */}
         {/* <SecondSignup/> */}
+        <Chat/>
       </MantineProvider>
     </ApolloProvider>
   );
