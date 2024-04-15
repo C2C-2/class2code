@@ -105,7 +105,6 @@
     display: flex;
     flex-direction: column;
     width: 100%;
-    height: 50%;
     align-items: center;
     gap: 20px;
 }
@@ -188,11 +187,24 @@
     text-decoration: none;
     transition: all 0.3s;
 }
-
+.SideBarSectionCenterContent ul li Link {
+    display: flex;
+    align-items: flex-start;
+    flex-direction: row;
+    justify-content: flex-start;
+    width: 100%;
+    gap: 10px;
+    text-decoration: none;
+    transition: all 0.3s;
+}
 
 .SideBarSectionCenterContent ul li:hover a svg {
     border-color: green;
 }
+.SideBarSectionCenterContent ul li:hover Link svg {
+    border-color: green;
+}
+
 
 .SideBarSectionText {
     align-items: center;
@@ -214,6 +226,10 @@
 .SideBarSectionCenterContent ul li:hover a .SideBarText {
     color: green;
 }
+.SideBarSectionCenterContent ul li:hover Link .SideBarText {
+    color: green;
+}
+
 
 .SideBarSectionTextMyCompanies {
     align-items: center;
@@ -228,7 +244,9 @@
 .SideBarSectionCenterContent ul li:hover a .SideBarSectionTextMyCompanies {
     background-color: #c3f4bd;
 }
-
+.SideBarSectionCenterContent ul li:hover Link .SideBarSectionTextMyCompanies {
+    background-color: #c3f4bd;
+}
 .SideBarSectionTextMyCompanies.active {
     background-color: #c3f4bd;
 
@@ -246,15 +264,23 @@
 .SideBarSectionCenterContent ul li a:hover .SideBarSectionText {
     background-color: #c3f4bd;
 }
-
+.SideBarSectionCenterContent ul li Link:hover .SideBarSectionText {
+    background-color: #c3f4bd;
+}
 .SubSection {
     background-color: #f0f8ff;
     border-radius: 5px;
     box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.05);
     left: 95%;
+    padding-left: 10px;
+    padding-top: 10px;
+    height: 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
     position: absolute;
-    z-index: 9999;
-    width: 170px;
+    width: 190px;
 }
 
 .SubSectionCompany {
@@ -262,12 +288,18 @@
     border-radius: 5px;
     box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.05);
     left: 95%;
+    padding-left: 10px;
+    padding-top: 10px;
+    height: 130px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
     position: absolute;
-    width: 180px;
-    padding-bottom: 10px;
+    width: 190px;
 }
 
-.SubText {
+.SubTextTeam {
     color: #757575;
     flex: 1;
     font-family: "Inter-Medium", Helvetica;
@@ -277,36 +309,132 @@
     line-height: 16px;
 }
 
-.Arrow {
+.SubTextCompany {
+    color: #757575;
+    flex: 1;
+    font-family: "Inter-Medium", Helvetica;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: -0.24px;
+    line-height: 16px;
+}
+.SubTextSetting {
+    color: #757575;
+    flex: 1;
+    font-family: "Inter-Medium", Helvetica;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: -0.24px;
+    line-height: 16px;
+}
+.ArrowTeam1 {
     border-bottom-style: solid;
     border-bottom-width: 2px;
     border-color: #F6F6F6;
     border-left-style: solid;
     border-left-width: 2px;
     border-radius: 0px 0px 0px 8px;
-    height: 8px;
+    height:10px;
+    left: -13px;
+    position: absolute;
+    top: 12px;
+    width: 13px;
+}
+.ArrowSetting1 {
+    border-bottom-style: solid;
+    border-bottom-width: 2px;
+    border-color: #F6F6F6;
+    border-left-style: solid;
+    border-left-width: 2px;
+    border-radius: 0px 0px 0px 8px;
+    height:10px;
+    left: -13px;
+    position: absolute;
+    top: 12px;
+    width: 13px;
+}
+.ArrowSetting2 {
+    border-bottom-style: solid;
+    border-bottom-width: 2px;
+    border-color: #F6F6F6;
+    border-left-style: solid;
+    border-left-width: 2px;
+    border-radius: 0px 0px 0px 8px;
+    height:40px;
+    left: -13px;
+    position: absolute;
+    top: 12px;
+    width: 13px;
+}
+.ArrowCompany1 {
+    border-bottom-style: solid;
+    border-bottom-width: 2px;
+    border-color: #F6F6F6;
+    border-left-style: solid;
+    border-left-width: 2px;
+    border-radius: 0px 0px 0px 8px;
+    height:10px;
+    left: -13px;
+    position: absolute;
+    top: 12px;
+    width: 13px;
+}
+.ArrowCompany2 {
+    border-bottom-style: solid;
+    border-bottom-width: 2px;
+    border-color: #F6F6F6;
+    border-left-style: solid;
+    border-left-width: 2px;
+    border-radius: 0px 0px 0px 8px;
+    height:40px;
+    left: -13px;
+    position: absolute;
+    top: 12px;
+    width: 13px;
+}
+.ArrowCompany3 {
+    border-bottom-style: solid;
+    border-bottom-width: 2px;
+    border-color: #F6F6F6;
+    border-left-style: solid;
+    border-left-width: 2px;
+    border-radius: 0px 0px 0px 8px;
+    height:70px;
+    left: -13px;
+    position: absolute;
+    top: 12px;
+    width: 13px;
+}
+.ArrowCompany4 {
+    border-bottom-style: solid;
+    border-bottom-width: 2px;
+    border-color: #F6F6F6;
+    border-left-style: solid;
+    border-left-width: 2px;
+    border-radius: 0px 0px 0px 8px;
+    height:100px;
+    left: -13px;
+    position: absolute;
+    top: 12px;
+    width: 13px;
+}
+.ArrowTeam2{
+    border-bottom-style: solid;
+    border-bottom-width: 2px;
+    border-color: #F6F6F6;
+    border-left-style: solid;
+    border-left-width: 2px;
+    border-radius: 0px 0px 0px 8px;
+    height:40px;
     left: -13px;
     position: absolute;
     top: 12px;
     width: 13px;
 }
 
-.Arrow1 {
-    border-bottom-style: solid;
-    border-bottom-width: 2px;
-    border-color: #F6F6F6;
-    border-left-style: solid;
-    border-left-width: 2px;
-    border-radius: 0px 0px 0px 8px;
-    height: 8px;
-    left: -13px;
-    position: absolute;
-    width: 13px;
-}
-
-.lineSub {
+.lineSubTeam {
     background-color: #F6F6F6;
-    height: 47px;
+    height: 45px;
     left: -13px;
     position: absolute;
     top: 0;
@@ -329,7 +457,7 @@
 }
 
 .SideBarSettings {
-    height: 40%;
+    height: 50%;
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -387,12 +515,30 @@
     text-decoration: none;
     transition: all 0.3s;
 }
+.SideBarSettingsCenter ul li Link{
+    display: flex;
+    align-items: flex-start;
+    flex-direction: row;
+    justify-content: flex-start;
+    width: 100%;
+    gap: 10px;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+
 
 .SideBarSettingsCenter ul li:hover a .SideBarText {
     color: green;
 }
 
 .SideBarSettingsCenter ul li:hover a .SideBarSectionTextSetting {
+    background-color: #c3f4bd;
+}
+.SideBarSettingsCenter ul li:hover Link .SideBarText {
+    color: green;
+}
+
+.SideBarSettingsCenter ul li:hover Link .SideBarSectionTextSetting {
     background-color: #c3f4bd;
 }
 
@@ -458,6 +604,5 @@
     font-style: normal;
     font-weight: 500;
     line-height: 20px;
-    /* 142.857% */
-    letter-spacing: -0.28px;
+   letter-spacing: -0.28px;
 }

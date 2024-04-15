@@ -1,4 +1,3 @@
-
 .SecondSignupAll {
   width: 100%;
   height: 100%;
@@ -10,7 +9,7 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-  width:95%;
+  width: 95%;
   align-items: flex-end;
   gap: 15px;
   padding-bottom: 10px;
@@ -19,7 +18,7 @@
 .SecondSignupCenter {
   display: flex;
   height: 90%;
-  width:80%;
+  width: 80%;
   flex-direction: column;
   align-items: center;
   padding-left: 20px;
@@ -220,7 +219,7 @@
 }
 
 .SecondSignupContentPart2Text1 {
-  color: var(--light, rgba(0, 0, 0, 0.60));
+  color: rgba(0, 0, 0, 0.60);
   font-family: Inter;
   font-size: 24px;
   font-style: normal;
@@ -232,17 +231,48 @@
   width: 100%;
   height: 70%;
   display: flex;
+  flex-wrap: nowrap;
   flex-direction: row;
   align-items: flex-start;
+  justify-content: space-between;
   gap: 20px;
+}
+.GreenBox2 {
+  flex: 0 0 calc(50% - 10px);
+  max-width: calc(50% - 10px); /* Ensure each card takes up half of the container */
 }
 
 .SecondSignupContentPart2ButtonAdd {
   width: 100%;
-  height: 10%;
+  height: 20%;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
+}
+
+.SecondSignupContentPart2ButtonAdd button {
+  margin-top: 10px;
+  /* Add margin between buttons */
+}
+
+.SecondSignupContentPart2ButtonAddinput {
+  width: 100%;
+  /* Adjust width of input field */
+  height: 30px;
+  /* Adjust height of input field */
+  padding: 5px;
+  /* Add padding to input field */
+  border: 1px solid #ccc;
+  /* Add border to input field */
+  border-radius: 5px;
+  /* Add border radius to input field */
+  margin-bottom: 10px;
+  /* Add margin at the bottom of input field */
+}
+
+.SecondSignupContentPart2ButtonAdd button {
+  margin-top: 10px;
+  /* Add margin between buttons */
 }
 
 .SecondSignupContentPart2ButtonFinish {

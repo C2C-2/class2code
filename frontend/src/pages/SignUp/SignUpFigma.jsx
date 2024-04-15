@@ -1,8 +1,60 @@
-import React from "react";
+import { useState } from "react";
 import "./SignUpFigma.css";
 import MainLogo from "./logo2 2.png";
 import Main from "./25593243_hqk2_0bag_220227 1.png";
+import { gql, useMutation } from "@apollo/client";
+// import { useRouter } from "next/router";
 export default function SignUpFigma() {
+  const [formData, setFormData] = useState({
+    fullName: "",
+    firstName: "",
+    lastName: "",
+    userName: "",
+    email: "",
+    password: "",
+  });
+  // const router = useRouter();
+  const createUser = gql`
+    mutation CreateNewUser($user: UserInput!) {
+      createNewUser(user: $user) {
+        id
+      }
+    }
+  `;
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    let firstName = "";
+    let lastName = "";
+    if (name === "fullName") {
+      const [first, ...rest] = value.split(" ");
+      firstName = first;
+      lastName = rest.join(" ");
+    }
+    setFormData({
+      ...formData,
+      [name]: value,
+      firstName,
+      lastName,
+    });
+  };
+  const [mutateFunction, { data, error }] = useMutation(createUser);
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    mutateFunction({
+      variables: {
+        user: {
+          FirstName: formData.firstName,
+          LastName: formData.lastName,
+          Username: formData.userName,
+        },
+      },
+    });
+  };
+  // const handleLoginClick = () => {
+  //   router.push("/login");
+  // };
+
   return (
     <div className="SignUpFigmaMain">
       <div className="SignUpFigmaPart1">
@@ -14,7 +66,9 @@ export default function SignUpFigma() {
             <img className="SignUpFigmaImage2" alt="Element" src={Main} />
           </div>
           <div className="SignUpFigmaTexts">
-            <div className="SignUpFigmaText-Create">Create your own company</div>
+            <div className="SignUpFigmaText-Create">
+              Create your own company
+            </div>
             <p className="SignUpFigmaText-Para">
               We&#39;re excited to welcome you to the Class2Code community! By
               creating an account, you&#39;ll gain access to a wealth of
@@ -29,10 +83,11 @@ export default function SignUpFigma() {
         <span className="SignUpFigmaline" />
       </div>
       <div className="SignUpFigmaPart2Second">
-      
         <div className="SignUpFigmaMid">
           <h4 className="SignUpFigmaMidSign">Sign Up to Your Account</h4>
-          <h5 className="SignUpFigmaMidEnter">Enter Yours Details to Sign Up</h5>
+          <h5 className="SignUpFigmaMidEnter">
+            Enter Yours Details to Sign Up
+          </h5>
         </div>
         <div className="SignUpFigmaLink">
           <div className="SignUpFigmaSocial">
@@ -127,18 +182,31 @@ export default function SignUpFigma() {
             <div className="SignUpFigmaPack1">Full Name</div>
             <input
               type="text"
+              name="fullName"
+              value={formData.fullName}
+              onChange={handleChange}
               className="SignUpFigmaPack2"
               placeholder="Osama Ghneem"
             ></input>
           </div>
           <div className="SignUpFigmaPacks">
             <div className="SignUpFigmaPack1">Username</div>
-            <input type="text" className="SignUpFigmaPack2" placeholder="Osama1"></input>
+            <input
+              type="text"
+              name="userName"
+              value={formData.userName}
+              onChange={handleChange}
+              className="SignUpFigmaPack2"
+              placeholder="Osama1"
+            ></input>
           </div>
           <div className="SignUpFigmaPacks">
             <div className="SignUpFigmaPack1">Email</div>
             <input
               type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
               className="SignUpFigmaPack2"
               placeholder="mail@abc.com"
             ></input>
@@ -147,18 +215,32 @@ export default function SignUpFigma() {
             <div className="Pack1">Password</div>
             <input
               type="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
               className="SignUpFigmaPack2"
               placeholder="***************"
             ></input>
           </div>
         </div>
         <div className="SignUpFigmaSignButton">
-          <div className="SignUpFigmaUnderSign">
+          <button
+            type="submit"
+            className="SignUpFigmaUnderSign"
+            onClick={handleSubmit}
+          >
             <div className="SignUpFigmatext-sign">Sign Up</div>
-          </div>
+          </button>
           <div className="SignUpFigmaUnderLogin">
-            <div className="SignUpFigmatext-Already">Already have an Account?</div>
-            <div className="SignUpFigmatext-LogIn">Login</div>
+            <div className="SignUpFigmatext-Already">
+              Already have an Account?
+            </div>
+            <button
+              className="SignUpFigmatext-LogIn"
+              // onClick={handleLoginClick}
+            >
+              Login
+            </button>
           </div>
         </div>
       </div>

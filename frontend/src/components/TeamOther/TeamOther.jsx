@@ -1,11 +1,13 @@
-import React from 'react'
-import "./TeamOther.css"
-function TeamOther() {
+import React from 'react';
+import "./TeamOther.css";
+
+function TeamOther({ team }) {
+  console.log(team);
   return (
     <button className='TeamAllCard'>
-        <span className='TACard'>Team1</span>
+        <span className='TACard'>{team.TeamName}</span>
     </button>
-  )
+  );
 }
 
-export default TeamOther
+export default TeamOther;

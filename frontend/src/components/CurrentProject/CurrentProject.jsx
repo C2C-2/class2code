@@ -1,9 +1,10 @@
-import React from "react";
+
 import "./CurrentProject.css";
-function CurrentProject() {
+function CurrentProject({project}) {
   return (
     <button className="ProjectAll">
-      <span className="PA1">Project 1</span>
+        <span className="PA1">{project}</span>
+      
       <button className="ProjectAllButtonSvg">
       <svg
         xmlns="http://www.w3.org/2000/svg"

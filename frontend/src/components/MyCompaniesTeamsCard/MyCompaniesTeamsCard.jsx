@@ -1,17 +1,18 @@
 import { useState, useEffect } from "react";
 import "./MyCompaniesTeamsCard.css";
 import Profile from "./Frame.png";
-function MyCompaniesTeamsCard({ color }) {
+import { Link } from "react-router-dom";
+function MyCompaniesTeamsCard({ color, companyName, teamName, teamRole, createDate ,teamId  }) {
   const [isDarkMode, setIsDarkMode] = useState(false);
   useEffect(() => {
     setIsDarkMode(color === "dark");
   }, [color]);
   return (
-    <button className="MyCompaniesTeamsCardAll">
+    <div className="MyCompaniesTeamsCardAll">
       <div className="MyCompaniesTeamsCardMain">
         <div className="MyCompaniesTeamsCardName">
           <span className="MyCompaniesTeamsCardName1">
-            <span className="MyCompaniesTeamsCardText">Company Name</span>
+          <span className="MyCompaniesTeamsCardText">{companyName}</span>
           </span>
         </div>
         <div
@@ -21,6 +22,9 @@ function MyCompaniesTeamsCard({ color }) {
               : "MyCompaniesTeamsCardDesign"
           }`}
         >
+      <div className="MyCompaniesTeamsCardEditButton">
+      <Link to={`/editTeams/${teamId}`} className="MyCompaniesTeamsCardEditButtonText">. . .</Link>
+          </div>
           <div className="MyCompaniesTeamsCardPart1">
             <span
               className={`${
@@ -29,7 +33,7 @@ function MyCompaniesTeamsCard({ color }) {
                   : "MyCompaniesTeamsCardPartText"
               }`}
             >
-              Technical Debt Reduction
+               {teamRole}
             </span>
             <span
               className={`${
@@ -49,7 +53,7 @@ function MyCompaniesTeamsCard({ color }) {
                   : "MyCompaniesTeamsCardPart2Text"
               }`}
             >
-              Team Name
+              {teamName}
             </button>
             <div className="MyCompaniesTeamsCardPart2Under">
               <div className="MyCompaniesTeamsCardPart2UnderProfile">
@@ -68,12 +72,12 @@ function MyCompaniesTeamsCard({ color }) {
                   Lead Name
                 </button>
               </div>
-              <div className="MyCompaniesTeamsCardPart2Text2">Jun 24, 2022</div>
+              <div className="MyCompaniesTeamsCardPart2Text2"> {createDate}</div>
             </div>
           </div>
         </div>
       </div>
-    </button>
+    </div>
   );
 }
 

@@ -2,13 +2,15 @@ import React from 'react'
 import { FaPlus, FaArrowLeft, FaDotCircle, FaPaperPlane } from "react-icons/fa";
 import { Button, Text, TextInput } from '@mantine/core';
 import './Chat.css';
-
+import {Link} from 'react-router-dom';
+import SideBar from "../../components/SideBar/SideBar"
 const Chat = () => {
     return (
-        <div className='chat d-flex p-4 bg-light gap-4 justify-content-center'>
-            <div className='chat_chats d-flex flex-column col-4 shadow bg-white'>
+        <div className='chat d-flex p-4 bg-light gap-4 w-100 h-100'>
+            <SideBar/>
+            <div className='chat_chats d-flex flex-column col-4 shadow bg-white w-85 '>
                 <div className='chat_chats_head d-flex justify-content-between align-items-center'>
-                    <Button leftSection={<FaArrowLeft size={16} />} variant="light" color="green" size="sm" radius="md">Back</Button>
+                    <Link to="/Dashboard"><Button leftSection={<FaArrowLeft size={16} />} variant="light" color="green" size="sm" radius="md">Back</Button></Link>
                     <h4>Chats</h4>
                     <Button variant="filled" color="green" className='add_chat' radius="xl"><FaPlus /></Button>
                 </div>

@@ -1,40 +1,39 @@
-import React from "react";
 import "./MyCompanyTaskCard.css";
 import RequirementNeed from "../RequirementNeed/RequirementNeed";
-function MyCompanyTaskCard() {
+// import { useHistory } from 'react-router-dom';
+function MyCompanyTaskCard({ taskName, createDate, priority, companyName, taskStatus, task_id  }) {
+  // const history = useHistory();
+  const handleEditClick = () => {
+    // Redirect to the EditTask page with the task ID as a parameter
+    // history.push(`/edit-task/${id}`);
+  };
   return (
     <button className="MyCompanyTaskCardAll">
       <div className="MyCompanyTaskCardMain">
         <div className="MyCompanyTaskCardName">
           <span className="MyCompanyTaskCardName1">
-            <span className="MyCompanyTaskCardText">Company Name</span>
+            <span className="MyCompanyTaskCardText">{companyName}</span>
           </span>
         </div>
         <div className="MyCompanyTaskCardDesign">
           <div className="MyCompanyTaskCardEditButton">
-            <button className="MyCompanyTaskCardEditButtonText">. . .</button>
+            <button className="MyCompanyTaskCardEditButtonText"onClick={handleEditClick}>. . .</button>
           </div>
           <div className="MyCompanyTaskCardCenter">
             <div className="MyCompanyTaskCardCenterPart1">
-              <span className="MyCompanyTaskCardCenterPart1Text1">
-                Task Name
-              </span>
-              <span className="MyCompanyTaskCardCenterPart1Text2">
-                Jun 24, 2022
-              </span>
+              <span className="MyCompanyTaskCardCenterPart1Text1">{taskName}</span>
+              <span className="MyCompanyTaskCardCenterPart1Text2">{createDate}</span>
             </div>
-            <span className="MyCompanyTaskCardCenterPart2Text1">5</span>
+            <span className="MyCompanyTaskCardCenterPart2Text1">{priority}</span>
           </div>
           <div className="MyCompanyTaskCardCenterParagraph">
-            <p className="MyCompanyTaskCardCenterParagraphText">
-              Brainstorming brings team members' diverse experience into play.{" "}
+            <p className="MyCompanyTaskCardCenterParagraphTexts">
+              Brainstorming brings team members' diverse experience into play.
             </p>
           </div>
           <div className="MyCompanyTaskCardCenterCardOther">
-          <RequirementNeed />
-          <RequirementNeed />
+            <RequirementNeed textReq={taskStatus} />
           </div>
-
         </div>
       </div>
     </button>

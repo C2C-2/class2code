@@ -1,13 +1,44 @@
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import "./MyCompanyTask.css";
 import SideBar from "../../../components/SideBar/SideBar";
 import NavBar from "../../../components/NavBar/NavBar";
 import { Button } from "@mantine/core";
 import MyCompanyTaskCard from "../../../components/MyCompanyTaskCard/MyCompanyTaskCard";
-
+import { useQuery, gql } from "@apollo/client";
+import { Link } from "react-router-dom";
+const GET_USER_TASKS = gql`
+  query Tasks($userId: String!) {
+    getUser(userId: $userId) {
+      MyCompanies {
+        Tasks {
+          CreateDate
+          TaskName
+          Priority
+          TaskStatus
+          IsMarked
+          _id
+        }
+        CompanyName
+      }
+    }
+  }
+`;
+const FILTER_TASKS = gql`
+  query FilterMyCompanies($userId: String!, $filterType: String) {
+    filterMyCompanies(userId: $userId, filterType: $filterType) {
+      Tasks {
+        TaskStatus
+        CreateDate
+        Priority
+        IsMarked
+      }
+    }
+  }
+`;
 function MyCompanyTask() {
   const [receivedData, setReceivedData] = useState("");
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [filterType, setFilterType] = useState(null);
   useEffect(() => {
     setIsDarkMode(receivedData === "dark");
   }, [receivedData]);
@@ -18,6 +49,23 @@ function MyCompanyTask() {
     document.getElementById("man").style.backgroundColor =
       receivedData === "light" ? "#fff" : "#000";
   }, [receivedData]);
+
+  const { loading, error, data } = useQuery(GET_USER_TASKS, {
+    variables: { userId: null }, // Pass your user ID here
+  });
+  const {
+    loading: filterLoading,
+    error: filterError,
+    data: filteredData,
+  } = useQuery(FILTER_TASKS, {
+    variables: { userId: null, filterType: filterType },
+    skip: !filterType, // Skip this query if filterType is not set
+  });
+  const handleFilter = (type) => {
+    setFilterType(type);
+    refetch();
+  };
+
   return (
     <div className="MyCompanyTaskAll" id="man">
       <SideBar colorSide={receivedData} />
@@ -25,7 +73,8 @@ function MyCompanyTask() {
         <NavBar sendDataToParent={receiveDataFromChild} />
         <div className="MyCompanyTaskAllCenter">
           <div className="MyCompanyTaskAllCenterButtonBack">
-          <Button
+          <Link to="/Dashboard">
+            <Button
               justify="center "
               variant="filled"
               color="#283739"
@@ -41,39 +90,96 @@ function MyCompanyTask() {
                 <path
                   d="M1.5 6H16.5"
                   stroke="white"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 />
                 <path
                   d="M6.49999 11L1.5 6L6.49999 1"
                   stroke="white"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 />
               </svg>
             </Button>
+            </Link>
           </div>
           <div className="MyCompanyTaskAllContent">
-          <div className="MyCompanyTaskContentButtons">
+            <div className="MyCompanyTaskContentButtons">
               <button className="MyCompanyTaskContentButtonsDesign">
-                <span className="MyCompanyTaskContentButtonText">Date</span>
+                <span
+                  className="MyCompanyTaskContentButtonText"
+                  onClick={() => handleFilter("Date")}
+                >
+                  Date
+                </span>
               </button>
               <button className="MyCompanyTaskContentButtonsDesign">
-                <span className="MyCompanyTaskContentButtonText">Priority</span>
+                <span
+                  className="MyCompanyTaskContentButtonText"
+                  onClick={() => handleFilter("Priority")}
+                >
+                  Priority
+                </span>
               </button>
               <button className="MyCompanyTaskContentButtonsDesign">
-                <span className="MyCompanyTaskContentButtonText">Late</span>
+                <span
+                  className="MyCompanyTaskContentButtonText"
+                  onClick={() => handleFilter("Late")}
+                >
+                  Late
+                </span>
               </button>
-              <button className="MyCompanyTaskContentButtonsDesign1">
-                <span className="MyCompanyTaskContentButtonText">In Progress</span>
+              <button
+                className="MyCompanyTaskContentButtonsDesign1"
+                onClick={() => handleFilter("In Progress")}
+              >
+                <span className="MyCompanyTaskContentButtonText">
+                  In Progress
+                </span>
               </button>
             </div>
             <div className="MyCompanyTaskContentCard">
-              <MyCompanyTaskCard/>
-              <MyCompanyTaskCard/>
-              <MyCompanyTaskCard/>
+              {loading ? (
+                <p>Loading...</p>
+              ) : error ? (
+                <p>Error: {error.message}</p>
+              ) : filterLoading ? (
+                <p>Loading Filtered Data...</p>
+              ) : filterError ? (
+                <p>Error: {filterError.message}</p>
+              ) : filterType ? (
+                filteredData &&
+                filteredData.filterMyCompanies.map((company) =>
+                  company.Tasks.map((task, index) => (
+                    <MyCompanyTaskCard
+                      key={index}
+                      taskName={task.TaskName}
+                      taskStatus={task.TaskStatus}
+                      priority={task.Priority}
+                      createDate={task.CreateDate}
+                      companyName={company.CompanyName}
+                      task_id={task._id}
+                    />
+                  ))
+                )
+              ) : (
+                data &&
+                data.getUser.MyCompanies.map((company) =>
+                  company.Tasks.map((task, index) => (
+                    <MyCompanyTaskCard
+                      key={index}
+                      taskName={task.TaskName}
+                      taskStatus={task.TaskStatus}
+                      priority={task.Priority}
+                      createDate={task.CreateDate}
+                      companyName={company.CompanyName}
+                      task_id={task._id}
+                    />
+                  ))
+                )
+              )}
             </div>
           </div>
         </div>

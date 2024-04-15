@@ -4,27 +4,73 @@ import SideBar from "../../../components/SideBar/SideBar";
 import NavBar from "../../../components/NavBar/NavBar";
 import AvailableProjectCard from "../../../components/AvailableProjectsCard/AvailableProjectsCard";
 import { Button } from "@mantine/core";
+import { Link } from "react-router-dom";
+import { gql, useQuery } from "@apollo/client";
 function AvailableProjects() {
   const [receivedData, setReceivedData] = useState("");
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
   useEffect(() => {
     setIsDarkMode(receivedData === "dark");
   }, [receivedData]);
+
   const receiveDataFromChild = (data) => {
     setReceivedData(data);
   };
+
   useEffect(() => {
     document.getElementById("man").style.backgroundColor =
       receivedData === "light" ? "#fff" : "#000";
   }, [receivedData]);
+
+  const searchInProjects = gql`
+    query SearchInProjects($word: String!) {
+      searchInProjects(word: $word) {
+        FileName
+        ProjectName
+        applications
+        ProjectDescription
+        Requirements {
+          Value
+        }
+      }
+    }
+  `;
+
+  const { loading, error, data } = useQuery(searchInProjects, {
+    variables: { word: searchTerm },
+  });
+
+  const GET_PROJECTS = gql`
+    query GetProjects {
+      getProjects {
+        _id
+        ProjectDescription
+        ProjectName
+        Requirements {
+          Value
+        }
+      }
+    }
+  `;
+  const {
+    loading: projectsLoading,
+    error: projectsError,
+    data: projectsData,
+  } = useQuery(GET_PROJECTS);
+
+  const handleSearchInputChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
   return (
     <div className="AvailableProjectsAll" id="man">
-      <SideBar colorSide={receivedData}/>
+      <SideBar colorSide={receivedData} />
       <div className="AvailableProjectCenter">
         <NavBar sendDataToParent={receiveDataFromChild} />
 
         <div className="AvailableProjectMain">
           <div className="ButtonBackAvailableProject">
+          <Link to="/Dashboard">
             <Button
               justify="center "
               variant="filled"
@@ -41,19 +87,20 @@ function AvailableProjects() {
                 <path
                   d="M1.5 6H16.5"
                   stroke="white"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 />
                 <path
                   d="M6.49999 11L1.5 6L6.49999 1"
                   stroke="white"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 />
               </svg>
             </Button>
+            </Link>
           </div>
           <div className="AvailableProjectContent">
             <div className="SearchPartAvailableProject">
@@ -65,6 +112,8 @@ function AvailableProjects() {
                     ? "TextPartAvailableProjectDark"
                     : "TextPartAvailableProject"
                 }`}
+                value={searchTerm}
+                onChange={handleSearchInputChange}
               ></input>
               <button className="SvgPartAvailableProject">
                 <svg
@@ -84,16 +133,24 @@ function AvailableProjects() {
               </button>
             </div>
             <div className="AvailableProjectCardAll">
-              <AvailableProjectCard colorProp={receivedData} />
-              <AvailableProjectCard />
-              <AvailableProjectCard />
-              <AvailableProjectCard />
-              <AvailableProjectCard />
-              <AvailableProjectCard />
-              <AvailableProjectCard />
-              <AvailableProjectCard />
-              <AvailableProjectCard />
-              <AvailableProjectCard />
+              {loading ? (
+                <p>Loading...</p>
+              ) : data && data.searchInProjects ? (
+                data.searchInProjects.map((project, index) => (
+                  <Link to={`/ProjectPage/${project._id}`} key={index}>
+                    <AvailableProjectCard
+                      projectName={project.ProjectName}
+                      projectDescription={project.ProjectDescription}
+                      requirements={project.Requirements.map(
+                        (req) => req.Value
+                      )}
+                      colorProp={receivedData}
+                    />
+                  </Link>
+                ))
+              ) : (
+                <p>No projects found.</p>
+              )}
             </div>
           </div>
         </div>

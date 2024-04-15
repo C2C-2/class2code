@@ -14,6 +14,21 @@
     gap: 30px;
 }
 
+.textareaLight {
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    background-color: #FFF;
+    color: #000;
+}
+.textareaDark {
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    background-color: #FFF;
+    color: #000;
+}
+
 .CenterEditMyCompanyProfile {
     width: 85%;
     display: flex;
@@ -40,14 +55,14 @@
     flex-direction: column;
     align-items: flex-start;
     width: 90%;
-    gap: 15px;
+    gap: 17px;
     height: 100%;
 }
 
 .DescriptionEditMyCompanyProfile {
     display: flex;
     width: 85%;
-    height: 20%;
+    height: 15%;
     padding: var(--12, 12px) var(--48, 48px) var(--12, 12px) 32px;
     flex-direction: row;
     align-items: center;
@@ -57,8 +72,15 @@
     box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.20);
 }
 
+.CompanyName {
+    height: 100%;
+    width: 37%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
 
-.C1 {
+.EditC1 {
     display: flex;
     flex-direction: row;
     width: 100%;
@@ -66,7 +88,7 @@
     height: 35%;
 }
 
-.C1Text {
+.EditC1Text {
     color: var(--dark, #283739);
     font-feature-settings: 'clig'off, 'liga'off;
     font-family: Inter;
@@ -77,7 +99,7 @@
     /* 83.333% */
 }
 
-.C1Number {
+.EditC1Number {
     color: var(--dark, #283739);
     font-feature-settings: 'clig'off, 'liga'off;
     font-family: Inter;
@@ -89,7 +111,7 @@
 
 }
 
-.C2 {
+.EditC2 {
     flex-direction: row;
     align-items: flex-start;
     display: flex;
@@ -98,7 +120,7 @@
 
 }
 
-.C2Text {
+.EditC2Text {
     color: rgba(0, 0, 0, 0.80);
     font-family: Inter;
     font-size: 14px;
@@ -108,18 +130,19 @@
     /* 142.857% */
 }
 
-.Domain {
+.EditDomain {
     padding-top: 5px;
     display: flex;
     text-align: center;
     flex-direction: column;
     height: 100%;
+    gap: 10px;
     width: 37%;
     align-items: flex-end;
     justify-content: center;
 }
 
-.D1 {
+.EditD1 {
     display: flex;
     flex-direction: column;
     width: 100%;
@@ -127,7 +150,7 @@
     height: 35%;
 }
 
-.D1Text {
+.EditD1Text {
     color: #000;
     font-feature-settings: 'clig'off, 'liga'off;
     font-family: Inter;
@@ -138,7 +161,7 @@
     /* 100% */
 }
 
-.D2 {
+.EditD2 {
     display: flex;
     text-align: center;
     flex-direction: column;
@@ -148,8 +171,8 @@
     height: 30%;
 }
 
-.D2Text {
-    color:  rgba(0, 0, 0, 0.60);
+.EditD2Text {
+    color: rgba(0, 0, 0, 0.60);
     font-feature-settings: 'clig'off, 'liga'off;
     font-family: Inter;
     font-size: 14px;
@@ -159,9 +182,10 @@
     /* 142.857% */
 }
 
-.CreateDate {
+.EditCreateDate {
     padding-top: 5px;
     display: flex;
+    gap: 10px;
     text-align: center;
     flex-direction: column;
     height: 100%;
@@ -170,7 +194,7 @@
     justify-content: center;
 }
 
-.CD1 {
+.EditCD1 {
     display: flex;
     flex-direction: column;
     width: 84%;
@@ -178,7 +202,7 @@
     height: 35%;
 }
 
-.CD1Text {
+.EditCD1Text {
     color: #000;
     font-feature-settings: 'clig'off, 'liga'off;
     font-family: Inter;
@@ -189,7 +213,7 @@
     /* 100% */
 }
 
-.CD2 {
+.EditCD2 {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -198,7 +222,7 @@
     height: 30%;
 }
 
-.CD2Text {
+.EditCD2Text {
     color: rgba(0, 0, 0, 0.60);
     font-feature-settings: 'clig'off, 'liga'off;
     font-family: Inter;
@@ -210,10 +234,11 @@
 }
 
 .ContentEditMyCompanyProfile {
+
     display: flex;
     flex-direction: row;
     width: 85%;
-    height: 90%;
+    height: 82%;
 
 }
 
@@ -235,7 +260,7 @@
     gap: 10px;
 }
 
-.DU1 {
+.EditDU1 {
     height: 20%;
     color: #00000099;
     font-family: Roboto;
@@ -244,7 +269,8 @@
     font-weight: 400;
     line-height: normal;
 }
-.DU1Dark {
+
+.EditDU1Dark {
     height: 20%;
     color: #aba6a6;
     font-family: Roboto;
@@ -255,7 +281,7 @@
 }
 
 
-.DU2 {
+.EditDU2 {
     height: 80%;
     width: 100%;
     padding-left: 15px;
@@ -266,7 +292,7 @@
     box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.20);
 }
 
-.ParaD {
+.EditParaD {
     width: 97%;
     color: rgba(0, 0, 0, 0.60);
     font-family: "Open Sans";
@@ -289,13 +315,14 @@
 .GeneralInformation {
     width: 60%;
     height: 9%;
-    color:  rgba(0, 0, 0, 0.60);
+    color: rgba(0, 0, 0, 0.60);
     font-family: Roboto;
     font-size: 24px;
     font-style: normal;
     font-weight: 400;
     line-height: normal;
 }
+
 .GeneralInformationDark {
     width: 60%;
     height: 9%;
@@ -332,8 +359,9 @@
     line-height: 20px;
     letter-spacing: 0.25px;
 }
+
 .TextPartCompanyDark {
-  color: #aba6a6;
+    color: #aba6a6;
     font-family: "Open Sans";
     font-size: 14px;
     font-style: normal;
@@ -350,7 +378,7 @@
     border-radius: 5px;
     border: 1px solid var(--line, #EAEAEA);
     background: #FAFAFA;
-    color:  rgba(0, 0, 0, 0.60);
+    color: rgba(0, 0, 0, 0.60);
     font-family: "Open Sans";
     font-size: 14px;
     font-style: normal;
@@ -381,13 +409,14 @@
 .EditCP1 {
     height: 10%;
     width: 80%;
-    color:  rgba(0, 0, 0, 0.60);
+    color: rgba(0, 0, 0, 0.60);
     font-family: Roboto;
     font-size: 24px;
     font-style: normal;
     font-weight: 400;
     line-height: normal;
 }
+
 .EditCP1Dark {
     height: 10%;
     width: 80%;
@@ -409,7 +438,7 @@
 }
 
 .ChangeProjectText {
-    color:  #141515;
+    color: #141515;
     font-family: "Open Sans";
     font-size: 14px;
     font-style: normal;
@@ -417,6 +446,7 @@
     line-height: 20px;
     letter-spacing: 0.25px;
 }
+
 .ChangeProjectTextDark {
     color: #aba6a6;
     font-family: "Open Sans";
@@ -449,7 +479,7 @@
 }
 
 .TextChange {
-    color:  rgba(0, 0, 0, 0.60);
+    color: rgba(0, 0, 0, 0.60);
     font-family: "Open Sans";
     font-size: 16px;
     font-style: normal;
@@ -485,6 +515,7 @@
     font-weight: 400;
     line-height: normal;
 }
+
 .EditTeamsDark {
     height: 10%;
     width: 80%;
@@ -513,6 +544,7 @@
     line-height: 20px;
     letter-spacing: 0.25px;
 }
+
 .ChangeTeamTextDark {
     color: #aba6a6;
     font-family: "Open Sans";

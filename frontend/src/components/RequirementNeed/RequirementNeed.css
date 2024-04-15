@@ -1,8 +1,10 @@
 .ReqNeedAllCard {
     display: flex;
-    padding: 8px 24px 6px 24px;
+    padding: 8px 24px 6px 8px;
     align-items: center;
+    height: 90%;
     gap: 10px;
+    width: 50%;
     border-radius: 12px;
     background:  #b3ebad;
 }
