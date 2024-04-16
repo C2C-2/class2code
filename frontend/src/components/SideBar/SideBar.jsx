@@ -2,6 +2,7 @@ import "./SideBar.css";
 import ProImg from "./Avatar.png";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { Button } from "@mantine/core";
 
 function SideBar({ colorSide }) {
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -512,10 +513,14 @@ function SideBar({ colorSide }) {
             </li>
           </ul>
           <div className="SideBarSettingButton">
-            <button
-              className={`${
-                isDarkMode ? "SideBarSettingLogoutDark" : "SideBarSettingLogout"
-              }`}
+            <Button
+              variant="outline"
+              color="red"
+              w={"90%"}
+              onClick={() => {
+                localStorage.clear();
+                window.location.reload();
+              }}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -534,8 +539,8 @@ function SideBar({ colorSide }) {
                   fill="#EB5757"
                 />
               </svg>
-              <span className="SideBarSettingLogoutText">Logout Account</span>
-            </button>
+              &nbsp; Logout Account
+            </Button>
           </div>
         </div>
       </div>

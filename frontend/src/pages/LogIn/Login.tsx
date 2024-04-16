@@ -20,8 +20,9 @@ import {
 import { GoogleButton } from './GoogleButton';
 // import { TwitterButton } from './TwitterButton';
 import { auth } from '../../config/firebase.js';
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
-import Alert from '../../components/Alert/AlertBox.jsx'
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
+import Alert from '../../components/Alert/AlertBox.jsx';
+import { Paths } from '../../assets/Paths';
 
 const Login = () => {
 
@@ -80,6 +81,24 @@ const Login = () => {
         }
     }
 
+    const signInByGoogle = async (e) => {
+        e.preventDefault();
+        try {
+            const provider = new GoogleAuthProvider();
+            provider.addScope('https://www.googleapis.com/auth/contacts.readonly');
+
+            const result = await signInWithPopup(auth, provider);
+            localStorage.setItem("token", await result.user.accessToken);
+            // localStorage.removeItem("token");
+            window.location.replace("/");
+
+        } catch (err) {
+            setError("Check your email and password please");
+            const time = setTimeout(() => setError(null), 3000);
+            return () => clearTimeout(time);
+        }
+    }
+
     return (
         <Flex
             mih={50}
@@ -92,7 +111,7 @@ const Login = () => {
         >
 
             {error && (
-                <Alert text={error} />
+                <Alert text={error} color="red" title="Error" />
             )}
 
             <img src={MainLogo} alt="" id='mainLogo' />
@@ -123,12 +142,12 @@ const Login = () => {
                         </p>
                     </div>
                     {type === 'login' && (
-                        <Button onClick={() => toggle()} w={"100%"} radius="md" variant="filled" color="green" size="lg">Create Account</Button>
+                        <Button onClick={() => toggle()} w={"100%"} radius="md" variant="filled" color="green" size="md">Create Account</Button>
 
                     )}
                     {
                         type === 'register' && (
-                            <Button onClick={() => toggle()} w={"100%"} radius="md" variant="filled" color="green" size="lg">Login</Button>
+                            <Button onClick={() => toggle()} w={"100%"} radius="md" variant="filled" color="green" size="md">Login</Button>
                         )
                     }
                 </div>
@@ -161,7 +180,7 @@ const Login = () => {
                     </div>
 
                     <Group grow mb="md" mt="md">
-                        <GoogleButton radius="xl">Google</GoogleButton>
+                        <GoogleButton onClick={signInByGoogle} radius="xl">Google</GoogleButton>
                         {/* <TwitterButton radius="xl">Twitter</TwitterButton> */}
                     </Group>
 
@@ -202,7 +221,9 @@ const Login = () => {
                             {
                                 type === 'login' && (
                                     <Group justify="end" mt="lg" id='ForgetPassword'>
-                                        <Anchor component="button" size="sm">
+                                        <Anchor component="button" size="sm" onClick={() => {
+                                            window.location.replace(Paths.ForgetPassword);
+                                        }}>
                                             Forgot password?
                                         </Anchor>
                                     </Group>

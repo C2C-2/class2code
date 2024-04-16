@@ -34,6 +34,7 @@ import EditPost from "./pages/CompanyAdsPages/EditPost/EditPost";
 import EditTeam from "./pages/TeamPages/EditTeam/EditTeam";
 import Chat from "./pages/chat/Chat";
 import { useEffect, useState } from "react";
+import { Paths } from "./assets/Paths";
 function App() {
   const client = new ApolloClient({
     cache: new InMemoryCache(),
@@ -44,10 +45,10 @@ function App() {
       <MantineProvider>
         <BrowserRouter>
           <Routes>
-            <Route path="/Login" element={<LogInFigma />} />
-            <Route path="/SignUpFigma" element={<SignUpFigma />} />
+            <Route path={Paths.Login} element={<LogInFigma />} />
+            <Route path={Paths.SignUpFigma} element={<SignUpFigma />} />
             <Route
-              path="/"
+              path={Paths.Home}
               element={
                 <TokenChecker>
                   <Dashboard />
@@ -55,7 +56,7 @@ function App() {
               }
             />
             <Route
-              path="/Dashboard"
+              path={Paths.Dashboard}
               element={
                 <TokenChecker>
                   <Dashboard />
@@ -63,7 +64,7 @@ function App() {
               }
             />
             <Route
-              path="/AvailableProject"
+              path={Paths.AvailableProject}
               element={
                 <TokenChecker>
                   <AvailableProjects />
@@ -71,29 +72,39 @@ function App() {
               }
             />
             <Route
-              path="/Posts"
+              path={Paths.ShowAllPost}
               element={
                 <TokenChecker>
                   <ShowAllPosts />
                 </TokenChecker>
               }
             />
-            <Route path="/Chat" element={<Chat />} />
-            <Route path="/MyCompaniesTeams" element={<MyCompaniesTeams />} />
-            <Route path="/CreateTeam" element={<CreateTeam />} />
-            <Route path="/CreateTask" element={<CreateTask />} />
-            <Route path="/AddPost" element={<AddPost />} />
-            <Route path="/EditPost" element={<EditPost />} />
-            <Route path="/EditTask" element={<EditTask />} />
-            <Route path="/EditTeam" element={<EditTeam />} />
-            <Route path="/ProjectPage/:projectId" element={<ProjectPage />} />
-            <Route path="/TaskPage" element={<TaskPage />} />
-            <Route path="/TeamsWorkingWith" element={<MyCompaniesTeams />} />
-            <Route path="/CreateCompany" element={<CreateCompany />} />
-            <Route path="/MyCompanies" element={<MyCompanies />} />
-            <Route path="/CompanyWorkingWith" element={<CompanyWorking />} />
-            <Route path="/MyCompanyTask" element={<MyCompanyTask />} />
-            <Route path="*" element={<NotFound />} />
+            <Route path={Paths.Chat} element={<Chat />} />
+            <Route
+              path={Paths.MyCompaniesTeams}
+              element={<MyCompaniesTeams />}
+            />
+            <Route path={Paths.CreateTeam} element={<CreateTeam />} />
+            <Route path={Paths.CreateTask} element={<CreateTask />} />
+            <Route path={Paths.AddPost} element={<AddPost />} />
+            <Route path={Paths.EditPost} element={<EditPost />} />
+            <Route path={Paths.EditTask} element={<EditTask />} />
+            <Route path={Paths.EditTeam} element={<EditTeam />} />
+            <Route path={Paths.ProjectPage} element={<ProjectPage />} />
+            <Route path={Paths.TaskPage} element={<TaskPage />} />
+            <Route
+              path={Paths.TeamsWorkingWith}
+              element={<MyCompaniesTeams />}
+            />
+            <Route path={Paths.CreateCompany} element={<CreateCompany />} />
+            <Route path={Paths.MyCompanies} element={<MyCompanies />} />
+            <Route
+              path={Paths.CompanyWorkingWith}
+              element={<CompanyWorking />}
+            />
+            <Route path={Paths.MyCompanyTask} element={<MyCompanyTask />} />
+            <Route path={Paths.ForgetPassword} element={<ForgetPassword />} />
+            <Route path={Paths.NotFound} element={<NotFound />} />
           </Routes>
         </BrowserRouter>
       </MantineProvider>
@@ -102,12 +113,11 @@ function App() {
 }
 
 const TokenChecker = ({ children }) => {
-  localStorage.removeItem("token");
   if (
     !localStorage.getItem("token") ||
     localStorage.getItem("token") === "null"
   ) {
-    window.location.replace("/Login");
+    window.location.replace(Paths.Login);
   } else {
     return children;
   }
