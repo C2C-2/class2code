@@ -20,7 +20,7 @@ import {
 import { GoogleButton } from './GoogleButton';
 // import { TwitterButton } from './TwitterButton';
 import { auth } from '../../config/firebase.js';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
 import Alert from '../../components/Alert/AlertBox.jsx'
 
 const Login = () => {
@@ -53,6 +53,22 @@ const Login = () => {
         try {
             if (form.isValid()) {
                 const a = await signInWithEmailAndPassword(auth, form.values.email, form.values.password);
+                localStorage.setItem("token", await a.user.getIdToken());
+                // localStorage.removeItem("token");
+                window.location.replace("/");
+            }
+        } catch (err) {
+            setError("Check your email and password please");
+            const time = setTimeout(() => setError(null), 3000);
+            return () => clearTimeout(time);
+        }
+    }
+
+    const register = async (e) => {
+        e.preventDefault();
+        try {
+            if (form.isValid()) {
+                const a = await createUserWithEmailAndPassword(auth, form.values.email, form.values.password);
                 localStorage.setItem("token", await a.user.getIdToken());
                 // localStorage.removeItem("token");
                 window.location.replace("/");
@@ -106,7 +122,15 @@ const Login = () => {
                             development through engaging in simulated software projects.
                         </p>
                     </div>
-                    <Button w={"100%"} radius="md" variant="filled" color="green" size="lg">Create Account</Button>
+                    {type === 'login' && (
+                        <Button onClick={() => toggle()} w={"100%"} radius="md" variant="filled" color="green" size="lg">Create Account</Button>
+
+                    )}
+                    {
+                        type === 'register' && (
+                            <Button onClick={() => toggle()} w={"100%"} radius="md" variant="filled" color="green" size="lg">Login</Button>
+                        )
+                    }
                 </div>
             </div>
 
@@ -126,13 +150,13 @@ const Login = () => {
                     <hr />
                 </div>
 
-                <Paper radius="md" p="xl">
+                <Paper radius="md" p="xl" id='LoginDetails'>
                     <div className="LogInFigmaMainPart2DesignCenter1">
                         <h4>
-                            Login to Your Account
+                            {type === 'login' ? 'Login to Your Account' : 'Create New Account'}
                         </h4>
                         <p>
-                            Enter Yours Details to Login{" "}
+                            Enter Yours Details to {type === 'login' ? 'Login' : 'Register'}
                         </p>
                     </div>
 
@@ -175,11 +199,15 @@ const Login = () => {
                                 radius="md"
                             />
 
-                            <Group justify="end" mt="lg" id='ForgetPassword'>
-                                <Anchor component="button" size="sm">
-                                    Forgot password?
-                                </Anchor>
-                            </Group>
+                            {
+                                type === 'login' && (
+                                    <Group justify="end" mt="lg" id='ForgetPassword'>
+                                        <Anchor component="button" size="sm">
+                                            Forgot password?
+                                        </Anchor>
+                                    </Group>
+                                )
+                            }
 
                             {type === 'register' && (
                                 <Checkbox
@@ -196,7 +224,7 @@ const Login = () => {
                                     ? 'Already have an account? Login'
                                     : "Don't have an account? Register"}
                             </Anchor>
-                            <Button type="submit" radius="xl" size='md' onClick={login}>
+                            <Button type="submit" radius="xl" size='md' onClick={type === 'login' ? login : register}>
                                 {upperFirst(type)}
                             </Button>
                         </Group>

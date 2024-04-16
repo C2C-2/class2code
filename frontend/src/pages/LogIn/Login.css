@@ -105,6 +105,10 @@
   margin-top: 0 !important;
 }
 
+#LoginDetails{
+  padding: 1vw 2vw !important;
+}
+
 .LogInFigmaMainPart2DesignCenter1 h4 {
   padding-bottom: 0.5vw;
   color: var(--dark, #283739);

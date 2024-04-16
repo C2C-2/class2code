@@ -45,6 +45,7 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route path="/Login" element={<LogInFigma />} />
+            <Route path="/SignUpFigma" element={<SignUpFigma />} />
             <Route
               path="/"
               element={
@@ -101,6 +102,7 @@ function App() {
 }
 
 const TokenChecker = ({ children }) => {
+  localStorage.removeItem("token");
   if (
     !localStorage.getItem("token") ||
     localStorage.getItem("token") === "null"
