@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef } from 'react'
 import { FaPlus, FaArrowLeft, FaDotCircle, FaPaperPlane } from "react-icons/fa";
-import { Button, Text, TextInput } from '@mantine/core';
+import { Button, Card, NativeSelect, Text, TextInput } from '@mantine/core';
 import './Chat.css';
 import { write, read, updateData } from '../../config/firebase.js';
 
@@ -11,7 +11,8 @@ const Chat = () => {
     const [chatId, setChatId] = React.useState('');
     const [message, setMessage] = React.useState('');
     const [userId, setUserId] = React.useState(0);
-    const [userId2, setUserId2] = React.useState(2);
+    const [userId2, setUserId2] = React.useState(0);
+    const [isSearch, setIsSearch] = React.useState(false);
     const listRef = useRef(null);
 
     const fetchOldChats = () => {
@@ -81,6 +82,12 @@ const Chat = () => {
             console.log(newUserId);
             setUserId(parseInt(newUserId));
         }
+
+        const newUserId2 = window.prompt("Enter friend Id");
+        if (newUserId) {
+            console.log(newUserId);
+            setUserId2(parseInt(newUserId2));
+        }
     }, []);
 
     useEffect(() => {
@@ -91,14 +98,17 @@ const Chat = () => {
         listRef.current?.scrollIntoView();
     }, [messages]);
 
-    const createChat = async (e: { preventDefault: () => void; }) => {
+    const createChat = async (e: { preventDefault: () => void; }, friendId: number) => {
         e.preventDefault();
-        const key = await updateData(`/chats`, { name: "" });
-        await updateData(`/users/${userId}/chats/${key}`, { name: "" });
-        await updateData(`/users/${userId2}/chats/${key}`, { name: "" });
+        setIsSearch((e) => true);
+        console.log(isSearch);
+
+        // const key = await updateData(`/chats`, { name: "" });
+        // await updateData(`/users/${userId}/chats/${key}`, { name: "" });
+        // await updateData(`/users/${friendId}/chats/${key}`, { name: "" });
     }
 
-    const search = (name: any) => {
+    const createChatBtnOnClick = () => {
 
     }
 
@@ -109,7 +119,7 @@ const Chat = () => {
                 <div className='chat_chats_head d-flex justify-content-between align-items-center'>
                     <Button leftSection={<FaArrowLeft size={16} />} variant="light" color="green" size="sm" radius="md">Back</Button>
                     <h4>Chats</h4>
-                    <Button variant="filled" color="green" className='add_chat' radius="xl" onClick={createChat}><FaPlus /></Button>
+                    <Button variant="filled" color="green" className='add_chat' radius="xl" onClick={(e) => createChat(e, userId2)}><FaPlus /></Button>
                 </div>
                 <div className='chat_chats_body px-4 d-flex flex-column gap-3'>
                     <TextInput
@@ -128,7 +138,7 @@ const Chat = () => {
                                     fetchChat(chatId)
                                 }}
                                 key={index}
-                                lastMessage={messages.lastMessage}
+                                lastMessage={messages?.lastMessage}
                                 image="https://i.pravatar.cc/300"
                             />
                         ))}
@@ -169,11 +179,14 @@ const Chat = () => {
                     <Button type='submit' variant="filled" color="#388E3C" className='send' rightSection={<FaPaperPlane />}>Send &nbsp;</Button>
                 </form>
             </div>
+            {/* <div id='chat_search'>
+                <SearchFriends isSearching={isSearch} createChatBtnOnClick={createChatBtnOnClick} />
+            </div> */}
         </div>
     )
 }
 
-const ChatItem = ({ userName = "User", lastMessage, image, onClike }: { userName: string, lastMessage: string, image: string }) => {
+const ChatItem = ({ userName = "User", lastMessage, image, onClike }: { userName: string, lastMessage: string, image: string, onClike: () => void }) => {
     return (
         <div className='d-flex chat_item gap-4 align-content-center' onClick={onClike}>
             <img src={image} alt={`${userName}`} />
@@ -195,6 +208,29 @@ const MessageItem = ({ userName, message, image, dir }: { userName: string, mess
                 </div>
             </div>
         </div >
+    )
+}
+
+const SearchFriends = ({ isSearching, createChatBtnOnClick }: { isSearching?: boolean, createChatBtnOnClick?: () => void }) => {
+    return (
+        <Card style={{ display: isSearching ? 'block' : 'none' }} id='chat_search_card' shadow="sm" padding="lg" radius="md" withBorder>
+            <TextInput
+                label="User Name"
+                placeholder="Mohammad Abu Salh"
+                description="Enter Name to Search"
+            />
+
+            <NativeSelect
+                mt="md"
+                label="Users"
+                data={['React', 'Angular', 'Vue', 'Svelte']}
+                description="This All Users With Entered Name"
+            />
+            <br />
+            <div id='chat_search_card_btn_div' dir='rtl'>
+                <Button onClick={createChatBtnOnClick} id='chat_search_card_btn' variant="filled" color="green">Start Chat</Button>
+            </div>
+        </Card>
     )
 }
 
