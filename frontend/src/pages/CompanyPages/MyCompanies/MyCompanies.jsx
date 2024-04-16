@@ -4,7 +4,59 @@ import { Button } from "@mantine/core";
 import SideBar from "../../../components/SideBar/SideBar";
 import NavBar from "../../../components/NavBar/NavBar";
 import MyCompaniesCard from "../../../components/MyCompaniesCard/MyCompaniesCard";
+import { useQuery, gql } from "@apollo/client";
+import { Link } from "react-router-dom";
+const FILTER_MY_COMPANIES = gql`
+  query FilterMyCompanies($filterType: String) {
+    filterMyCompanies(filterType: $filterType) {
+      CreateDate
+      Rate
+    }
+  }
+`;
+const SEARCH_IN_MY_COMPANIES = gql`
+  query SearchInMyCompanies($userId: String!, $word: String!) {
+    searchInMyCompanies(userId: $userId, word: $word) {
+      CompanyDescription
+      CompanyName
+      Rate
+    }
+  }
+`;
+const GET_USER_COMPANIES = gql`
+  query MyCompanies($userId: String!) {
+    getUser(userId: $userId) {
+      MyCompanies {
+        CompanyDescription
+        CompanyName
+        Rate
+      }
+    }
+  }
+`;
+
 function MyCompanies() {
+  const [sortBy, setSortBy] = useState("CreateDate");
+  const [userId, setUserId] = useState(null);
+  const [searchWord, setSearchWord] = useState("");
+  const {
+    loading: userLoading,
+    error: userError,
+    data: userData,
+  } = useQuery(GET_USER_COMPANIES, {
+    variables: { userId: userId },
+  }); // Default sorting by CreateDate
+  const { loading, error, data } = useQuery(
+    searchWord ? SEARCH_IN_MY_COMPANIES : FILTER_MY_COMPANIES,
+    {
+      variables: {
+        filterType: sortBy,
+        userId: userId,
+        word: searchWord,
+      },
+    }
+  );
+
   const [receivedData, setReceivedData] = useState("");
   const receiveDataFromChild = (data) => {
     setReceivedData(data);
@@ -13,6 +65,18 @@ function MyCompanies() {
     document.getElementById("man").style.backgroundColor =
       receivedData === "light" ? "#fff" : "#000";
   }, [receivedData]);
+
+  const handleSortBy = (criteria) => {
+    if (sortBy === criteria) {
+      setSortBy(`${criteria}-desc`);
+    } else {
+      setSortBy(criteria);
+    }
+  };
+  const handleSearch = (e) => {
+    setSearchWord(e.target.value);
+  };
+
   return (
     <div className="MainMyCompanies" id="man">
       <SideBar />
@@ -20,6 +84,7 @@ function MyCompanies() {
         <NavBar sendDataToParent={receiveDataFromChild} />
         <div className="Part2My">
           <div className="ButtonBack">
+          <Link to="/Dashboard">
             <Button
               justify="center "
               variant="filled"
@@ -36,19 +101,20 @@ function MyCompanies() {
                 <path
                   d="M1.5 6H16.5"
                   stroke="white"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 />
                 <path
                   d="M6.49999 11L1.5 6L6.49999 1"
                   stroke="white"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 />
               </svg>
             </Button>
+            </Link>
           </div>
           <div className="SearchMy">
             <div className="SearchPart">
@@ -56,6 +122,7 @@ function MyCompanies() {
                 type="text"
                 placeholder="Search for Companies"
                 className="TextPart"
+                onChange={handleSearch}
               ></input>
               <span className="SvgPart">
                 <svg
@@ -75,7 +142,12 @@ function MyCompanies() {
               </span>
             </div>
             <div className="ButtonPart">
-              <Button variant="filled" color="#388E3C" w={100}>
+              <Button
+                variant="filled"
+                color="#388E3C"
+                w={100}
+                onClick={() => handleSortBy("CreateDate")}
+              >
                 New
               </Button>
               <Button
@@ -83,6 +155,7 @@ function MyCompanies() {
                 c="black"
                 color="rgba(222, 224, 222, 1)"
                 w={100}
+                onClick={() => handleSortBy("CreateDate")}
               >
                 Date
               </Button>
@@ -91,6 +164,7 @@ function MyCompanies() {
                 c="black"
                 color="rgba(222, 224, 222, 1)"
                 w={100}
+                onClick={() => handleSortBy("Rate")}
               >
                 Rate
               </Button>
@@ -98,9 +172,23 @@ function MyCompanies() {
           </div>
           <div className="Part3My">
             <div className="Part31">
-              <MyCompaniesCard colorProp={receivedData} />
-              <MyCompaniesCard />
-              <MyCompaniesCard />
+              {userLoading ? (
+                <p>Loading...</p>
+              ) : userError ? (
+                <p>Error: {userError.message}</p>
+              ) : (
+                userData &&
+                userData.getUser &&
+                userData.getUser.MyCompanies.map((company, index) => (
+                  <MyCompaniesCard
+                    key={index}
+                    colorProp={receivedData}
+                    CompanyName={company.CompanyName}
+                    CompanyDescription={company.CompanyDescription}
+                    Rate={company.Rate}
+                  />
+                ))
+              )}
             </div>
           </div>
         </div>

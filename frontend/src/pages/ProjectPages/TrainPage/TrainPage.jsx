@@ -1,9 +1,9 @@
-import React from "react";
+
 import "./TrainPage.css";
 import { useState, useEffect } from "react";
 import SideBar from "../../../components/SideBar/SideBar";
 import NavBar from "../../../components/NavBar/NavBar";
-
+import { Link } from "react-router-dom";
 import { Button } from "@mantine/core";
 function TrainPage() {
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -20,11 +20,12 @@ function TrainPage() {
   }, [receivedData]);
   return (
     <div className="TrainPageAll" id="man">
-      <SideBar />
+      <SideBar colorSide={receivedData}/>
       <div className="TrainPageMain">
         <NavBar sendDataToParent={receiveDataFromChild} />
         <div className="TrainPageCenter">
           <div className="TrainPageButtonBack">
+          <Link to="/Dashboard">
             <Button
               justify="center "
               variant="filled"
@@ -41,19 +42,20 @@ function TrainPage() {
                 <path
                   d="M1.5 6H16.5"
                   stroke="white"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 />
                 <path
                   d="M6.49999 11L1.5 6L6.49999 1"
                   stroke="white"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 />
               </svg>
             </Button>
+            </Link>
           </div>
           <div className="TrainPageContent">
             <div className="HeaderTitle">

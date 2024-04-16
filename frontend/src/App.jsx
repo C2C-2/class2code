@@ -1,48 +1,38 @@
 import "@mantine/core/styles.css";
 import { MantineProvider } from "@mantine/core";
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
-import SecondSignup from "./pages/SecondSignup/SecondSignup"
+import SecondSignup from "./pages/SecondSignup/SecondSignup";
 import SignUpFigma from "./pages/SignUp/SignUpFigma";
 import LogInFigma from "./pages/LogIn/LogInFigma";
-import NavBar from "./components/NavBar/NavBar";
-import SideBar from "./components/SideBar/SideBar";
 import AIChat from "./pages/AI Chat/AIChatDef/AIChat";
-import SideBarAI from "./components/SideBarAI/SideBarAI";
-import NavBarAI from "./components/NavBarAI/NavBarAI";
 import AIChatResponse from "./pages/AI Chat/AIChatResponse/AIChatResponse";
 import MyCompanies from "./pages/CompanyPages/MyCompanies/MyCompanies";
-import MyCompaniesCard from "./components/MyCompaniesCard/MyCompaniesCard";
 import OtherCompanyProfile from "./pages/CompanyPages/OtherCompanyProfile/OtherCompanyProfile";
-import CommentComp from "./components/Comments/CommentComp";
 import CreateCompany from "./pages/CompanyPages/CreateCompany/CreateCompany";
-import MyCompanyProfile from "./pages/CompanyPages/MyComanyProfile/MyCompanyProfile";
-import CompanyWorking from "./components/CompanyWorkingCard/CompanyWorking";
-import AvailableProjectsCard from "./components/AvailableProjectsCard/AvailableProjectsCard";
+import CompanyWorking from "./pages/CompanyPages/CompanyWorking/CompanyWorking";
 import EditMyCompanyProfile from "./pages/CompanyPages/EditMyCompanyProfile/EditMyCompanyProfile";
 import AvailableProjects from "./pages/ProjectPages/AvailableProjects/AvailableProjects";
 import TrainPage from "./pages/ProjectPages/TrainPage/TrainPage";
-import PostsCard from "./components/PostsCard/PostsCard";
 import ShowAllPosts from "./pages/CompanyAdsPages/ShowAllPost/ShowAllPosts";
 import AddPost from "./pages/CompanyAdsPages/AddPosts/AddPost";
+import EditTask from "./pages/TaskPages/EditTask/EditTask";
 import ShowMyPost from "./pages/CompanyAdsPages/ShowMyPost/ShowMyPost";
 import ProjectPage from "./pages/ProjectPages/ProjectPage/ProjectPage";
 import CreateTeam from "./pages/TeamPages/CreateTeam/CreateTeam";
-import MyCompaniesTeamsCard from "./components/MyCompaniesTeamsCard/MyCompaniesTeamsCard"
 import MyCompaniesTeams from "./pages/TeamPages/MyCompaniesTeams/MyCompaniesTeams";
 import CreateTask from "./pages/TaskPages/CreateTask/CreateTask";
 import TaskPage from "./pages/TaskPages/TaskPage/TaskPage";
 import MyCompanyTask from "./pages/TaskPages/MyCompanyTask/MyCompanyTask";
-import MyCompanyTaskCard from "./components/MyCompanyTaskCard/MyCompanyTaskCard";
-import Dashboard from "./pages/OtherPages/Dashboard/Dashboard"
+import Dashboard from "./pages/OtherPages/Dashboard/Dashboard";
 import NotFound from "./pages/OtherPages/NotFound/NotFound";
 import ForgetPassword from "./pages/OtherPages/ForgetPassword/ForgetPassword";
 import ContactUs from "./pages/OtherPages/ContactUs/ContactUs";
 import HomePage from "./pages/OtherPages/Home/HomePage";
 import FAQQuestion from "./pages/OtherPages/FAQQuestion/FAQQuestion";
-import LightDarkMode from "./components/NavBar/Light_DarkMode/LightDarkMode";
-import Chat from './pages/chat/Chat'
-
-
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import EditPost from "./pages/CompanyAdsPages/EditPost/EditPost";
+import EditTeam from "./pages/TeamPages/EditTeam/EditTeam";
+import Chat from "./pages/chat/Chat";
 function App() {
   const client = new ApolloClient({
     cache: new InMemoryCache(),
@@ -51,39 +41,33 @@ function App() {
   return (
     <ApolloProvider client={client}>
       <MantineProvider>
-        {/* <AIChat/> */}
-        {/* <ShowAllPosts/> */}
-        {/* <NewSideBar/> */}
-        {/* <SideBarFigma/> */}
-        {/* <AddPost/> */}
-        {/* <ShowMyPost/> */}
-        {/* <ProjectPage/> */}
-        {/* <AIChatResponse/> */}
-        {/* <CreateTeam/> */}
-        {/* <MyCompaniesTeams/> */}
-        {/* <CreateTask/> */}
-        {/* <TaskPage/> */}
-        {/* <MyCompanyTask/> */}
-        {/* <Dashboard/> */}
-        {/* <NotFound/> */}
-        {/* <ForgetPassword/> */}
-        {/* <ContactUs/> */}
-        {/* <FAQQuestion/> */}
-        {/* <HomePage/> */}
-        {/* <MyCompanies/> */}
-        {/* <OtherCompanyProfile/> */}
-        {/* <MyCompanyProfile/> */}
-        {/* <EditMyCompanyProfile/> */}
-        {/* <AvailableProjects/> */}
-        {/* <TrainPage/> */}
-        {/* <SignUpFigma/> */}
-        {/* <LogInFigma/> */}
-        {/* <SecondSignup/> */}
-        <Chat/>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/Dashboard" element={<Dashboard />} />
+            <Route path="/AvailableProject" element={<AvailableProjects />} />
+            <Route path="/Posts" element={<ShowAllPosts />} />
+            <Route path="/Chat" element={<Chat />} />
+            <Route path="/MyCompaniesTeams" element={<MyCompaniesTeams />} />
+            <Route path="/CreateTeam" element={<CreateTeam />} />
+            <Route path="/CreateTask" element={<CreateTask />} />
+            <Route path="/AddPost" element={<AddPost />} />
+            <Route path="/EditPost" element={<EditPost />} />
+            <Route path="/EditTask" element={<EditTask />} />
+            <Route path="/EditTeam" element={<EditTeam />} />
+            <Route path="/ProjectPage/:projectId" element={<ProjectPage />} />
+            <Route path="/TaskPage" element={<TaskPage />} />
+            {/* <Route path="/TeamsWorkingWith" element={<MyCompaniesTeams/>}/> */}
+            <Route path="/CreateCompany" element={<CreateCompany />} />
+            <Route path="/MyCompanies" element={<MyCompanies />} />
+            <Route path="/CompanyWorkingWith" element={<CompanyWorking />} />
+            <Route path="/MyCompanyTask" element={<MyCompanyTask />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
       </MantineProvider>
     </ApolloProvider>
   );
 }
-
 
 export default App;

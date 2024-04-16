@@ -244,7 +244,7 @@
 
 .Para {
     width: 90%;
-    color:  rgba(0, 0, 0, 0.60);
+    color: rgba(0, 0, 0, 0.60);
     font-feature-settings: 'clig'off, 'liga'off;
     font-family: Inter;
     font-size: 15px;
@@ -252,6 +252,16 @@
     font-weight: 500;
     line-height: 24px;
     /* 160% */
+}
+
+.CommentsCard {
+    height: 40%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    gap: 20px;
+    overflow-y: scroll;
 }
 
 .Part1UnderAddComments {
@@ -294,16 +304,18 @@
 
 .CP1 {
     width: 80%;
-    color:  rgba(0, 0, 0, 0.60);
+    color: rgba(0, 0, 0, 0.60);
     font-family: Roboto;
     font-size: 24px;
     font-style: normal;
     font-weight: 400;
     line-height: normal;
 }
+
 .CP1Dark {
     width: 80%;
-    color: #aba6a6;;
+    color: #aba6a6;
+    ;
     font-family: Roboto;
     font-size: 24px;
     font-style: normal;
@@ -322,13 +334,14 @@
 
 .TA1 {
     width: 80%;
-    color:  rgba(0, 0, 0, 0.60);
+    color: rgba(0, 0, 0, 0.60);
     font-family: Roboto;
     font-size: 24px;
     font-style: normal;
     font-weight: 400;
     line-height: normal;
 }
+
 .TA1Dark {
     width: 80%;
     color: #aba6a6;

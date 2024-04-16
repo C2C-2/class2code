@@ -1,18 +1,76 @@
+import {useState,useEffect} from "react";
 import "./CreateCompany.css";
 import SideBar from "../../../components/SideBar/SideBar";
 import NavBar from "../../../components/NavBar/NavBar";
 import { Button } from "@mantine/core";
-import GreenBox2 from "../../../components/greenBox/GreenBox";
+import GreenBox2 from "../../../components/GreenBox/GreenBox2";
+import { useMutation, gql } from "@apollo/client";
+
+const CREATE_NEW_COMPANY = gql`
+  mutation CreateNewCompany($company: CompanyInput!, $userId: String!) {
+    createNewCompany(company: $company, userId: $userId) {
+      CompanyDescription
+      CompanyName
+      Domain
+      Teams {
+        TeamName
+      }
+      Project {
+        ProjectName
+      }
+    }
+  }
+`;
 function CreateCompany() {
+  const [receivedData, setReceivedData] = useState("");
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [companyData, setCompanyData] = useState({
+    company: null,
+    userId: null,
+  });
+  const [createCompany] = useMutation(CREATE_NEW_COMPANY);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setCompanyData((prevData) => ({
+      ...prevData,
+      company: {
+        ...prevData.company,
+        [name]: value,
+      },
+    }));
+  };
+
+  const handleCreateCompany = () => {
+    createCompany({ variables: companyData })
+      .then((res) => {
+        // Handle success, e.g., show a success message
+        console.log("Company created successfully:", res.data.createNewCompany);
+      })
+      .catch((error) => {
+        // Handle error, e.g., show an error message
+        console.error("Error creating company:", error);
+      });
+  };
+
+
+  useEffect(() => {
+    setIsDarkMode(receivedData === "dark");
+  }, [receivedData]);
+  const receiveDataFromChild = (data) => {
+    setReceivedData(data);
+  };
+
+  useEffect(() => {
+    document.getElementById("man").style.backgroundColor =
+      receivedData === "light" ? "#fff" : "#000";
+  }, [receivedData]);
+
   return (
-    <div className="CreateCompany">
-      <div className="CreateCompanySideBar">
-        <SideBar />
-      </div>
+    <div className="CreateCompany" id="man">
+        <SideBar colorSide={receivedData}/>
       <div className="CreateComp">
-        <div className="Part1CreateCompany">
-          <NavBar />
-        </div>
+          <NavBar sendDataToParent={receiveDataFromChild} /> 
         <div className="Part2CreateCompany">
           <div className="CreateCompanyButtonBack">
             <Button
@@ -53,6 +111,8 @@ function CreateCompany() {
                   <span className="TextPartCmopany">Company Name</span>
                   <input
                     type="text"
+                    name="CompanyName"
+                    onChange={handleInputChange}
                     placeholder="Enter Company Name"
                     className="TextInput"
                   />
@@ -61,6 +121,8 @@ function CreateCompany() {
                   <span className="TextPartCmopany">Company Description</span>
                   <input
                     type="text"
+                    name="CompanyDescription"
+                    onChange={handleInputChange}
                     placeholder="Enter Company Description"
                     className="TextInput"
                   />
@@ -70,6 +132,8 @@ function CreateCompany() {
                   <input
                     type="text"
                     placeholder="Enter Company Admin"
+                    name="CompanyAdmin"
+                    onChange={handleInputChange}
                     className="TextInput"
                   />
                 </div>
@@ -78,6 +142,8 @@ function CreateCompany() {
                   <input
                     type="text"
                     placeholder="Enter Company Domain"
+                    name="Domain"
+                    onChange={handleInputChange}
                     className="TextInput"
                   />
                 </div>
@@ -86,6 +152,8 @@ function CreateCompany() {
                   <input
                     type="text"
                     placeholder="Select Project"
+                    name="Project"
+                    onChange={handleInputChange}
                     className="TextInput"
                   />
                 </div>
@@ -94,18 +162,20 @@ function CreateCompany() {
             <div className="Part2Teams">
               <div className="TextTeamCreateCompany">Teams</div>
               <div className="InputOverAllTeam">
+                
                 <span className="TextPartCmopany">Select Team</span>
                 <input
                   type="text"
                   placeholder="Select Team"
+                  name="Team"
+                  onChange={handleInputChange}
                   className="TextInput"
                 />
               </div>
               <div className="AddTeamsCreateCompany">
-                <GreenBox2 />
               </div>
               <div className="ButtonCreateCompany">
-                <Button variant="filled" color="#388E3C" w={150} h={40}>
+                <Button variant="filled" color="#388E3C" w={150} h={40}  onClick={handleCreateCompany}>
                   Create
                 </Button>
               </div>

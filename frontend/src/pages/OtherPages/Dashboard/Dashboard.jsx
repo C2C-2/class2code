@@ -20,7 +20,7 @@ function Dashboard() {
   }, [receivedData]);
   return (
     <div className="DashboardAll" id="man">
-      <SideBar />
+      <SideBar colorSide={receivedData}/>
       <div className="DashboardMain">
         <NavBar sendDataToParent={receiveDataFromChild}/>
         <div className="DashboardCenter">

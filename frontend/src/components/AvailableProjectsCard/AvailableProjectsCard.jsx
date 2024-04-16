@@ -1,7 +1,8 @@
 import React from "react";
 import "./AvailableProjectCard.css";
 import RequirementNeed from "../RequirementNeed/RequirementNeed";
-function AvailableProjectsCard({colorProp}) {
+
+function AvailableProjectsCard({ projectName, applications, projectDescription, requirements, colorProp }) {
   return (
     <button className="AvailableProjectAll">
       <div className="AvailableProjectDesign">
@@ -12,22 +13,19 @@ function AvailableProjectsCard({colorProp}) {
         </div>
         <div className="PartTextAvailableProject">
           <div className="PartTitleAvailableProject">
-            <span className="T1Project">Restaurant System</span>
-            <span className="T2Project">25 Apply</span>
+            <span className="T1Project">{projectName}</span>
+            <span className="T2Project">{applications} Apply</span>
           </div>
           <div className="ParagraphAvailableProject">
-            <p className="P1Project">
-              Emmelie is a traditional book-worm and has always been from a
-              young age. She is a housekeeper mom with two kids and she has a
-              lot of time to read and relax.
-            </p>
+            <p className="P1Project">{projectDescription}</p>
           </div>
         </div>
         <div className="RequirementsAvailableProject">
           <span className="TextRequirements">Requirements</span>
           <div className="ReqNeed">
-            <RequirementNeed colorProps={colorProp} />
-            <RequirementNeed />
+            {requirements?.map((requirement, index) => (
+              <RequirementNeed key={index} colorProps={colorProp} textReq={requirement} />
+            ))}
           </div>
         </div>
       </div>

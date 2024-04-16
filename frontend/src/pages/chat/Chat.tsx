@@ -117,7 +117,7 @@ const Chat = () => {
         <div className='messages d-flex p-4 bg-light gap-4 justify-content-center'>
             <div className='chat_chats d-flex flex-column col-4 shadow bg-white'>
                 <div className='chat_chats_head d-flex justify-content-between align-items-center'>
-                    <Button leftSection={<FaArrowLeft size={16} />} variant="light" color="green" size="sm" radius="md">Back</Button>
+                    <Link to="/Dashboard"><Button leftSection={<FaArrowLeft size={16} />} variant="light" color="green" size="sm" radius="md">Back</Button></Link>
                     <h4>Chats</h4>
                     <Button variant="filled" color="green" className='add_chat' radius="xl" onClick={(e) => createChat(e, userId2)}><FaPlus /></Button>
                 </div>

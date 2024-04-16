@@ -4,6 +4,8 @@ import SideBar from "../../../components/SideBar/SideBar";
 import NavBar from "../../../components/NavBar/NavBar";
 import { Button } from "@mantine/core";
 import MyPostCard from "../../../components/MyPostCard/MyPostCard";
+import { Link } from "react-router-dom";
+
 function ShowMyPost() {
   const [receivedData, setReceivedData] = useState("");
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -24,6 +26,7 @@ function ShowMyPost() {
         <NavBar sendDataToParent={receiveDataFromChild} />
         <div className="ShowMyPostContent">
           <div className="ShowMyPostButtonBack">
+          <Link to="/Dashboard">
             <Button
               justify="center "
               variant="filled"
@@ -40,19 +43,20 @@ function ShowMyPost() {
                 <path
                   d="M1.5 6H16.5"
                   stroke="white"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 />
                 <path
                   d="M6.49999 11L1.5 6L6.49999 1"
                   stroke="white"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 />
               </svg>
             </Button>
+            </Link>
           </div>
           <div className="ShowMyPostData">
             <div className="SearchPartShowMyPost">

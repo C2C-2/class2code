@@ -1,7 +1,6 @@
 import React from "react";
 import "./LogInFigma.css";
 import MainLogo from "./logo2 2.png";
-import { Button } from "@mantine/core";
 
 export default function LogInFigma() {
   return (

@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@ant-design/icons": "^5.3.6",
-    "@apollo/client": "^3.8.10",
+    "@apollo/client": "^3.9.10",
     "@iconify/react": "^4.1.1",
     "@mantine/core": "^7.3.2",
     "@mantine/hooks": "^7.3.2",

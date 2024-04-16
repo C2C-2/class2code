@@ -2,9 +2,11 @@ import { useEffect, useState } from "react";
 import "./MyCompaniesTeams.css";
 import SideBar from "../../../components/SideBar/SideBar";
 import NavBar from "../../../components/NavBar/NavBar";
-import { Button, Input, TextInput } from "@mantine/core";
+import { Button } from "@mantine/core";
 import MyCompaniesTeamsCard from "../../../components/MyCompaniesTeamsCard/MyCompaniesTeamsCard";
-function MyCompaniesTeams() {
+import { gql, useQuery } from "@apollo/client";
+import { Link } from 'react-router-dom';
+function MyCompaniesTeams({user_id}) {
   const [receivedData, setReceivedData] = useState("");
   const [isDarkMode, setIsDarkMode] = useState(false);
   useEffect(() => {
@@ -17,13 +19,34 @@ function MyCompaniesTeams() {
     document.getElementById("man").style.backgroundColor =
       receivedData === "light" ? "#fff" : "#000";
   }, [receivedData]);
+
+
+  const GET_MY_COMPANIES_TEAMS = gql`
+  query MyCompanies($userId: String!) {
+    getUser(userId: $userId) {
+      MyCompanies {
+        CompanyName
+        Teams {
+          TeamRole
+          TeamName
+          CreateDate
+          _id
+        }
+      }
+    }
+  }
+`;
+const { loading, error, data } = useQuery(GET_MY_COMPANIES_TEAMS, {
+  variables: { user_id },
+});
   return (
     <div className="MyCompaniesTeamsAll" id="man">
-      <SideBar />
+      <SideBar colorSide={receivedData}/>
       <div className="MyCompaniesTeamsMain">
         <NavBar sendDataToParent={receiveDataFromChild} />
         <div className="MyCompaniesTeamsCenter">
           <div className="MyCompaniesTeamsCenterButtonBack">
+          <Link to="/Dashboard">
             <Button
               justify="center "
               variant="filled"
@@ -40,19 +63,20 @@ function MyCompaniesTeams() {
                 <path
                   d="M1.5 6H16.5"
                   stroke="white"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 />
                 <path
                   d="M6.49999 11L1.5 6L6.49999 1"
                   stroke="white"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 />
               </svg>
             </Button>
+            </Link>
           </div>
           <div className="MyCompaniesTeamsContent">
             <div className="MyCompaniesTeamsContentButtons">
@@ -74,9 +98,24 @@ function MyCompaniesTeams() {
               </button>
             </div>
             <div className="MyCompaniesTeamsContentCard">
-              <MyCompaniesTeamsCard color={receivedData} />
-              <MyCompaniesTeamsCard color={receivedData} />
-              <MyCompaniesTeamsCard color={receivedData} />
+              {loading ? (
+                <p>Loading...</p>
+              ) : error ? (
+                <p>Error: {error.message}</p>
+              ) : (
+                data?.getUser?.MyCompanies.map((company) =>
+                  company.Teams.map((team, index) => (
+                    <MyCompaniesTeamsCard
+                      key={index}
+                      teamRole={team.TeamRole}
+                      teamName={team.TeamName}
+                      createDate={team.CreateDate}
+                      teamId={team._id}
+                      color={receivedData}
+                    />
+                  ))
+                )
+              )}
             </div>
           </div>
         </div>

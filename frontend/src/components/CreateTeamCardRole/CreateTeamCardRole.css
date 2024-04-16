@@ -1,0 +1,32 @@
+.CreateTeamCardAllRole {
+    align-items: center;
+    display: flex;
+    height: 25%;
+    gap: 10px;
+    justify-content: space-between;
+    border-radius: 5px;
+    border: 1px solid var(--line, #EAEAEA);
+    background: var(--light, #F2F9F1);
+   padding-left: 10px;
+   padding-right: 10px;
+    width: 100%;
+}
+
+.CreateTeamCardTextRole {
+    color: var(--variable-collection-30);
+    font-family: "Inter-Medium", Helvetica;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0;
+    line-height: normal;
+    margin-top: -0.5px;
+    position: relative;
+    white-space: nowrap;
+
+}
+
+.CreateTeamCardimgSvgRole {
+    height: 16px;
+    position: relative;
+    width: 16px;
+}

@@ -1,27 +1,104 @@
-import{useState,useEffect} from "react";
+import { useState, useEffect } from "react";
 import "./EditMyCompanyProfile.css";
 import SideBar from "../../../components/SideBar/SideBar";
 import NavBar from "../../../components/NavBar/NavBar";
-import { Button} from "@mantine/core";
+import { Button } from "@mantine/core";
 import CurrentProject from "../../../components/CurrentProject/CurrentProject";
-import TeamOther from "../../../components/TeamOther/TeamOther";
 import EditTeamMyCompanyProfile from "../../../components/EditTeamMyCompanyProfile/EditTeamMyCompanyProfile";
+import { gql, useMutation } from "@apollo/client";
+
 function EditMyCompanyProfile() {
   const [receivedData, setReceivedData] = useState("");
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [companyName, setCompanyName] = useState("Company ABC");
+  const [domain, setDomain] = useState("www.companyabc.com");
+  const [description, setDescription] = useState(
+    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+  );
+  const [rate, setRate] = useState(4.9);
+  const [project, setProject] = useState("Project XYZ");
+  const [teams, setTeams] = useState([
+    { TeamName: "Team 1" },
+    { TeamName: "Team 2" },
+    { TeamName: "Team 3" },
+  ]);
+
   useEffect(() => {
     setIsDarkMode(receivedData === "dark");
   }, [receivedData]);
+
   const receiveDataFromChild = (data) => {
     setReceivedData(data);
   };
+
   useEffect(() => {
     document.getElementById("man").style.backgroundColor =
       receivedData === "light" ? "#fff" : "#000";
   }, [receivedData]);
+
+  const UPDATE_COMPANY_MUTATION = gql`
+    mutation UpdateCompany($companyId: Int!, $company: CompanyInput!) {
+      updateCompany(companyId: $companyId, company: $company) {
+        CompanyDescription
+        CompanyName
+        Domain
+        CreateDate
+        Project {
+          ProjectName
+        }
+        Teams {
+          TeamName
+        }
+        Rate
+      }
+    }
+  `;
+  const [updateCompany, { data, loading, error }] = useMutation(
+    UPDATE_COMPANY_MUTATION
+  );
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    if (name === "companyName") {
+      setCompanyName(value);
+    } else if (name === "domain") {
+      setDomain(value);
+    } else if (name === "description") {
+      setDescription(value);
+    } else if (name === "rate") {
+      setRate(parseFloat(value));
+    } else if (name === "project") {
+      setProject(value);
+    }
+  };
+
+  const handleProjectChange = (newProject) => {
+    setProject(newProject);
+  };
+  const handleRemoveTeamMember = (teamName) => {
+    setTeams(teams.filter((team) => team.TeamName !== teamName));
+  };
+
+  const handleSubmit = () => {
+    updateCompany({
+      variables: {
+        companyId: companyId,
+        company: {
+          CompanyName: companyName,
+          Domain: domain,
+          CompanyDescription: description,
+          Rate: rate,
+          Project: {
+            ProjectName: project,
+          },
+          Teams: teams,
+        },
+      },
+    });
+  };
   return (
     <div className="EditMyCompanyProfileAll" id="man">
-      <SideBar />
+      <SideBar colorSide={receivedData} />
       <div className="MainEditMyCompanyProfile">
         <NavBar sendDataToParent={receiveDataFromChild} />
         <div className="CenterEditMyCompanyProfile">
@@ -60,10 +137,16 @@ function EditMyCompanyProfile() {
             <div className="Part2EditCenter">
               <div className="DescriptionEditMyCompanyProfile">
                 <div className="CompanyName">
-                  <div className="C1">
-                    <span className="C1Text">Company Name</span>
-                    <span className="C1Number">
-                      4.9{" "}
+                  <div className="EditC1">
+                    <span className="EditC1Text">{companyName}</span>
+                    <span
+                      className="EditC1Number"
+                      type="number"
+                      name="rate"
+                      value={rate}
+                      onChange={handleInputChange}
+                    >
+                      4.9
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="17"
@@ -78,93 +161,113 @@ function EditMyCompanyProfile() {
                       </svg>
                     </span>
                   </div>
-                  <div className="C2">
-                    <span className="C2Text">Andrew Smith</span>
+                  <div className="EditC2">
+                    <span className="EditC2Text">Andrew Smith</span>
                   </div>
                 </div>
-                <div className="Domain">
-                  <div className="D1">
-                    <span className="D1Text">Domain</span>
+                <div className="EditDomain">
+                  <div className="EditD1">
+                    <span className="EditD1Text">{domain}</span>
                   </div>
-                  <div className="D2">
-                    <span className="D2Text">Company Domain</span>
+                  <div className="EditD2">
+                    <span className="EditD2Text">Company Domain</span>
                   </div>
                 </div>
-                <div className="CreateDate">
-                  <div className="CD1">
+                <div className="EditCreateDate">
+                  <div className="EditCD1">
                     <span className="CD1Text">Created Date</span>
                   </div>
-                  <div className="CD2">
-                    <span className="CD2Text">22/4/2022</span>
+                  <div className="EditCD2">
+                    <span className="EditCD2Text">22/4/2022</span>
                   </div>
                 </div>
               </div>
               <div className="ContentEditMyCompanyProfile">
                 <div className="Part1EditMyCompanyProfile">
                   <div className="DescriptionText">
-                    <div className={`${
-                  isDarkMode
-                    ? "DU1Dark"
-                    : "DU1"
-                }`}>Description</div>
-                    <div className="DU2">
-                      <p className="ParaD">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                        sed do eiusmod tempor incididunt ut labore et dolore
-                        magna aliqua. Ut enim ad minim veniam, quis nostrud
-                        exercitation ullamco laboris nisi
-                      </p>
+                    <div className={`${isDarkMode ? "EditDU1Dark" : "EditDU1"}`}>
+                      Description
+                    </div>
+                    <div className="EditDU2">
+                      <textarea
+                        cols="70"
+                        rows="4"
+                        name="description"
+                        placeholder="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. "
+                        className={`${
+                          isDarkMode ? "textareaDark" : "textareaLight"
+                        }`}
+                        value={description}
+                        onChange={handleInputChange}
+                      ></textarea>
                     </div>
                   </div>
                   <div className="InputsTextEditMyCompanyProfile">
-                    <div className={`${
-                  isDarkMode
-                    ? "GeneralInformationDark"
-                    : "GeneralInformation"
-                }`}>
+                    <div
+                      className={`${
+                        isDarkMode
+                          ? "GeneralInformationDark"
+                          : "GeneralInformation"
+                      }`}
+                    >
                       General Information
                     </div>
                     <div className="InputsMyCompanyProfile">
                       <div className="InputOverAll">
-                        <span className={`${
-                  isDarkMode
-                    ? "TextPartCompanyDark"
-                    : "TextPartCompany"
-                }`}>Name</span>
+                        <span
+                          className={`${
+                            isDarkMode
+                              ? "TextPartCompanyDark"
+                              : "TextPartCompany"
+                          }`}
+                        >
+                          Name
+                        </span>
                         <input
                           type="text"
+                          name="companyName"
                           placeholder="Company Name"
                           className="TextInput"
-                          />
+                          value={companyName}
+                          onChange={handleInputChange}
+                        />
                       </div>
                       <div className="InputOverAll">
-                        <span className={`${
-                  isDarkMode
-                    ? "TextPartCompanyDark"
-                    : "TextPartCompany"
-                }`}>Domain</span>
+                        <span
+                          className={`${
+                            isDarkMode
+                              ? "TextPartCompanyDark"
+                              : "TextPartCompany"
+                          }`}
+                        >
+                          Domain
+                        </span>
                         <input
                           type="text"
+                          name="domain"
                           placeholder="Domain"
                           className="TextInput"
+                          value={domain}
+                          onChange={handleInputChange}
                         />
                       </div>
                     </div>
                     <div className="ButtonEdit">
-                      <Button variant="filled" color="#388E3C" w={135} h={40}>
+                      <Button
+                        variant="filled"
+                        color="#388E3C"
+                        w={135}
+                        h={40}
+                        onClick={handleSubmit}
+                      >
                         Update Profile
                       </Button>
                       <Button
                         variant="transparent"
-                        color={`${
-                          isDarkMode
-                            ? "#fff"
-                            : "#000"
-                        }`}
+                        color={`${isDarkMode ? "#fff" : "#000"}`}
                         w={105}
                         h={30}
                         size="compact-md"
-                        
                       >
                         Reset
                       </Button>
@@ -173,44 +276,60 @@ function EditMyCompanyProfile() {
                 </div>
                 <div className="Part2EditUnderOther">
                   <div className="EditCurrentProjects">
-                    <div className={`${
-                  isDarkMode
-                    ? "EditCP1Dark"
-                    : "EditCP1"
-                }`}>Current Projects</div>
+                    <div
+                      className={`${isDarkMode ? "EditCP1Dark" : "EditCP1"}`}
+                    >
+                      Current Projects
+                    </div>
                     <div className="ChangeProject">
-                      <span className={`${
-                  isDarkMode
-                    ? "ChangeProjectTextDark"
-                    : "ChangeProjectText"
-                }`}>Change Project</span>
-                      <div className="ChangeProjectDivs">
-                        <span className="TextChange">Project A</span>
-                      </div>
+                      <span
+                        className={`${
+                          isDarkMode
+                            ? "ChangeProjectTextDark"
+                            : "ChangeProjectText"
+                        }`}
+                      >
+                        Change Project
+                      </span>
+                      <input
+                        type="text"
+                        className="ChangeProjectDivs"
+                        value={project}
+                        onChange={(e) => handleProjectChange(e.target.value)}
+                      />
                     </div>
                     <div className="CardOfCurrentProject">
-                      <CurrentProject />
+                      <CurrentProject project={project} />
                     </div>
                   </div>
                   <div className="PartTeams">
-                    <div className={`${
-                  isDarkMode
-                    ? "EditTeamsDark"
-                    : "EditTeams"
-                }`} >Teams</div>
+                    <div
+                      className={`${
+                        isDarkMode ? "EditTeamsDark" : "EditTeams"
+                      }`}
+                    >
+                      Teams
+                    </div>
                     <div className="CreateTeam">
-                      <span className={`${
-                  isDarkMode
-                    ? "ChangeTeamTextDark"
-                    : "ChangeTeamText"
-                }`} >Create Team</span>
+                      <span
+                        className={`${
+                          isDarkMode ? "ChangeTeamTextDark" : "ChangeTeamText"
+                        }`}
+                      >
+                        Create Team
+                      </span>
                       <button className="ChangeTeamDivs">
                         <span className="TextChange">Create Team</span>
                       </button>
                     </div>
                     <div className="EditCurrentTeams">
-                      <EditTeamMyCompanyProfile />
-                      <EditTeamMyCompanyProfile />
+                      {teams.map((team) => (
+                        <EditTeamMyCompanyProfile
+                          key={team.TeamName}
+                          team={team}
+                          onRemove={handleRemoveTeamMember}
+                        />
+                      ))}
                     </div>
                   </div>
                 </div>

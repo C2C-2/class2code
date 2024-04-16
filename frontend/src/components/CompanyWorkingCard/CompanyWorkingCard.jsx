@@ -1,19 +1,24 @@
-import React from "react";
-import "./CompanyWorking.css";
+import  { useEffect, useState } from "react"
+import "./CompanyWorkingCard.css";
 import Dir from "./Rectangle.png";
-function CompanyWorking() {
+function CompanyWorkingCard({colorProp ,company }) {
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  useEffect(() => {
+    setIsDarkMode(colorProp === "dark");
+  }, [colorProp]);
+  console.log(colorProp);
   return (
     <div className="CompanyWorkingAll">
       <div className="CompanyWorkingDesign">
         <div className="CompanyWorkingPart1">
           <div className="PartTitle">
-            <span className="Title1">Emily Miller</span>
-            <span className="Title2">VP of HR</span>
+            <span className="Title1">{company.CompanyName}</span>
+            <span className="Title2">{company.Domain}</span>
           </div>
           <div className="PartParagraph">
             <p className="ParaCompanyWorking">
-              Quam elementum accumsan vitae habitant mattis. Enim sit placerat
-              quis habitasse Odio pul.
+            {company.CompanyDescription}
             </p>
           </div>
         </div>
@@ -32,4 +37,4 @@ function CompanyWorking() {
   );
 }
 
-export default CompanyWorking;
+export default CompanyWorkingCard;
