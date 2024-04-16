@@ -1,4 +1,4 @@
-import "./GreenBox.css";
+import "./GreenBoxFile.css";
 
 const GreenBox2 = ({ title, removeSkill, skillId }) => {
   const handleRemoveSkill = () => {

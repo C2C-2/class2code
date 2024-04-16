@@ -1,0 +1,145 @@
+#LoginPage {
+  height: 100vh;
+}
+
+#mainLogo {
+  position: absolute;
+  top: 1vw;
+  left: 1vw;
+  width: 3.6vw;
+  z-index: 10;
+  animation: leftToRight 1s ease-in-out;
+}
+
+.LoginImageSvg {
+  box-shadow: 5px 20px 60px 5px rgba(0, 0, 0, 0.6);
+}
+
+.LogInFigmaMainPart1UnderText {
+  position: absolute;
+  bottom: 1vw;
+  left: 1vw;
+  background: var(--light, #f4f4f4);
+  padding: 0.5vw;
+  border-radius: 16px;
+  z-index: 10;
+  animation: leftToRight 1s ease-in-out;
+}
+
+.LoginImage {
+  background-color: #283739;
+  height: 100%;
+  display: flex;
+  gap: 6vw;
+  align-items: center;
+  padding: 4vw;
+  border-top-right-radius: 12px;
+  border-bottom-right-radius: 12px;
+  /* justify-content: center; */
+  animation: leftToRight 1s ease-in-out;
+}
+.titles {
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+  justify-content: center;
+  height: 100%;
+  /* padding: 4vw; */
+  /* justify-content: space-around; */
+  gap: 2.5vw;
+  animation: leftToRight 1s ease-in-out;
+}
+
+.LogInFigmaMainPart1Center1 {
+  text-align: center;
+  background: rgb(245, 249, 245, 0.5);
+  padding: 1vw;
+  border-radius: 10px;
+  background: var(--light, #f2f9f1);
+}
+
+.LogInFigmaMainPart1Center1 h4 {
+  color: var(--dark, #283739);
+  font-family: Inter;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 32px;
+  text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
+}
+
+.LogInFigmaMainPart1Center1 h4 b {
+  color: #388e3c;
+}
+
+.LogInFigmaMainPart1Center2Text {
+  color: white;
+  font-family: Inter;
+  font-size: 17px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 32px;
+  text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.LoginForm {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 2vw;
+  padding: 3vw 2vw;
+  animation: FadeIn 1s ease-in-out;
+}
+
+.LoginFormLogo {
+  display: flex;
+  gap: 1vw;
+  align-items: center;
+}
+
+.LoginFormLogoImage {
+  width: 3vw;
+}
+
+#ForgetPassword {
+  margin-top: 0 !important;
+}
+
+.LogInFigmaMainPart2DesignCenter1 h4 {
+  padding-bottom: 0.5vw;
+  color: var(--dark, #283739);
+  font-style: normal;
+  font-weight: 800;
+}
+
+.LogInFigmaMainPart2DesignCenter1 p {
+  color: var(--dark, #283739);
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: 0.15px;
+  padding-bottom: 1vw;
+  font-size: 14px;
+}
+
+@keyframes leftToRight {
+  0% {
+    /* Start state */
+    transform: translateX(-300px);
+  }
+  100% {
+    /* End state */
+    transform: translateX(0px);
+  }
+}
+
+@keyframes FadeIn {
+  0% {
+    /* Start state */
+    opacity: 0;
+  }
+  100% {
+    /* End state */
+    opacity: 1;
+  }
+}

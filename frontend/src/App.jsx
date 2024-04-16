@@ -3,7 +3,7 @@ import { MantineProvider } from "@mantine/core";
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 import SecondSignup from "./pages/SecondSignup/SecondSignup";
 import SignUpFigma from "./pages/SignUp/SignUpFigma";
-import LogInFigma from "./pages/LogIn/LogInFigma";
+import LogInFigma from "./pages/LogIn/Login";
 import AIChat from "./pages/AI Chat/AIChatDef/AIChat";
 import AIChatResponse from "./pages/AI Chat/AIChatResponse/AIChatResponse";
 import MyCompanies from "./pages/CompanyPages/MyCompanies/MyCompanies";
@@ -33,6 +33,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import EditPost from "./pages/CompanyAdsPages/EditPost/EditPost";
 import EditTeam from "./pages/TeamPages/EditTeam/EditTeam";
 import Chat from "./pages/chat/Chat";
+import { useEffect, useState } from "react";
 function App() {
   const client = new ApolloClient({
     cache: new InMemoryCache(),
@@ -43,10 +44,39 @@ function App() {
       <MantineProvider>
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/Dashboard" element={<Dashboard />} />
-            <Route path="/AvailableProject" element={<AvailableProjects />} />
-            <Route path="/Posts" element={<ShowAllPosts />} />
+            <Route path="/Login" element={<LogInFigma />} />
+            <Route
+              path="/"
+              element={
+                <TokenChecker>
+                  <Dashboard />
+                </TokenChecker>
+              }
+            />
+            <Route
+              path="/Dashboard"
+              element={
+                <TokenChecker>
+                  <Dashboard />
+                </TokenChecker>
+              }
+            />
+            <Route
+              path="/AvailableProject"
+              element={
+                <TokenChecker>
+                  <AvailableProjects />
+                </TokenChecker>
+              }
+            />
+            <Route
+              path="/Posts"
+              element={
+                <TokenChecker>
+                  <ShowAllPosts />
+                </TokenChecker>
+              }
+            />
             <Route path="/Chat" element={<Chat />} />
             <Route path="/MyCompaniesTeams" element={<MyCompaniesTeams />} />
             <Route path="/CreateTeam" element={<CreateTeam />} />
@@ -57,7 +87,7 @@ function App() {
             <Route path="/EditTeam" element={<EditTeam />} />
             <Route path="/ProjectPage/:projectId" element={<ProjectPage />} />
             <Route path="/TaskPage" element={<TaskPage />} />
-            {/* <Route path="/TeamsWorkingWith" element={<MyCompaniesTeams/>}/> */}
+            <Route path="/TeamsWorkingWith" element={<MyCompaniesTeams />} />
             <Route path="/CreateCompany" element={<CreateCompany />} />
             <Route path="/MyCompanies" element={<MyCompanies />} />
             <Route path="/CompanyWorkingWith" element={<CompanyWorking />} />
@@ -69,5 +99,16 @@ function App() {
     </ApolloProvider>
   );
 }
+
+const TokenChecker = ({ children }) => {
+  if (
+    !localStorage.getItem("token") ||
+    localStorage.getItem("token") === "null"
+  ) {
+    window.location.replace("/Login");
+  } else {
+    return children;
+  }
+};
 
 export default App;

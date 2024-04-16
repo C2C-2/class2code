@@ -1,7 +1,7 @@
 import "./CompanyWorking.css";
 import { useEffect, useState } from "react";
-import SideBar from "C:/Users/osama/Desktop/class2code/frontend/src/components/SideBar/SideBar.jsx";
-import NavBar from "C:/Users/osama/Desktop/class2code/frontend/src/components/NavBar/NavBar.jsx";
+import SideBar from "../../../components/SideBar/SideBar.jsx";
+import NavBar from "../../../components/NavBar/NavBar.jsx";
 import { Button } from "@mantine/core";
 import { useQuery, gql } from "@apollo/client";
 import CompanyWorkingCard from "../../../components/CompanyWorkingCard/CompanyWorkingCard";
