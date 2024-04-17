@@ -1,45 +1,17 @@
 import "./SideBar.css";
 import ProImg from "./Avatar.png";
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { Box, Button, Divider, Menu, NavLink, rem, Text } from "@mantine/core";
-import {
-  IconActivity,
-  IconChevronRight,
-  IconFingerprint,
-  IconGauge,
-} from "@tabler/icons-react";
+import { Box, Button, Divider, NavLink } from "@mantine/core";
+import { IconChevronRight, IconGauge } from "@tabler/icons-react";
 import { BsChatDots, BsPostcard, BsClipboard2Data } from "react-icons/bs";
 import { CiSettings } from "react-icons/ci";
 import { RiTeamLine } from "react-icons/ri";
-import { AiOutlineTeam ,AiOutlineQuestionCircle } from "react-icons/ai";
+import { AiOutlineTeam, AiOutlineQuestionCircle } from "react-icons/ai";
 import { CgProfile } from "react-icons/cg";
-import { FaTeamspeak, FaUser, FaUserFriends } from "react-icons/fa";
 import { Paths } from "../../assets/Paths";
 
-function SideBar({ colorSide }) {
+function SideBar() {
   const [isDarkMode, setIsDarkMode] = useState(false);
-  const [isTeamDropdownOpen, setTeamDropdownOpen] = useState(false);
-  const [isCompanyDropdownOpen, setCompanyDropdownOpen] = useState(false);
-  const [isSettingDropdownOpen, setSettingDropdownOpen] = useState(false);
-  const [selectedText, setSelectedText] = useState(null);
-
-  useEffect(() => {
-    setIsDarkMode(colorSide === "dark");
-  }, [colorSide]);
-
-  const toggleTeamDropdown = () => {
-    setTeamDropdownOpen(!isTeamDropdownOpen);
-  };
-  const toggleSettingDropdown = () => {
-    setSettingDropdownOpen(!isSettingDropdownOpen);
-  };
-  const toggleCompanyDropdown = () => {
-    setCompanyDropdownOpen(!isCompanyDropdownOpen);
-  };
-  const handleTextClick = (text) => {
-    setSelectedText(selectedText === text ? null : text);
-  };
 
   const data = [
     {
@@ -63,27 +35,30 @@ function SideBar({ colorSide }) {
       link: Paths.AvailableProject,
     },
     {
-      icon: AiOutlineTeam ,
+      icon: AiOutlineTeam,
       label: "My Teams",
       rightSection: <IconChevronRight size="1rem" stroke={1.5} />,
       links: [
-        { label: "My companies Teams", link:Paths.MyCompaniesTeams  },
-        { label: "Teams I am working In it", link: Paths.TeamsWorkingWith},
+        { label: "My companies Teams", link: Paths.MyCompaniesTeams },
+        { label: "Teams I am working In it", link: Paths.TeamsWorkingWith },
       ],
     },
     {
-    icon: RiTeamLine ,
-    label: "My Companies",
-    rightSection: <IconChevronRight size="1rem" stroke={1.5} />,
-    links: [
-      { label: "Create Company", link: Paths.CreateCompany },
-      { label: "My Companies", link: Paths.MyCompanies},
-      { label: "Companies I am working in it ", link: Paths.CompanyWorkingWith},
-      { label: "Companies Tasks ", link: Paths.MyCompanyTask},
-    ],
-  },
+      icon: RiTeamLine,
+      label: "My Companies",
+      rightSection: <IconChevronRight size="1rem" stroke={1.5} />,
+      links: [
+        { label: "Create Company", link: Paths.CreateCompany },
+        { label: "My Companies", link: Paths.MyCompanies },
+        {
+          label: "Companies I am working in it ",
+          link: Paths.CompanyWorkingWith,
+        },
+        { label: "Companies Tasks ", link: Paths.MyCompanyTask },
+      ],
+    },
   ];
-  const data2=[
+  const data2 = [
     {
       icon: CgProfile,
       label: "Profile",
@@ -93,7 +68,7 @@ function SideBar({ colorSide }) {
       icon: CiSettings,
       label: "Settings",
       rightSection: <IconChevronRight size="1rem" stroke={1.5} />,
-      links:[
+      links: [
         {
           label: "Change Password",
           link: Paths.ChangePassword,
@@ -101,15 +76,15 @@ function SideBar({ colorSide }) {
         {
           label: "Change Email",
           link: Paths.ChangeEmail,
-        }
-      ]
+        },
+      ],
     },
-    {  icon:AiOutlineQuestionCircle,
+    {
+      icon: AiOutlineQuestionCircle,
       label: "Any Question",
       link: Paths.AnyQuestion,
-    }
-  ]
-
+    },
+  ];
 
   return (
     <div className={`${isDarkMode ? "SideBarMainDark" : "SideBarMain"}`}>
@@ -152,7 +127,7 @@ function SideBar({ colorSide }) {
       <Divider my="md" w={"100%"} />
       <div className="SideBarSettings">
         <span className="SideBarSettingText">Setting</span>
-        <SideBarMenuCard2 data2={data2} />
+        <SideBarMenuCard data={data2} />
         <div className="SideBarSettingsCenter">
           <div className="SideBarSettingButton">
             <Button
@@ -190,14 +165,14 @@ function SideBar({ colorSide }) {
   );
 }
 
-const SideBarMenuCard = ({data}) => {
+const SideBarMenuCard = ({ data }) => {
   const [active, setActive] = useState(0);
 
   const items = data?.map((item, index) => {
     if (!item.rightSection) {
       return (
         <NavLink
-          href="#required-for-focus"
+          href={item.link}
           key={item.label}
           active={index === active}
           label={item.label}
@@ -205,8 +180,8 @@ const SideBarMenuCard = ({data}) => {
           leftSection={<item.icon size="1rem" stroke={1.5} />}
           onClick={() => {
             setActive(index);
-            window.location.replace(item.link);
           }}
+          color="green"
         />
       );
     } else {
@@ -221,15 +196,15 @@ const SideBarMenuCard = ({data}) => {
           leftSection={<item.icon size="1rem" stroke={1.5} />}
           onClick={() => {
             setActive(index);
-            item.onClick;
           }}
+          color="green"
         >
           {item?.links?.map((child) => (
             <NavLink
+              href={child.link}
               key={child.label}
               label={child.label}
               description={child.description}
-              link={child.link}
             />
           ))}
         </NavLink>
@@ -238,58 +213,6 @@ const SideBarMenuCard = ({data}) => {
   });
 
   return <Box w={220}>{items}</Box>;
-};
-
-
-
-const SideBarMenuCard2 = ({ data2  }) => {
-  const [active, setActive] = useState(0);
-
-  const itemsTwo = data2?.map((item, index) => {
-    if (!item.rightSection) {
-      return (
-        <NavLink
-          href="#required-for-focus"
-          key={item.label}
-          active={index === active}
-          label={item.label}
-          description={item.description}
-          leftSection={<item.icon size="1rem" stroke={1.5} />}
-          onClick={() => {
-            setActive(index);
-            window.location.replace(item.link);
-          }}
-        />
-      );
-    } else {
-      return (
-        <NavLink
-          href="#required-for-focus"
-          key={item.label}
-          active={index === active}
-          label={item.label}
-          description={item.description}
-          rightSection={item.rightSection}
-          leftSection={<item.icon size="1rem" stroke={1.5} />}
-          onClick={() => {
-            setActive(index);
-            item.onClick;
-          }}
-        >
-          {item?.links?.map((child) => (
-            <NavLink
-              key={child.label}
-              label={child.label}
-              description={child.description}
-              link={child.link}
-            />
-          ))}
-        </NavLink>
-      );
-    }
-  });
-
-  return <Box w={220}>{itemsTwo}</Box>;
 };
 
 export default SideBar;

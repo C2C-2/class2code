@@ -1,15 +1,12 @@
 import React from "react";
 import "./SideBarAI.css";
-import { Button } from '@mantine/core';
+import { Button } from "@mantine/core";
 function SideBarAI() {
   return (
     <div className="MainBar">
       <div className="AIBar">
         <div className="AITop">
-          <span className="TextAll">
-            <span className="ChatText1">HORIZON</span>
-            <span className="ChatText2"> AI FREE</span>
-          </span>
+          <h4 className="ChatText1">Class2Code</h4>
           <hr className="LineAi"></hr>
         </div>
         <div className="AIMid">
@@ -26,7 +23,7 @@ function SideBarAI() {
                 fill="#4318FF"
               />
             </svg>
-            <span className="ChatUiText">Chat UI</span>
+            <span className="ChatUiText">Chat</span>
           </div>
           <div className="MyProject">
             <svg
@@ -41,9 +38,24 @@ function SideBarAI() {
                 fill="#718096"
               />
             </svg>
-            <span className="MyProjectText">My Projects</span>
+            <span className="MyProjectText">My Project1</span>
           </div>
-          <div className="Template">
+          <div className="MyProject">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="18"
+              height="20"
+              viewBox="0 0 18 20"
+              fill="none"
+            >
+              <path
+                d="M9.64996 17.2571C9.26321 17.568 8.71531 17.568 8.32856 17.2571L1.72158 11.9489C1.33483 11.638 0.797672 11.638 0.410922 11.9489C-0.136974 12.3931 -0.136974 13.2482 0.410922 13.6924L7.67323 19.5336C8.44673 20.1555 9.53178 20.1555 10.316 19.5336L17.5783 13.6924C18.1262 13.2482 18.1262 12.3931 17.5783 11.9489L17.5676 11.9378C17.1808 11.6269 16.6437 11.6269 16.2569 11.9378L9.64996 17.2571ZM10.3268 13.9034L17.5891 8.06219C18.137 7.61799 18.137 6.7518 17.5891 6.30761L10.3268 0.466408C9.55327 -0.155469 8.46822 -0.155469 7.68398 0.466408L0.421665 6.31871C-0.126231 6.76291 -0.126231 7.62909 0.421665 8.07329L7.68398 13.9145C8.45748 14.5364 9.55327 14.5364 10.3268 13.9034Z"
+                fill="#718096"
+              />
+            </svg>
+            <span className="MyProjectText">My Project2</span>
+          </div>
+          {/* <div className="Template">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="28"
@@ -64,24 +76,40 @@ function SideBarAI() {
               </defs>
             </svg>
             <span className="TemplateText">Templates</span>
-          </div>
-          <div className="OtherPage">
+          </div> */}
+          {/* <div className="OtherPage">
             <div className="OtherPage1">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 16 18" fill="none">
-  <path d="M14.4181 15.2341H4.37314C3.94076 15.2341 3.56715 15.0774 3.25229 14.7642C2.93741 14.4509 2.77997 14.0792 2.77997 13.649V1.57389C2.77997 1.1437 2.93741 0.77384 3.25229 0.464304C3.56715 0.154768 3.94076 0 4.37314 0H10.5408C10.7532 0 10.9585 0.0424702 11.1568 0.127411C11.355 0.212364 11.53 0.326536 11.6816 0.469926L15.5277 4.29657C15.6718 4.44746 15.7866 4.62152 15.8719 4.81875C15.9573 5.01599 16 5.22029 16 5.43162V13.649C16 14.0792 15.8426 14.4509 15.5277 14.7642C15.2128 15.0774 14.843 15.2341 14.4181 15.2341ZM14.4181 5.17074L10.7231 1.57389V3.98473C10.7231 4.31874 10.8379 4.59992 11.0673 4.82825C11.2969 5.05658 11.5795 5.17074 11.9152 5.17074H14.4181ZM1.58186 18C1.14951 18 0.777772 17.8452 0.466663 17.5357C0.155554 17.2262 0 16.8563 0 16.4261V5.01615C0 4.79156 0.0753877 4.60425 0.226163 4.45424C0.376952 4.30423 0.565208 4.22922 0.790931 4.22922C1.01667 4.22922 1.20492 4.30423 1.3557 4.45424C1.50648 4.60425 1.58186 4.79156 1.58186 5.01615V16.4261H10.8142C11.04 16.4261 11.2282 16.5011 11.379 16.6512C11.5298 16.8012 11.6052 16.9885 11.6052 17.2131C11.6052 17.4377 11.5298 17.625 11.379 17.7749C11.2282 17.925 11.04 18 10.8142 18H1.58186Z" fill="#718096"/>
-</svg>
-<span className="OtherPageText">Other Page</span>
-</div>
-<div className="SubOther">
-    <span className="SubText">Prompt Page</span>
-    <span className="SubText">Register</span>
-    <span className="SubText">Sign In</span>    
-
-</div>
-          </div>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 16 18"
+                fill="none"
+              >
+                <path
+                  d="M14.4181 15.2341H4.37314C3.94076 15.2341 3.56715 15.0774 3.25229 14.7642C2.93741 14.4509 2.77997 14.0792 2.77997 13.649V1.57389C2.77997 1.1437 2.93741 0.77384 3.25229 0.464304C3.56715 0.154768 3.94076 0 4.37314 0H10.5408C10.7532 0 10.9585 0.0424702 11.1568 0.127411C11.355 0.212364 11.53 0.326536 11.6816 0.469926L15.5277 4.29657C15.6718 4.44746 15.7866 4.62152 15.8719 4.81875C15.9573 5.01599 16 5.22029 16 5.43162V13.649C16 14.0792 15.8426 14.4509 15.5277 14.7642C15.2128 15.0774 14.843 15.2341 14.4181 15.2341ZM14.4181 5.17074L10.7231 1.57389V3.98473C10.7231 4.31874 10.8379 4.59992 11.0673 4.82825C11.2969 5.05658 11.5795 5.17074 11.9152 5.17074H14.4181ZM1.58186 18C1.14951 18 0.777772 17.8452 0.466663 17.5357C0.155554 17.2262 0 16.8563 0 16.4261V5.01615C0 4.79156 0.0753877 4.60425 0.226163 4.45424C0.376952 4.30423 0.565208 4.22922 0.790931 4.22922C1.01667 4.22922 1.20492 4.30423 1.3557 4.45424C1.50648 4.60425 1.58186 4.79156 1.58186 5.01615V16.4261H10.8142C11.04 16.4261 11.2282 16.5011 11.379 16.6512C11.5298 16.8012 11.6052 16.9885 11.6052 17.2131C11.6052 17.4377 11.5298 17.625 11.379 17.7749C11.2282 17.925 11.04 18 10.8142 18H1.58186Z"
+                  fill="#718096"
+                />
+              </svg>
+              <span className="OtherPageText">Other Page</span>
+            </div>
+            <div className="SubOther">
+              <span className="SubText">Prompt Page</span>
+              <span className="SubText">Register</span>
+              <span className="SubText">Sign In</span>
+            </div>
+          </div> */}
         </div>
         <div className="Under">
-        <Button variant="filled" color="#388E3C" size="md" radius="xl" className="Button">New</Button>
+          <Button
+            variant="filled"
+            color="#388E3C"
+            size="md"
+            radius="xl"
+            className="Button"
+          >
+            New
+          </Button>
         </div>
       </div>
     </div>
