@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { FileButton, Button, Group, Text } from "@mantine/core";
 import upload from "./feather_upload-cloud.png";
 import Young from "./young man sitting with laptop and waving.png";
-import GreenBox2 from "../../components/GreenBox/GreenBox2";
+import GreenBox2 from "../../components/greenBox/GreenBox";
 import SideBar from "../../components/SideBar/SideBar";
 import NavBar from "../../components/NavBar/NavBar";
 import { gql, useMutation, useQuery } from "@apollo/client";

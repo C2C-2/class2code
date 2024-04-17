@@ -1,6 +1,6 @@
 import {useState,useEffect} from "react";
 import "./CreateCompany.css";
-import SideBar from "C:/Users/osama/Desktop/class2code/frontend/src/components/SideBar/SideBar.jsx";
+import SideBar from "../../../components/SideBar/SideBar";
 import NavBar from "../../../components/NavBar/NavBar";
 import { Button } from "@mantine/core";
 import GreenBox2 from "../../../components/GreenBox/GreenBox2";

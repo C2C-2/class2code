@@ -1,6 +1,15 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { child, getDatabase, push, ref, set, onValue, update } from "firebase/database";
+import {
+  getDatabase,
+  child,
+  push,
+  ref,
+  set,
+  onValue,
+  update,
+} from "firebase/database";
+import { getAuth } from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCjlW-VgZ05J5gWwLRsfRuUjsETmJV5lJI",
@@ -44,3 +53,5 @@ export function updateData(path, data) {
   update(ref(database), updates);
   return newPostKey;
 }
+
+export const auth = getAuth(app);

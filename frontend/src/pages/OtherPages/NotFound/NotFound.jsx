@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import "./NotFound.css";
-import { Button } from '@mantine/core';
+import { Button } from "@mantine/core";
 import { Link } from "react-router-dom";
-import NewNavBar from "../../../components/NewNavBar/NewNavBar";
+
 function NotFound() {
   const [receivedData, setReceivedData] = useState("");
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -12,13 +12,13 @@ function NotFound() {
   const receiveDataFromChild = (data) => {
     setReceivedData(data);
   };
-  useEffect(() => {
-    document.getElementById("man").style.backgroundColor =
-      receivedData === "light" ? "#fff" : "#000";
-  }, [receivedData]);
+  // useEffect(() => {
+  //   document.getElementById("man").style.backgroundColor =
+  //     receivedData === "light" ? "#fff" : "#000";
+  // }, [receivedData]);
   return (
     <div className="NotFoundAll" id="man">
-      <NewNavBar sendDataToParent={receiveDataFromChild} />
+      {/* <NewNavBar sendDataToParent={receiveDataFromChild} /> */}
       <div className="NotFoundCenter">
         <svg
           width="580"
@@ -605,11 +605,15 @@ function NotFound() {
           />
         </svg>
         <span className="NotFoundText1">Oh no. We lost this page</span>
-        <p className={`${
-                isDarkMode ? "NotFoundText2Dark" : "NotFoundText2"
-              }`}>We searched everywhere but couldn’t find what  you’re looking for.
-Let’s find a better place for you to go.</p>
-<Link to="/Dashboard"><Button variant="filled" color="#388E3C" radius="lg" h={45}>Back to homepage</Button></Link>
+        <p className={`${isDarkMode ? "NotFoundText2Dark" : "NotFoundText2"}`}>
+          We searched everywhere but couldn’t find what you’re looking for.
+          Let’s find a better place for you to go.
+        </p>
+        <Link to="/Dashboard">
+          <Button variant="filled" color="#388E3C" radius="lg" h={45}>
+            Back to homepage
+          </Button>
+        </Link>
       </div>
     </div>
   );

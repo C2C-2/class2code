@@ -1,8 +1,8 @@
 import "./LightMyCompanies.css";
 import { useEffect, useState } from "react";
 import { Button } from "@mantine/core";
-import SideBar from "C:/Users/osama/Desktop/class2code/frontend/src/components/SideBar/SideBar.jsx";
-import NavBar from "C:/Users/osama/Desktop/class2code/frontend/src/components/NavBar/NavBar.jsx";
+import SideBar from "../../../components/SideBar/SideBar";
+import NavBar from "../../../components/NavBar/NavBar";
 import MyCompaniesCard from "../../../components/MyCompaniesCard/MyCompaniesCard";
 import { useQuery, gql } from "@apollo/client";
 import { Link } from "react-router-dom";

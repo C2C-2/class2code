@@ -3,7 +3,7 @@ import { MantineProvider } from "@mantine/core";
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 import SecondSignup from "./pages/SecondSignup/SecondSignup";
 import SignUpFigma from "./pages/SignUp/SignUpFigma";
-import LogInFigma from "./pages/LogIn/LogInFigma";
+import LogInFigma from "./pages/LogIn/Login";
 import AIChat from "./pages/AI Chat/AIChatDef/AIChat";
 import AIChatResponse from "./pages/AI Chat/AIChatResponse/AIChatResponse";
 import MyCompanies from "./pages/CompanyPages/MyCompanies/MyCompanies";
@@ -33,6 +33,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import EditPost from "./pages/CompanyAdsPages/EditPost/EditPost";
 import EditTeam from "./pages/TeamPages/EditTeam/EditTeam";
 import Chat from "./pages/chat/Chat";
+import { useEffect, useState } from "react";
+import { Paths } from "./assets/Paths";
 function App() {
   const client = new ApolloClient({
     cache: new InMemoryCache(),
@@ -65,11 +67,27 @@ function App() {
             <Route path="*" element={<NotFound />} />
             <Route path="/LogIn" element={<LogInFigma/>}></Route>
             <Route path="/SignUp" element={<SignUpFigma/>}></Route>
+            <Route path="/ForgetPassword" element={<ForgetPassword/>}/>
+            <Route path="/ContactUs" element={<ContactUs/>}/>
+            <Route path="/CompanyProfile" element={<EditMyCompanyProfile/>}/>
+            <Route path="/OtherCompanyProfile" element={<OtherCompanyProfile/>}/>
+            
           </Routes>
         </BrowserRouter>
       </MantineProvider>
     </ApolloProvider>
   );
 }
+
+const TokenChecker = ({ children }) => {
+  if (
+    !localStorage.getItem("token") ||
+    localStorage.getItem("token") === "null"
+  ) {
+    window.location.replace(Paths.Login);
+  } else {
+    return children;
+  }
+};
 
 export default App;

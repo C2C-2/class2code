@@ -1,31 +1,57 @@
-import {useState} from "react";
+import { useState } from "react";
 import "./ForgetPassword.css";
 import Logo from "./logo2 14.png";
-import { Button } from "@mantine/core";
-import { useMutation, gql } from "@apollo/client";
-const FORGET_PASSWORD = gql`
-  mutation ForgetPassword($email: String!) {
-    forgetPassword(email: $email)
-  }
-`;
-function ForgetPassword() {
-  const [email, setEmail] = useState("");
-  const [forgetPassword, { loading, error }] = useMutation(FORGET_PASSWORD);
+import { Button, TextInput } from "@mantine/core";
+import { sendPasswordResetEmail } from "firebase/auth";
+import { auth } from "../../../config/firebase.js";
+import { Paths } from "../../../assets/Paths";
 
-  const handleForgetPassword = async () => {
+import Alert from "../../../components/Alert/AlertBox.jsx";
+function ForgetPassword() {
+  const [error, setError] = useState(null);
+  const [info, setInfo] = useState(null);
+  const [email, setEmail] = useState("");
+
+  const handleForgetPassword = async (e) => {
+    e.preventDefault();
     try {
-      await forgetPassword({ variables: { email } });
-      // Handle success, maybe show a message to the user
-    } catch (error) {
-      // Handle error, maybe show an error message to the user
-      console.error("Error sending forget password request:", error);
+      if (!email) {
+        setError("Email is required");
+        const time = setTimeout(() => setError(null), 3000);
+        return () => clearTimeout(time);
+      }
+
+      if (!/\S+@\S+\.\S+/.test(email)) {
+        setError("Invalid email");
+        const time = setTimeout(() => setError(null), 3000);
+        return () => clearTimeout(time);
+      }
+
+      await sendPasswordResetEmail(auth, email);
+      setInfo("Check your email for password reset link");
+      const time = setTimeout(() => setInfo(null), 3000);
+      return () => clearTimeout(time);
+    } catch (a) {
+      setError(a.message);
+      const time = setTimeout(() => setError(null), 3000);
+      return () => clearTimeout(time);
     }
   };
   return (
     <div className="ForgetPasswordAll">
+      {error && <Alert color="red" text={error} title={"Error"} />}
+      {info && <Alert color="green" text={info} title={"Info"} />}
       <div className="ForgetPasswordPart1">
         <img src={Logo} alt="Logo" className="ForgetPasswordImg" />
-        <Button variant="filled" color="#283739" w={120} h={45}>
+        <Button
+          variant="filled"
+          color="green"
+          w={120}
+          h={45}
+          onClick={() => {
+            window.location.replace(Paths.Login);
+          }}
+        >
           Log In
         </Button>
       </div>
@@ -41,35 +67,29 @@ function ForgetPassword() {
             code to your email.
           </p>
           <div className="ForgetPasswordInput">
-            <span className="ForgetPasswordLabelText">Email</span>
-            <input
-              type="email"
+            <TextInput
+              label="Email"
               placeholder="mail@abc.com"
-              className="ForgetPasswordTextInput"
+              mt="md"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              w={"100%"}
             />
           </div>
           <Button
             variant="filled"
-            color="#388E3C"
+            color="#283739"
             w="100%"
             h={50}
             onClick={handleForgetPassword}
-            disabled={loading || email.trim() === ""}
           >
-            <span className="ForgetPasswordButton">
-              {loading ? "Sending..." : "Continue"}
-            </span>
+            Send
           </Button>
-          {error && (
-            <p className="ForgetPasswordError">
-              Error: {error.message || "An error occurred."}
-            </p>
-          )}
         </div>
       </div>
-      <div className="ForgetPasswordUnder" ><span>@ 2024 Class2Code </span></div>
+      <div className="ForgetPasswordUnder">
+        <span>@ 2024 Class2Code </span>
+      </div>
     </div>
   );
 }
