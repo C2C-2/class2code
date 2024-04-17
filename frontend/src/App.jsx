@@ -79,32 +79,136 @@ function App() {
                 </TokenChecker>
               }
             />
-            <Route path={Paths.Chat} element={<Chat />} />
+            <Route
+              path={Paths.Chat}
+              element={
+                <TokenChecker>
+                  <Chat />
+                </TokenChecker>
+              }
+            />
             <Route
               path={Paths.MyCompaniesTeams}
-              element={<MyCompaniesTeams />}
+              element={
+                <TokenChecker>
+                  <MyCompaniesTeams />
+                </TokenChecker>
+              }
             />
-            <Route path={Paths.CreateTeam} element={<CreateTeam />} />
-            <Route path={Paths.CreateTask} element={<CreateTask />} />
-            <Route path={Paths.AddPost} element={<AddPost />} />
-            <Route path={Paths.EditPost} element={<EditPost />} />
-            <Route path={Paths.EditTask} element={<EditTask />} />
-            <Route path={Paths.EditTeam} element={<EditTeam />} />
-            <Route path={Paths.ProjectPage} element={<ProjectPage />} />
-            <Route path={Paths.TaskPage} element={<TaskPage />} />
             <Route
-              path={Paths.TeamsWorkingWith}
-              element={<MyCompaniesTeams />}
+              path={Paths.CreateTeam}
+              element={
+                <TokenChecker>
+                  <CreateTeam />
+                </TokenChecker>
+              }
             />
-            <Route path={Paths.CreateCompany} element={<CreateCompany />} />
-            <Route path={Paths.MyCompanies} element={<MyCompanies />} />
+            <Route
+              path={Paths.CreateTask}
+              element={
+                <TokenChecker>
+                  <CreateTask />
+                </TokenChecker>
+              }
+            />
+            <Route
+              path={Paths.AddPost}
+              element={
+                <TokenChecker>
+                  <AddPost />
+                </TokenChecker>
+              }
+            />
+            <Route
+              path={Paths.EditPost}
+              element={
+                <TokenChecker>
+                  <EditPost />
+                </TokenChecker>
+              }
+            />
+            <Route
+              path={Paths.EditTask}
+              element={
+                <TokenChecker>
+                  <EditTask />
+                </TokenChecker>
+              }
+            />
+            <Route
+              path={Paths.EditTeam}
+              element={
+                <TokenChecker>
+                  <EditTeam />
+                </TokenChecker>
+              }
+            />
+            <Route
+              path={Paths.ProjectPage}
+              element={
+                <TokenChecker>
+                  <ProjectPage />
+                </TokenChecker>
+              }
+            />
+            <Route
+              path={Paths.TaskPage}
+              element={
+                <TokenChecker>
+                  <TaskPage />
+                </TokenChecker>
+              }
+            />
+            <Route
+              path={Paths.MyCompaniesTeams}
+              element={
+                <TokenChecker>
+                  <MyCompaniesTeams />
+                </TokenChecker>
+              }
+            />
+            <Route
+              path={Paths.CreateCompany}
+              element={
+                <TokenChecker>
+                  <CreateCompany />
+                </TokenChecker>
+              }
+            />
+            <Route
+              path={Paths.MyCompanies}
+              element={
+                <TokenChecker>
+                  <MyCompanies />
+                </TokenChecker>
+              }
+            />
             <Route
               path={Paths.CompanyWorkingWith}
-              element={<CompanyWorking />}
+              element={
+                <TokenChecker>
+                  <CompanyWorking />
+                </TokenChecker>
+              }
             />
-            <Route path={Paths.MyCompanyTask} element={<MyCompanyTask />} />
+            <Route
+              path={Paths.MyCompanyTask}
+              element={
+                <TokenChecker>
+                  <MyCompanyTask />
+                </TokenChecker>
+              }
+            />
             <Route path={Paths.ForgetPassword} element={<ForgetPassword />} />
             <Route path={Paths.NotFound} element={<NotFound />} />
+            <Route
+              path={Paths.SecondSignup}
+              element={
+                <TokenChecker>
+                  <SecondSignup />
+                </TokenChecker>
+              }
+            />
           </Routes>
         </BrowserRouter>
       </MantineProvider>

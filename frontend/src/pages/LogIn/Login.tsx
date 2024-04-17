@@ -55,7 +55,7 @@ const Login = () => {
             if (form.isValid()) {
                 const a = await signInWithEmailAndPassword(auth, form.values.email, form.values.password);
                 localStorage.setItem("token", await a.user.getIdToken());
-                // localStorage.removeItem("token");
+                localStorage.setItem("user", a.user);
                 window.location.replace("/");
             }
         } catch (err) {
@@ -71,8 +71,11 @@ const Login = () => {
             if (form.isValid()) {
                 const a = await createUserWithEmailAndPassword(auth, form.values.email, form.values.password);
                 localStorage.setItem("token", await a.user.getIdToken());
-                // localStorage.removeItem("token");
-                window.location.replace("/");
+                localStorage.setItem("user", a.user);
+                if (type === 'register')
+                    window.location.replace(Paths.SecondSignup);
+                else
+                    window.location.replace(Paths.Home);
             }
         } catch (err) {
             setError("Check your email and password please");
@@ -89,8 +92,12 @@ const Login = () => {
 
             const result = await signInWithPopup(auth, provider);
             localStorage.setItem("token", await result.user.accessToken);
+            localStorage.setItem("user", result.user);
             // localStorage.removeItem("token");
-            window.location.replace("/");
+            if (type === 'register')
+                window.location.replace(Paths.SecondSignup);
+            else
+                window.location.replace(Paths.Home);
 
         } catch (err) {
             setError("Check your email and password please");

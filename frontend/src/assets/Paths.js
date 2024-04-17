@@ -1,3 +1,4 @@
+
 export const Paths = {
   Login: "/Login",
   SignUpFigma: "/SignUpFigma",
@@ -22,4 +23,5 @@ export const Paths = {
   MyCompanyTask: "/MyCompanyTask",
   ForgetPassword: "/ForgetPassword",
   NotFound: "*",
+  SecondSignup: "/SecondSignup",
 };

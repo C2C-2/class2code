@@ -2,7 +2,21 @@ import "./SideBar.css";
 import ProImg from "./Avatar.png";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Button } from "@mantine/core";
+import { Box, Button, Divider, Menu, NavLink, rem, Text } from "@mantine/core";
+import {
+  IconActivity,
+  IconArrowsLeftRight,
+  IconChevronRight,
+  IconFingerprint,
+  IconGauge,
+  IconMessageCircle,
+  IconPhoto,
+  IconSearch,
+  IconSettings,
+  IconTrash,
+} from "@tabler/icons-react";
+import { FaTeamspeak, FaUser, FaUserFriends } from "react-icons/fa";
+import { Paths } from "../../assets/Paths";
 
 function SideBar({ colorSide }) {
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -27,6 +41,21 @@ function SideBar({ colorSide }) {
   const handleTextClick = (text) => {
     setSelectedText(selectedText === text ? null : text);
   };
+
+  const data = [
+    {
+      icon: IconGauge,
+      label: "Dashboard",
+      link: Paths.Dashboard,
+    },
+    {
+      icon: IconFingerprint,
+      label: "Security",
+      rightSection: <IconChevronRight size="1rem" stroke={1.5} />,
+    },
+    { icon: IconActivity, label: "Activity" },
+  ];
+
   return (
     <div className={`${isDarkMode ? "SideBarMainDark" : "SideBarMain"}`}>
       <div className="SideBarSectionProfile">
@@ -63,302 +92,9 @@ function SideBar({ colorSide }) {
         <div className="SideBarSectionCenterMain">
           <span className="SideBarSectionCenterMainText">Main</span>
         </div>
-        <div className="SideBarSectionCenterContent">
-          <ul className="SideBarSectionCenterContentSections">
-            <li>
-              <Link to="/Dashboard">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="20"
-                  height="20"
-                  viewBox="0 0 20 20"
-                  fill="none"
-                >
-                  <path
-                    fillRule="evenodd"
-                    clipRule="evenodd"
-                    d="M9.99935 2.23145C9.23796 2.23145 8.49113 2.44007 7.83997 2.83466L3.67331 5.35966C3.06059 5.73095 2.55395 6.25397 2.20234 6.87819C1.85072 7.50241 1.666 8.20675 1.66602 8.92318V14.1665C1.66602 15.2716 2.105 16.3314 2.8864 17.1128C3.6678 17.8942 4.72761 18.3332 5.83268 18.3332H14.166C15.2711 18.3332 16.3309 17.8942 17.1123 17.1128C17.8937 16.3314 18.3327 15.2716 18.3327 14.1665V8.92235C18.3325 8.20608 18.1477 7.50176 17.7961 6.87774C17.4445 6.25372 16.938 5.73087 16.3254 5.35966L12.1587 2.83466C11.5076 2.44008 10.7607 2.23145 9.99935 2.23145ZM8.70373 4.26003C9.09443 4.02328 9.54252 3.89811 9.99935 3.89811C10.4562 3.89811 10.9043 4.02328 11.295 4.26003L15.4616 6.78503C15.8292 7.00776 16.1331 7.32147 16.3441 7.69589C16.555 8.07025 16.6659 8.49266 16.666 8.92235V14.1665C16.666 14.8296 16.4026 15.4654 15.9338 15.9343C15.4649 16.4031 14.8291 16.6665 14.166 16.6665H13.3327V14.1665C13.3327 13.2825 12.9815 12.4346 12.3564 11.8095C11.7312 11.1844 10.8834 10.8332 9.99935 10.8332C9.11529 10.8332 8.26745 11.1844 7.64233 11.8095C7.0172 12.4346 6.66601 13.2825 6.66601 14.1665V16.6665H5.83268C5.16964 16.6665 4.53376 16.4031 4.06491 15.9343C3.59607 15.4654 3.33268 14.8296 3.33268 14.1665V8.92318C3.33267 8.49332 3.4435 8.07069 3.65447 7.69616C3.86544 7.32163 4.16942 7.00782 4.53706 6.78504L8.70373 4.26003ZM11.1779 12.988C11.4904 13.3006 11.666 13.7245 11.666 14.1665V16.6665H8.33268V14.1665C8.33268 13.7245 8.50828 13.3006 8.82084 12.988C9.1334 12.6754 9.55732 12.4999 9.99935 12.4999C10.4414 12.4999 10.8653 12.6754 11.1779 12.988Z"
-                    fill={`${isDarkMode ? "#fff" : "#000"}`}
-                    stroke={`${selectedText === "Dashboard" ? "#008000" : ""}`}
-                    fillOpacity="0.5"
-                    strokeWidth="0.6"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-                <div
-                  className={`SideBarText ${
-                    selectedText === "Dashboard" ? "active" : ""
-                  }`}
-                  onClick={() => handleTextClick("Dashboard")}
-                >
-                  Dashboard
-                </div>
-              </Link>
-            </li>
-            <li>
-              <Link to="/Posts">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="18"
-                  height="18"
-                  viewBox="0 0 22 22"
-                  fill="none"
-                >
-                  <path
-                    d="M17.3684 11C17.3684 11.3184 17.1079 11.5789 16.7895 11.5789H11.5789V16.7895C11.5789 17.1079 11.3184 17.3684 11 17.3684C10.6816 17.3684 10.4211 17.1079 10.4211 16.7895V11.5789H5.21053C4.89211 11.5789 4.63158 11.3184 4.63158 11C4.63158 10.6816 4.89211 10.4211 5.21053 10.4211H10.4211V5.21053C10.4211 4.89211 10.6816 4.63158 11 4.63158C11.3184 4.63158 11.5789 4.89211 11.5789 5.21053V10.4211H16.7895C17.1079 10.4211 17.3684 10.6816 17.3684 11ZM22 11C22 17.0789 17.0789 22 11 22C4.92105 22 0 17.0789 0 11C0 4.92105 4.92105 0 11 0C17.0789 0 22 4.92105 22 11ZM20.8421 11C20.8421 5.55789 16.4421 1.15789 11 1.15789C5.55789 1.15789 1.15789 5.55789 1.15789 11C1.15789 16.4421 5.55789 20.8421 11 20.8421C16.4421 20.8421 20.8421 16.4421 20.8421 11Z"
-                    fill={`${isDarkMode ? "#fff" : "#000"}`}
-                    stroke={`${
-                      selectedText === "Post" ? "#008000" : "#00000099"
-                    }`}
-                    fillOpacity="0.6"
-                    strokeWidth="0.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-                <div
-                  className={`SideBarText ${
-                    selectedText === "Post" ? "active" : ""
-                  }`}
-                  onClick={() => handleTextClick("Post")}
-                >
-                  Post
-                </div>
-              </Link>
-            </li>
-            <li>
-              <Link to="/Chat">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="18"
-                  height="18"
-                  viewBox="0 0 22 22"
-                  fill="none"
-                  className={`SvgImg ${
-                    selectedText === "Chat" ? "active" : ""
-                  }`}
-                >
-                  <path
-                    d="M15.999 11.5C16.2751 11.5 16.499 11.2761 16.499 11C16.499 10.7239 16.2751 10.5 15.999 10.5C15.7229 10.5 15.499 10.7239 15.499 11C15.499 11.2761 15.7229 11.5 15.999 11.5Z"
-                    fill={`${isDarkMode ? "#fff" : "#000"}`}
-                    fillOpacity="0.6"
-                    stroke={` ${selectedText === "Chat" ? "active" : "#000"}`}
-                    strokeOpacity="0.6"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M11 11.5C11.2761 11.5 11.5 11.2761 11.5 11C11.5 10.7239 11.2761 10.5 11 10.5C10.7239 10.5 10.5 10.7239 10.5 11C10.5 11.2761 10.7239 11.5 11 11.5Z"
-                    fill={`${isDarkMode ? "#fff" : "#000"}`}
-                    fillOpacity="0.6"
-                    stroke={` ${selectedText === "Chat" ? "active" : "#000"}`}
-                    strokeOpacity="0.6"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M5.99902 11.5C6.27516 11.5 6.49902 11.2761 6.49902 11C6.49902 10.7239 6.27516 10.5 5.99902 10.5C5.72288 10.5 5.49902 10.7239 5.49902 11C5.49902 11.2761 5.72288 11.5 5.99902 11.5Z"
-                    fill={`${isDarkMode ? "#fff" : "#000"}`}
-                    stroke={` ${selectedText === "Chat" ? "active" : "#000"}`}
-                    strokeOpacity="0.6"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M11 21C16.5228 21 21 16.5228 21 11C21 5.47715 16.5228 1 11 1C5.47715 1 1 5.47715 1 11C1 12.8214 1.48697 14.5291 2.33782 16L1.5 20.5L6 19.6622C7.47087 20.513 9.1786 21 11 21Z"
-                    stroke={` ${
-                      isDarkMode
-                        ? "#fff"
-                        : selectedText === "Chat"
-                        ? "green"
-                        : "#000"
-                    }`}
-                    strokeOpacity="0.6"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-                <div
-                  className={`SideBarText ${
-                    selectedText === "Chat" ? "active" : ""
-                  }`}
-                  onClick={() => handleTextClick("Chat")}
-                >
-                  Chat
-                </div>
-              </Link>
-            </li>
-            <li>
-              <Link to="/AvailableProject">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="18"
-                  height="18"
-                  viewBox="0 0 20 20"
-                  fill="none"
-                >
-                  <path
-                    d="M7.23535 11.25V11.6465L7.50712 11.9353L12.9586 17.728C11.7821 18.5183 10.4013 18.9797 8.9217 18.9994L8.92164 18.9994C4.8068 19.0543 1.14933 15.4357 1.00472 10.92C0.869934 6.70578 3.62941 3.23118 7.23535 2.43365V11.25ZM13.3061 17.4806L13.3059 17.4808L13.3061 17.4806ZM12.9946 12.25H18.9344C18.6401 13.8509 17.9201 15.2829 16.9114 16.4116L12.9946 12.25ZM19.0033 11.8151L19.0032 11.8154L19.0033 11.8151ZM16.8965 17.0406L16.4901 17.4231L16.8965 17.0406ZM11 1.04648C14.5163 1.52673 17.3625 4.52254 17.7884 8.37495H11V1.04648Z"
-                    stroke={`${
-                      selectedText === "Available Projects" ? "#008000" : "#000"
-                    }`}
-                    fill={`${isDarkMode ? "#fff" : "#000"}`}
-                    strokeOpacity="0.6"
-                    strokeWidth="2"
-                  />
-                </svg>
-
-                <div
-                  className={`SideBarText ${
-                    selectedText === "Available Projects" ? "active" : ""
-                  }`}
-                  onClick={() => handleTextClick("Available Projects")}
-                >
-                  Available Projects
-                </div>
-              </Link>
-            </li>
-            <li>
-              <Link to="">
-                <div
-                  className={`SideBarSectionText ${
-                    isTeamDropdownOpen ? "active" : ""
-                  }`}
-                  onClick={toggleTeamDropdown}
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 20 20"
-                    fill="none"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      clipRule="evenodd"
-                      d="M12.9993 1.66667C12.6457 1.66667 12.3066 1.80715 12.0565 2.0572C11.8065 2.30725 11.666 2.64638 11.666 3V6.66667H7.99935C7.64573 6.66667 7.30659 6.80714 7.05654 7.05719C6.80649 7.30724 6.66601 7.64638 6.66601 8V12.5H2.99935C2.64573 12.5 2.30659 12.6405 2.05654 12.8905C1.80649 13.1406 1.66602 13.4797 1.66602 13.8333V17C1.66602 17.3536 1.80649 17.6928 2.05654 17.9428C2.30659 18.1929 2.64573 18.3333 2.99935 18.3333H16.9993C17.353 18.3333 17.6921 18.1929 17.9422 17.9428C18.1922 17.6928 18.3327 17.3536 18.3327 17V3C18.3327 2.64638 18.1922 2.30725 17.9422 2.0572C17.6921 1.80715 17.353 1.66667 16.9993 1.66667H12.9993ZM8.33268 8.33334H11.666V16.6667H8.33268V8.33334ZM16.666 16.6667H13.3327V3.33334H16.666V16.6667ZM6.66601 14.1667V16.6667H3.33268V14.1667H6.66601Z"
-                      fill="black"
-                      fillOpacity="0.6"
-                    />
-                  </svg>
-                  <span className="SideBarText">My Teams</span>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    viewBox="0 0 16 16"
-                    fill="none"
-                    className={`icon-chevron ${
-                      isTeamDropdownOpen ? "active" : ""
-                    }`}
-                  >
-                    <path
-                      d="M11.5289 10.4715C11.7893 10.7318 12.2114 10.7318 12.4717 10.4715C12.7321 10.2111 12.7321 9.78903 12.4717 9.52868L8.47173 5.52868C8.21138 5.26833 7.78927 5.26833 7.52892 5.52868L3.52892 9.52868C3.26857 9.78903 3.26857 10.2111 3.52892 10.4715C3.78927 10.7318 4.21138 10.7318 4.47173 10.4715L8.00033 6.94289L11.5289 10.4715Z"
-                      fill="black"
-                    />
-                  </svg>
-                </div>
-              </Link>
-              {isTeamDropdownOpen && (
-                <div className="SubSection">
-                  <Link to="/MyCompaniesTeams">
-                    <div className="Subs">
-                      <div className="SubTextTeam">My companies Teams</div>
-                      <div className="ArrowTeam1" />
-                    </div>
-                  </Link>
-                  <Link to="/TeamsWorkingWith">
-                    <div className="Subs">
-                      <p className="SubTextTeam">Teams I am working In it</p>
-                      <div className="ArrowTeam2" />
-                    </div>
-                  </Link>
-                  <div className="lineSubTeam" />
-                </div>
-              )}
-            </li>
-            <li>
-              <Link to="">
-                <div
-                  className={`SideBarSectionTextMyCompanies ${
-                    isCompanyDropdownOpen ? "active" : ""
-                  }`}
-                  onClick={toggleCompanyDropdown}
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 20 20"
-                    fill="none"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      clipRule="evenodd"
-                      d="M12.9993 1.66667C12.6457 1.66667 12.3066 1.80715 12.0565 2.0572C11.8065 2.30725 11.666 2.64638 11.666 3V6.66667H7.99935C7.64573 6.66667 7.30659 6.80714 7.05654 7.05719C6.80649 7.30724 6.66601 7.64638 6.66601 8V12.5H2.99935C2.64573 12.5 2.30659 12.6405 2.05654 12.8905C1.80649 13.1406 1.66602 13.4797 1.66602 13.8333V17C1.66602 17.3536 1.80649 17.6928 2.05654 17.9428C2.30659 18.1929 2.64573 18.3333 2.99935 18.3333H16.9993C17.353 18.3333 17.6921 18.1929 17.9422 17.9428C18.1922 17.6928 18.3327 17.3536 18.3327 17V3C18.3327 2.64638 18.1922 2.30725 17.9422 2.0572C17.6921 1.80715 17.353 1.66667 16.9993 1.66667H12.9993ZM8.33268 8.33334H11.666V16.6667H8.33268V8.33334ZM16.666 16.6667H13.3327V3.33334H16.666V16.6667ZM6.66601 14.1667V16.6667H3.33268V14.1667H6.66601Z"
-                      fill="black"
-                      fillOpacity="0.6"
-                    />
-                  </svg>
-                  <div className="SideBarText">My Companies</div>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    viewBox="0 0 16 16"
-                    fill="none"
-                    className={`icon-chevron ${
-                      isCompanyDropdownOpen ? "active" : ""
-                    }`}
-                  >
-                    <path
-                      d="M11.5289 10.4715C11.7893 10.7318 12.2114 10.7318 12.4717 10.4715C12.7321 10.2111 12.7321 9.78903 12.4717 9.52868L8.47173 5.52868C8.21138 5.26833 7.78927 5.26833 7.52892 5.52868L3.52892 9.52868C3.26857 9.78903 3.26857 10.2111 3.52892 10.4715C3.78927 10.7318 4.21138 10.7318 4.47173 10.4715L8.00033 6.94289L11.5289 10.4715Z"
-                      fill="black"
-                    />
-                  </svg>
-                </div>
-              </Link>
-              {isCompanyDropdownOpen && (
-                <div className="SubSectionCompany">
-                  <Link to="/CreateCompany">
-                    <div className="Subs">
-                      <div className="SubTextCompany">Create Company</div>
-                      <div className="ArrowCompany1" />
-                    </div>
-                  </Link>
-                  <Link to="MyCompanies">
-                    <div className="Subs">
-                      <div className="SubTextCompany">My Companies</div>
-                      <div className="ArrowCompany2" />
-                    </div>
-                  </Link>
-                  <Link to="/CompanyWorkingWith">
-                    <div className="Subs">
-                      <p className="SubTextCompany">
-                        Companies I am working in it
-                      </p>
-                      <div className="ArrowCompany3" />
-                    </div>
-                  </Link>
-                  <Link to="MyCompanyTask">
-                    <div className="SubsUnder">
-                      <div className="SubText">Companies Tasks</div>
-                      <div className="ArrowCompany4" />
-                    </div>
-                  </Link>
-                  <div className="lineSubCompany" />
-                </div>
-              )}
-            </li>
-          </ul>
-          <hr className="SideBarCenterLine"></hr>
-        </div>
+        <SideBarMenuCard data={data} />
       </div>
+      <Divider my="md" w={"100%"} />
       <div className="SideBarSettings">
         <span className="SideBarSettingText">Setting</span>
         <div className="SideBarSettingsCenter">
@@ -547,5 +283,55 @@ function SideBar({ colorSide }) {
     </div>
   );
 }
+
+const SideBarMenuCard = ({ data }) => {
+  const [active, setActive] = useState(0);
+
+  const items = data.map((item, index) => {
+    if (!item.rightSection) {
+      return (
+        <NavLink
+          href="#required-for-focus"
+          key={item.label}
+          active={index === active}
+          label={item.label}
+          description={item.description}
+          leftSection={<item.icon size="1rem" stroke={1.5} />}
+          onClick={() => {
+            setActive(index);
+            window.location.replace(item.link);
+          }}
+        />
+      );
+    } else {
+      return (
+        <NavLink
+          href="#required-for-focus"
+          key={item.label}
+          active={index === active}
+          label={item.label}
+          description={item.description}
+          rightSection={item.rightSection}
+          leftSection={<item.icon size="1rem" stroke={1.5} />}
+          onClick={() => {
+            setActive(index);
+            item.onClick();
+          }}
+        >
+          {item?.childs?.map((child) => (
+            <NavLink
+              key={child.label}
+              label={child.label}
+              description={child.description}
+              onClick={child.onClick}
+            />
+          ))}
+        </NavLink>
+      );
+    }
+  });
+
+  return <Box w={220}>{items}</Box>;
+};
 
 export default SideBar;
