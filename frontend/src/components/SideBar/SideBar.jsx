@@ -5,15 +5,9 @@ import { Link } from "react-router-dom";
 import { Box, Button, Divider, Menu, NavLink, rem, Text } from "@mantine/core";
 import {
   IconActivity,
-  IconArrowsLeftRight,
   IconChevronRight,
   IconFingerprint,
   IconGauge,
-  IconMessageCircle,
-  IconPhoto,
-  IconSearch,
-  IconSettings,
-  IconTrash,
 } from "@tabler/icons-react";
 import { FaTeamspeak, FaUser, FaUserFriends } from "react-icons/fa";
 import { Paths } from "../../assets/Paths";
