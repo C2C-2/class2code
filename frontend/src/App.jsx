@@ -63,6 +63,8 @@ function App() {
             <Route path="/CompanyWorkingWith" element={<CompanyWorking />} />
             <Route path="/MyCompanyTask" element={<MyCompanyTask />} />
             <Route path="*" element={<NotFound />} />
+            <Route path="/LogIn" element={<LogInFigma/>}></Route>
+            <Route path="/SignUp" element={<SignUpFigma/>}></Route>
           </Routes>
         </BrowserRouter>
       </MantineProvider>

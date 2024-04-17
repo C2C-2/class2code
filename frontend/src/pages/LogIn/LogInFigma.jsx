@@ -1,7 +1,7 @@
 import React from "react";
 import "./LogInFigma.css";
 import MainLogo from "./logo2 2.png";
-
+import { Link } from "react-router-dom";
 export default function LogInFigma() {
   return (
     <div className="LogInFigmaMain">
@@ -56,7 +56,7 @@ export default function LogInFigma() {
                 Login to Your Account
               </span>
               <span className="LogInFigmaMainPart2DesignCenter1Text2">
-                Enter Yours Details to Login{" "}
+                Enter Yours Details to Login
               </span>
             </div>
             <div className="LogInFigmaMainPart2DesignCenter2">
@@ -182,16 +182,15 @@ export default function LogInFigma() {
             </div>
           </div>
           <button className="LogInFigmaMainPart2DesignButtonLogin">
-            {" "}
             <span className="LogInFigmaMainPart2DesignButtonText">Login</span>
           </button>
           <div className="LogInFigmaMainPart2DesignSignup">
             <p className="LogInFigmaMainPart2DesignSignupText">
               I don’t have an Account?
             </p>
-            <span className="LogInFigmaMainPart2DesignButtonTextSignup">
+            <Link to="/SignUp" className="LogInFigmaMainPart2DesignButtonTextSignup">
               Sign up
-            </span>
+            </Link>
           </div>
         </div>
       </div>

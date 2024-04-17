@@ -211,7 +211,7 @@
 }
 
 .LogInFigmaMainPart2DesignCenter1Text2 {
-    color: var(--light, rgba(0, 0, 0, 0.60));
+    color:  rgba(0, 0, 0, 0.60);
     font-family: Montserrat;
     font-size: 20px;
     font-style: normal;

@@ -3,6 +3,7 @@ import "./SignUpFigma.css";
 import MainLogo from "./logo2 2.png";
 import Main from "./25593243_hqk2_0bag_220227 1.png";
 import { gql, useMutation } from "@apollo/client";
+import { Link } from "react-router-dom";
 // import { useRouter } from "next/router";
 export default function SignUpFigma() {
   const [formData, setFormData] = useState({
@@ -235,12 +236,12 @@ export default function SignUpFigma() {
             <div className="SignUpFigmatext-Already">
               Already have an Account?
             </div>
-            <button
+            <Link to="/LogIn"
               className="SignUpFigmatext-LogIn"
               // onClick={handleLoginClick}
             >
               Login
-            </button>
+            </Link>
           </div>
         </div>
       </div>
