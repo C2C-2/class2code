@@ -65,6 +65,53 @@ function MyCompanyTask() {
     setFilterType(type);
     refetch();
   };
+  const dummyData = {
+    MyCompanies: [
+      {
+        CompanyName: "Company A",
+        Tasks: [
+          {
+            TaskName: "Task 1",
+            TaskStatus: "InProgress",
+            Priority: "High",
+            CreateDate: "2024-04-17T08:00:00Z",
+            IsMarked: false,
+            _id: "1",
+          },
+          {
+            TaskName: "Task 2",
+            TaskStatus: "Completed",
+            Priority: "Low",
+            CreateDate: "2024-04-16T08:00:00Z",
+            IsMarked: true,
+            _id: "2",
+          },
+        ],
+      },
+      {
+        CompanyName: "Company B",
+        Tasks: [
+          {
+            TaskName: "Task 3",
+            TaskStatus: "Pending",
+            Priority: "Medium",
+            CreateDate: "2024-04-15T08:00:00Z",
+            IsMarked: false,
+            _id: "3",
+          },
+          {
+            TaskName: "Task 4",
+            TaskStatus: "InProgress",
+            Priority: "High",
+            CreateDate: "2024-04-14T08:00:00Z",
+            IsMarked: false,
+            _id: "4",
+          },
+        ],
+      },
+    ],
+  };
+
 
   return (
     <div className="MyCompanyTaskAll" id="man">
@@ -141,7 +188,7 @@ function MyCompanyTask() {
               </button>
             </div>
             <div className="MyCompanyTaskContentCard">
-              {loading ? (
+              {/* {loading ? (
                 <p>Loading...</p>
               ) : error ? (
                 <p>Error: {error.message}</p>
@@ -164,9 +211,9 @@ function MyCompanyTask() {
                     />
                   ))
                 )
-              ) : (
-                data &&
-                data.getUser.MyCompanies.map((company) =>
+              ) :*/ ( 
+                dummyData &&
+                dummyData.MyCompanies.map((company) =>
                   company.Tasks.map((task, index) => (
                     <MyCompanyTaskCard
                       key={index}

@@ -4,7 +4,7 @@ import SideBar from "../../../components/SideBar/SideBar";
 import NavBar from "../../../components/NavBar/NavBar";
 import { Button } from "@mantine/core";
 import { useMutation, useQuery, gql } from "@apollo/client";
-
+import { Link } from "react-router-dom";
 const CREATE_POSITION_POST = gql`
   mutation CreatePositionPost($post: PositionPostInput!, $companyId: Int!) {
     createPositionPost(post: $post, companyId: $companyId) {
@@ -27,7 +27,7 @@ function AddPost({ companyId }) {
   const [receivedData, setReceivedData] = useState("");
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [postData, setPostData] = useState({
-    post: null,
+    post: {},
     companyId: companyId,
   });
   const [createPost] = useMutation(CREATE_POSITION_POST);
@@ -111,8 +111,8 @@ function AddPost({ companyId }) {
                 <input
                   type="text"
                   name="Company"
-                  value={postData.post.Company || ""}
-                  readOnly
+                  // value={postData.post.CompanyName || ""}
+                  
                   className="AddPostTextInput"
                 />
               </div>
@@ -134,6 +134,7 @@ function AddPost({ companyId }) {
               </div>
             </div>
             <div className="AddPostButton">
+              <Link to="/Posts">
               <Button
                 variant="filled"
                 color="#388E3C"
@@ -143,6 +144,7 @@ function AddPost({ companyId }) {
               >
                 Add
               </Button>
+              </Link>
             </div>
           </div>
         </div>

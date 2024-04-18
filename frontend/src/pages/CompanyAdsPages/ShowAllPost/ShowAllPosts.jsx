@@ -103,13 +103,25 @@ const [applyToPost] = useMutation(APPLY_TO_POST);
     variables: { userId, isDesc: true }, // Assuming you want to sort in descending order
   });
 
-  const combinedData = {
-    user: userData?.getUser,
-    posts: postsData?.getAllPosts,
-  };
 
   const handleSortByDate = () => {
     setSortByDate(!sortByDate);
+  };
+  const dummyPosts = [
+    {
+      _id: "1",
+      Content: "Dummy post content 1",
+      CreatedDate: "2024-04-17T08:00:00Z",
+    },
+    {
+      _id: "2",
+      Content: "Dummy post content 2",
+      CreatedDate: "2024-04-16T08:00:00Z",
+    },
+  ];
+  const combinedData = {
+    user: userData?.getUser,
+    posts: dummyPosts, // Use dummyPosts for testing instead of actual data
   };
 
   return (
@@ -193,19 +205,28 @@ const [applyToPost] = useMutation(APPLY_TO_POST);
               >
                 <span style={{ color: "#000000" }}>Date</span>
               </Button>
+              <Link to="./AddPost">
+              <Button
+                variant="filled"
+                color="rgba(202, 204, 202, 1)"
+                w={120}
+                onClick={handleSortByDate}
+              >
+                <span style={{ color: "#000000" }}>Add Post</span>
+              </Button>
+              </Link>
             </div>
             <div className="ShowAllPostsCards">
-              {!userLoading && !postsLoading && (
-                <PostsCard
-                  color={receivedData}
-                  userData={combinedData.user}
-                  postsData={
-                    searchWord
-                      ? searchData?.searchInMyPosts
-                      : combinedData.posts
-                  }
-                  onApply={handleApplyToPost}
-                />
+              {!postsLoading && dummyPosts && (
+    // Use dummyPosts for testing instead of actual data
+    dummyPosts?.map((post) => (
+                  <PostsCard
+                    key={post._id}
+                    color={receivedData}
+                    postDate={post.CreatedDate}
+                    postContent={post.Content}
+                  />
+                ))
               )}
             </div>
           </div>

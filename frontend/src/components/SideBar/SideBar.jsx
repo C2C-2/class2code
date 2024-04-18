@@ -112,7 +112,7 @@ function SideBar({ colorSide }) {
     },
     {  icon:AiOutlineQuestionCircle,
       label: "Any Question",
-      link: Paths.AnyQuestion,
+      link: Paths.FAQQuestion,
     }
   ]
 

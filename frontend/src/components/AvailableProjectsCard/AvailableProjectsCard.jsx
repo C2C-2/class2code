@@ -1,10 +1,11 @@
-import React from "react";
+import { Link } from "react-router-dom";
 import "./AvailableProjectCard.css";
 import RequirementNeed from "../RequirementNeed/RequirementNeed";
 
-function AvailableProjectsCard({ projectName, applications, projectDescription, requirements, colorProp }) {
+function AvailableProjectsCard({ projectName, applications, projectDescription, requirements, colorProp ,project_id }) {
   return (
-    <button className="AvailableProjectAll">
+
+    <Link to={`/ProjectPage/${project_id}`} className="AvailableProjectAll">
       <div className="AvailableProjectDesign">
         <div className="AddProjectAvailable">
           <span className="Adds1">
@@ -29,7 +30,7 @@ function AvailableProjectsCard({ projectName, applications, projectDescription, 
           </div>
         </div>
       </div>
-    </button>
+    </Link>
   );
 }
 

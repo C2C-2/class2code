@@ -39,6 +39,46 @@ function MyCompaniesTeams({user_id}) {
 const { loading, error, data } = useQuery(GET_MY_COMPANIES_TEAMS, {
   variables: { user_id },
 });
+const dummyData = {
+  getUser: {
+    MyCompanies: [
+      {
+        CompanyName: "Company A",
+        Teams: [
+          {
+            TeamRole: "Developer",
+            TeamName: "Team 1",
+            CreateDate: "2024-04-17T08:00:00Z",
+            _id: "1"
+          },
+          {
+            TeamRole: "Manager",
+            TeamName: "Team 2",
+            CreateDate: "2024-04-16T08:00:00Z",
+            _id: "2"
+          }
+        ]
+      },
+      {
+        CompanyName: "Company B",
+        Teams: [
+          {
+            TeamRole: "Developer",
+            TeamName: "Team 3",
+            CreateDate: "2024-04-15T08:00:00Z",
+            _id: "3"
+          },
+          {
+            TeamRole: "Manager",
+            TeamName: "Team 4",
+            CreateDate: "2024-04-14T08:00:00Z",
+            _id: "4"
+          }
+        ]
+      }
+    ]
+  }
+};
   return (
     <div className="MyCompaniesTeamsAll" id="man">
       <SideBar colorSide={receivedData}/>
@@ -91,22 +131,20 @@ const { loading, error, data } = useQuery(GET_MY_COMPANIES_TEAMS, {
               <button className="MyCompaniesTeamsContentButtonsDesign">
                 <span className="MyCompaniesTeamsContentButtonText">Late</span>
               </button>
-              <button className="MyCompaniesTeamsContentButtonsDesign1">
+              
+              <Link to="/CreateTeam" className="MyCompaniesTeamsContentButtonsDesign1">
                 <span className="MyCompaniesTeamsContentButtonText">
-                  In Progress
+                  Create Team
                 </span>
-              </button>
+              </Link>
             </div>
             <div className="MyCompaniesTeamsContentCard">
-              {loading ? (
-                <p>Loading...</p>
-              ) : error ? (
-                <p>Error: {error.message}</p>
-              ) : (
-                data?.getUser?.MyCompanies.map((company) =>
-                  company.Teams.map((team, index) => (
+            {(
+                dummyData.getUser.MyCompanies.map((company) =>
+                  company.Teams.map((team) => (
                     <MyCompaniesTeamsCard
-                      key={index}
+                      key={team._id}
+                      companyName={company.CompanyName}
                       teamRole={team.TeamRole}
                       teamName={team.TeamName}
                       createDate={team.CreateDate}

@@ -53,7 +53,36 @@ function TaskPage() {
       setTaskData(data.getTask);
     }
   }, [loading, error, data]);
+  const dummyTaskData = {
+    EndDate: "2024-04-25",
+    Priority: "High",
+    StartDate: "2024-04-15",
+    TaskName: "Example Task",
+    Steps: [
+      {
+        Description: "Step 1",
+        Number: 1,
+        IsCompleted: false
+      },
+      {
+        Description: "Step 2",
+        Number: 2,
+        IsCompleted: false
+      },
+      {
+        Description: "Step 3",
+        Number: 3,
+        IsCompleted: false
+      }
+    ],
+    TaskStatus: "In Progress",
+    IsMarked: true
+  };
 
+  useEffect(() => {
+    // Set dummy task data
+    setTaskData(dummyTaskData);
+  }, []);
   return (
     <div className="TaskPageAll" id="man">
       <SideBar />
@@ -102,10 +131,12 @@ function TaskPage() {
               <>
                 <div className={`${isDarkMode ? "TaskPageContentPart1 bg-black" : "TaskPageContentPart1"}`}>
                   <div className="TSCP1">
+                    <div className="TaskNameClass">
                     <div className="ArrowDesign">
                       <GoArrowUp className="TaskPageArrow" />
                     </div>
-                    <span className="TaskPageText1Part1">Task Name: {taskData.TaskName}</span>
+                    <span className="TaskPageText1Part1"> {taskData.TaskName}</span>
+                    </div>
                     <div className="TaskPageTimes">
                       <span className="TaskPageText1Part1">StartDate: {taskData.StartDate}</span>
                     </div>

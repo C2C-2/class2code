@@ -6,7 +6,8 @@ import CreateTeamAddOnsCard from "../../../components/CreateTeamAddOnsCard/Creat
 import { Button } from "@mantine/core";
 import CreateTaskCard from "../../../components/CreateTaskCard/CreateTaskCard";
 import { useMutation, gql } from "@apollo/client";
-
+import { Link } from "react-router-dom";
+import { Descriptions } from "antd";
 const CREATE_TASK = gql`
   mutation CreateTaskForTeam(
     $task: TaskInput!
@@ -46,6 +47,10 @@ function CreateTask() {
       },
     }));
   };
+  const dummySteps = [
+    { Number: 1, Description: "Sample step 1" },
+    { Number: 2, Description: "Sample step 2" },
+  ];
   const handleCreateTask = () => {
     createTask({ variables: taskData })
       .then((res) => {
@@ -201,14 +206,17 @@ function CreateTask() {
               >
                 Steps
               </span>
-              <CreateTaskCard color={receivedData} />
-              <CreateTaskCard />
+              {dummySteps.map((step, index) => (
+                <CreateTaskCard key={index} number={Number}  description={Descriptions}/>
+              ))}
               <CreateTeamAddOnsCard />
             </div>
             <div className="CreateTaskButton">
+              <Link to="/MyCompanyTask">
               <Button variant="filled" color="#388E3C" w={130} h={40} onClick={handleCreateTask}>
                 Create
               </Button>
+              </Link>
             </div>
           </div>
         </div>

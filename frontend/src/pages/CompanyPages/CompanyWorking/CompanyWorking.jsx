@@ -88,6 +88,23 @@ function CompanyWorking({ userId }) {
   const handleSearchChange = (event) => {
     setSearchWord(event.target.value);
   };
+  const dummyData = [
+    {
+      CompanyName: "Dummy Company 1",
+      CompanyDescription: "Wore these with my training tee and pods to a graduation bbq and the young bucks was all over",
+      Domain: "Technology",
+      Rate: 4.3,
+      CreateDate: "2024-04-18",
+    },
+    {
+      CompanyName: "Dummy Company 2",
+      CompanyDescription: "Wore these with my training tee and pods to a graduation bbq and the young bucks was all over",
+      Domain: "Finance",
+      Rate: 3.8,
+      CreateDate: "2024-04-17",
+    },
+    // Add more dummy company objects as needed
+  ];
 
   return (
     <div className="MainCompanyWorkOn" id="man">
@@ -177,25 +194,22 @@ function CompanyWorking({ userId }) {
           </div>
           <div className="Part3CompanyWorkOn">
             <div className="Part3CompanyWorkOnCard">
-              {userLoading && <p>Loading...</p>}
-              {userError && <p>Error: {userError.message}</p>}
-              {userData &&
-                userData.getUser.WorkCompanies.map((company, index) => (
-                  <CompanyWorkingCard
-                    key={index}
-                    colorProp={receivedData}
-                    company={company}
-                  />
-                ))}
+              {dummyData.map((company, index) => (
+                <CompanyWorkingCard
+                  key={index}
+                  colorProp={receivedData}
+                  company={company}
+                />
+              ))}
 
-              {searchData &&
+              {/* {searchData &&
                 searchData.searchInWorksCompanies.map((company, index) => (
                   <CompanyWorkingCard
                     key={index}
                     colorProp={receivedData}
                     company={company}
                   />
-                ))}
+                ))} */}
             </div>
           </div>
         </div>

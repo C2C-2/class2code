@@ -7,8 +7,8 @@ function SideBarAI() {
       <div className="AIBar">
         <div className="AITop">
           <span className="TextAll">
-            <span className="ChatText1">HORIZON</span>
-            <span className="ChatText2"> AI FREE</span>
+            <span className="ChatText1">Class2</span>
+            <span className="ChatText2">Code</span>
           </span>
           <hr className="LineAi"></hr>
         </div>
@@ -28,7 +28,7 @@ function SideBarAI() {
             </svg>
             <span className="ChatUiText">Chat UI</span>
           </div>
-          <div className="MyProject">
+          <button className="MyProject">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="18"
@@ -42,8 +42,8 @@ function SideBarAI() {
               />
             </svg>
             <span className="MyProjectText">My Projects</span>
-          </div>
-          <div className="Template">
+          </button>
+          <button className="Template">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="28"
@@ -64,7 +64,7 @@ function SideBarAI() {
               </defs>
             </svg>
             <span className="TemplateText">Templates</span>
-          </div>
+          </button>
           <div className="OtherPage">
             <div className="OtherPage1">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 16 18" fill="none">
@@ -73,9 +73,9 @@ function SideBarAI() {
 <span className="OtherPageText">Other Page</span>
 </div>
 <div className="SubOther">
-    <span className="SubText">Prompt Page</span>
-    <span className="SubText">Register</span>
-    <span className="SubText">Sign In</span>    
+    <button className="SubText">Prompt Page</button>
+    <button className="SubText">Register</button>
+    <button className="SubText">Sign In</button>    
 
 </div>
           </div>

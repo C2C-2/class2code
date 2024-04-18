@@ -6,7 +6,7 @@ import { Button } from "@mantine/core";
 import CurrentProject from "../../../components/CurrentProject/CurrentProject";
 import EditTeamMyCompanyProfile from "../../../components/EditTeamMyCompanyProfile/EditTeamMyCompanyProfile";
 import { gql, useMutation } from "@apollo/client";
-
+import { Link } from "react-router-dom";
 function EditMyCompanyProfile() {
   const [receivedData, setReceivedData] = useState("");
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -104,6 +104,7 @@ function EditMyCompanyProfile() {
         <div className="CenterEditMyCompanyProfile">
           <div className="AllEditMyCompanyProfile">
             <div className="EditMyCompanyProfileButtonBack">
+              <Link to="/MyCompanies">
               <Button
                 justify="center "
                 variant="filled"
@@ -133,6 +134,7 @@ function EditMyCompanyProfile() {
                   />
                 </svg>
               </Button>
+              </Link>
             </div>
             <div className="Part2EditCenter">
               <div className="DescriptionEditMyCompanyProfile">
@@ -253,6 +255,7 @@ function EditMyCompanyProfile() {
                       </div>
                     </div>
                     <div className="ButtonEdit">
+                    <Link to="/MyCompanies">
                       <Button
                         variant="filled"
                         color="#388E3C"
@@ -262,6 +265,7 @@ function EditMyCompanyProfile() {
                       >
                         Update Profile
                       </Button>
+                      </Link>
                       <Button
                         variant="transparent"
                         color={`${isDarkMode ? "#fff" : "#000"}`}

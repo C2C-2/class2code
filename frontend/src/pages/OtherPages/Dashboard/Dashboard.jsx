@@ -27,7 +27,7 @@ function Dashboard() {
           <div className="DashboardTexts">
             <span className="DashboardTexts1">
               <span className="DashboardTexts1Part1">Hello,</span>
-              <span className="DashboardTexts1Part2">Student07!</span>
+              <span className="DashboardTexts1Part2">Osama!</span>
             </span>
             <span className="DashboardTexts2">
               <span className="DashboardTexts2Part1">

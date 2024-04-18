@@ -66,10 +66,10 @@ function AIChat() {
               </div>
               <div className="RightSideAiDef">
                 <div className="TextsDef">
-                  <span className="LeftTextDef">HomePage</span>
-                  <span className="LeftTextDef">License</span>
-                  <span className="LeftTextDef">Terms of Use</span>
-                  <span className="LeftTextDef">PrivacyPolicy</span>
+                  <button className="LeftTextDef">HomePage</button>
+                  <button className="LeftTextDef">License</button>
+                  <button className="LeftTextDef">Terms of Use</button>
+                  <button className="LeftTextDef">PrivacyPolicy</button>
                 </div>
               </div>
             </div>

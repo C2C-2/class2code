@@ -2,12 +2,12 @@ import React from 'react';
 import "./CommentComp.css";
 import defaultProfileImage from "./Oval.png";
 
-function CommentComp({ commenterName, profilePicture, commentText, timestamp }) {
+function CommentComp({ commenterName, profilePicture, commentText, timestamp ,ImageUser}) {
   return (
     <div className="Comments">
       <div className="Comments1">
         <button className='CommentsProfileButton'>
-          <img src={profilePicture || defaultProfileImage} alt="CommentsProfile" />
+          <img src={ImageUser} alt="CommentsProfile" className='imgEdit' />
         </button>
         <button className="ComText">{commenterName}</button>
         <span className="ComText1">{timestamp}</span>

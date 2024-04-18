@@ -2,7 +2,7 @@
     align-items: center;
     display: flex;
     flex-direction: row;
-    height: 20%;
+    height: 100%;
     gap: 10px;
     justify-content: space-between;
     border-radius: 15px;
@@ -10,7 +10,7 @@
     background-color: #63f09d7c;
     padding-left: 10px;
     padding-right: 10px;
-    width: 100%;
+    width: 100% !important;
     border: none;
 }
 .CreateTaskCardAllDark {

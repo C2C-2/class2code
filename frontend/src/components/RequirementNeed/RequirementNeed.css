@@ -1,10 +1,11 @@
 .ReqNeedAllCard {
     display: flex;
     padding: 8px 24px 6px 8px;
-    align-items: center;
     height: 90%;
     gap: 10px;
-    width: 50%;
+    display: flex;
+    flex-direction: column;
+    width: 30%;
     border-radius: 12px;
     background:  #b3ebad;
 }
@@ -12,7 +13,7 @@
 .ReqTextCard {
     background: var(--light, #F2F9F1);
     font-family: Catamaran;
-    font-size: 12px;
+    font-size: 14px;
     border: none;
     font-style: normal;
     font-weight: 500;
@@ -23,7 +24,7 @@
 .ReqTextCardDark {
     background: var(--light, #040404);
     font-family: Catamaran;
-    font-size: 12px;
+    font-size: 14px;
     border: none;
     font-style: normal;
     font-weight: 500;

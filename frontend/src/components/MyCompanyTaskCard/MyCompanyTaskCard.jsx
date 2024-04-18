@@ -1,14 +1,10 @@
 import "./MyCompanyTaskCard.css";
 import RequirementNeed from "../RequirementNeed/RequirementNeed";
+import { Link } from "react-router-dom";
 // import { useHistory } from 'react-router-dom';
 function MyCompanyTaskCard({ taskName, createDate, priority, companyName, taskStatus, task_id  }) {
-  // const history = useHistory();
-  const handleEditClick = () => {
-    // Redirect to the EditTask page with the task ID as a parameter
-    // history.push(`/edit-task/${id}`);
-  };
   return (
-    <button className="MyCompanyTaskCardAll">
+    <Link to={`/TaskPage/${task_id}`} className="MyCompanyTaskCardAll">
       <div className="MyCompanyTaskCardMain">
         <div className="MyCompanyTaskCardName">
           <span className="MyCompanyTaskCardName1">
@@ -17,7 +13,9 @@ function MyCompanyTaskCard({ taskName, createDate, priority, companyName, taskSt
         </div>
         <div className="MyCompanyTaskCardDesign">
           <div className="MyCompanyTaskCardEditButton">
-            <button className="MyCompanyTaskCardEditButtonText"onClick={handleEditClick}>. . .</button>
+          <Link to={`/EditTask/${task_id}`}>
+            <button className="MyCompanyTaskCardEditButtonText">. . .</button>
+            </Link>
           </div>
           <div className="MyCompanyTaskCardCenter">
             <div className="MyCompanyTaskCardCenterPart1">
@@ -36,7 +34,7 @@ function MyCompanyTaskCard({ taskName, createDate, priority, companyName, taskSt
           </div>
         </div>
       </div>
-    </button>
+    </Link>
   );
 }
 

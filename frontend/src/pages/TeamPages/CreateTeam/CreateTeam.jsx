@@ -3,8 +3,10 @@ import "./CreateTeam.css";
 import SideBar from "../../../components/SideBar/SideBar";
 import NavBar from "../../../components/NavBar/NavBar";
 import CreateTeamCard from "../../../components/CreateTeamCard/CreateTeamCard"
+import CreateTeamCardRole from "../../../components/CreateTeamCardRole/CreateTeamCardRole"
 import CreateTeamAddOnsCard from "../../../components/CreateTeamAddOnsCard/CreateTeamAddOnsCard"
 import { Button } from "@mantine/core";
+import { Link } from "react-router-dom";
 function CreateTeam() {
   const [receivedData, setReceivedData] = useState("");
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -18,6 +20,10 @@ function CreateTeam() {
     document.getElementById("man").style.backgroundColor =
       receivedData === "light" ? "#fff" : "#000";
   }, [receivedData]);
+  const dummyUsers = [
+    { name: "User 1", role: "Role 1" },
+    { name: "User 2", role: "Role 2" },
+  ];
   return (
     <div className="CreateTeamAll" id="man">
       <SideBar />
@@ -99,8 +105,13 @@ function CreateTeam() {
                     ? "CreateTeamLabelDark"
                     : "CreateTeamLabel"
                 }`}>User</span>
-            <CreateTeamCard/>
-            <CreateTeamCard/>
+               {dummyUsers.map((user, index) => (
+                  <CreateTeamCard
+                    key={index}
+                    name={user.name}
+                    
+                  />
+                ))}
             </div>
             <div className="CreateTeamRoles">
             <span className={`${
@@ -108,13 +119,20 @@ function CreateTeam() {
                     ? "CreateTeamLabelDark"
                     : "CreateTeamLabel"
                 }`}>Role</span>
-            <CreateTeamCard/>
-            <CreateTeamCard/>
+             {dummyUsers.map((user, index) => (
+                  <CreateTeamCardRole
+                    key={index}
+                  
+                    role={user.role}
+                  />
+                ))}
             </div>
           </div>
         <CreateTeamAddOnsCard/>
         <div className="CreateTeamButton">
+          <Link to="/MyCompaniesTeams">
                 <Button variant="filled" color="#388E3C" w={130} h={40}>Create</Button>
+                </Link>
                 </div>
           </div>
         </div>

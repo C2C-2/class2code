@@ -6,6 +6,10 @@
     display: flex;
     flex-direction: column;
 }
+.imgEdit{
+    height: 30px;
+    width: 30px;
+}
 
 .Comments1 {
     display: flex;

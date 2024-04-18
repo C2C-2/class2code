@@ -3,42 +3,15 @@ import "./CreateTaskCard.css";
 import EditSteps from "../../pages/TaskPages/EditTask/EditSteps";
 import { useMutation, gql } from "@apollo/client";
 
-const UPDATE_TASK_STEP = gql`
-  mutation UpdateTaskStep($taskStepId: Int!, $taskStep: TaskStepInput!) {
-    updateTaskStep(taskStepId: $taskStepId, taskStep: $taskStep) {
-      Description
-      Number
-    }
-  }
-`;
-
 function CreateTaskCard({ color, number, description }) {
   const [isDarkMode, setIsDarkMode] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [step, setStep] = useState(description);
 
-  const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
-
-  const [updateTaskStepMutation, { data }] = useMutation(UPDATE_TASK_STEP);
 
   useEffect(() => {
     setIsDarkMode(color === "dark");
   }, [color]);
 
-  const handleSaveStep = () => {
-    updateTaskStepMutation({
-      variables: {
-        taskStepId: null,
-        taskStep: {
-          Description: step, 
-          Number: number, 
-        },
-      },
-    });
-    // Close the modal
-    closeModal();
-  };
+
 
   return (
     <div>
@@ -46,14 +19,13 @@ function CreateTaskCard({ color, number, description }) {
         className={`${
           isDarkMode ? "CreateTaskCardAllDark" : "CreateTaskCardAll"
         }`}
-        onClick={openModal}
       >
         <div
           className={`${
             isDarkMode ? "CreateTaskCardTextDark" : "CreateTaskCardText"
           }`}
         >
-          {step}
+         {number} {description}
         </div>
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -68,12 +40,6 @@ function CreateTaskCard({ color, number, description }) {
           />
         </svg>
       </button>
-      <EditSteps
-        isOpen={isModalOpen}
-        onClose={closeModal}
-        onSave={handleSaveStep}
-        initialStep={step}
-      />
     </div>
   );
 }

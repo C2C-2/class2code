@@ -40,6 +40,22 @@ function AvailableProjects() {
   const { loading, error, data } = useQuery(searchInProjects, {
     variables: { word: searchTerm },
   });
+  const dummyProjects = [
+    {
+      _id: "1",
+      applications:"5",
+      ProjectName: "Dummy Project 1",
+      ProjectDescription: "This is a dummy project 1",
+      Requirements: [{ Value: "Rest" },{ Value: "Rest" }],
+    },
+    {
+      _id: "2",
+      applications:"7",
+      ProjectName: "Dummy Project 2",
+      ProjectDescription: "This is a dummy project 2",
+      Requirements: [{ Value: "React" },{ Value: "Rest" }],
+    },
+  ];
 
   const GET_PROJECTS = gql`
     query GetProjects {
@@ -135,18 +151,21 @@ function AvailableProjects() {
             <div className="AvailableProjectCardAll">
               {loading ? (
                 <p>Loading...</p>
-              ) : data && data.searchInProjects ? (
-                data.searchInProjects.map((project, index) => (
-                  <Link to={`/ProjectPage/${project._id}`} key={index}>
+              ) : dummyProjects ? (
+                dummyProjects.map((project, index) => (
+                  // <Link to={`/ProjectPage/${project._id}`} key={index}>
                     <AvailableProjectCard
+                    key={index}
                       projectName={project.ProjectName}
                       projectDescription={project.ProjectDescription}
+                      applications={project.applications}
+                      project_id={project._id}
                       requirements={project.Requirements.map(
                         (req) => req.Value
                       )}
                       colorProp={receivedData}
                     />
-                  </Link>
+                  // </Link>
                 ))
               ) : (
                 <p>No projects found.</p>

@@ -3,6 +3,7 @@ import "./MyCompaniesTeamsCard.css";
 import Profile from "./Frame.png";
 import { Link } from "react-router-dom";
 function MyCompaniesTeamsCard({ color, companyName, teamName, teamRole, createDate ,teamId  }) {
+  console.log(teamName);
   const [isDarkMode, setIsDarkMode] = useState(false);
   useEffect(() => {
     setIsDarkMode(color === "dark");
@@ -23,7 +24,7 @@ function MyCompaniesTeamsCard({ color, companyName, teamName, teamRole, createDa
           }`}
         >
       <div className="MyCompaniesTeamsCardEditButton">
-      <Link to={`/editTeams/${teamId}`} className="MyCompaniesTeamsCardEditButtonText">. . .</Link>
+      <Link to={`/EditTeam/${teamId}`} className="MyCompaniesTeamsCardEditButtonText">. . .</Link>
           </div>
           <div className="MyCompaniesTeamsCardPart1">
             <span

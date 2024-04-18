@@ -8,7 +8,7 @@ import CreateTeamAddOnsCard from "../../../components/CreateTeamAddOnsCard/Creat
 import { useParams } from "react-router-dom";
 import { Button } from "@mantine/core";
 import { useMutation, gql } from "@apollo/client";
-
+import { Link } from "react-router-dom";
 const UPDATE_TEAM_MUTATION = gql`
   mutation UpdateTeam($teamId: Int!, $team: TeamInput!) {
     updateTeam(teamId: $teamId, team: $team) {
@@ -164,6 +164,7 @@ function EditTeam() {
             </div>
             <CreateTeamAddOnsCard />
             <div className="EditTeamButton">
+              <Link to="/MyCompaniesTeams">
               <Button
                 variant="filled"
                 color="#388E3C"
@@ -173,6 +174,7 @@ function EditTeam() {
               >
                 Save
               </Button>
+              </Link>
             </div>
           </div>
         </div>

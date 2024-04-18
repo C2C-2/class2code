@@ -1,6 +1,6 @@
 import { useState,useEffect } from "react";
-import "./CompanyWorkOnCard.css";
-function CompanyWorkOnCard({color}) {
+import "C:/Users/osama/Desktop/class2code/frontend/src/components/CompanyWorkOnCard/CompanyWorkOnCard.css"
+function CompanyWorkOnCard({color,companyName,createDate}) {
   const [isDarkMode, setIsDarkMode] = useState(false);
   useEffect(() => {
     setIsDarkMode(color === "dark");
@@ -25,12 +25,12 @@ function CompanyWorkOnCard({color}) {
           isDarkMode
             ? "CompanyWorkOnCardText1Dark"
             : "CompanyWorkOnCardText1"
-        }`}>Ellie joined team developers</span>
+        }`}>{companyName}</span>
         <span className={`${
           isDarkMode
             ? "CompanyWorkOnCardText2Dark"
             : "CompanyWorkOnCardText2"
-        }`}>04 April, 2021 | 04:00 PM</span>
+        }`}>{createDate}</span>
       </div>
     </button>
   );

@@ -20,7 +20,6 @@
     align-items: center;
     justify-content: center;
     background: rgba(242, 249, 241, 0.40);
-    backdrop-filter: blur(6px);
 }
 
 .EditPostContent {

@@ -1,4 +1,4 @@
-import{ useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import "./OtherCompanyProfile.css";
 import { Button } from "@mantine/core";
 import SideBar from "../../../components/SideBar/SideBar";
@@ -9,6 +9,8 @@ import TeamOther from "../../../components/TeamOther/TeamOther";
 import { useQuery, useMutation } from "@apollo/client";
 import { gql } from "@apollo/client";
 import { Link } from "react-router-dom";
+import pro1 from "./Oval.png"
+import pro2 from "./Avatar.png"
 const GET_COMPANY_QUERY = gql`
   query Comments($companyId: Int!) {
     getCompany(companyId: $companyId) {
@@ -91,25 +93,30 @@ function OtherCompanyProfile() {
   const dummyData = {
     getCompany: {
       Comments: [
-        { CreatedDate: "2023-04-11", Value: "Great company!", _id: 1 },
+        {UserName:"Rose", CreatedDate: "2023-04-11", Value: "Great company!", _id: 1
+      ,ImageUser:pro1 },
         {
           CreatedDate: "2023-04-12",
           Value: "Awesome work environment",
+          UserName:"Omer Salah",
+          ImageUser:pro2,
           _id: 2,
         },
       ],
-      CompanyDescription: "Lorem ipsum dolor sit amet...",
-      CompanyName: "Dummy Company",
+      CompanyDescription:
+        "Wore these with my training tee and pods to a graduation bbq and the young bucks was all over it. Love the look and feel.",
+      CompanyName: "Web Company",
       CreateDate: "2022-01-01",
       Domain: "Technology",
+
       Project: [
-        { ProjectName: "Project 1", _id: 1 },
-        { ProjectName: "Project 2", _id: 2 },
+        { ProjectName: "Web Project", _id: 1 },
+        { ProjectName: "School Project", _id: 2 },
       ],
       Rate: 4.5,
       Teams: [
-        { TeamName: "Team A", _id: 1 },
-        { TeamName: "Team B", _id: 2 },
+        { TeamName: "Frontend Team", _id: 1 },
+        { TeamName: "Backend Team", _id: 2 },
       ],
     },
   };
@@ -123,36 +130,36 @@ function OtherCompanyProfile() {
         <NavBar sendDataToParent={receiveDataFromChild} />
         <div className="Part2OtherProfile">
           <div className="OtherProfileButtonBack">
-          <Link to="/Dashboard">
-            <Button
-              justify="center "
-              variant="filled"
-              color="#283739"
-              radius="md"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="18"
-                height="12"
-                viewBox="0 0 18 12"
-                fill="none"
+            <Link to="/Dashboard">
+              <Button
+                justify="center "
+                variant="filled"
+                color="#283739"
+                radius="md"
               >
-                <path
-                  d="M1.5 6H16.5"
-                  stroke="white"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M6.49999 11L1.5 6L6.49999 1"
-                  stroke="white"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </Button>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="18"
+                  height="12"
+                  viewBox="0 0 18 12"
+                  fill="none"
+                >
+                  <path
+                    d="M1.5 6H16.5"
+                    stroke="white"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M6.49999 11L1.5 6L6.49999 1"
+                    stroke="white"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </Button>
             </Link>
           </div>
           <div className="OtherProfileDescriptionCenter">
@@ -185,15 +192,15 @@ function OtherCompanyProfile() {
                   <span className="D1Text">{companyData.Domain}</span>
                 </div>
                 <div className="D2">
-                  <span className="D2Text"></span>
+                  <span className="D2Text">Domain</span>
                 </div>
               </div>
               <div className="CreateDate">
                 <div className="CD1">
-                  <span className="CD1Text">Created Date</span>
+                  <span className="CD1Text"> {companyData.CreateDate}</span>
                 </div>
                 <div className="CD2">
-                  <span className="CD2Text">{companyData.CreateDate}</span>
+                  <span className="CD2Text">Created Date </span>
                 </div>
               </div>
             </div>
@@ -207,8 +214,9 @@ function OtherCompanyProfile() {
                   {companyData.Comments.map((comment) => (
                     <CommentComp
                       key={comment._id}
-                      commenterName="Andrew Smith"
+                      commenterName={comment.UserName}
                       commentText={comment.Value}
+                      ImageUser={comment.ImageUser}
                       timestamp={comment.CreatedDate}
                     />
                   ))}

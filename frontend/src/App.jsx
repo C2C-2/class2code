@@ -33,7 +33,6 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import EditPost from "./pages/CompanyAdsPages/EditPost/EditPost";
 import EditTeam from "./pages/TeamPages/EditTeam/EditTeam";
 import Chat from "./pages/chat/Chat";
-import { useEffect, useState } from "react";
 import { Paths } from "./assets/Paths";
 function App() {
   const client = new ApolloClient({
@@ -53,13 +52,13 @@ function App() {
             <Route path="/MyCompaniesTeams" element={<MyCompaniesTeams />} />
             <Route path="/CreateTeam" element={<CreateTeam />} />
             <Route path="/CreateTask" element={<CreateTask />} />
-            <Route path="/AddPost" element={<AddPost />} />
+            <Route path="Posts/AddPost" element={<AddPost />} />
             <Route path="/EditPost" element={<EditPost />} />
-            <Route path="/EditTask" element={<EditTask />} />
-            <Route path="/EditTeam" element={<EditTeam />} />
+            <Route path="/EditTask/:task_id" element={<EditTask />} />
+            <Route path="/EditTeam/:teamId" element={<EditTeam />} />
             <Route path="/ProjectPage/:projectId" element={<ProjectPage />} />
-            <Route path="/TaskPage" element={<TaskPage />} />
-            {/* <Route path="/TeamsWorkingWith" element={<MyCompaniesTeams/>}/> */}
+            <Route path="/TaskPage/:task_id" element={<TaskPage />} />
+            <Route path="/TeamsWorkingWith" element={<MyCompaniesTeams/>}/>
             <Route path="/CreateCompany" element={<CreateCompany />} />
             <Route path="/MyCompanies" element={<MyCompanies />} />
             <Route path="/CompanyWorkingWith" element={<CompanyWorking />} />
@@ -71,6 +70,8 @@ function App() {
             <Route path="/ContactUs" element={<ContactUs/>}/>
             <Route path="/CompanyProfile" element={<EditMyCompanyProfile/>}/>
             <Route path="/OtherCompanyProfile" element={<OtherCompanyProfile/>}/>
+            <Route path="/AIChat" element={<AIChat/>}/>
+            <Route path="/FAQQuestion" element={<FAQQuestion/>} />
             
           </Routes>
         </BrowserRouter>

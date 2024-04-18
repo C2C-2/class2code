@@ -76,7 +76,19 @@ function MyCompanies() {
   const handleSearch = (e) => {
     setSearchWord(e.target.value);
   };
-
+  const dummyCompanies = [
+    {
+      CompanyName: "Dummy Company 1",
+      CompanyDescription: "Wore these with my training tee and pods to a graduation bbq and the young bucks was all over it. Love the look and feel.",
+      Rate: 4.5
+    },
+    {
+      CompanyName: "Dummy Company 2",
+      CompanyDescription: "Wore these with my training tee and pods to a graduation bbq and the young bucks was all over it. Love the look and feel.",
+      Rate: 3.8
+    },
+    // Add more dummy company objects as needed
+  ];
   return (
     <div className="MainMyCompanies" id="man">
       <SideBar />
@@ -171,15 +183,11 @@ function MyCompanies() {
             </div>
           </div>
           <div className="Part3My">
-            <div className="Part31">
-              {userLoading ? (
-                <p>Loading...</p>
-              ) : userError ? (
-                <p>Error: {userError.message}</p>
-              ) : (
-                userData &&
-                userData.getUser &&
-                userData.getUser.MyCompanies.map((company, index) => (
+            <Link to="/CompanyProfile" className="Part31">
+            
+              { (
+                dummyCompanies &&
+                dummyCompanies?.map((company, index) => (
                   <MyCompaniesCard
                     key={index}
                     colorProp={receivedData}
@@ -189,7 +197,8 @@ function MyCompanies() {
                   />
                 ))
               )}
-            </div>
+              
+            </Link>
           </div>
         </div>
       </div>
