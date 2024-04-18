@@ -3,6 +3,7 @@ import { FaPlus, FaArrowLeft, FaDotCircle, FaPaperPlane } from "react-icons/fa";
 import { Button, Card, NativeSelect, Text, TextInput } from '@mantine/core';
 import './Chat.css';
 import { write, read, updateData } from '../../config/firebase.js';
+import { Link } from 'react-router-dom';
 
 const Chat = () => {
 
@@ -79,13 +80,11 @@ const Chat = () => {
         const newUserId = window.prompt("Enter Your Id");
 
         if (newUserId) {
-            console.log(newUserId);
             setUserId(parseInt(newUserId));
         }
 
         const newUserId2 = window.prompt("Enter friend Id");
         if (newUserId) {
-            console.log(newUserId);
             setUserId2(parseInt(newUserId2));
         }
     }, []);
@@ -101,11 +100,10 @@ const Chat = () => {
     const createChat = async (e: { preventDefault: () => void; }, friendId: number) => {
         e.preventDefault();
         setIsSearch((e) => true);
-        console.log(isSearch);
 
-        // const key = await updateData(`/chats`, { name: "" });
-        // await updateData(`/users/${userId}/chats/${key}`, { name: "" });
-        // await updateData(`/users/${friendId}/chats/${key}`, { name: "" });
+        const key = await updateData(`/chats`, { name: "" });
+        await updateData(`/users/${userId}/chats/${key}`, { name: "" });
+        await updateData(`/users/${friendId}/chats/${key}`, { name: "" });
     }
 
     const createChatBtnOnClick = () => {
@@ -135,7 +133,7 @@ const Chat = () => {
                                 onClike={() => {
                                     const chatId = Object.keys(oldChats)[index];
                                     setChatId(chatId);
-                                    fetchChat(chatId)
+                                    fetchChat(chatId);
                                 }}
                                 key={index}
                                 lastMessage={messages?.lastMessage}

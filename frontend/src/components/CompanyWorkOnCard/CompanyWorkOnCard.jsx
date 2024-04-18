@@ -1,5 +1,5 @@
 import { useState,useEffect } from "react";
-import "C:/Users/osama/Desktop/class2code/frontend/src/components/CompanyWorkOnCard/CompanyWorkOnCard.css"
+import "../CompanyWorkOnCard/CompanyWorkOnCard.css";
 function CompanyWorkOnCard({color,companyName,createDate}) {
   const [isDarkMode, setIsDarkMode] = useState(false);
   useEffect(() => {

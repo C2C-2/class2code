@@ -1,6 +1,9 @@
-import "@mantine/core/styles.css";
-import { MantineProvider } from "@mantine/core";
+import React from "react";
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { MantineProvider } from "@mantine/core";
+import "@mantine/core/styles.css";
+
 import SecondSignup from "./pages/SecondSignup/SecondSignup";
 import SignUpFigma from "./pages/SignUp/SignUpFigma";
 import LogInFigma from "./pages/LogIn/Login";
@@ -26,66 +29,220 @@ import MyCompanyTask from "./pages/TaskPages/MyCompanyTask/MyCompanyTask";
 import Dashboard from "./pages/OtherPages/Dashboard/Dashboard";
 import NotFound from "./pages/OtherPages/NotFound/NotFound";
 import ForgetPassword from "./pages/OtherPages/ForgetPassword/ForgetPassword";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
 import EditPost from "./pages/CompanyAdsPages/EditPost/EditPost";
 import EditTeam from "./pages/TeamPages/EditTeam/EditTeam";
 import Chat from "./pages/chat/Chat";
+import ContactUs from "./pages/OtherPages/ContactUs/ContactUs";
+import FAQuestion from "./pages/OtherPages/FAQQuestion/FAQQuestion";
 import { Paths } from "./assets/Paths";
-function App() {
-  const client = new ApolloClient({
-    cache: new InMemoryCache(),
-    uri: "http://localhost:3000/graphql",
-  });
-  return (
-    <ApolloProvider client={client}>
-      <MantineProvider>
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/Dashboard" element={<Dashboard />} />
-            <Route path="/AvailableProject" element={<AvailableProjects />} />
-            <Route path="/Posts" element={<ShowAllPosts />} />
-            <Route path="/Chat" element={<Chat />} />
-            <Route path="/MyCompaniesTeams" element={<MyCompaniesTeams />} />
-            <Route path="/CreateTeam" element={<CreateTeam />} />
-            <Route path="/CreateTask" element={<CreateTask />} />
-            <Route path="Posts/AddPost" element={<AddPost />} />
-            <Route path="/EditPost" element={<EditPost />} />
-            <Route path="/EditTask/:task_id" element={<EditTask />} />
-            <Route path="/EditTeam/:teamId" element={<EditTeam />} />
-            <Route path="/ProjectPage/:projectId" element={<ProjectPage />} />
-            <Route path="/TaskPage/:task_id" element={<TaskPage />} />
-            <Route path="/TeamsWorkingWith" element={<MyCompaniesTeams/>}/>
-            <Route path="/CreateCompany" element={<CreateCompany />} />
-            <Route path="/MyCompanies" element={<MyCompanies />} />
-            <Route path="/CompanyWorkingWith" element={<CompanyWorking />} />
-            <Route path="/MyCompanyTask" element={<MyCompanyTask />} />
-            <Route path="*" element={<NotFound />} />
-            <Route path="/LogIn" element={<LogInFigma/>}></Route>
-            <Route path="/SignUp" element={<SignUpFigma/>}></Route>
-            <Route path="/ForgetPassword" element={<ForgetPassword/>}/>
-            <Route path="/ContactUs" element={<ContactUs/>}/>
-            <Route path="/CompanyProfile" element={<EditMyCompanyProfile/>}/>
-            <Route path="/OtherCompanyProfile" element={<OtherCompanyProfile/>}/>
-            <Route path="/AIChat" element={<AIChat/>}/>
-            <Route path="/FAQQuestion" element={<FAQQuestion/>} />
-            
-          </Routes>
-        </BrowserRouter>
-      </MantineProvider>
-    </ApolloProvider>
-  );
-}
 
 const TokenChecker = ({ children }) => {
   if (
     !localStorage.getItem("token") ||
     localStorage.getItem("token") === "null"
   ) {
-    window.location.replace(Paths.Login);
+    return <Navigate to="/Login" state={{ from: location }} replace />;
   } else {
     return children;
   }
 };
+
+function App() {
+  const client = new ApolloClient({
+    cache: new InMemoryCache(),
+    uri: "http://localhost:3000/graphql",
+  });
+
+  return (
+    <ApolloProvider client={client}>
+      <MantineProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/LogIn" element={<LogInFigma />} />
+            <Route path="/SignUp" element={<SignUpFigma />} />
+            <Route path="/ForgetPassword" element={<ForgetPassword />} />
+            <Route
+              path="/ContactUs"
+              element={
+                <TokenChecker>
+                  <ContactUs />
+                </TokenChecker>
+              }
+            />
+            <Route
+              path="/FAQQuestion"
+              element={
+                <TokenChecker>
+                  <FAQuestion />
+                </TokenChecker>
+              }
+            />
+            <Route
+              path="/Dashboard"
+              element={
+                <TokenChecker>
+                  <Dashboard />
+                </TokenChecker>
+              }
+            />
+
+            <Route
+              path="/"
+              element={
+                <TokenChecker>
+                  <Dashboard />
+                </TokenChecker>
+              }
+            />
+            <Route
+              path="/AvailableProject"
+              element={
+                <TokenChecker>
+                  <AvailableProjects />
+                </TokenChecker>
+              }
+            />
+            <Route
+              path="/Posts"
+              element={
+                <TokenChecker>
+                  <ShowAllPosts />
+                </TokenChecker>
+              }
+            />
+            <Route
+              path="/Chat"
+              element={
+                <TokenChecker>
+                  <Chat />
+                </TokenChecker>
+              }
+            />
+            <Route
+              path="/MyCompaniesTeams"
+              element={
+                <TokenChecker>
+                  <MyCompaniesTeams />
+                </TokenChecker>
+              }
+            />
+            <Route
+              path="/CreateTeam"
+              element={
+                <TokenChecker>
+                  <CreateTeam />
+                </TokenChecker>
+              }
+            />
+            <Route
+              path="/CreateTask"
+              element={
+                <TokenChecker>
+                  <CreateTask />
+                </TokenChecker>
+              }
+            />
+            <Route
+              path="/Posts/AddPost"
+              element={
+                <TokenChecker>
+                  <AddPost />
+                </TokenChecker>
+              }
+            />
+            <Route
+              path="/EditPost"
+              element={
+                <TokenChecker>
+                  <EditPost />
+                </TokenChecker>
+              }
+            />
+            <Route
+              path="/EditTask/:task_id"
+              element={
+                <TokenChecker>
+                  <EditTask />
+                </TokenChecker>
+              }
+            />
+            <Route
+              path="/EditTeam/:teamId"
+              element={
+                <TokenChecker>
+                  <EditTeam />
+                </TokenChecker>
+              }
+            />
+            <Route
+              path="/ProjectPage/:projectId"
+              element={
+                <TokenChecker>
+                  <ProjectPage />
+                </TokenChecker>
+              }
+            />
+            <Route
+              path="/TaskPage/:task_id"
+              element={
+                <TokenChecker>
+                  <TaskPage />
+                </TokenChecker>
+              }
+            />
+            <Route
+              path="/TeamsWorkingWith"
+              element={
+                <TokenChecker>
+                  <MyCompaniesTeams />
+                </TokenChecker>
+              }
+            />
+            <Route
+              path="/CreateCompany"
+              element={
+                <TokenChecker>
+                  <CreateCompany />
+                </TokenChecker>
+              }
+            />
+            <Route
+              path="/MyCompanies"
+              element={
+                <TokenChecker>
+                  <MyCompanies />
+                </TokenChecker>
+              }
+            />
+            <Route
+              path="/CompanyWorkingWith"
+              element={
+                <TokenChecker>
+                  <CompanyWorking />
+                </TokenChecker>
+              }
+            />
+            <Route
+              path="/MyCompanyTask"
+              element={
+                <TokenChecker>
+                  <MyCompanyTask />
+                </TokenChecker>
+              }
+            />
+            <Route
+              path="*"
+              element={
+                <TokenChecker>
+                  <NotFound />
+                </TokenChecker>
+              }
+            />
+          </Routes>
+        </BrowserRouter>
+      </MantineProvider>
+    </ApolloProvider>
+  );
+}
 
 export default App;
