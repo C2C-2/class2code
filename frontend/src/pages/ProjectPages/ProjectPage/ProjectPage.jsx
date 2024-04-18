@@ -56,9 +56,9 @@ function ProjectPage() {
       { Value: "Html and Css" },
     ],
     Applies: [
-      { CompanyName: "Company A", CreateDate: "2024-04-16" },
-      { CompanyName: "Company B", CreateDate: "2024-04-17" },
-      { CompanyName: "Company C", CreateDate: "2024-04-18" },
+      { CompanyName: "Company A", CreateDate: "2024-04-16" ,images:"https://i.pravatar.cc/300" },
+      { CompanyName: "Company B", CreateDate: "2024-04-17" ,images:"https://i.pravatar.cc/300"},
+      { CompanyName: "Company C", CreateDate: "2024-04-18" ,images:"https://i.pravatar.cc/300"},
     ],
   };
 
@@ -147,6 +147,7 @@ function ProjectPage() {
                     key={index}
                     companyName={company.CompanyName}
                     createDate={company.CreateDate}
+                    imageUser={company.images}
                   />
                 ))}
               </div>

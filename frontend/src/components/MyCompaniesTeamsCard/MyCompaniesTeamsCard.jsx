@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import "./MyCompaniesTeamsCard.css";
 import Profile from "./Frame.png";
 import { Link } from "react-router-dom";
-function MyCompaniesTeamsCard({ color, companyName, teamName, teamRole, createDate ,teamId  }) {
+function MyCompaniesTeamsCard({ color, companyName, teamName, teamRole, createDate ,teamId ,imagesUser,teamLead }) {
   console.log(teamName);
   const [isDarkMode, setIsDarkMode] = useState(false);
   useEffect(() => {
@@ -59,7 +59,7 @@ function MyCompaniesTeamsCard({ color, companyName, teamName, teamRole, createDa
             <div className="MyCompaniesTeamsCardPart2Under">
               <div className="MyCompaniesTeamsCardPart2UnderProfile">
                 <img
-                  src={Profile}
+                  src={imagesUser}
                   alt="Profile"
                   className="MyCompaniesTeamsCardPart2UnderProfileImg"
                 />
@@ -70,7 +70,7 @@ function MyCompaniesTeamsCard({ color, companyName, teamName, teamRole, createDa
                       : "MyCompaniesTeamsCardPart2UnderProfileText"
                   }`}
                 >
-                  Lead Name
+                  {teamLead}
                 </button>
               </div>
               <div className="MyCompaniesTeamsCardPart2Text2"> {createDate}</div>

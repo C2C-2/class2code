@@ -9,6 +9,11 @@
     display: flex;
     flex-direction: row;
 }
+.CompanyWorkOnCardimg{
+    height: 30px;
+    border-radius: 15px;
+    width: 30px;
+}
 .CompanyWorkOnCardDark {
     border: none;
     width: 100%;

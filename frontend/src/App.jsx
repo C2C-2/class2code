@@ -30,7 +30,9 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import EditPost from "./pages/CompanyAdsPages/EditPost/EditPost";
 import EditTeam from "./pages/TeamPages/EditTeam/EditTeam";
 import Chat from "./pages/chat/Chat";
+import ContactUs from "./pages/OtherPages/ContactUs/ContactUs"
 import { Paths } from "./assets/Paths";
+import FAQQuestion from "./pages/OtherPages/FAQQuestion/FAQQuestion";
 function App() {
   const client = new ApolloClient({
     cache: new InMemoryCache(),
