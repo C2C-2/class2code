@@ -70,6 +70,14 @@ function App() {
               }
             />
             <Route
+              path="/AIChat"
+              element={
+                <TokenChecker>
+                  <AIChat />
+                </TokenChecker>
+              }
+            />
+            <Route
               path="/FAQQuestion"
               element={
                 <TokenChecker>
