@@ -40,20 +40,23 @@ function AvailableProjects() {
   const { loading, error, data } = useQuery(searchInProjects, {
     variables: { word: searchTerm },
   });
+
   const dummyProjects = [
     {
       _id: "1",
-      applications:"5",
+      applications: "5",
       ProjectName: "Dummy Project 1",
-      ProjectDescription: "This is a dummy project 1",
-      Requirements: [{ Value: "Rest" },{ Value: "Rest" }],
+      ProjectDescription:
+        "Emmelie is a traditional book-worm and has always been from a young age. She is a housekeeper mom with two kids and she has a lot of time to read and relax.",
+      Requirements: [{ Value: "Rest" }, { Value: "Rest" }],
     },
     {
       _id: "2",
-      applications:"7",
+      applications: "7",
       ProjectName: "Dummy Project 2",
-      ProjectDescription: "This is a dummy project 2",
-      Requirements: [{ Value: "React" },{ Value: "Rest" }],
+      ProjectDescription:
+        "Emmelie is a traditional book-worm and has always been from a young age. She is a housekeeper mom with two kids and she has a lot of time to read and relax.",
+      Requirements: [{ Value: "React" }, { Value: "Rest" }],
     },
   ];
 
@@ -86,36 +89,36 @@ function AvailableProjects() {
 
         <div className="AvailableProjectMain">
           <div className="ButtonBackAvailableProject">
-          <Link to="/Dashboard">
-            <Button
-              justify="center "
-              variant="filled"
-              color="#283739"
-              radius="md"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="18"
-                height="12"
-                viewBox="0 0 18 12"
-                fill="none"
+            <Link to="/Dashboard">
+              <Button
+                justify="center "
+                variant="filled"
+                color="#283739"
+                radius="md"
               >
-                <path
-                  d="M1.5 6H16.5"
-                  stroke="white"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M6.49999 11L1.5 6L6.49999 1"
-                  stroke="white"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </Button>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="18"
+                  height="12"
+                  viewBox="0 0 18 12"
+                  fill="none"
+                >
+                  <path
+                    d="M1.5 6H16.5"
+                    stroke="white"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M6.49999 11L1.5 6L6.49999 1"
+                    stroke="white"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </Button>
             </Link>
           </div>
           <div className="AvailableProjectContent">
@@ -154,17 +157,15 @@ function AvailableProjects() {
               ) : dummyProjects ? (
                 dummyProjects.map((project, index) => (
                   // <Link to={`/ProjectPage/${project._id}`} key={index}>
-                    <AvailableProjectCard
+                  <AvailableProjectCard
                     key={index}
-                      projectName={project.ProjectName}
-                      projectDescription={project.ProjectDescription}
-                      applications={project.applications}
-                      project_id={project._id}
-                      requirements={project.Requirements.map(
-                        (req) => req.Value
-                      )}
-                      colorProp={receivedData}
-                    />
+                    projectName={project.ProjectName}
+                    projectDescription={project.ProjectDescription}
+                    applications={project.applications}
+                    project_id={project._id}
+                    requirements={project.Requirements.map((req) => req.Value)}
+                    colorProp={receivedData}
+                  />
                   // </Link>
                 ))
               ) : (
