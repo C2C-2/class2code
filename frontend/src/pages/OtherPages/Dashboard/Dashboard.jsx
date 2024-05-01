@@ -16,6 +16,8 @@ function Dashboard() {
   const [companiesNumber, setCompaniesNumber] = useState(0);
   const [teamsNumber, setTeamsNumber] = useState(0);
 
+  const userId = 
+
   const GET_LOCATIONS = gql`
     query Query($userId: String!) {
       getProfileStatistics(userId: $userId) {
