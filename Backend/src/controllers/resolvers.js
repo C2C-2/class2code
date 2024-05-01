@@ -1464,7 +1464,7 @@ const resolvers = {
         user.IsActive = true;
 
         // find user by id
-        const existingUser = await NeodeObject?.first("User", "id", user.id);
+        const existingUser = await NeodeObject?.first("User", "id", user?.id);
         if (existingUser) {
           throw new Error("User already exists");
         }
@@ -1496,6 +1496,7 @@ const resolvers = {
 
         // return await createdUser?.toJson();
       } catch (error) {
+        console.log(error);
         Logging.error(
           `${new Date()}, in resolvers.js => createNewUser, ${error}`
         );
