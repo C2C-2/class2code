@@ -192,7 +192,7 @@ const SideBarMenuCard = ({ data }) => {
     } else {
       return (
         <NavLink
-          href="#required-for-focus"
+          href={item.link}
           key={item.label}
           active={index === active}
           label={item.label}
@@ -203,6 +203,7 @@ const SideBarMenuCard = ({ data }) => {
             setActive(index);
           }}
           color="green"
+          
         >
           {item?.links?.map((child) => (
             <NavLink
@@ -217,7 +218,7 @@ const SideBarMenuCard = ({ data }) => {
     }
   });
 
-  return <Box w={220}>{items}</Box>;
+  return <Box w="100%">{items}</Box>;
 };
 
 export default SideBar;
