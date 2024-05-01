@@ -1,37 +1,35 @@
-.MyCompanyTaskAll{
-    display:flex;
+.MyCompanyTaskAll {
+    display: flex;
     flex-direction: row;
-    height: 100%;
-    width: 100%;
+    gap: 20px;
 }
-.MyCompanyTaskAllMain{
+
+.MyCompanyTaskAllMain {
     display: flex;
     flex-direction: column;
-    width: 100%;
-    height: 100%;
+    gap: 20px;
     align-items: flex-end;
 }
-.MyCompanyTaskAllCenter{
+
+.MyCompanyTaskAllCenter {
     display: flex;
     flex-direction: row;
-    height: 100%;
-    width: 85%;
     align-items: center;
     padding-right: 30px;
     padding-bottom: 4vw;
 }
+
 .MyCompanyTaskAllCenterButtonBack {
     height: 90%;
-    width: 8.5%;
     flex-direction: column;
     display: flex;
     align-items: flex-end;
 }
-.MyCompanyTaskAllContent{
+
+.MyCompanyTaskAllContent {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    width: 100%;
     height: 70%;
     gap: 2vw;
 }
@@ -59,6 +57,7 @@
     border-radius: 5px;
     width: 10%;
 }
+
 .MyCompanyTaskContentButtonsDesign1 {
     display: flex;
     padding: 10px var(--24, 24px);
@@ -72,20 +71,22 @@
     border-radius: 5px;
     width: 13%;
 }
-.MyCompanyTaskContentButtonText{
+
+.MyCompanyTaskContentButtonText {
     color: #000;
-    font-feature-settings: 'clig' off, 'liga' off;
+    font-feature-settings: 'clig'off, 'liga'off;
     font-family: Roboto;
     font-size: 16px;
     font-style: normal;
     font-weight: 300;
-    line-height: normal;   
+    line-height: normal;
 }
-.MyCompanyTaskContentCard{
+
+.MyCompanyTaskContentCard {
     display: flex;
     flex-wrap: wrap;
     flex-direction: row;
-    height:90%;
+    height: 90%;
     width: 100%;
     gap: 3vw;
 }
