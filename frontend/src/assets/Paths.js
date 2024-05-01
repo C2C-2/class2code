@@ -24,4 +24,5 @@ export const Paths = {
   ForgetPassword: "/ForgetPassword",
   NotFound: "*",
   SecondSignup: "/SecondSignup",
+  AIChat: "/AIChat",
 };

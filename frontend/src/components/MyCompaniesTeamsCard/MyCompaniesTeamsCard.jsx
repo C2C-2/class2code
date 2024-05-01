@@ -2,7 +2,16 @@ import { useState, useEffect } from "react";
 import "./MyCompaniesTeamsCard.css";
 import Profile from "./Frame.png";
 import { Link } from "react-router-dom";
-function MyCompaniesTeamsCard({ color, companyName, teamName, teamRole, createDate ,teamId  }) {
+function MyCompaniesTeamsCard({
+  color,
+  companyName,
+  teamName,
+  teamRole,
+  createDate,
+  teamId,
+  imagesUser,
+  teamLead,
+}) {
   console.log(teamName);
   const [isDarkMode, setIsDarkMode] = useState(false);
   useEffect(() => {
@@ -13,7 +22,7 @@ function MyCompaniesTeamsCard({ color, companyName, teamName, teamRole, createDa
       <div className="MyCompaniesTeamsCardMain">
         <div className="MyCompaniesTeamsCardName">
           <span className="MyCompaniesTeamsCardName1">
-          <span className="MyCompaniesTeamsCardText">{companyName}</span>
+            <span className="MyCompaniesTeamsCardText">{companyName}</span>
           </span>
         </div>
         <div
@@ -23,8 +32,11 @@ function MyCompaniesTeamsCard({ color, companyName, teamName, teamRole, createDa
               : "MyCompaniesTeamsCardDesign"
           }`}
         >
-      <div className="MyCompaniesTeamsCardEditButton">
-      <Link to={`/EditTeam/${teamId}`} className="MyCompaniesTeamsCardEditButtonText">. . .</Link>
+          <div className="MyCompaniesTeamsCardEditButton">
+            <Link
+              to={`/EditTeam/${teamId}`}
+              className="MyCompaniesTeamsCardEditButtonText"
+            >. . .</Link>
           </div>
           <div className="MyCompaniesTeamsCardPart1">
             <span
@@ -34,7 +46,7 @@ function MyCompaniesTeamsCard({ color, companyName, teamName, teamRole, createDa
                   : "MyCompaniesTeamsCardPartText"
               }`}
             >
-               {teamRole}
+              {teamRole}
             </span>
             <span
               className={`${
@@ -59,7 +71,7 @@ function MyCompaniesTeamsCard({ color, companyName, teamName, teamRole, createDa
             <div className="MyCompaniesTeamsCardPart2Under">
               <div className="MyCompaniesTeamsCardPart2UnderProfile">
                 <img
-                  src={Profile}
+                  src={imagesUser}
                   alt="Profile"
                   className="MyCompaniesTeamsCardPart2UnderProfileImg"
                 />
@@ -70,10 +82,13 @@ function MyCompaniesTeamsCard({ color, companyName, teamName, teamRole, createDa
                       : "MyCompaniesTeamsCardPart2UnderProfileText"
                   }`}
                 >
-                  Lead Name
+                  {teamLead}
                 </button>
               </div>
-              <div className="MyCompaniesTeamsCardPart2Text2"> {createDate}</div>
+              <div className="MyCompaniesTeamsCardPart2Text2">
+                {" "}
+                {createDate}
+              </div>
             </div>
           </div>
         </div>

@@ -1,269 +1,267 @@
 .MyCompaniesTeamsCardAll {
-    width: 30%;
-    height: 35%;
-    display: flex;
-    border: none;
-    background-color: transparent;
-    flex-direction: column;
+  width: 30%;
+  height: 40%;
+  display: flex;
+  border: none;
+  background-color: transparent;
+  flex-direction: column;
 }
 
 .MyCompaniesTeamsCardMain {
-    display: flex;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .MyCompaniesTeamsCardDesign {
-    padding-top: 20px;
-    padding-bottom: 15px;
-    padding-right: 20px;
-    width: 100%;
-    height: 100%;
-    border-radius: var(--16, 16px);
-    background: #F9F9F9;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    padding-left: 15px;
-    align-items: flex-start;
+  padding-top: 20px;
+  padding-bottom: 3vw;
+  padding-right: 20px;
+  width: 100%;
+  height: 89%;
+  border-radius: var(--16, 16px);
+  background: #f9f9f9;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-left: 15px;
+  align-items: flex-start;
 }
 
 .MyCompaniesTeamsCardDesignDark {
-    padding-top: 20px;
-    padding-bottom: 15px;
-    width: 100%;
-    height: 100%;
-    border-radius: var(--16, 16px);
-    background: #0b0b0b;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    padding-left: 15px;
-    align-items: flex-start;
+  padding-top: 20px;
+  padding-bottom: 15px;
+  width: 100%;
+  height: 100%;
+  border-radius: var(--16, 16px);
+  background: #0b0b0b;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-left: 15px;
+  align-items: flex-start;
 }
 
-
 .MyCompaniesTeamsCardName {
-    display: flex;
-    height: 13%;
-    padding-left: 30px;
-    align-items: center;
-    justify-content: center;
-    width: 40%;
-    transform: translate(0px, 5px);
-
+  display: flex;
+  height: 40% !important;
+  padding-left: 30px;
+  align-items: center;
+  justify-content: center;
+  width: 40%;
+  transform: translate(0px, 9px);
 }
 
 .MyCompaniesTeamsCardName1 {
-    display: flex;
-    border-radius: var(--4, 4px);
-    background: var(--dark-orange, #EE7214);
-    height: 100%;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
+  display: flex;
+  border-radius: var(--4, 4px);
+  background: var(--dark-orange, #ee7214);
+  height: 100%;
+  font-size: 14px;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
 }
 
 .MyCompaniesTeamsCardText {
-    color: var(--white-100, #FFF);
-    font-family: Inter;
-    font-size: 10px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: normal;
+  color: var(--white-100, #fff);
+  font-family: Inter;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
 }
 
 .MyCompaniesTeamsCardTextDark {
-    color: var(--black-100, #000);
-    font-family: Inter;
-    font-size: 10px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: normal;
+  color: var(--black-100, #000);
+  font-family: Inter;
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
 }
-.MyCompaniesTeamsCardEdit{
-    height: 5%;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
+.MyCompaniesTeamsCardEdit {
+  height: 5%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
 }
 .MyCompaniesTeamsCardEditButton {
-    width: 100%;
-    height: 9%;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
+  width: 100%;
+  height: 9%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
 }
 
 .MyCompaniesTeamsCardEditButtonText {
-    color: #0D062D;
-    font-family: Inter;
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 800;
-    line-height: normal;
-    letter-spacing: -1.045px;
-    text-decoration: none;
-    border: none;
-    background-color: transparent;
+  color: #0d062d;
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 800;
+  line-height: normal;
+  letter-spacing: -1.045px;
+  text-decoration: none;
+  border: none;
+  background-color: transparent;
 }
 
 .MyCompaniesTeamsCardPart1 {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    height: 10%;
-    padding-left: 10px;
-    padding-right: 10px;
-    justify-content: space-between;
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 10%;
+  padding-left: 10px;
+  padding-right: 10px;
+  justify-content: space-between;
 }
 
 .MyCompaniesTeamsCardPartText {
-    color: rgba(0, 0, 0, 0.60);
-    font-feature-settings: 'cv11'on, 'cv01'on, 'ss01'on;
-    font-family: Inter;
-    font-size: 12px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 18px;
+  color: rgba(0, 0, 0, 0.6);
+  font-feature-settings: "cv11" on, "cv01" on, "ss01" on;
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 18px;
 }
 
 .MyCompaniesTeamsCardPartTextDark {
-    color: #fff;
-    font-feature-settings: 'cv11'on, 'cv01'on, 'ss01'on;
-    font-family: Inter;
-    font-size: 12px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 18px;
+  color: #fff;
+  font-feature-settings: "cv11" on, "cv01" on, "ss01" on;
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 18px;
 }
 
 .MyCompaniesTeamsCardPartNumber {
-    color: #000;
-    padding-right: 20px;
-    font-feature-settings: 'cv11'on, 'cv01'on, 'ss01'on;
-    font-family: Inter;
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 20px;
-    /* 100% */
+  color: #000;
+  padding-right: 20px;
+  font-feature-settings: "cv11" on, "cv01" on, "ss01" on;
+  font-family: Inter;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 20px;
+  /* 100% */
 }
 
 .MyCompaniesTeamsCardPartNumberDark {
-    color: #fff;
-    padding-right: 20px;
-    font-feature-settings: 'cv11'on, 'cv01'on, 'ss01'on;
-    font-family: Inter;
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 20px;
-    /* 100% */
+  color: #fff;
+  padding-right: 20px;
+  font-feature-settings: "cv11" on, "cv01" on, "ss01" on;
+  font-family: Inter;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 20px;
+  /* 100% */
 }
 
 .MyCompaniesTeamsCardPart2 {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    gap: 15px;
-    height: 30%;
-    align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 15px;
+  height: 30%;
+  align-items: flex-start;
 }
 
 .MyCompaniesTeamsCardPart2Text {
-    padding-left: 10px;
-    color: var(--black-100, #1C1C1C);
-    font-feature-settings: 'cv11'on, 'cv01'on, 'ss01'on;
-    font-family: Inter;
-    font-size: 12px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 20px;
-    border: none;
-    background-color: transparent;
+  padding-left: 10px;
+  color: var(--black-100, #1c1c1c);
+  font-feature-settings: "cv11" on, "cv01" on, "ss01" on;
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 20px;
+  border: none;
+  background-color: transparent;
 }
 
 .MyCompaniesTeamsCardPart2TextDark {
-    padding-left: 10px;
-    color: var(--white-100, #e8e8e8);
-    font-feature-settings: 'cv11'on, 'cv01'on, 'ss01'on;
-    font-family: Inter;
-    font-size: 12px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 20px;
-    border: none;
-    background-color: transparent;
+  padding-left: 10px;
+  color: var(--white-100, #e8e8e8);
+  font-feature-settings: "cv11" on, "cv01" on, "ss01" on;
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 20px;
+  border: none;
+  background-color: transparent;
 }
 
-
 .MyCompaniesTeamsCardPart2Under {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    gap: 20px;
-    height: 100%;
-    justify-content: space-between;
-    align-items: center;
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  gap: 20px;
+  height: 100%;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .MyCompaniesTeamsCardPart2UnderProfile {
-    display: flex;
-    flex-direction: row;
-    height: 100%;
-    gap: 5px;
-    width: 90%;
-    padding-left: 10px;
-    align-items: center;
-    justify-content: flex-start;
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  gap: 5px;
+  width: 90%;
+  padding-left: 10px;
+  align-items: center;
+  justify-content: flex-start;
 }
 
 .MyCompaniesTeamsCardPart2UnderProfileImg {
-    border-radius: var(--80, 80px);
-    background: var(--black-5, rgba(28, 28, 28, 0.05));
-    width: 30px;
-    height: 30px;
+  border-radius: var(--80, 80px);
+  background: var(--black-5, rgba(28, 28, 28, 0.05));
+  width: 30px;
+  height: 30px;
 }
 
 .MyCompaniesTeamsCardPart2UnderProfileText {
-    color: rgba(0, 0, 0, 0.80);
-    font-feature-settings: 'cv11'on, 'cv01'on, 'ss01'on;
-    font-family: Inter;
-    font-size: 12px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 20px;
-    display: flex;
-    border: none;
-    background-color: transparent;
+  color: rgba(0, 0, 0, 0.8);
+  font-feature-settings: "cv11" on, "cv01" on, "ss01" on;
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 20px;
+  display: flex;
+  border: none;
+  background-color: transparent;
 }
 
 .MyCompaniesTeamsCardPart2UnderProfileTextDark {
-    color: #fff;
-    font-feature-settings: 'cv11'on, 'cv01'on, 'ss01'on;
-    font-family: Inter;
-    font-size: 12px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 20px;
-    display: flex;
-    border: none;
-    background-color: transparent;
+  color: #fff;
+  font-feature-settings: "cv11" on, "cv01" on, "ss01" on;
+  font-family: Inter;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 20px;
+  display: flex;
+  border: none;
+  background-color: transparent;
 }
 
 .MyCompaniesTeamsCardPart2Text2 {
-    width: 50%;
-    height: 100%;
-    color: #787486;
-    font-family: Inter;
-    font-size: 12px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: normal;
-    padding-top: 4px;
-    display: flex;
+  width: 50%;
+  height: 100%;
+  color: #787486;
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  padding-top: 4px;
+  display: flex;
 }

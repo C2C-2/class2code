@@ -7,34 +7,34 @@ import { IconSun, IconMoon } from "@tabler/icons-react";
 import clsx from "clsx";
 import classes from "./Light_DarkMode/LightDarkMode.module.css";
 import "./NavBar.css";
-import { useEffect ,useState } from "react";
+import { useEffect, useState } from "react";
 import MainLogo from "./logo2 2.png";
 import ProfileLogo from "./Profile.png";
 // import LightDarkMode from "./Light_DarkMode/LightDarkMode";
-function NavBar({sendDataToParent}) {
+function NavBar() {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const { setColorScheme } = useMantineColorScheme();
   const computedColorScheme = useComputedColorScheme("light", {
     getInitialValueInEffect: true,
   });
-sendDataToParent(computedColorScheme)
-useEffect(() => {
-  setIsDarkMode(computedColorScheme === "dark");
-}, [computedColorScheme]); 
+
+  useEffect(() => {
+    setIsDarkMode(computedColorScheme === "dark");
+  }, [computedColorScheme]);
 
   return (
-    <div className="MainNav" 
+    <div
+      className="MainNav"
       style={{
-        backgroundColor:  computedColorScheme=== "dark" ? "#000" : "#fff"
-      }}>
-      <div className={`${
-                isDarkMode ? "NavDark" : "Nav"
-              }`}>
+        backgroundColor: computedColorScheme === "dark" ? "#000" : "#fff",
+      }}
+    >
+      <div className={`${isDarkMode ? "NavDark" : "Nav"}`}>
         <div className="TopImage">
           <img className="NavMainLogo" alt="Logo" src={MainLogo} />
-          <span  className={`${
-                isDarkMode ? "NavTextBarDark" : "NavTextBar"
-              }`}>Class2Code</span>
+          <span className={`${isDarkMode ? "NavTextBarDark" : "NavTextBar"}`}>
+            Class2Code
+          </span>
         </div>
         <div className="TopPartNavBar">
           <span className="BackSearch">
@@ -101,7 +101,7 @@ useEffect(() => {
             <ActionIcon
               onClick={() =>
                 setColorScheme(
-                  computedColorScheme === "light" ? "dark": "light" 
+                  computedColorScheme === "light" ? "dark" : "light"
                 )
               }
               variant="transparent"

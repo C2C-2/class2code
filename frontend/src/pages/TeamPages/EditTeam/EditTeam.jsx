@@ -165,15 +165,15 @@ function EditTeam() {
             <CreateTeamAddOnsCard />
             <div className="EditTeamButton">
               <Link to="/MyCompaniesTeams">
-              <Button
-                variant="filled"
-                color="#388E3C"
-                w={130}
-                h={40}
-                onClick={handleSave}
-              >
-                Save
-              </Button>
+                <Button
+                  variant="filled"
+                  color="#388E3C"
+                  w={130}
+                  h={40}
+                  onClick={handleSave}
+                >
+                  Save
+                </Button>
               </Link>
             </div>
           </div>

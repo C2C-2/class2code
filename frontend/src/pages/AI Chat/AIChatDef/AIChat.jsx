@@ -5,6 +5,7 @@ import { Button } from "@mantine/core";
 
 import NavBarAI from "../../../components/NavBarAI/NavBarAI";
 import SideBarAI from "../../../components/SideBarAI/SideBarAI";
+import { Link } from "react-router-dom";
 function AIChat() {
   return (
     <div className="MainAiDef">
@@ -66,7 +67,7 @@ function AIChat() {
               </div>
               <div className="RightSideAiDef">
                 <div className="TextsDef">
-                  <button className="LeftTextDef">HomePage</button>
+                  <Link to={"/"} className="LeftTextDef">HomePage</Link>
                   <button className="LeftTextDef">License</button>
                   <button className="LeftTextDef">Terms of Use</button>
                   <button className="LeftTextDef">PrivacyPolicy</button>

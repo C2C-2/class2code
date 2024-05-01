@@ -20,6 +20,11 @@ function SideBar() {
       link: Paths.Dashboard,
     },
     {
+      icon: BsChatDots,
+      label: "AI Chat",
+      link: Paths.AIChat,
+    },
+    {
       icon: BsPostcard,
       label: "Post",
       link: Paths.Posts,
@@ -83,9 +88,8 @@ function SideBar() {
       icon: AiOutlineQuestionCircle,
       label: "Any Question",
       link: Paths.FAQQuestion,
-    }
-  ]
-
+    },
+  ];
 
   return (
     <div className={`${isDarkMode ? "SideBarMainDark" : "SideBarMain"}`}>

@@ -8,10 +8,8 @@ import { useForm } from '@mantine/form';
 import {
     TextInput,
     PasswordInput,
-    Text,
     Paper,
     Group,
-    PaperProps,
     Divider,
     Checkbox,
     Anchor,
@@ -20,9 +18,13 @@ import {
 import { GoogleButton } from './GoogleButton';
 // import { TwitterButton } from './TwitterButton';
 import { auth } from '../../config/firebase.js';
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, GithubAuthProvider, signInWithRedirect } from 'firebase/auth';
 import Alert from '../../components/Alert/AlertBox.jsx';
 import { Paths } from '../../assets/Paths';
+import { GithubFilled } from '@ant-design/icons';
+import { ButtonProps } from 'antd';
+import { FaGithub } from 'react-icons/fa';
+import { gql, useMutation } from '@apollo/client';
 
 const Login = () => {
 
@@ -42,6 +44,15 @@ const Login = () => {
         },
     });
 
+    const Create_User = gql`
+        mutation Mutation($user: UserInput!) {
+            createNewUser(user: $user) {
+                id
+            }
+        }
+    `;
+    const [createUser, { data, loading }] = useMutation(Create_User);
+
     if (
         localStorage.getItem("token") &&
         localStorage.getItem("token") !== "null"
@@ -53,10 +64,12 @@ const Login = () => {
         e.preventDefault();
         try {
             if (form.isValid()) {
-                const a = await signInWithEmailAndPassword(auth, form.values.email, form.values.password);
-                localStorage.setItem("token", await a.user.getIdToken());
-                localStorage.setItem("user", a.user);
-                window.location.replace("/");
+                const result = await signInWithEmailAndPassword(auth, form.values.email, form.values.password);
+                localStorage.setItem("token", result.user.accessToken);
+                localStorage.setItem("name", result?.user?.displayName);
+                localStorage.setItem("id", result?.user?.uid);
+                localStorage.setItem("type", "old");
+                // window.location.replace(Paths.Dashboard);
             }
         } catch (err) {
             setError("Check your email and password please");
@@ -69,14 +82,32 @@ const Login = () => {
         e.preventDefault();
         try {
             if (form.isValid()) {
-                const a = await createUserWithEmailAndPassword(auth, form.values.email, form.values.password);
-                localStorage.setItem("token", await a.user.getIdToken());
-                localStorage.setItem("user", a.user);
-                if (type === 'register')
-                    window.location.replace(Paths.SecondSignup);
-                else
-                    window.location.replace(Paths.Home);
+                const result = await createUserWithEmailAndPassword(auth, form.values.email, form.values.password);
+                const userName = result?.user?.displayName;
+                if (type === 'register') {
+                    const names = userName?.split(" ");
+                    await createUser({
+                        variables: {
+                            user: {
+                                id: result?.user?.uid,
+                                FirstName: names[0] || '',
+                                LastName: names[1] || '',
+                            }
+                        }
+                    }).then(() => {
+                        localStorage.setItem("token", result.user.accessToken);
+                        localStorage.setItem("name", userName);
+                        localStorage.setItem("id", result?.user?.uid);
+                        localStorage.setItem("type", "new");
+                        // window.location.replace(Paths.SecondSignup);
+                    }).catch(err => {
+                        setError(err.message);
+                        const time = setTimeout(() => setError(null), 3000);
+                        return () => clearTimeout(time);
+                    });
+                }
             }
+            // window.location.replace(Paths.Dashboard);
         } catch (err) {
             setError("Check your email and password please");
             const time = setTimeout(() => setError(null), 3000);
@@ -91,13 +122,68 @@ const Login = () => {
             provider.addScope('https://www.googleapis.com/auth/contacts.readonly');
 
             const result = await signInWithPopup(auth, provider);
-            localStorage.setItem("token", await result.user.accessToken);
-            localStorage.setItem("user", result.user);
+            const userName = result?.user?.displayName;
+
+            const names = userName?.split(" ");
+            const FirstName = names[0] || '';
+            names[0] = "";
+            const LastName = names?.join(" ") || '';
+
+            const user = await createUser({
+                variables: {
+                    user: {
+                        id: result?.user?.uid,
+                        FirstName: FirstName,
+                        LastName: LastName,
+                    }
+                }
+            });
+
+            if (user) {
+                localStorage.setItem("type", "new");
+                localStorage.setItem("token", result.user.accessToken);
+                localStorage.setItem("name", userName);
+                localStorage.setItem("id", result?.user?.uid);
+            }
+
+        } catch (err) {
+            setError(err.message);
+            const time = setTimeout(() => setError(null), 3000);
+            return () => clearTimeout(time);
+        }
+    }
+
+    const signInByGithub = async (e) => {
+        e.preventDefault();
+        try {
+            const provider = new GithubAuthProvider();
+
+            const result = await signInWithRedirect(auth, provider);
+            const userName = result?.user?.displayName;
             // localStorage.removeItem("token");
-            if (type === 'register')
-                window.location.replace(Paths.SecondSignup);
-            else
-                window.location.replace(Paths.Home);
+            if (type === 'register') {
+                const names = userName?.split(" ");
+                const re = await createUser({
+                    variables: {
+                        user: {
+                            id: result?.user?.uid,
+                            FirstName: names[0] || '',
+                            LastName: names[1] || '',
+                        }
+                    }
+                }).then(() => {
+                    window.location.replace(Paths.SecondSignup);
+                }).catch(err => {
+                    setError(err.message);
+                    const time = setTimeout(() => setError(null), 3000);
+                    return () => clearTimeout(time);
+                });
+            }
+
+            localStorage.setItem("token", result.user.accessToken);
+            localStorage.setItem("name", userName);
+            localStorage.setItem("id", result?.user?.uid);
+            window.location.replace(Paths.Home);
 
         } catch (err) {
             setError("Check your email and password please");
@@ -188,7 +274,7 @@ const Login = () => {
 
                     <Group grow mb="md" mt="md">
                         <GoogleButton onClick={signInByGoogle} radius="xl">Google</GoogleButton>
-                        {/* <TwitterButton radius="xl">Twitter</TwitterButton> */}
+                        <GithubButton onClick={signInByGithub} radius="xl"> Github </GithubButton>
                     </Group>
 
                     <Divider label="Or continue with email" labelPosition="center" my="lg" />
@@ -197,7 +283,7 @@ const Login = () => {
                         <Stack>
                             {type === 'register' && (
                                 <TextInput
-                                    label="Name"
+                                    label="Full Name"
                                     placeholder="Your name"
                                     value={form.values.name}
                                     onChange={(event) => form.setFieldValue('name', event.currentTarget.value)}
@@ -261,6 +347,10 @@ const Login = () => {
             </div>
         </Flex >
     )
+}
+
+export function GithubButton(props: ButtonProps & React.ComponentPropsWithoutRef<'button'>) {
+    return <Button leftSection={<FaGithub />} variant="default" {...props} />;
 }
 
 export default Login

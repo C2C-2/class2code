@@ -20,7 +20,6 @@
     padding-top: 20px;
     padding-bottom: 15px;
     width: 100%;
-    height: 100%;
     border-radius: var(--16, 16px);
     background: #F9F9F9;
     display: flex;
@@ -33,13 +32,11 @@
 
 .MyCompanyTaskCardName {
     display: flex;
-    height: 15% !important;
     padding-left: 30px;
     align-items: center;
     justify-content: center;
-    width: 35%;
-    transform: translate(0px, 5px);
-
+    transform: translate(0px, 9px);
+    width: fit-content;
 }
 
 .MyCompanyTaskCardName1 {
@@ -54,11 +51,11 @@
 
 .MyCompanyTaskCardText {
     color: var(--white-100, #FFF);
-    font-family: Inter;
-    font-size: 10px;
+    font-size: 12px;
     font-style: normal;
     font-weight: 600;
     line-height: normal;
+    padding: 0.2vw 1vw;
 }
 
 .MyCompanyTaskCardEditButton {
@@ -141,13 +138,11 @@
     align-items: flex-start;
     display: flex;
     flex-direction: row;
-    height: 100%;
-    width: 100% !important;
-    color: #787486;
+    color: var(--black-100, #1C1C1C);
     font-family: Inter;
-    font-size: 12px;
+    font-size: 14px;
     font-style: normal;
-    font-weight: 400;
+    font-weight: 500;
     line-height: normal;
 }
 
