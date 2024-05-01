@@ -39,7 +39,6 @@ const TokenChecker = ({ children }) => {
   if (!localStorage.getItem("token")) {
     return <Navigate to="/LogIn" />;
   }
-
   return children;
 };
 
