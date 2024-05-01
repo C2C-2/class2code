@@ -4,9 +4,8 @@ import SideBar from "../../../components/SideBar/SideBar";
 import NavBar from "../../../components/NavBar/NavBar";
 import DashboardStatusCard from "../../../components/DashboardStatusCard/DashboardStatusCard";
 import DashboardProfileCard from "../../../components/DashboardProfileCard/DashboardProfileCard";
-import { Button, Grid, Modal, Table } from "@mantine/core";
+import { Button, Modal, Table } from "@mantine/core";
 import { gql, useQuery } from "@apollo/client";
-import { Paths } from "../../../assets/Paths";
 import SecondSignup from "../../SecondSignup/SecondSignup";
 import { useDisclosure } from "@mantine/hooks";
 function Dashboard() {
