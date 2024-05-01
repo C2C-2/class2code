@@ -1,33 +1,59 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState } from "react";
 import "./Dashboard.css";
 import SideBar from "../../../components/SideBar/SideBar";
 import NavBar from "../../../components/NavBar/NavBar";
 import DashboardStatusCard from "../../../components/DashboardStatusCard/DashboardStatusCard";
 import DashboardProfileCard from "../../../components/DashboardProfileCard/DashboardProfileCard";
-import { Button } from "@mantine/core";
+import { Button, Table } from "@mantine/core";
+import { gql, useQuery } from "@apollo/client";
 function Dashboard() {
   const [receivedData, setReceivedData] = useState("");
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [projectsNumber, setProjectsNumber] = useState(0);
+  const [tasksNumber, setTasksNumber] = useState(0);
+  const [companiesNumber, setCompaniesNumber] = useState(0);
+  const [teamsNumber, setTeamsNumber] = useState(0);
+
+  const GET_LOCATIONS = gql`
+    query Query($userId: String!) {
+      getProfileStatistics(userId: $userId) {
+        NumberOfProjects
+        NumberOfTeams
+        NumberOfTasks
+        NumberOfMyCompanies
+      }
+    }
+  `;
+
+  const { loading, error, data } = useQuery(GET_LOCATIONS, {
+    variables: { userId: localStorage.getItem("id") },
+  });
+
   useEffect(() => {
-    setIsDarkMode(receivedData === "dark");
-  }, [receivedData]);
-  const receiveDataFromChild = (data) => {
-    setReceivedData(data);
-  };
-  useEffect(() => {
-    document.getElementById("man").style.backgroundColor =
-      receivedData === "light" ? "#fff" : "#000";
-  }, [receivedData]);
+    if (data) {
+      setReceivedData(data);
+      setProjectsNumber(data.getProfileStatistics.NumberOfProjects);
+      setTasksNumber(data.getProfileStatistics.NumberOfTasks);
+      setCompaniesNumber(data.getProfileStatistics.NumberOfMyCompanies);
+      setTeamsNumber(data.getProfileStatistics.NumberOfTeams);
+    }
+  }, [data]);
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error : {error.message}</p>;
+
   return (
     <div className="DashboardAll" id="man">
-      <SideBar colorSide={receivedData}/>
+      <SideBar colorSide={receivedData} />
       <div className="DashboardMain">
-        <NavBar sendDataToParent={receiveDataFromChild}/>
+        <NavBar />
         <div className="DashboardCenter">
           <div className="DashboardTexts">
             <span className="DashboardTexts1">
               <span className="DashboardTexts1Part1">Hello,</span>
-              <span className="DashboardTexts1Part2">Osama!</span>
+              <span className="DashboardTexts1Part2">
+                {localStorage.getItem("name") || "Osama"}!
+              </span>
             </span>
             <span className="DashboardTexts2">
               <span className="DashboardTexts2Part1">
@@ -39,7 +65,7 @@ function Dashboard() {
           <div className="DashboardClasses">
             <button className="DashboardMyProjects">
               <div className="DashboardMyProjects1">
-                <span className="DashboardMyProjects1Text">My Projects</span>
+                <h6 className="DashboardMyProjects1Text">My Projects</h6>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="25"
@@ -53,11 +79,11 @@ function Dashboard() {
                   />
                 </svg>
               </div>
-              <span className="DashboardMyProjects2">29</span>
+              <span className="DashboardMyProjects2">{projectsNumber}</span>
             </button>
             <button className="DashboardTotalTasks">
               <div className="DashboardMyProjects1">
-                <span className="DashboardMyProjects1Text">Total Tasks</span>
+                <h6 className="DashboardMyProjects1Text">Total Tasks</h6>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="25"
@@ -71,11 +97,11 @@ function Dashboard() {
                   />
                 </svg>
               </div>
-              <span className="DashboardMyProjects2">15</span>
+              <span className="DashboardMyProjects2">{tasksNumber}</span>
             </button>
             <button className="DashboardMyCompanies">
               <div className="DashboardMyProjects1">
-                <span className="DashboardMyProjects1Text">My Companies</span>
+                <h6 className="DashboardMyProjects1Text">My Companies</h6>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="25"
@@ -89,13 +115,11 @@ function Dashboard() {
                   />
                 </svg>
               </div>
-              <span className="DashboardMyProjects2">3</span>
+              <span className="DashboardMyProjects2">{companiesNumber}</span>
             </button>
             <button className="DashboardProjectFinished">
               <div className="DashboardMyProjects1">
-                <span className="DashboardMyProjects1Text">
-                  Project Finished
-                </span>
+                <h6 className="DashboardMyProjects1Text">My Teams</h6>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="25"
@@ -109,152 +133,77 @@ function Dashboard() {
                   />
                 </svg>
               </div>
-              <span className="DashboardMyProjects2">46</span>
+              <span className="DashboardMyProjects2">{teamsNumber}</span>
             </button>
           </div>
           <div className="DashboardUnder">
             <div className="DashboardUnderPart1">
-              <span  className={`${
+              <span
+                className={`${
                   isDarkMode
                     ? "DashboardUnderPart1Text1Dark"
                     : "DashboardUnderPart1Text1"
-                }`}>New Tasks</span>
+                }`}
+              >
+                New Tasks
+              </span>
               <span className="DashboardUnderPart1Text2">32 Tasks</span>
             </div>
             <div className="DashboardUnderPart2">
-              <table 
-               className={`table table-hover ${
-                isDarkMode
-                  ? "bg-dark"
-                  : "bg-white"
-              }`}>
-                <thead>
-                  <tr>
-                    <th scope="col" className= {`text-secondary ${
-                isDarkMode
-                  ? "bg-black"
-                  : "bg-bg-white"
-              }`}>
-                      Tasks
-                    </th>
-                    <th scope="col" className= {`text-secondary ${
-                isDarkMode
-                  ? "bg-black"
-                  : "bg-bg-white"
-              }`}>
-                      Deadline
-                    </th>
-                    <th scope="col" className= {`text-secondary ${
-                isDarkMode
-                  ? "bg-black"
-                  : "bg-bg-white"
-              }`}>
-                      Leader + Team
-                    </th>
-                    <th scope="col" className= {`text-secondary ${
-                isDarkMode
-                  ? "bg-black"
-                  : "bg-bg-white"
-              }`}>
-                      Company
-                    </th>
-                    <th scope="col" className= {`text-secondary ${
-                isDarkMode
-                  ? "bg-black"
-                  : "bg-bg-white"
-              }`}>
-                      Status
-                    </th>
-                    <th className= {`text-secondary ${
-                isDarkMode
-                  ? "bg-black"
-                  : "bg-white"
-              }`}></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr >
-                    <td className= {` ${
-                isDarkMode
-                  ? "bg-black"
-                  : "bg-white"
-              }`}>
-                      <div className= {`TableDesign ${
-                isDarkMode
-                  ? "bg-black"
-                  : "bg-white"
-              }`}>
-                        <span className= {` ${
-                isDarkMode
-                  ? "TableDesignText1Dark text-white"
-                  : "TableDesignText1 text-dark"
-              }`}>
-                          New Dashboard
-                        </span>
-                        <span className={` ${
-                isDarkMode
-                  ? "TableDesignText2Dark text-white"
-                  : "TableDesignText2 text-dark"
-              }`}>Toyota</span>
-                      </div>
-                    </td>
-                    <td className= {` ${
-                isDarkMode
-                  ? "bg-black"
-                  : "bg-white"
-              }`}>
-                      <div className= {`TableDesign ${
-                isDarkMode
-                  ? "bg-black"
-                  : "bg-white"
-              }`}>
-                        <span className= {`TableDesignText1 justify-content-center ${
-                isDarkMode
-                  ? "TableDesignText1Dark text-white"
-                  : " TableDesignText1 text-dark"
-              }`}>
+              <Table>
+                <Table.Thead>
+                  <Table.Tr>
+                    <Table.Th>Tasks</Table.Th>
+                    <Table.Th>Deadline</Table.Th>
+                    <Table.Th>Leader + Team</Table.Th>
+                    <Table.Th>Company</Table.Th>
+                    <Table.Th>Status</Table.Th>
+                  </Table.Tr>
+                </Table.Thead>
+                <Table.Tbody>
+                  <Table.Tr>
+                    <Table.Td>1</Table.Td>
+                    <Table.Td>
+                      <div
+                        className={`TableDesign ${
+                          isDarkMode ? "bg-black" : "bg-white"
+                        }`}
+                      >
+                        <span
+                          className={`TableDesignText1 justify-content-center ${
+                            isDarkMode
+                              ? "TableDesignText1Dark text-white"
+                              : " TableDesignText1 text-dark"
+                          }`}
+                        >
                           Mar 24, 2015
                         </span>
-                        <span  className={` ${
-                isDarkMode
-                  ? "TableDesignText2Dark text-white"
-                  : "TableDesignText2 text-dark"
-              }`}>In 6 Days</span>
+                        <span
+                          className={` ${
+                            isDarkMode
+                              ? "TableDesignText2Dark text-white"
+                              : "TableDesignText2 text-dark"
+                          }`}
+                        >
+                          In 6 Days
+                        </span>
                       </div>
-                    </td>
-                    <td className= {` ${
-                isDarkMode
-                  ? "bg-black"
-                  : "bg-white"
-              }`}>
-                      <div className="align-items-center">
-                        <DashboardProfileCard color={receivedData} />
-                      </div>
-                    </td>
-                    <td className= {` ${
-                isDarkMode
-                  ? "text-white fs-6 pt-3 bg-black"
-                  : " text-dark fs-6 pt-3 bg-white"
-              }`}>Company1</td>
-                    <td className= {` ${
-                isDarkMode
-                  ? " pt-3 align-items-center bg-black"
-                  : "pt-3 align-items-center bg-white"
-              }`}>
+                    </Table.Td>
+                    <Table.Td>
+                      <DashboardProfileCard color={receivedData} />
+                    </Table.Td>
+                    <Table.Td>Company</Table.Td>
+                    <Table.Td>
                       <DashboardStatusCard />
-                    </td>
-                    <td  className= {` ${
-                isDarkMode
-                  ? "bg-black"
-                  : "bg-white"
-              }`}>
+                    </Table.Td>
+                    <Table.Td>
                       <Button variant="filled" color="#EE7214" w={100} h={40}>
                         Start
                       </Button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+                    </Table.Td>
+                  </Table.Tr>
+                </Table.Tbody>
+              </Table>
             </div>
           </div>
         </div>

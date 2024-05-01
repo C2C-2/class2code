@@ -2,7 +2,7 @@ import "./MyCompanyTaskCard.css";
 import RequirementNeed from "../RequirementNeed/RequirementNeed";
 import { Link } from "react-router-dom";
 // import { useHistory } from 'react-router-dom';
-function MyCompanyTaskCard({ taskName, createDate, priority, companyName, taskStatus, task_id  }) {
+function MyCompanyTaskCard({ taskName, createDate, priority, companyName, taskStatus, task_id ,colorReq }) {
   return (
     <Link to={`/TaskPage/${task_id}`} className="MyCompanyTaskCardAll">
       <div className="MyCompanyTaskCardMain">
@@ -30,7 +30,7 @@ function MyCompanyTaskCard({ taskName, createDate, priority, companyName, taskSt
             </p>
           </div>
           <div className="MyCompanyTaskCardCenterCardOther">
-            <RequirementNeed textReq={taskStatus} />
+            <RequirementNeed textReq={taskStatus} colorReq={colorReq} />
           </div>
         </div>
       </div>

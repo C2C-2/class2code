@@ -1,141 +1,143 @@
 .AvailableProjectAll {
-    width:22%;
-    align-items: center;
-    display: flex;
-    flex-direction: column;
-    height: 60%;
-    border: none;
-    text-decoration: none;
-    background-color: transparent;
+  width: 24%;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  height: 60%;
+  border: none;
+  text-decoration: none;
+  background-color: transparent;
 }
 
 .AvailableProjectDesign {
-    display: flex;
-    width: 100%;
-    height: 100%;
-    padding-top: 15px;
-    padding-left: 20px;
-    padding-right: 20px;
-    flex-direction: column;
-    align-items: flex-end;
-    border-radius: 18px;
-    border: 1px solid rgba(0, 0, 0, 0.10);
-    background: var(--white-100, #FFF);
-    box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.10);
+  display: flex;
+  width: 100%;
+  height: 100%;
+  padding-top: 15px;
+  padding-left: 20px;
+  padding-right: 20px;
+  flex-direction: column;
+  align-items: flex-end;
+  border-radius: 18px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  background: var(--white-100, #fff);
+  box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.1);
 }
 
 .AddProjectAvailable {
-    width: 15%;
-    height: 9%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+  width: 15%;
+  height: 9%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .Adds1 {
-    width: 100% !important;
-    height: 80%;
-    text-decoration: none;
-    display: flex;
-    width: var(--32, 32px);
-    padding-bottom: 7px;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    border-radius: 50px;
-    background-color: #FFF4E6;
+  width: 100% !important;
+  height: 80%;
+  text-decoration: none;
+  display: flex;
+  width: var(--32, 32px);
+  padding-bottom: 7px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-radius: 50px;
 }
 
 .Plus {
-    color: var(--dark-orange, #EE7214);
-    font-feature-settings: 'clig'off, 'liga'off;
-    font-family: Inter;
-    font-size: 30px;
-    text-decoration: none;
-    font-style: normal;
-    font-weight: 600;
-    line-height: normal;
-    border-radius: 15px;
-    border: none;
+  color: var(--dark-orange, #ee7214);
+  background-color: #fff4e6;
+  padding-bottom: 5px;
+  border: none;
+  border-radius: 50%;
+  width: 2.2vw;
+  height: 2.2vw;
+  font-size: 1.3vw;
+  font-weight: 700;
+  text-align: center;
+  cursor: pointer;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.05);
 }
 
 .PartTextAvailableProject {
-    width: 100%;
-    height: 60%;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 25px;
+  width: 100%;
+  height: 60%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 25px;
 }
 
 .PartTitleAvailableProject {
-    height: 20%;
-    width: 95%;
-    flex-direction: column;
-    display: flex;
-    gap: 2px;
+  height: 20%;
+  width: 95%;
+  flex-direction: column;
+  display: flex;
+  gap: 2px;
 }
 
 .T1Project {
-    color: rgba(0, 0, 0, 0.80);
-    font-family: Catamaran;
-    font-size: 20px;
-    font-style: normal;
-    font-weight: 700;
-    line-height: normal;
+  color: rgba(0, 0, 0, 0.8);
+  font-family: Catamaran;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
 }
 
 .T2Project {
-    color: #909090;
-    font-family: Catamaran;
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: normal;
+  color: #909090;
+  font-family: Catamaran;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
 }
 
 .ParagraphAvailableProject {
-    height: 65%;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
+  height: 65%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
 .P1Project {
-    color: #505050;
-    font-family: Catamaran;
-    font-size: 15px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: normal;
+  color: #505050;
+  font-family: Catamaran;
+  font-size: 15px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
 }
 
 .RequirementsAvailableProject {
-    width: 100%;
-    height: 22%;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
+  width: 100%;
+  height: 22%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
 }
 
 .TextRequirements {
-    color: var(--orange, #FFA789);
-    font-family: Catamaran;
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 800;
-    line-height: normal;
+  color: var(--orange, #EE7214);
+  font-family: Catamaran;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 800;
+  line-height: normal;
 }
 
 .ReqNeed {
-    display: flex;
-    flex-direction: row;
-    height: 50%;
-    width: 100%;
-    align-items: center;
-    gap: 15px;
+  display: flex;
+  flex-direction: row;
+  height: 50%;
+  width: 100%;
+  align-items: center;
+  justify-content: start;
+  gap: 1vw;
 }

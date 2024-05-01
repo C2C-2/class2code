@@ -14,10 +14,11 @@
 .MyCompanyTaskAllCenter{
     display: flex;
     flex-direction: row;
-    height: 90%;
+    height: 100%;
     width: 85%;
     align-items: center;
     padding-right: 30px;
+    padding-bottom: 4vw;
 }
 .MyCompanyTaskAllCenterButtonBack {
     height: 90%;
@@ -32,7 +33,7 @@
     align-items: flex-start;
     width: 100%;
     height: 70%;
-    gap: 60px;
+    gap: 2vw;
 }
 
 .MyCompanyTaskContentButtons {
@@ -83,9 +84,8 @@
 .MyCompanyTaskContentCard{
     display: flex;
     flex-wrap: wrap;
-  
     flex-direction: row;
     height:90%;
     width: 100%;
-    gap: 50px;
+    gap: 3vw;
 }

@@ -40,6 +40,7 @@ function AvailableProjects() {
   const { loading, error, data } = useQuery(searchInProjects, {
     variables: { word: searchTerm },
   });
+
   const dummyProjects = [
     {
       _id: "1",

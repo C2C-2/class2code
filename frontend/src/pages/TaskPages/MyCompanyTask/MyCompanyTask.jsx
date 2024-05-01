@@ -77,6 +77,7 @@ function MyCompanyTask() {
             CreateDate: "2024-04-17T08:00:00Z",
             IsMarked: false,
             _id: "1",
+            color:"#FFF3BF"
           },
           {
             TaskName: "Task 2",
@@ -85,6 +86,7 @@ function MyCompanyTask() {
             CreateDate: "2024-04-16T08:00:00Z",
             IsMarked: true,
             _id: "2",
+            color:"green"
           },
         ],
       },
@@ -93,11 +95,12 @@ function MyCompanyTask() {
         Tasks: [
           {
             TaskName: "Task 3",
-            TaskStatus: "Pending",
+            TaskStatus: "InProgress",
             Priority: "Medium",
             CreateDate: "2024-04-15T08:00:00Z",
             IsMarked: false,
             _id: "3",
+            color:"#FFF3BF"
           },
           {
             TaskName: "Task 4",
@@ -106,12 +109,12 @@ function MyCompanyTask() {
             CreateDate: "2024-04-14T08:00:00Z",
             IsMarked: false,
             _id: "4",
+            color:"#FFF3BF"
           },
         ],
       },
     ],
   };
-
 
   return (
     <div className="MyCompanyTaskAll" id="man">
@@ -120,36 +123,36 @@ function MyCompanyTask() {
         <NavBar sendDataToParent={receiveDataFromChild} />
         <div className="MyCompanyTaskAllCenter">
           <div className="MyCompanyTaskAllCenterButtonBack">
-          <Link to="/Dashboard">
-            <Button
-              justify="center "
-              variant="filled"
-              color="#283739"
-              radius="md"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="18"
-                height="12"
-                viewBox="0 0 18 12"
-                fill="none"
+            <Link to="/Dashboard">
+              <Button
+                justify="center "
+                variant="filled"
+                color="#283739"
+                radius="md"
               >
-                <path
-                  d="M1.5 6H16.5"
-                  stroke="white"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M6.49999 11L1.5 6L6.49999 1"
-                  stroke="white"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </Button>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="18"
+                  height="12"
+                  viewBox="0 0 18 12"
+                  fill="none"
+                >
+                  <path
+                    d="M1.5 6H16.5"
+                    stroke="white"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M6.49999 11L1.5 6L6.49999 1"
+                    stroke="white"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </Button>
             </Link>
           </div>
           <div className="MyCompanyTaskAllContent">
@@ -188,7 +191,8 @@ function MyCompanyTask() {
               </button>
             </div>
             <div className="MyCompanyTaskContentCard">
-              {/* {loading ? (
+              {
+                /* {loading ? (
                 <p>Loading...</p>
               ) : error ? (
                 <p>Error: {error.message}</p>
@@ -211,22 +215,24 @@ function MyCompanyTask() {
                     />
                   ))
                 )
-              ) :*/ ( 
-                dummyData &&
-                dummyData.MyCompanies.map((company) =>
-                  company.Tasks.map((task, index) => (
-                    <MyCompanyTaskCard
-                      key={index}
-                      taskName={task.TaskName}
-                      taskStatus={task.TaskStatus}
-                      priority={task.Priority}
-                      createDate={task.CreateDate}
-                      companyName={company.CompanyName}
-                      task_id={task._id}
-                    />
-                  ))
-                )
-              )}
+              ) :*/ dummyData &&
+                  dummyData.MyCompanies.map((company) =>
+                    company.Tasks.map((task, index) => (
+                      <MyCompanyTaskCard
+                        key={index}
+                        taskName={task.TaskName}
+                        taskStatus={task.TaskStatus}
+                        priority={task.Priority}
+                        createDate={task.CreateDate}
+                        companyName={company.CompanyName}
+                        task_id={task._id}
+                        colorReq={task.color}
+                      
+                      />
+
+                    ))
+                  )
+              }
             </div>
           </div>
         </div>

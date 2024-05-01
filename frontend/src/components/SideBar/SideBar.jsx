@@ -20,6 +20,11 @@ function SideBar() {
       link: Paths.Dashboard,
     },
     {
+      icon: BsChatDots,
+      label: "AI Chat",
+      link: Paths.AIChat,
+    },
+    {
       icon: BsPostcard,
       label: "Post",
       link: Paths.Posts,
@@ -83,9 +88,8 @@ function SideBar() {
       icon: AiOutlineQuestionCircle,
       label: "Any Question",
       link: Paths.FAQQuestion,
-    }
-  ]
-
+    },
+  ];
 
   return (
     <div className={`${isDarkMode ? "SideBarMainDark" : "SideBarMain"}`}>
@@ -188,7 +192,7 @@ const SideBarMenuCard = ({ data }) => {
     } else {
       return (
         <NavLink
-          href="#required-for-focus"
+          href={item.link}
           key={item.label}
           active={index === active}
           label={item.label}
@@ -199,6 +203,7 @@ const SideBarMenuCard = ({ data }) => {
             setActive(index);
           }}
           color="green"
+          
         >
           {item?.links?.map((child) => (
             <NavLink
@@ -213,7 +218,7 @@ const SideBarMenuCard = ({ data }) => {
     }
   });
 
-  return <Box w={220}>{items}</Box>;
+  return <Box w="100%">{items}</Box>;
 };
 
 export default SideBar;

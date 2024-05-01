@@ -7,34 +7,52 @@ import { IconSun, IconMoon } from "@tabler/icons-react";
 import clsx from "clsx";
 import classes from "./Light_DarkMode/LightDarkMode.module.css";
 import "./NavBar.css";
-import { useEffect ,useState } from "react";
+import { useEffect, useState } from "react";
 import MainLogo from "./logo2 2.png";
 import ProfileLogo from "./Profile.png";
 // import LightDarkMode from "./Light_DarkMode/LightDarkMode";
-function NavBar({sendDataToParent}) {
+function NavBar() {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const { setColorScheme } = useMantineColorScheme();
+  const [navClass, setNavClass] = useState("Nav");
+  const [topClass, setTopClass] = useState("TopImage");
   const computedColorScheme = useComputedColorScheme("light", {
     getInitialValueInEffect: true,
   });
-sendDataToParent(computedColorScheme)
-useEffect(() => {
-  setIsDarkMode(computedColorScheme === "dark");
-}, [computedColorScheme]); 
 
+  useEffect(() => {
+    setIsDarkMode(computedColorScheme === "dark");
+  }, [computedColorScheme]);
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth > 1200) {
+        setNavClass("NavOriginal");
+        setTopClass("TopImage");
+      } else {
+        setNavClass("Nav");
+        setTopClass("TopImageOriginal");
+      }
+    };
+    handleResize();
+
+    window.addEventListener("resize", handleResize);
+
+    // Cleanup function to remove event listener
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
   return (
-    <div className="MainNav" 
+    <div
+      className="MainNav"
       style={{
-        backgroundColor:  computedColorScheme=== "dark" ? "#000" : "#fff"
-      }}>
-      <div className={`${
-                isDarkMode ? "NavDark" : "Nav"
-              }`}>
-        <div className="TopImage">
+        backgroundColor: computedColorScheme === "dark" ? "#000" : "#fff",
+      }}
+    >
+      <div className={`${isDarkMode ? "NavDark" : navClass}`}>
+        <div className={topClass}>
           <img className="NavMainLogo" alt="Logo" src={MainLogo} />
-          <span  className={`${
-                isDarkMode ? "NavTextBarDark" : "NavTextBar"
-              }`}>Class2Code</span>
+          <span className={`${isDarkMode ? "NavTextBarDark" : "NavTextBar"}`}>
+            Class2Code
+          </span>
         </div>
         <div className="TopPartNavBar">
           <span className="BackSearch">
@@ -101,7 +119,7 @@ useEffect(() => {
             <ActionIcon
               onClick={() =>
                 setColorScheme(
-                  computedColorScheme === "light" ? "dark": "light" 
+                  computedColorScheme === "light" ? "dark" : "light"
                 )
               }
               variant="transparent"
