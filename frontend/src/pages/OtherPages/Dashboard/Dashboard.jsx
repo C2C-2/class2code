@@ -5,7 +5,7 @@ import NavBar from "../../../components/NavBar/NavBar";
 import DashboardStatusCard from "../../../components/DashboardStatusCard/DashboardStatusCard";
 import DashboardProfileCard from "../../../components/DashboardProfileCard/DashboardProfileCard";
 import { Button, Modal, Table } from "@mantine/core";
-import { gql, useQuery } from "@apollo/client";
+import { gql, useMutation, useQuery } from "@apollo/client";
 import SecondSignup from "../../SecondSignup/SecondSignup";
 import { useDisclosure } from "@mantine/hooks";
 function Dashboard() {
@@ -15,8 +15,6 @@ function Dashboard() {
   const [tasksNumber, setTasksNumber] = useState(0);
   const [companiesNumber, setCompaniesNumber] = useState(0);
   const [teamsNumber, setTeamsNumber] = useState(0);
-
-  const userId = 
 
   const GET_LOCATIONS = gql`
     query Query($userId: String!) {
@@ -29,9 +27,54 @@ function Dashboard() {
     }
   `;
 
+  const GET_TASKS = gql`
+    query Query($userId: String!) {
+      getUser(userId: $userId) {
+        Tasks {
+          TaskName
+          TaskStatus
+          StartDate
+          EndDate
+          Priority
+          Comments
+          CompanyName
+          TeamName
+          IsMarked
+          CreateDate
+          _id
+        }
+      }
+    }
+  `;
+
+  const UPDATE_TASK = gql`
+    mutation Mutation($taskId: Int!, $task: TaskInput!) {
+      updateTask(taskId: $taskId, task: $task) {
+        _id
+      }
+    }
+  `;
+
   const { loading, error, data } = useQuery(GET_LOCATIONS, {
     variables: { userId: localStorage.getItem("id") },
   });
+
+  const {
+    loading: loadingTasks,
+    error: errorTasks,
+    data: dataTasks,
+  } = useQuery(GET_TASKS, {
+    variables: { userId: localStorage.getItem("id") },
+  });
+
+  const [
+    updateTask,
+    {
+      data: dataUpdateTask,
+      loading: loadingUpdateTask,
+      error: errorUpdateTask,
+    },
+  ] = useMutation(UPDATE_TASK);
 
   useEffect(() => {
     if (data) {
@@ -144,8 +187,10 @@ function Dashboard() {
                     {companiesNumber}
                   </span>
                 </button>
-                <button className="DashboardMyProjects"
-                style={{ backgroundColor: "#f8f0fc" }}>
+                <button
+                  className="DashboardMyProjects"
+                  style={{ backgroundColor: "#f8f0fc" }}
+                >
                   <div className="DashboardMyProjects1">
                     <h6 className="DashboardMyProjects1Text">My Teams</h6>
                     <svg
@@ -175,13 +220,15 @@ function Dashboard() {
                   >
                     New Tasks
                   </span>
-                  <span className="DashboardUnderPart1Text2">32 Tasks</span>
+                  <span className="DashboardUnderPart1Text2">
+                    {tasksNumber} Tasks
+                  </span>
                 </div>
                 <div className="DashboardUnderPart2">
                   <Table>
                     <Table.Thead>
                       <Table.Tr>
-                        <Table.Th>Tasks</Table.Th>
+                        <Table.Th>Name</Table.Th>
                         <Table.Th>Deadline</Table.Th>
                         <Table.Th>Leader + Team</Table.Th>
                         <Table.Th>Company</Table.Th>
@@ -189,52 +236,93 @@ function Dashboard() {
                       </Table.Tr>
                     </Table.Thead>
                     <Table.Tbody>
-                      <Table.Tr>
-                        <Table.Td>1</Table.Td>
-                        <Table.Td>
-                          <div
-                            className={`TableDesign ${
-                              isDarkMode ? "bg-black" : "bg-white"
-                            }`}
-                          >
-                            <span
-                              className={`TableDesignText1 justify-content-center ${
-                                isDarkMode
-                                  ? "TableDesignText1Dark text-white"
-                                  : " TableDesignText1 text-dark"
+                      {dataTasks?.getUser?.Tasks.map((task, index) => (
+                        <Table.Tr key={index}>
+                          <Table.Td>{task?.TaskName}</Table.Td>
+                          <Table.Td>
+                            <div
+                              className={`TableDesign ${
+                                isDarkMode ? "bg-black" : "bg-white"
                               }`}
                             >
-                              Mar 24, 2015
-                            </span>
-                            <span
-                              className={` ${
-                                isDarkMode
-                                  ? "TableDesignText2Dark text-white"
-                                  : "TableDesignText2 text-dark"
-                              }`}
+                              <span
+                                className={`TableDesignText1 justify-content-center ${
+                                  isDarkMode
+                                    ? "TableDesignText1Dark text-white"
+                                    : " TableDesignText1 text-dark"
+                                }`}
+                              >
+                                {task?.EndDate}
+                              </span>
+                              <span
+                                className={` ${
+                                  isDarkMode
+                                    ? "TableDesignText2Dark text-white"
+                                    : "TableDesignText2 text-dark"
+                                }`}
+                              >
+                                IN{" "}
+                                {getDaysDifference(
+                                  task.StartDate,
+                                  task.EndDate
+                                )}{" "}
+                                DAYS
+                              </span>
+                            </div>
+                          </Table.Td>
+                          <Table.Td>{task?.TeamName}</Table.Td>
+                          <Table.Td>{task?.CompanyName}</Table.Td>
+                          <Table.Td>
+                            <DashboardStatusCard
+                              status={task?.TaskStatus}
+                              color={
+                                task?.TaskStatus == "Pending"
+                                  ? "red"
+                                  : task.TaskStatus == "new"
+                                  ? "yellow"
+                                  : "green"
+                              }
+                            />
+                          </Table.Td>
+                          <Table.Td>
+                            <Button
+                              variant="filled"
+                              color="#EE7214"
+                              w={100}
+                              h={40}
+                              disabled={
+                                task?.TaskStatus == "Finish" ? "disabled" : null
+                              }
+                              onClick={async (e) => {
+                                e.preventDefault();
+                                if (task?.TaskStatus == "Pending") {
+                                  await updateTask({
+                                    variables: {
+                                      taskId: parseInt(task._id),
+                                      task: {
+                                        TaskName: task.TaskName,
+                                        TaskStatus: "Finish",
+                                        StartDate: task.StartDate,
+                                        EndDate: task.EndDate,
+                                        Priority: task.Priority,
+                                        Comments: task.Comments,
+                                        IsMarked: task.IsMarked,
+                                        CreateDate: task.CreateDate,
+                                      },
+                                    },
+                                  });
+                                }
+                              }}
                             >
-                              In 6 Days
-                            </span>
-                          </div>
-                        </Table.Td>
-                        <Table.Td>
-                          <DashboardProfileCard color={receivedData} />
-                        </Table.Td>
-                        <Table.Td>Company</Table.Td>
-                        <Table.Td>
-                          <DashboardStatusCard />
-                        </Table.Td>
-                        <Table.Td>
-                          <Button
-                            variant="filled"
-                            color="#EE7214"
-                            w={100}
-                            h={40}
-                          >
-                            Start
-                          </Button>
-                        </Table.Td>
-                      </Table.Tr>
+                              {task?.TaskStatus == "Pending"
+                                ? "Finish"
+                                : task?.TaskStatus == "New"
+                                ? "Start"
+                                : "Done"}
+                            </Button>
+                          </Table.Td>
+                        </Table.Tr>
+                      ))}
                     </Table.Tbody>
                   </Table>
                 </div>
@@ -245,6 +333,24 @@ function Dashboard() {
       </div>
     </div>
   );
+}
+
+function getDaysDifference(startDateString, endDateString) {
+  if (!startDateString || !endDateString) {
+    return 0; // Return 0 if either date is falsy (e.g., null or undefined)
+  }
+
+  const startDate = new Date(startDateString);
+  const endDate = new Date(endDateString);
+
+  if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
+    return 0; // Return 0 if either date is invalid
+  }
+
+  const diffInMilliseconds = endDate.getTime() - startDate.getTime();
+  const diffInDays = diffInMilliseconds / (1000 * 60 * 60 * 24);
+
+  return Math.round(diffInDays); // Round the result to the nearest integer
 }
 
 export default Dashboard;

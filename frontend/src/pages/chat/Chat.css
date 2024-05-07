@@ -9,8 +9,9 @@
 }
 
 .messages {
-  background-color: #f4f4f4;
-  height: 100vh;
+  margin-top: 12vh;
+  height: 88vh;
+  width: 100%;
 }
 .chat_chats {
   gap: 1vw;
@@ -108,4 +109,8 @@
 
 #chat_search_card_btn {
   width: 20%;
+}
+
+.mantine-Select-dropdown {
+  z-index: 99999999999999999999999999 !important;
 }

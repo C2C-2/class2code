@@ -122,6 +122,7 @@ const Login = () => {
             provider.addScope('https://www.googleapis.com/auth/contacts.readonly');
 
             const result = await signInWithPopup(auth, provider);
+
             const userName = result?.user?.displayName;
 
             const names = userName?.split(" ");
@@ -137,14 +138,17 @@ const Login = () => {
                         LastName: LastName,
                     }
                 }
-            });
+            })
 
-            if (user) {
+            if (user?.type == "new") {
                 localStorage.setItem("type", "new");
-                localStorage.setItem("token", result.user.accessToken);
-                localStorage.setItem("name", userName);
-                localStorage.setItem("id", result?.user?.uid);
+            } else if (user?.type == "old") {
+                localStorage.setItem("type", "old");
             }
+
+            localStorage.setItem("token", result?.user?.accessToken);
+            localStorage.setItem("name", userName);
+            localStorage.setItem("id", result?.user?.uid);
 
         } catch (err) {
             setError(err.message);

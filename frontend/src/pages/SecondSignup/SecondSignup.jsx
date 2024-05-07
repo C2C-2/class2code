@@ -5,30 +5,45 @@ import {
   Input,
   Pill,
   PillsInput,
-  Select,
   TextInput,
 } from "@mantine/core";
 import Young from "./young man sitting with laptop and waving.png";
 import { useRef, useState } from "react";
-import { DateInput } from "@mantine/dates";
+import { uploadImage } from "../../config/firebase";
+import { gql, useMutation } from "@apollo/client";
 
-const SecondSignup = ({ close }) => {
+const SecondSignup = () => {
   const ref = useRef(null);
   const [skills, setSkills] = useState([]);
   const [skill, setSkill] = useState("");
+  const [image, setImage] = useState(null);
+  const [dateOfBirth, setDateOfBirth] = useState(new Date());
+  const [gender, setGender] = useState("male");
+  const [specialty, setSpecialty] = useState("");
+  const [country, setCountry] = useState("");
+
+  const UPDATE_PROFILE = gql`
+    mutation Mutation($userId: String!, $user: UserInput!) {
+      updateUser(userId: $userId, user: $user) {
+        id
+      }
+    }
+  `;
+
+  const [createProfile] = useMutation(UPDATE_PROFILE);
+
+  const CREATE_SKILL = gql`
+    mutation CreateNewSkill($skill: SkillInput!, $userId: String!) {
+      createNewSkill(skill: $skill, userId: $userId) {
+        _id
+      }
+    }
+  `;
+
+  const [createSkill] = useMutation(CREATE_SKILL);
 
   return (
     <div className="SecondSignupAll">
-      {/* <div className="SecondSignupCenterTop">
-        <div className="SecondSignupCenterTopPart1">
-          <h4>Lets Complete Your Profile !</h4>
-          <p className="SecondSignupCenterTopPart1Text2">
-            Add Your Information & Skills
-          </p>
-        </div>
-        <img src={Young} id="SecondSignupImage" />
-      </div> */}
-
       <div className="SecondSignupTitle">
         <h4>Lets Complete Your Profile !</h4>
         <p className="SecondSignupCenterTopPart1Text2">
@@ -37,30 +52,101 @@ const SecondSignup = ({ close }) => {
       </div>
 
       <div className="Second_SignUp_body">
-        <div className="inputs">
+        <form
+          onSubmit={async (e) => {
+            e.preventDefault();
+
+            const url = await uploadImage(image);
+
+            await createProfile({
+              variables: {
+                userId: localStorage.getItem("id"),
+                user: {
+                  ImageUrl: url,
+                  DateOfBirth: dateOfBirth,
+                  Gender: gender,
+                  Work: specialty,
+                  Country: country,
+                },
+              },
+            });
+
+            skills.forEach(async (skill) => {
+              await createSkill({
+                variables: {
+                  userId: localStorage.getItem("id"),
+                  skill: {
+                    Skill: skill,
+                  },
+                },
+              });
+            });
+
+            close();
+            localStorage.setItem("type", "");
+          }}
+          className="inputs"
+        >
           <FileInput
             label="Upload Your Image"
             description="Select a file or drag and drop here"
             placeholder="JPG, PNG file size no more than 10MB"
             ref={ref}
             accept="image/png,image/jpeg"
-          />
-          <DateInput
-            clearable
-            defaultValue={new Date()}
-            label="Date Of Birth"
-            placeholder="DD/MM/YYYY"
+            onChange={setImage}
+            icon={<img src={Young} alt="image" />}
+            required
           />
 
-          <Select
-            label="Gender"
-            placeholder="Male/Female"
-            data={["Male", "Female"]}
+          <div className="htmlInputGroup">
+            <label htmlFor="date">Date Of Birth</label>
+            <input
+              className="htmlInput"
+              type="date"
+              defaultValue={new Date()}
+              placeholder="DD/MM/YYYY"
+              value={dateOfBirth}
+              onChange={(e) => setDateOfBirth(() => e.target.value)}
+              required
+            />
+          </div>
+
+          <div className="htmlInputGroup">
+            <label htmlFor="Gender">Gender</label>
+            <select
+              className="htmlInput"
+              name="Gender"
+              id="Gender"
+              value={gender}
+              onChange={(e) => setGender(() => e.target.value)}
+              required
+            >
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+            </select>
+          </div>
+
+          <TextInput
+            value={specialty}
+            onChange={(e) => setSpecialty(() => e.target.value)}
+            label="Your Specialty"
+            placeholder="Software Engineer"
+            required
+          />
+          <TextInput
+            value={country}
+            onChange={(e) => setCountry(() => e.target.value)}
+            label="Country"
+            placeholder="Pakistan"
+            required
           />
 
-          <TextInput label="Your specialty" placeholder="Software Engineer" />
-          <TextInput label="Country" placeholder="Pakistan" />
-        </div>
+          <div className="Second_SignUp_footer">
+            <Button type="submit" variant="filled" color="#283739" size="md">
+              Save
+            </Button>
+          </div>
+        </form>
         <div className="skills">
           <PillsInput label="Skills" description="Add Your Skills">
             <Pill.Group>
@@ -79,7 +165,8 @@ const SecondSignup = ({ close }) => {
           </PillsInput>
           <form
             action="#"
-            onSubmit={() => {
+            onSubmit={(e) => {
+              e.preventDefault();
               if (!skill) return;
               if (skills.includes(skill)) return;
               if (skill.trim() === "") return;
@@ -114,20 +201,6 @@ const SecondSignup = ({ close }) => {
             </div>
           </form>
         </div>
-      </div>
-
-      <div className="Second_SignUp_footer">
-        <Button
-          variant="filled"
-          color="#283739"
-          size="md"
-          onClick={() => {
-            close();
-            localStorage.setItem("type", "");
-          }}
-        >
-          Save
-        </Button>
       </div>
     </div>
   );

@@ -25,4 +25,5 @@ export const Paths = {
   NotFound: "*",
   SecondSignup: "/SecondSignup",
   AIChat: "/AIChat",
+  MyPosts: "/MyPosts",
 };

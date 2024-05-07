@@ -2,7 +2,7 @@
 import { useState,useEffect } from 'react';
 import "./DashboardProfileCard.css"
 import Profile from "./Image.png";
-function DashboardProfileCard({color}) {
+function DashboardProfileCard({color, TeamName}) {
   const [isDarkMode, setIsDarkMode] = useState(false);
   useEffect(() => {
     setIsDarkMode(color === "dark");
@@ -15,8 +15,7 @@ function DashboardProfileCard({color}) {
                   isDarkMode
                     ? "DashboardProfileCardText1Dark"
                     : "DashboardProfileCardText1"
-                }`}>Theresa Lane</span>
-            <span className='DashboardProfileCardText2'>UX Design Team</span>
+                }`}>{TeamName}</span>
         </div>
     </div>
   )

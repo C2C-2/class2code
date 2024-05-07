@@ -10,6 +10,12 @@ import {
   update,
 } from "firebase/database";
 import { getAuth } from "firebase/auth";
+import {
+  getStorage,
+  ref as storageRef,
+  uploadBytesResumable,
+  getDownloadURL,
+} from "firebase/storage";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCjlW-VgZ05J5gWwLRsfRuUjsETmJV5lJI",
@@ -28,9 +34,11 @@ const app = initializeApp(firebaseConfig);
 // Initialize Realtime Database and get a reference to the service
 const database = getDatabase(app);
 
+// Initialize Firebase Storage and get a reference to the service
+const storage = getStorage(app);
+
 // Read data from the Realtime Database
 export function read(path, callback) {
-  console.log(path);
   const dbRef = ref(database, path);
   onValue(dbRef, (snapshot) => {
     const data = snapshot.val();
@@ -46,12 +54,44 @@ export function write(path, data) {
 
 export function updateData(path, data) {
   const newPostKey = push(child(ref(database), path)).key;
-
   const updates = {};
   updates[`${path}/` + newPostKey] = data;
-
   update(ref(database), updates);
   return newPostKey;
+}
+
+// Upload image to Firebase Storage
+export function uploadImage(file) {
+  return new Promise((resolve, reject) => {
+    const storageRefVar = storageRef(storage, `userImages/${file.name}`);
+    const uploadTask = uploadBytesResumable(storageRefVar, file);
+
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        // Track upload progress (optional)
+        const progress =
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        console.log(`Upload is ${progress}% done`);
+      },
+      (error) => {
+        // Handle upload error
+        console.error("Upload failed:", error);
+        reject(error);
+      },
+      () => {
+        // Upload completed successfully
+        getDownloadURL(uploadTask.snapshot.ref)
+          .then((downloadURL) => {
+            resolve(downloadURL);
+          })
+          .catch((error) => {
+            console.error("Error getting download URL:", error);
+            reject(error);
+          });
+      }
+    );
+  });
 }
 
 export const auth = getAuth(app);

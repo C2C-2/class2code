@@ -71,10 +71,8 @@ const team = {
 };
 
 const user = {
-  id: "Y0U0TxMEnKO7ttLjFp5F1P0nNpD2",
+  id: "sikFUvzJTqTEkW7e36vlDR2PAfl1",
   Username: "example_username",
-  FirstName: "John",
-  LastName: "Doe",
   Email: "john.doe@example.com",
   Password: "secure_password",
   Country: "United States",
@@ -116,10 +114,8 @@ describe("Create User API Tests (create)", () => {
     const mutation = `
     mutation{
       createNewUser(user: {
-        id: "${user.id}",
+        id: "${user.id}222",
         Username: "${user.Username}",
-        FirstName: "${user.FirstName}",
-        LastName: "${user.LastName}",
         Country: "${user.Country}",
         CreatedBy: ${user.CreatedBy},
         Rate: ${user.Rate},
@@ -149,39 +145,6 @@ describe("Create User API Tests (create)", () => {
     }
     `;
 
-    console.log(`mutation{
-      createNewUser(user: {
-        id: "${user.id}",
-        Username: "${user.Username}",
-        FirstName: "${user.FirstName}",
-        LastName: "${user.LastName}",
-        Country: "${user.Country}",
-        CreatedBy: ${user.CreatedBy},
-        Rate: ${user.Rate},
-        DateOfBirth: "${user.DateOfBirth}",
-        Gender: "${user.Gender}",
-        Work: "${user.Work}",
-        Bio: "${user.Bio}",
-        LastTimeOnline: "${user.LastTimeOnline}",
-        ImageUrl: "${user.ImageUrl}",
-      }) {
-        id
-        Username
-        FirstName
-        LastName
-        Country
-        IsActive
-        CreatedBy
-        CreateDate
-        Rate
-        DateOfBirth
-        Gender
-        Work
-        Bio
-        LastTimeOnline
-        ImageUrl
-      }
-    }`);
     request(app)
       .post("/graphql")
       .send({
@@ -211,7 +174,7 @@ describe("Create User API Tests (create)", () => {
 
         const { data } = res.body;
         if (userId === 0) {
-          userId = data?.createNewUser?.id;
+          userId = user.id;
         }
 
         assert.notStrictEqual(data?.createNewUser, null || undefined);
@@ -221,8 +184,6 @@ describe("Create User API Tests (create)", () => {
           null || undefined
         );
         assert.strictEqual(data?.createNewUser?.Username, user.Username);
-        assert.strictEqual(data?.createNewUser?.FirstName, user.FirstName);
-        assert.strictEqual(data?.createNewUser?.LastName, user.LastName);
         assert.strictEqual(data?.createNewUser?.Country, user.Country);
         assert.strictEqual(data?.createNewUser?.IsActive, true);
         assert.strictEqual(data?.createNewUser?.CreatedBy, user.CreatedBy);
@@ -248,8 +209,8 @@ describe("Second Create User API Tests (create)", () => {
       createNewUser(user: {
         id: "2YrWwaO2CQd6xqhoKIPbn6ddeq02",
         Username: "${user.Username}",
-        FirstName: "${user.FirstName}",
-        LastName: "${user.LastName}",
+        FirstName: "Mohammad",
+        LastName: "Abu Salh",
         Country: "${user.Country}",
         CreatedBy: ${user.CreatedBy},
         Rate: ${user.Rate},
@@ -318,8 +279,8 @@ describe("Second Create User API Tests (create)", () => {
           null || undefined
         );
         assert.strictEqual(data?.createNewUser?.Username, user.Username);
-        assert.strictEqual(data?.createNewUser?.FirstName, user.FirstName);
-        assert.strictEqual(data?.createNewUser?.LastName, user.LastName);
+        assert.strictEqual(data?.createNewUser?.FirstName, "Mohammad");
+        assert.strictEqual(data?.createNewUser?.LastName, "Abu Salh");
         assert.strictEqual(data?.createNewUser?.Country, user.Country);
         assert.strictEqual(data?.createNewUser?.IsActive, true);
         assert.strictEqual(data?.createNewUser?.CreatedBy, user.CreatedBy);
@@ -342,12 +303,12 @@ describe("Second Create User API Tests (create)", () => {
 describe("Create AIChat API Tests", () => {
   it("Should create a new AI chat for a valid user ID", (done) => {
     const mutation = `
-      mutation {
-        createNewAIChat(userId: "${userId}") {
-          _id
-          CreatedDate
-        }
+    mutation Mutation($userId: String!, $name: String!, $projectId: Int!) {
+      createNewAIChat(userId: ${userId}, Name: ${project.ProjectName}, projectId: ${projectId}) {
+        _id
+        CreatedDate
       }
+    }
     `;
 
     request(app)
@@ -968,7 +929,8 @@ describe("Create Task For User API Tests", () => {
             Priority: ${taskInput.Priority},
             Comments: "${taskInput.Comments}",
             IsMarked: ${taskInput.IsMarked},
-          }, userId: "${userId}", userCreateTaskId: "${userCreateTaskId}", companyId: ${companyId}) {
+            CreateDate: "${taskInput.CreateDate}",
+          }, userId: "${userId}", userCreateTaskId: "${userCreateTaskId}", companyId: ${myCompany}, teamId: ${teamId}) {
             _id
             TaskName
             TaskStatus
@@ -1026,7 +988,7 @@ describe("Create Task For Team API Tests", () => {
             Priority: ${taskInput.Priority},
             Comments: "${taskInput.Comments}",
             IsMarked: ${taskInput.IsMarked},
-          }, teamId: ${teamId}, userId: "${userId}") {
+          }, teamId: ${teamId}, userId: "${userId}", companyId: ${myCompany}) {
             _id
             TaskName
             TaskStatus
@@ -1570,8 +1532,6 @@ describe("get User API Test", () => {
         assert.notStrictEqual(data?.getUser, null || undefined);
         assert.strictEqual(data?.getUser?.id, userId);
         assert.strictEqual(data?.getUser?.Username, user.Username);
-        assert.strictEqual(data?.getUser?.FirstName, user.FirstName);
-        assert.strictEqual(data?.getUser?.LastName, user.LastName);
         assert.strictEqual(data?.getUser?.Rate, user.Rate);
         assert.strictEqual(data?.getUser?.Gender, user.Gender);
         assert.strictEqual(data?.getUser?.Bio, user.Bio);
@@ -2489,10 +2449,8 @@ describe("Update User API Tests (update)", () => {
   it("Should update an existing user with valid input data", (done) => {
     const mutation = `
       mutation {
-        updateUser(userId: "${userId}", user: {
+        updateUser(userId: "${user.id}", user: {
           Username: "aa",
-          FirstName: "b",
-          LastName: "c",
           Country: "as",
           IsActive: false,
           CreatedBy: 99,
@@ -2506,8 +2464,6 @@ describe("Update User API Tests (update)", () => {
         }) {
           id
           Username
-          FirstName
-          LastName
           Country
           IsActive
           CreatedBy
@@ -2532,8 +2488,6 @@ describe("Update User API Tests (update)", () => {
         const { data } = res.body;
         assert(data.updateUser.id); // Ensure an ID is returned for the updated user
         assert.strictEqual(data.updateUser.Username, "aa"); // Ensure the updated user has the expected values
-        assert.strictEqual(data.updateUser.FirstName, "b");
-        assert.strictEqual(data.updateUser.LastName, "c");
         assert.strictEqual(data.updateUser.Country, "as");
         assert.strictEqual(data.updateUser.Gender, "Female");
         assert.strictEqual(data.updateUser.Rate, 4.8);

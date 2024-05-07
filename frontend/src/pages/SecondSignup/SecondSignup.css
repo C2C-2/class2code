@@ -4,7 +4,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 0 4vw;
+  padding: 1rem 4vw;
   gap: 1.5vw;
 }
 
@@ -34,9 +34,9 @@
 }
 
 .Second_SignUp_footer {
-  display: flex;
-  width: 100%;
-  justify-content: end;
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
 }
 
 :where([data-mantine-color-scheme="light"]) .m_44da308b {
@@ -55,14 +55,30 @@
   justify-content: end;
 }
 
-#SecondSignupImage{
+#SecondSignupImage {
   width: 4.5vw;
 }
 
-.SecondSignupTitle{
+.SecondSignupTitle {
   width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: start;
   gap: 0.5vw;
+}
+
+.htmlInputGroup {
+  display: flex;
+  flex-direction: column;
+}
+
+.htmlInputGroup label {
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.htmlInput {
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  padding: 8px 12px;
 }

@@ -8,18 +8,12 @@ import SecondSignup from "./pages/SecondSignup/SecondSignup";
 import SignUpFigma from "./pages/SignUp/SignUpFigma";
 import LogInFigma from "./pages/LogIn/Login";
 import AIChat from "./pages/AI Chat/AIChatDef/AIChat";
-import AIChatResponse from "./pages/AI Chat/AIChatResponse/AIChatResponse";
 import MyCompanies from "./pages/CompanyPages/MyCompanies/MyCompanies";
-import OtherCompanyProfile from "./pages/CompanyPages/OtherCompanyProfile/OtherCompanyProfile";
 import CreateCompany from "./pages/CompanyPages/CreateCompany/CreateCompany";
 import CompanyWorking from "./pages/CompanyPages/CompanyWorking/CompanyWorking";
-import EditMyCompanyProfile from "./pages/CompanyPages/EditMyCompanyProfile/EditMyCompanyProfile";
 import AvailableProjects from "./pages/ProjectPages/AvailableProjects/AvailableProjects";
-import TrainPage from "./pages/ProjectPages/TrainPage/TrainPage";
 import ShowAllPosts from "./pages/CompanyAdsPages/ShowAllPost/ShowAllPosts";
-import AddPost from "./pages/CompanyAdsPages/AddPosts/AddPost";
 import EditTask from "./pages/TaskPages/EditTask/EditTask";
-import ShowMyPost from "./pages/CompanyAdsPages/ShowMyPost/ShowMyPost";
 import ProjectPage from "./pages/ProjectPages/ProjectPage/ProjectPage";
 import CreateTeam from "./pages/TeamPages/CreateTeam/CreateTeam";
 import MyCompaniesTeams from "./pages/TeamPages/MyCompaniesTeams/MyCompaniesTeams";
@@ -34,6 +28,8 @@ import EditTeam from "./pages/TeamPages/EditTeam/EditTeam";
 import Chat from "./pages/chat/Chat";
 import ContactUs from "./pages/OtherPages/ContactUs/ContactUs";
 import FAQuestion from "./pages/OtherPages/FAQQuestion/FAQQuestion";
+import MyPosts from "./pages/CompanyAdsPages/ShowMyPost/ShowMyPost";
+import { Paths } from "./assets/Paths";
 
 const TokenChecker = ({ children }) => {
   if (!localStorage.getItem("token")) {
@@ -47,14 +43,22 @@ function App() {
     <MantineProvider>
       <BrowserRouter>
         <Routes>
-          <Route path="/LogIn" element={<LogInFigma />} />
-          <Route path="/SignUp" element={<SignUpFigma />} />
-          <Route path="/ForgetPassword" element={<ForgetPassword />} />
+          <Route path={Paths.Login} element={<LogInFigma />} />
+          <Route path={Paths.SignUpFigma} element={<SignUpFigma />} />
+          <Route path={Paths.ForgetPassword} element={<ForgetPassword />} />
           <Route
             path="/ContactUs"
             element={
               <TokenChecker>
                 <ContactUs />
+              </TokenChecker>
+            }
+          />
+          <Route
+            path={Paths.MyPosts}
+            element={
+              <TokenChecker>
+                <MyPosts />
               </TokenChecker>
             }
           />
@@ -136,14 +140,6 @@ function App() {
             element={
               <TokenChecker>
                 <CreateTask />
-              </TokenChecker>
-            }
-          />
-          <Route
-            path="/Posts/AddPost"
-            element={
-              <TokenChecker>
-                <AddPost />
               </TokenChecker>
             }
           />

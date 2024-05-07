@@ -104,7 +104,7 @@ def read_and_answer():
     # Read file in-memory and splitting
     pdf_text = readPdfFromBytes(file_bytes)
     text_chunks = text_splitter.split_text(pdf_text)
-
+    
     # Convert text to embedding and create vectors
     pdf_embeddings = FAISS.from_texts(text_chunks, embeddings)
 

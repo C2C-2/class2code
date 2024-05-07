@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import "./AvailableProjectCard.css";
 import RequirementNeed from "../RequirementNeed/RequirementNeed";
+import { ActionIcon, Button } from "@mantine/core";
 
 function AvailableProjectsCard({
   projectName,
@@ -11,20 +12,28 @@ function AvailableProjectsCard({
   project_id,
 }) {
   return (
-    <Link to={`/ProjectPage/${project_id}`} className="AvailableProjectAll">
-      <div className="AvailableProjectDesign">
-        <button className="Plus">+</button>
+    <div className="AvailableProjectDesign">
+      <div className="w-100 d-flex justify-content-end">
+        <ActionIcon
+          className="PlusIcon"
+          color="#fff4e6"
+          variant="filled"
+          radius="xl"
+          aria-label="Settings"
+          size={"lg"}
+        >
+          <h4>+</h4>
+        </ActionIcon>
+      </div>
+      <Link to={`/ProjectPage/${project_id}`}>
         <div className="PartTextAvailableProject">
-          <div className="PartTitleAvailableProject">
-            <span className="T1Project">{projectName}</span>
-            <span className="T2Project">{applications} Apply</span>
-          </div>
-          <div className="ParagraphAvailableProject">
-            <p className="P1Project">{projectDescription}</p>
-          </div>
+          <h5>{projectName}</h5>
+          <span>{applications} Apply</span>
+          <p>{projectDescription}</p>
         </div>
+        <br />
         <div className="RequirementsAvailableProject">
-          <span className="TextRequirements">Requirements</span>
+          <h6>Requirements</h6>
           <div className="ReqNeed">
             {requirements?.map((requirement, index) => (
               <RequirementNeed
@@ -35,8 +44,8 @@ function AvailableProjectsCard({
             ))}
           </div>
         </div>
-      </div>
-    </Link>
+      </Link>
+    </div>
   );
 }
 
