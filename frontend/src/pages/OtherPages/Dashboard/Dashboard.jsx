@@ -16,39 +16,39 @@ function Dashboard() {
   const [companiesNumber, setCompaniesNumber] = useState(0);
   const [teamsNumber, setTeamsNumber] = useState(0);
 
-  const userId = 
+  // const userId = 
 
-  const GET_LOCATIONS = gql`
-    query Query($userId: String!) {
-      getProfileStatistics(userId: $userId) {
-        NumberOfProjects
-        NumberOfTeams
-        NumberOfTasks
-        NumberOfMyCompanies
-      }
-    }
-  `;
+  // const GET_LOCATIONS = gql`
+  //   query Query($userId: String!) {
+  //     getProfileStatistics(userId: $userId) {
+  //       NumberOfProjects
+  //       NumberOfTeams
+  //       NumberOfTasks
+  //       NumberOfMyCompanies
+  //     }
+  //   }
+  // `;
 
-  const { loading, error, data } = useQuery(GET_LOCATIONS, {
-    variables: { userId: localStorage.getItem("id") },
-  });
+  // const { loading, error, data } = useQuery(GET_LOCATIONS, {
+  //   variables: { userId: localStorage.getItem("id") },
+  // });
 
-  useEffect(() => {
-    if (data) {
-      setReceivedData(data);
-      setProjectsNumber(data.getProfileStatistics.NumberOfProjects);
-      setTasksNumber(data.getProfileStatistics.NumberOfTasks);
-      setCompaniesNumber(data.getProfileStatistics.NumberOfMyCompanies);
-      setTeamsNumber(data.getProfileStatistics.NumberOfTeams);
-    }
-  }, [data]);
+  // useEffect(() => {
+  //   if (data) {
+  //     setReceivedData(data);
+  //     setProjectsNumber(data.getProfileStatistics.NumberOfProjects);
+  //     setTasksNumber(data.getProfileStatistics.NumberOfTasks);
+  //     setCompaniesNumber(data.getProfileStatistics.NumberOfMyCompanies);
+  //     setTeamsNumber(data.getProfileStatistics.NumberOfTeams);
+  //   }
+  // }, [data]);
 
   // if (loading) return <p>Loading...</p>;
   // if (error) return <p>Error : {error.message}</p>;
 
-  const [opened, { open, close }] = useDisclosure(
-    localStorage.getItem("type") ? true : false
-  );
+  // const [opened, { open, close }] = useDisclosure(
+  //   localStorage.getItem("type") ? true : false
+  // );
 
   return (
     <div className="DashboardAll" id="man">

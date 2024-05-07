@@ -2,8 +2,8 @@ import "./RequirementNeed.css";
 
 function RequirementNeed({ colorProps, textReq ,colorReq }) {
   return (
-    <div className="ReqNeedAllCard" style={{backgroundColor:colorReq}}>
-      <button className={colorProps === "dark" ? "ReqTextCardDark" : "ReqTextCard" }>{textReq}</button>
+    <div className="ReqNeedAllCard" >
+      <button className={colorProps === "dark" ? "ReqTextCardDark" : "ReqTextCard" } style={{backgroundColor:colorReq}}>{textReq}</button>
     </div>
   );
 }

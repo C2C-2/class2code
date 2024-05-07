@@ -1,21 +1,10 @@
-.MyCompaniesCardMainOverMy {
-    height: 70%;
-    width: 21%;
-    align-items: center;
-    justify-content: center;
-    text-decoration: none;
-    display: flex;
-    border: none;
-    background-color: transparent;
-}
+
 
 .MyCompaniesCardOverAllMy {
-    width: 100%;
     display: flex;
     text-decoration: none;
-    height: 100%;
-    padding-left: 15px;
-    padding-right: 15px;
+    padding-left: 1vw;
+    padding-right: 1vw;
     flex-direction: column;
     justify-content: center;
     align-items: center;
@@ -24,23 +13,9 @@
     box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.20);
 }
 
-.MyCompaniesCardOverAllMyDark-mode {
-    width: 100%;
-    display: flex;
-    height: 100%;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    border-radius: var(--16, 16px);
-    border: 1px solid #fff;
-    box-shadow: 0px 5px 10px 0px rgba(165, 184, 208, 0.2);
-}
 
 .MyCompaniesCardAllItemMy {
-    padding-top: 20px;
-    width: 100%;
-    height: 100%;
-    gap: 20px;
+    padding-top: 2vw;
     display: flex;
     align-items: center;
     flex-direction: column;
@@ -49,50 +24,38 @@
 }
 
 .MyCompaniesCardtextPartMy {
-    height: 60%;
-    width: 100%;
     text-decoration: none;
     display: flex;
     align-items: center;
     flex-direction: column;
     justify-content: center;
-    gap: 12px;
+    gap: 1vw;
 }
 
 .MyCompaniesCardT1My {
     color: #000;
     font-family: Roboto;
     text-decoration: none;
-    font-size: 15px;
     font-style: normal;
     font-weight: 700;
     line-height: normal;
 }
 
-.MyCompaniesCardT1MyDark {
-    color: #fff;
-    font-family: Roboto;
-    font-size: 15px;
-    font-style: normal;
-    text-decoration: none;
-    font-weight: 700;
-    line-height: normal;
-}
 
-.MyCompaniesCardT2My {
-    width: 100%;
+p {
     color: rgba(0, 0, 0, 0.60);
     text-align: center;
     text-decoration: none;
     font-family: Roboto;
     font-size: 14px;
+    text-wrap: wrap;
     font-style: normal;
     font-weight: 400;
+    width: 30vh;
     line-height: 20px;
 }
 
 .MyCompaniesCardT2MyDark {
-    width: 100%;
     color: #909090;
     text-align: center;
     font-family: Roboto;
@@ -122,13 +85,11 @@
 
 
 .MyCompaniesCardImgPartMy {
-    height: 30%;
-    width: 100%;
-    display: flex;
 
+    display: flex;
     flex-direction: column;
     justify-content: center;
-    gap: 20px;
+    gap:0.5vw;
 }
 
 .MyCompaniesCardLineMy {
@@ -138,15 +99,14 @@
 }
 
 .MyCompaniesCardImg {
-    height: 35%;
     display: flex;
     flex-direction: row;
+    gap: 1vw;
     align-items: center;
-    justify-content: space-around;
+
 }
 
 .MyCompaniesCardTextsOver {
-    height: 50%;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -170,22 +130,10 @@
     font-style: normal;
     font-weight: 500;
     line-height: 20px;
-    /* 125% */
 }
 
-.MyCompaniesCardTe2Dark {
-    color: #9c9c9c;
-    font-family: Roboto;
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: 20px;
-    /* 125% */
-}
 
 .MyCompaniesCardRemove {
-    width: 100%;
-    height: 40%;
     display: flex;
     align-items: center;
     flex-direction: column;

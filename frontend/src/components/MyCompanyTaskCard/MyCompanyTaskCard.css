@@ -1,38 +1,24 @@
 .MyCompanyTaskCardAll {
-    width: 30%;
-    height: 50%;
-    display: flex;
-    flex-direction: column;
-    border: none;
-    background-color: transparent;
     text-decoration: none;
 }
 
-.MyCompanyTaskCardMain {
-    display: flex;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-}
 
 .MyCompanyTaskCardDesign {
-    padding-top: 20px;
-    padding-bottom: 15px;
-    width: 100%;
+    padding-top: 0.7vw;
+    padding-bottom: 1vw;
     border-radius: var(--16, 16px);
     background: #F9F9F9;
     display: flex;
+    gap: 1vw;
+    width: fit-content;
     flex-direction: column;
-    gap: 10px;
-    padding-right: 15px;
-    padding-left: 20px;
-    align-items: flex-start;
+    padding-right: 1vw;
+    padding-left: 1vw;
 }
 
 .MyCompanyTaskCardName {
     display: flex;
-    padding-left: 30px;
+    padding-left: 2vw;
     align-items: center;
     justify-content: center;
     transform: translate(0px, 9px);
@@ -43,10 +29,8 @@
     display: flex;
     border-radius: var(--4, 4px);
     background: #973FCF;
-    height: 100%;
     align-items: center;
     justify-content: center;
-    width: 100%;
 }
 
 .MyCompanyTaskCardText {
@@ -59,39 +43,24 @@
 }
 
 .MyCompanyTaskCardEditButton {
-    width: 100%;
-    height: 9%;
     display: flex;
     flex-direction: column;
     align-items: flex-end;
 }
 
-.MyCompanyTaskCardEditButtonText {
-    color: #0D062D;
-    font-family: Inter;
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 800;
-    line-height: normal;
-    letter-spacing: -1.045px;
-    border: none;
-    background-color: transparent;
-}
+
 
 .MyCompanyTaskCardCenter {
     display: flex;
+    padding-right: 1vw;
     flex-direction: row;
-    width: 100%;
-    height: 35%;
+    justify-content: space-between;
     align-items: center;
 }
 
 .MyCompanyTaskCardCenterPart1 {
     display: flex;
     flex-direction: column;
-    height: 100%;
-    ;
-    width: 85%;
     align-items: flex-start;
     gap: 10px;
 }
@@ -102,6 +71,7 @@
     font-size: 16.798px;
     font-style: normal;
     font-weight: 600;
+    text-decoration: none;
     line-height: normal;
 }
 
@@ -125,19 +95,8 @@
     line-height: 36px;
 }
 
-.MyCompanyTaskCardCenterParagraph {
-    height: 20%;
-    width: 100% !important;
-    display: flex;
-    flex-direction: row;
-    align-items: flex-start;
-    padding-right: 60px;
-}
 
 .MyCompanyTaskCardCenterParagraphTexts {
-    align-items: flex-start;
-    display: flex;
-    flex-direction: row;
     color: var(--black-100, #1C1C1C);
     font-family: Inter;
     font-size: 14px;
@@ -150,7 +109,5 @@
     display: flex;
     justify-content: flex-end;
     flex-direction: row;
-    width: 100%;
-    height: 18%;
-    gap: 10px;
+    gap: 1vw;
 }

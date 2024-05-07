@@ -1,26 +1,27 @@
 .MyCompanyTaskAll {
     display: flex;
     flex-direction: row;
-    gap: 20px;
 }
 
 .MyCompanyTaskAllMain {
     display: flex;
     flex-direction: column;
-    gap: 20px;
-    align-items: flex-end;
+    align-items: flex-start;
+}
+
+.FackDivMyCompanyTask {
+    width: 30vh;
 }
 
 .MyCompanyTaskAllCenter {
     display: flex;
+    padding-left: 7vw;
     flex-direction: row;
-    align-items: center;
-    padding-right: 30px;
-    padding-bottom: 4vw;
+    align-items: flex-start;
+    padding-top: 6vw;
 }
 
 .MyCompanyTaskAllCenterButtonBack {
-    height: 90%;
     flex-direction: column;
     display: flex;
     align-items: flex-end;
@@ -29,64 +30,28 @@
 .MyCompanyTaskAllContent {
     display: flex;
     flex-direction: column;
+    padding-left: 1vw;
+    padding-right: 1vw;
+    padding-top: 3vw;
     align-items: flex-start;
-    height: 70%;
     gap: 2vw;
+
 }
 
 .MyCompanyTaskContentButtons {
     display: flex;
     flex-direction: row;
-    height: 8%;
-    gap: 15px;
-    width: 100%;
+    gap: 1.5vw;
     align-items: center;
     justify-content: flex-start;
-}
-
-.MyCompanyTaskContentButtonsDesign {
-    display: flex;
-    padding: 10px var(--24, 24px);
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    align-self: stretch;
-    background: var(--light, #dee8dc);
-    border: none;
-    height: 100%;
-    border-radius: 5px;
-    width: 10%;
-}
-
-.MyCompanyTaskContentButtonsDesign1 {
-    display: flex;
-    padding: 10px var(--24, 24px);
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    align-self: stretch;
-    background: var(--light, #dee8dc);
-    border: none;
-    height: 100%;
-    border-radius: 5px;
-    width: 13%;
-}
-
-.MyCompanyTaskContentButtonText {
-    color: #000;
-    font-feature-settings: 'clig'off, 'liga'off;
-    font-family: Roboto;
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 300;
-    line-height: normal;
 }
 
 .MyCompanyTaskContentCard {
     display: flex;
     flex-wrap: wrap;
     flex-direction: row;
-    height: 90%;
-    width: 100%;
-    gap: 3vw;
+    overflow-y: scroll;
+    align-items: center;
+    justify-self: flex-start;
+    gap: 2.3vw;
 }

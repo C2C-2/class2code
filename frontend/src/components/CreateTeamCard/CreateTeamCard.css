@@ -1,15 +1,17 @@
 .CreateTeamCardAll {
-    align-items: center;
     display: flex;
-    height: 25%;
-    gap: 10px;
+    flex-direction: row;
     justify-content: space-between;
+    gap: 3.5vw;
+    align-items: center;
     border-radius: 5px;
     border: 1px solid var(--line, #EAEAEA);
     background: var(--light, #F2F9F1);
-   padding-left: 10px;
-   padding-right: 10px;
-    width: 100%;
+    padding-left: 0.50vw;
+    padding-top: 0.25vw;
+    padding-right: 0.50vw;
+    padding-bottom: 0.25vw;
+
 }
 
 .CreateTeamCardText {
@@ -19,14 +21,10 @@
     font-weight: 500;
     letter-spacing: 0;
     line-height: normal;
-    margin-top: -0.5px;
-    position: relative;
-    white-space: nowrap;
 
 }
 
 .CreateTeamCardimgSvg {
     height: 16px;
-    position: relative;
     width: 16px;
 }

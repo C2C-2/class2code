@@ -2,10 +2,13 @@ import { useState, useEffect } from "react";
 import "./MyCompanyTask.css";
 import SideBar from "../../../components/SideBar/SideBar";
 import NavBar from "../../../components/NavBar/NavBar";
-import { Button } from "@mantine/core";
 import MyCompanyTaskCard from "../../../components/MyCompanyTaskCard/MyCompanyTaskCard";
-import { useQuery, gql } from "@apollo/client";
+import { useQuery, gql, useMutation } from "@apollo/client";
 import { Link } from "react-router-dom";
+import CreateTaskCard from "../../../components/CreateTaskCard/CreateTaskCard";
+import CreateTeamAddOnsCard from "../../../components/CreateTeamAddOnsCard/CreateTeamAddOnsCard";
+import { useDisclosure } from "@mantine/hooks";
+import { Modal, Button, Input, TextInput, Select } from "@mantine/core";
 const GET_USER_TASKS = gql`
   query Tasks($userId: String!) {
     getUser(userId: $userId) {
@@ -17,8 +20,26 @@ const GET_USER_TASKS = gql`
           TaskStatus
           IsMarked
           _id
+          StartDate
+          EndDate
+          Comments
         }
         CompanyName
+      }
+    }
+  }
+`;
+const GET_USER_TEAMS = gql`
+  query Teams($userId: String!) {
+    getUser(userId: $userId) {
+      MyCompanies {
+        Teams {
+          TeamName
+          Members {
+            LastName
+            FirstName
+          }
+        }
       }
     }
   }
@@ -35,10 +56,31 @@ const FILTER_TASKS = gql`
     }
   }
 `;
+const CREATE_TASK = gql`
+  mutation CreateTaskForTeam(
+    $task: TaskInput!
+    $teamId: Int!
+    $userId: String!
+  ) {
+    createTaskForTeam(task: $task, teamId: $teamId, userId: $userId) {
+      TaskName
+      Priority
+      StartDate
+      EndDate
+      Comments
+    }
+  }
+`;
 function MyCompanyTask() {
   const [receivedData, setReceivedData] = useState("");
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [filterType, setFilterType] = useState(null);
+  const [taskData, setTaskData] = useState({
+    task: null,
+    teamId: null,
+    userId: null,
+  });
+  const [opened, { open, close }] = useDisclosure(false);
   useEffect(() => {
     setIsDarkMode(receivedData === "dark");
   }, [receivedData]);
@@ -53,6 +95,9 @@ function MyCompanyTask() {
   const { loading, error, data } = useQuery(GET_USER_TASKS, {
     variables: { userId: null }, // Pass your user ID here
   });
+  const { loadingTeams, errorTeams, dataTeams } = useQuery(GET_USER_TEAMS, {
+    variables: { userId: null }, // Pass your user ID here
+  });
   const {
     loading: filterLoading,
     error: filterError,
@@ -65,6 +110,26 @@ function MyCompanyTask() {
     setFilterType(type);
     refetch();
   };
+  const [createTask] = useMutation(CREATE_TASK);
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setTaskData((prevData) => ({
+      ...prevData,
+      task: {
+        ...prevData.task,
+        [name]: value,
+      },
+    }));
+  };
+  const handleCreateTask = () => {
+    createTask({ variables: taskData })
+      .then((res) => {
+        console.log("Task created successfully:", res.data.createTaskForTeam);
+      })
+      .catch((error) => {
+        console.error("Error creating task:", error);
+      });
+  };
   const dummyData = {
     MyCompanies: [
       {
@@ -74,19 +139,25 @@ function MyCompanyTask() {
             TaskName: "Task 1",
             TaskStatus: "InProgress",
             Priority: "High",
-            CreateDate: "2024-04-17T08:00:00Z",
+            CreateDate: "2024-04-17",
             IsMarked: false,
             _id: "1",
-            color:"#FFF3BF"
+            color: "#FFF3BF",
+            StartDate: "2024-04-17",
+            EndDate: "2024-04-18",
+            comment: "Hi",
           },
           {
             TaskName: "Task 2",
             TaskStatus: "Completed",
             Priority: "Low",
-            CreateDate: "2024-04-16T08:00:00Z",
+            CreateDate: "2024-04-16",
             IsMarked: true,
             _id: "2",
-            color:"green"
+            color: "rgba(65, 191, 117, 0.66)",
+            StartDate: "2024-04-17",
+            EndDate: "2024-04-18",
+            comment: "Hi",
           },
         ],
       },
@@ -97,20 +168,59 @@ function MyCompanyTask() {
             TaskName: "Task 3",
             TaskStatus: "InProgress",
             Priority: "Medium",
-            CreateDate: "2024-04-15T08:00:00Z",
+            CreateDate: "2024-04-15",
             IsMarked: false,
             _id: "3",
-            color:"#FFF3BF"
+            color: "#FFF3BF",
+            StartDate: "2024-04-17",
+            EndDate: "2024-04-18",
+            comment: "Hi",
           },
           {
-            TaskName: "Task 4",
+            TaskName: "Task 3",
             TaskStatus: "InProgress",
-            Priority: "High",
-            CreateDate: "2024-04-14T08:00:00Z",
+            Priority: "Medium",
+            CreateDate: "2024-04-15",
             IsMarked: false,
-            _id: "4",
-            color:"#FFF3BF"
+            _id: "3",
+            color: "#FFF3BF",
+            StartDate: "2024-04-17",
+            EndDate: "2024-04-18",
+            comment: "Hi",
           },
+          {
+            TaskName: "Task 3",
+            TaskStatus: "InProgress",
+            Priority: "Medium",
+            CreateDate: "2024-04-15",
+            IsMarked: false,
+            _id: "3",
+            color: "#FFF3BF",
+            StartDate: "2024-04-17",
+            EndDate: "2024-04-18",
+            comment: "Hi",
+          },
+          {
+            TaskName: "Task 3",
+            TaskStatus: "InProgress",
+            Priority: "Medium",
+            CreateDate: "2024-04-15",
+            IsMarked: false,
+            _id: "3",
+            color: "#FFF3BF",
+            StartDate: "2024-04-17",
+            EndDate: "2024-04-18",
+            comment: "Hi",
+          },
+          // {
+          //   TaskName: "Task 4",
+          //   TaskStatus: "InProgress",
+          //   Priority: "High",
+          //   CreateDate: "2024-04-14T08:00:00Z",
+          //   IsMarked: false,
+          //   _id: "4",
+          //   color:"#FFF3BF"
+          // },
         ],
       },
     ],
@@ -122,6 +232,7 @@ function MyCompanyTask() {
       <div className="MyCompanyTaskAllMain">
         <NavBar sendDataToParent={receiveDataFromChild} />
         <div className="MyCompanyTaskAllCenter">
+          <div className="FackDivMyCompanyTask"></div>
           <div className="MyCompanyTaskAllCenterButtonBack">
             <Link to="/Dashboard">
               <Button
@@ -157,38 +268,118 @@ function MyCompanyTask() {
           </div>
           <div className="MyCompanyTaskAllContent">
             <div className="MyCompanyTaskContentButtons">
-              <button className="MyCompanyTaskContentButtonsDesign">
-                <span
-                  className="MyCompanyTaskContentButtonText"
-                  onClick={() => handleFilter("Date")}
+              <div>
+                <Modal
+                  opened={opened}
+                  onClose={close}
+                  title="Add Task"
+                  centered
                 >
-                  Date
-                </span>
-              </button>
-              <button className="MyCompanyTaskContentButtonsDesign">
-                <span
-                  className="MyCompanyTaskContentButtonText"
-                  onClick={() => handleFilter("Priority")}
-                >
-                  Priority
-                </span>
-              </button>
-              <button className="MyCompanyTaskContentButtonsDesign">
-                <span
-                  className="MyCompanyTaskContentButtonText"
-                  onClick={() => handleFilter("Late")}
-                >
-                  Late
-                </span>
-              </button>
-              <button
-                className="MyCompanyTaskContentButtonsDesign1"
-                onClick={() => handleFilter("In Progress")}
+                  <div className="d-flex flex-column gap-4 p-2">
+                    <div className="d-flex flex-row gap-3">
+                      <TextInput
+                        label="Name"
+                        name="name"
+                        value={taskData.name}
+                        onChange={handleInputChange}
+                        placeholder="Task name"
+                      />
+                      <TextInput
+                        label="Priority"
+                        placeholder="2"
+                        name="priority"
+                        value={taskData.priority}
+                      />
+                    </div>
+                    <div className="d-flex flex-row gap-3">
+                      <TextInput
+                        label="Start Date"
+                        name="startDate"
+                        value={taskData.startDate}
+                        onChange={handleInputChange}
+                        placeholder="12/3/2005"
+                      />
+                      <TextInput
+                        label="End Date"
+                        name="endDate"
+                        value={taskData.endDate}
+                        onChange={handleInputChange}
+                        placeholder="22/9/2005"
+                      />
+                    </div>
+                    <div className="d-flex flex-row gap-3">
+                      <Select
+                        label="Type"
+                        placeholder="Select"
+                        data={["User", "Team"]}
+                        defaultValue="React"
+                        clearable
+                      />
+                      <TextInput
+                        label="For"
+                        name="assignedTo"
+                        value={taskData.assignedTo}
+                        onChange={handleInputChange}
+                        placeholder="User or Team Name"
+                      />
+                    </div>
+                    <div className="d-flex flex-row gap-3">
+                      <TextInput
+                        label="Comment"
+                        name="comment"
+                        value={taskData.comment}
+                        onChange={handleInputChange}
+                        placeholder="Your Comment"
+                      />
+                    </div>
+                  </div>
+                  <div className="d-flex flex-row justify-content-end pt-3">
+                    <Button
+                      variant="filled"
+                      color="#388E3C"
+                      onClick={handleCreateTask}
+                    >
+                      Create
+                    </Button>
+                  </div>
+                </Modal>
+
+                <Button onClick={open} variant="filled" color="orange">
+                  New
+                </Button>
+              </div>
+              <Button
+                variant="filled"
+                color="#F1F1F1"
+                onClick={() => handleFilter("Date")}
+                className="MyCompanyTaskContentButtonText"
               >
-                <span className="MyCompanyTaskContentButtonText">
-                  In Progress
-                </span>
-              </button>
+                Date
+              </Button>
+              <Button
+                variant="filled"
+                color="#F1F1F1"
+                onClick={() => handleFilter("Priority")}
+                className="MyCompanyTaskContentButtonText"
+              >
+                Priority
+              </Button>
+              <Button
+                variant="filled"
+                color="#F1F1F1"
+                onClick={() => handleFilter("Late")}
+                className="MyCompanyTaskContentButtonText"
+              >
+                Late
+              </Button>
+              <Button
+                variant="filled"
+                color="#F1F1F1"
+                onClick={() => handleFilter("In Progress")}
+                className="MyCompanyTaskContentButtonText"
+              >
+                In Progress
+              </Button>
             </div>
             <div className="MyCompanyTaskContentCard">
               {
@@ -226,10 +417,11 @@ function MyCompanyTask() {
                         createDate={task.CreateDate}
                         companyName={company.CompanyName}
                         task_id={task._id}
+                        StartDate={task.StartDate}
+                        EndDate={task.EndDate}
+                        Comment={task.comment}
                         colorReq={task.color}
-                      
                       />
-
                     ))
                   )
               }
