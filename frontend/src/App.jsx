@@ -29,6 +29,8 @@ import Chat from "./pages/chat/Chat";
 import ContactUs from "./pages/OtherPages/ContactUs/ContactUs";
 import FAQuestion from "./pages/OtherPages/FAQQuestion/FAQQuestion";
 import MyPosts from "./pages/CompanyAdsPages/ShowMyPost/ShowMyPost";
+import OtherCompanyProfile from "./pages/CompanyPages/OtherCompanyProfile/OtherCompanyProfile";
+import EditMyCompanyProfile from "./pages/CompanyPages/EditMyCompanyProfile/EditMyCompanyProfile";
 import { Paths } from "./assets/Paths";
 
 const TokenChecker = ({ children }) => {
@@ -222,25 +224,22 @@ function App() {
                 <MyCompanyTask />
               </TokenChecker>
             }
-            
           />
-             <Route
+          <Route
             path="/OtherCompanyProfile/:company_id"
             element={
               <TokenChecker>
-                <OtherCompanyProfile/>
+                <OtherCompanyProfile />
               </TokenChecker>
             }
-            
           />
-              <Route
+          <Route
             path="/EditMyCompanyProfile/:company_id"
             element={
               <TokenChecker>
-                <EditMyCompanyProfile/>
+                <EditMyCompanyProfile />
               </TokenChecker>
             }
-            
           />
           <Route
             path="/SecondSignup"
@@ -257,7 +256,6 @@ function App() {
                 <NotFound />
               </TokenChecker>
             }
-
           />
         </Routes>
       </BrowserRouter>
