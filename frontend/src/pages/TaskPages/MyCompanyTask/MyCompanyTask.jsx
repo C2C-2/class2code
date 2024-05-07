@@ -47,7 +47,7 @@ function MyCompanyTask() {
   };
   useEffect(() => {
     document.getElementById("man").style.backgroundColor =
-      receivedData === "light" ? "#fff" : "#000";
+      receivedData === "light" ? "#fff" : "";
   }, [receivedData]);
 
   const { loading, error, data } = useQuery(GET_USER_TASKS, {
