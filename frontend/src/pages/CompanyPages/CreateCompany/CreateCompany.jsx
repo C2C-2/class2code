@@ -5,6 +5,7 @@ import NavBar from "../../../components/NavBar/NavBar";
 import { Button } from "@mantine/core";
 import GreenBox2 from "../../../components/GreenBox/GreenBox2";
 import { useMutation, gql } from "@apollo/client";
+import { Link } from "react-router-dom";
 
 const CREATE_NEW_COMPANY = gql`
   mutation CreateNewCompany($company: CompanyInput!, $userId: String!) {
@@ -63,7 +64,7 @@ function CreateCompany() {
 
   useEffect(() => {
     document.getElementById("man").style.backgroundColor =
-      receivedData === "light" ? "#fff" : "#000";
+      receivedData === "light" ? "#fff" : "";
   }, [receivedData]);
 
   return (
@@ -72,7 +73,10 @@ function CreateCompany() {
       <div className="CreateComp">
           <NavBar sendDataToParent={receiveDataFromChild} /> 
         <div className="Part2CreateCompany">
+          <div className="FakeDivNews"></div>
+          <div className="ContentCreateCompany">
           <div className="CreateCompanyButtonBack">
+            <Link to="/Dashboard">
             <Button
               justify="center "
               variant="filled"
@@ -89,72 +93,73 @@ function CreateCompany() {
                 <path
                   d="M1.5 6H16.5"
                   stroke="white"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 />
                 <path
                   d="M6.49999 11L1.5 6L6.49999 1"
                   stroke="white"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 />
               </svg>
             </Button>
+            </Link>
           </div>
           <div className="CreateCompanyInputs">
             <div className="Part1Inputs">
-              <div className="GeneralInformation">General Information</div>
+              <div className="GeneralInformationCreateCompany">General Information</div>
               <div className="InputsCreateCompanyAll">
                 <div className="InputOverAll">
-                  <span className="TextPartCmopany">Company Name</span>
+                  <h6 className="TextPartCmopany">Company Name</h6>
                   <input
                     type="text"
                     name="CompanyName"
                     onChange={handleInputChange}
                     placeholder="Enter Company Name"
-                    className="TextInput"
+                    className="TextInputCreateCompany"
                   />
                 </div>
                 <div className="InputOverAll">
-                  <span className="TextPartCmopany">Company Description</span>
+                  <h6 className="TextPartCmopany">Company Description</h6>
                   <input
                     type="text"
                     name="CompanyDescription"
                     onChange={handleInputChange}
                     placeholder="Enter Company Description"
-                    className="TextInput"
+                    className="TextInputCreateCompany"
                   />
                 </div>
                 <div className="InputOverAll">
-                  <span className="TextPartCmopany">Company Admin</span>
+                  <h6 className="TextPartCmopany">Company Admin</h6>
                   <input
                     type="text"
                     placeholder="Enter Company Admin"
                     name="CompanyAdmin"
                     onChange={handleInputChange}
-                    className="TextInput"
+                    className="TextInputCreateCompany"
                   />
                 </div>
                 <div className="InputOverAll">
-                  <span className="TextPartCmopany">Company Domain</span>
+                  <h6 className="TextPartCmopany">Company Domain</h6>
                   <input
                     type="text"
                     placeholder="Enter Company Domain"
                     name="Domain"
                     onChange={handleInputChange}
-                    className="TextInput"
+                    className="TextInputCreateCompany"
                   />
                 </div>
                 <div className="InputOverAll">
-                  <span className="TextPartCmopany">Select Project</span>
+                  <h6 className="TextPartCmopany">Select Project</h6>
                   <input
                     type="text"
                     placeholder="Select Project"
                     name="Project"
                     onChange={handleInputChange}
-                    className="TextInput"
+                    className="TextInputCreateCompany"
                   />
                 </div>
               </div>
@@ -162,24 +167,24 @@ function CreateCompany() {
             <div className="Part2Teams">
               <div className="TextTeamCreateCompany">Teams</div>
               <div className="InputOverAllTeam">
-                
-                <span className="TextPartCmopany">Select Team</span>
+                <h6 className="TextPartCmopany">Select Team</h6>
                 <input
                   type="text"
                   placeholder="Select Team"
                   name="Team"
                   onChange={handleInputChange}
-                  className="TextInput"
+                  className="TextInputCreateCompany"
                 />
               </div>
               <div className="AddTeamsCreateCompany">
               </div>
-              <div className="ButtonCreateCompany">
-                <Button variant="filled" color="#388E3C" w={150} h={40}  onClick={handleCreateCompany}>
+              <Link to="/MyCompanies" className="ButtonCreateCompany">
+                <Button variant="filled"  size="md"color="#388E3C" w={200} h={40}  onClick={handleCreateCompany}>
                   Create
                 </Button>
-              </div>
+              </Link>
             </div>
+          </div>
           </div>
         </div>
       </div>

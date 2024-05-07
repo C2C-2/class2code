@@ -222,6 +222,25 @@ function App() {
                 <MyCompanyTask />
               </TokenChecker>
             }
+            
+          />
+             <Route
+            path="/OtherCompanyProfile/:company_id"
+            element={
+              <TokenChecker>
+                <OtherCompanyProfile/>
+              </TokenChecker>
+            }
+            
+          />
+              <Route
+            path="/EditMyCompanyProfile/:company_id"
+            element={
+              <TokenChecker>
+                <EditMyCompanyProfile/>
+              </TokenChecker>
+            }
+            
           />
           <Route
             path="/SecondSignup"
@@ -238,6 +257,7 @@ function App() {
                 <NotFound />
               </TokenChecker>
             }
+
           />
         </Routes>
       </BrowserRouter>

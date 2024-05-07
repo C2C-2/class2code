@@ -1,0 +1,14 @@
+.MainCompanyWorkOn{
+    display: flex;
+    flex-direction: row;
+}
+.FakeDivWorkingOn{
+    width: 30vh;
+}
+.CompanyImWorkOn{
+    display: flex;
+    padding-left: 7vw;
+    flex-direction: row;
+    align-items: flex-start;
+    padding-top: 6vw;
+}

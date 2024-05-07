@@ -67,21 +67,13 @@ function EditTeam() {
     });
   };
 
-  const [updateTeam] = useMutation(UPDATE_TEAM_MUTATION);
-
-  const handleSave = async () => {
-    try {
-      await updateTeam({
-        variables: {
-          teamId: parseInt(teamId),
-          team: teamData,
-        },
-      });
-      console.log("Team updated successfully");
-    } catch (error) {
-      console.error("Error updating team:", error);
-    }
-  };
+  // const [updateTeam] = useMutation(UPDATE_TEAM_MUTATION);
+  // const handleSave =()=>{
+  //       variables: {
+  //         teamId: parseInt(teamId),
+  //         team: teamData
+  //       },
+  // };
 
   return (
     <div className="EditTeamAll" id="man">
