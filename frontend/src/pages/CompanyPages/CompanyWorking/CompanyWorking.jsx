@@ -37,8 +37,9 @@ const FILTER_WORKS_COMPANIES = gql`
     }
   }
 `;
-function CompanyWorking({ userId }) {
+function CompanyWorking() {
   const [searchWord, setSearchWord] = useState("");
+  const user_id = localStorage.getItem("id");
   const [receivedData, setReceivedData] = useState("");
   const [sortingType, setSortingType] = useState(null);
   const [sortingOrder, setSortingOrder] = useState("desc");
@@ -57,12 +58,12 @@ function CompanyWorking({ userId }) {
     data: userData,
   } = useQuery(GET_USER_QUERY, {
     variables: {
-      userId,
+      user_id,
     },
   });
   const { loading, error, data } = useQuery(FILTER_WORKS_COMPANIES, {
     variables: {
-      userId: userId,
+      userId: user_id,
       filterType: sortingType,
     },
   });
@@ -73,7 +74,7 @@ function CompanyWorking({ userId }) {
     data: searchData,
   } = useQuery(SEARCH_WORKS_COMPANIES, {
     variables: {
-      userId: userId,
+      userId: user_id,
       word: searchWord,
     },
   });
@@ -88,48 +89,6 @@ function CompanyWorking({ userId }) {
   const handleSearchChange = (event) => {
     setSearchWord(event.target.value);
   };
-  const dummyData = [
-    {
-      _id: "6",
-      CompanyName: "Dummy Company 1",
-      CompanyDescription:
-        "Wore these with my training tee and pods to a graduation bbq and the young bucks was all over",
-      Domain: "Technology",
-      Rate: 4.3,
-      CreateDate: "2024-04-18",
-    },
-    {
-      _id: "7",
-      CompanyName: "Dummy Company 2",
-      CompanyDescription:
-        "Wore these with my training tee and pods to a graduation bbq and the young bucks was all over",
-      Domain: "Finance",
-      Rate: 3.8,
-      CreateDate: "2024-04-17",
-    },
-    {
-      _id: "8",
-      CompanyName: "Asel",
-      CompanyDescription:
-        "Wore these with my training tee and pods to a graduation bbq and the young bucks was all over",
-      Domain: "SOA",
-      Rate: 3.8,
-      CreateDate: "2024-04-17",
-    },
-   
-    {
-      _id: "7",
-      CompanyName: "Dummy Company2 2",
-      CompanyDescription:
-        "Wore these with my training tee and pods to a graduation bbq and the young bucks was all over",
-      Domain: "Finance",
-      Rate: 3.8,
-      CreateDate: "2024-04-13",
-    },
-
-  
-    // Add more dummy company objects as needed
-  ];
 
   return (
     <div className="MainCompanyWorkOn" id="man">
@@ -138,7 +97,7 @@ function CompanyWorking({ userId }) {
         <NavBar sendDataToParent={receiveDataFromChild} />
         <div className="Part2CompanyWorkingOn">
           <div className="FakeDivWorkingOn"></div>
-          <div className="ButtonCompanyWorkOn">
+          <div className="CompanyWorkOnCenter">
             <Link to="/Dashboard">
               <Button
                 justify="center "
@@ -170,7 +129,6 @@ function CompanyWorking({ userId }) {
                 </svg>
               </Button>
             </Link>
-          </div>
           <div className="ContentCompanyWorkOn">
             <div className="SearchCompanyWorkOn">
               <div className="SearchPartCompanyWorkOn">
@@ -180,7 +138,6 @@ function CompanyWorking({ userId }) {
                   value={searchWord}
                   variant="unstyled"
                   onChange={handleSearchChange}
-                  data={["React", "Angular", "Vue", "Svelte"]}
                 />
 
                 <div className="SvgPartCompanyWorkOn">
@@ -222,25 +179,40 @@ function CompanyWorking({ userId }) {
               </div>
             </div>
             <div className="Part3CompanyWorkOnCard">
-              {dummyData.map((company, index) => (
-                <CompanyWorkingCard
-                  key={index}
-                  colorProp={receivedData}
-                  company={company}
-                />
-              ))}
-
-              {/* {searchData &&
-                searchData.searchInWorksCompanies.map((company, index) => (
-                  <CompanyWorkingCard
-                    key={index}
-                    colorProp={receivedData}
-                    company={company}
-                  />
-                ))} */}
+            {userLoading && <p>Loading...</p>}
+        {userError && <p>Error: {userError.message}</p>}
+        {userData &&
+          userData.getUser &&
+          userData.getUser.WorkCompanies.map((company, index) => (
+            <CompanyWorkingCard
+              key={index}
+              colorProp={receivedData}
+              company={company}
+            />
+          ))}
+        {loading && <p>Loading...</p>}
+        {error && <p>Error: {error.message}</p>}
+        {data &&
+          data.filterWorksCompanies.map((company, index) => (
+            <CompanyWorkingCard
+              key={index}
+              colorProp={receivedData}
+              company={company}
+            />
+          ))}
+        {searchLoading && <p>Loading...</p>}
+        {searchError && <p>Error: {searchError.message}</p>}
+        {searchData &&
+          searchData.searchInWorksCompanies.map((company, index) => (
+            <CompanyWorkingCard
+              key={index}
+              colorProp={receivedData}
+              company={company}
+            />
+          ))}
             </div>
           </div>
-        </div>
+        </div></div>
       </div>
     </div>
   );

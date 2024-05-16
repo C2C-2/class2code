@@ -44,8 +44,15 @@ const CREATE_NEW_TEAMS = gql`
     }
   }
 `;
+const ADD_USER_TO_TEAM = gql`
+  mutation AddUserToTeam($teamId: Int!, $userId: String!, $role: String!) {
+    addUserToTeam(teamId: $teamId, userId: $userId, role: $role)
+  }
+`;
 
-function MyCompaniesTeams({ user_id }) {
+function MyCompaniesTeams(
+) {
+  const user_id = localStorage.getItem("id");
   const [receivedData, setReceivedData] = useState("");
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [teamData, setTeamData] = useState({
@@ -67,6 +74,7 @@ function MyCompaniesTeams({ user_id }) {
     variables: { user_id },
   });
   const [createTeam] = useMutation(CREATE_NEW_TEAMS);
+  const [addUserToTeam] = useMutation(ADD_USER_TO_TEAM);
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setTeamData((prevData) => ({
@@ -78,121 +86,17 @@ function MyCompaniesTeams({ user_id }) {
     }));
   };
   const handleCreateTeam = () => {
-    createTeam({variables:{team:teamData ,companyId:company_id }})
+    createTeam({ variables: { team: teamData, companyId: company_id } })
       .then((res) => {
-        console.log("Task created successfully:", res.data.createTaskForTeam);
+        console.log("Team created successfully:", res.data.createNewTeam);
+        const teamId = res.data.createNewTeam._id;
+        const userId = localStorage.getItem("id");
+        const role = "member";
+        addUserToTeam({ variables: { teamId, userId, role } });
       })
       .catch((error) => {
-        console.error("Error creating task:", error);
+        console.error("Error creating team:", error);
       });
-  };
-  const dummyData = {
-    getUser: {
-      MyCompanies: [
-        {
-          CompanyName: "Company A",
-          Teams: [
-            {
-              TeamRole: "Developer",
-              TeamName: "Team 1",
-              CreateDate: "2024-04-17",
-              _id: "1",
-              images: "https://i.pravatar.cc/300",
-              TeamLead: "Mohammed",
-              Tasks: [
-                {
-                  TaskName: "Task 1",
-                },
-              ],
-              Members: [
-                {
-                  MemberName: "Mohammed",
-                  MemberRole: "Developer",
-                },
-                {
-                  MemberName: "Qossay",
-                  MemberRole: "Developer",
-                },
-              ],
-            },
-            {
-              TeamRole: "Manager",
-              TeamName: "Team 2",
-              CreateDate: "2024-04-16",
-              _id: "2",
-              images: "https://i.pravatar.cc/300",
-              TeamLead: "Mohammed",
-              Tasks: [
-                {
-                  TaskName: "Task 1",
-                },
-              ],
-              Members: [
-                {
-                  MemberName: "Mohammed",
-                  MemberRole: "Developer",
-                },
-                {
-                  MemberName: "Qossay",
-                  MemberRole: "Developer",
-                },
-              ],
-            },
-          ],
-        },
-        {
-          CompanyName: "Company B",
-          Teams: [
-            {
-              TeamRole: "Developer",
-              TeamName: "Team 3",
-              CreateDate: "2024-04-15",
-              _id: "3",
-              images: "https://i.pravatar.cc/300",
-              TeamLead: "Qossay",
-              Tasks: [
-                {
-                  TaskName: "Task 1",
-                },
-              ],
-              Members: [
-                {
-                  MemberName: "Mohammed",
-                  MemberRole: "Developer",
-                },
-                {
-                  MemberName: "Qossay",
-                  MemberRole: "Developer",
-                },
-              ],
-            },
-            {
-              TeamRole: "Manager",
-              TeamName: "Team 4",
-              CreateDate: "2024-04-14",
-              _id: "4",
-              images: "https://i.pravatar.cc/300",
-              TeamLead: "Osama",
-              Tasks: [
-                {
-                  TaskName: "Task 1",
-                },
-              ],
-              Members: [
-                {
-                  MemberName: "Mohammed",
-                  MemberRole: "Developer",
-                },
-                {
-                  MemberName: "Qossay",
-                  MemberRole: "Developer",
-                },
-              ],
-            },
-          ],
-        },
-      ],
-    },
   };
   return (
     <div className="MyCompaniesTeamsAll" id="man">
@@ -303,15 +207,13 @@ function MyCompaniesTeams({ user_id }) {
               <Button variant="filled" color="#F1F1F1" c="black">
                 Date
               </Button>
-              <Button variant="filled" color="#F1F1F1" c="black">
-                Priority
-              </Button>
-              <Button variant="filled" color="#F1F1F1" c="black">
-                Late
-              </Button>
             </div>
             <div className="MyCompaniesTeamsContentCard">
-              {dummyData.getUser.MyCompanies.map((company) =>
+            {loading && <p>Loading...</p>}
+            {error && <p>Error: {error.message}</p>}
+            {data &&
+              data.getUser &&
+              data.getUser.MyCompanies.map((company) =>
                 company.Teams.map((team) => (
                   <MyCompaniesTeamsCard
                     key={team._id}

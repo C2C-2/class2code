@@ -10,6 +10,7 @@ import "./NavBar.css";
 import { useEffect, useState } from "react";
 import MainLogo from "./logo2 2.png";
 import ProfileLogo from "./Profile.png";
+import { Link } from "react-router-dom";
 // import LightDarkMode from "./Light_DarkMode/LightDarkMode";
 function NavBar() {
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -48,12 +49,14 @@ function NavBar() {
       }}
     >
       <div className={`${isDarkMode ? "NavDark" : navClass}`}>
+        <Link to="/Dashboard">
         <div className={topClass}>
           <img className="NavMainLogo" alt="Logo" src={MainLogo} />
           <span className={`${isDarkMode ? "NavTextBarDark" : "NavTextBar"}`}>
             Class2Code
           </span>
         </div>
+        </Link>
         <div className="TopPartNavBar">
           <span className="BackSearch">
             <button className="ButtonSvg">
@@ -70,7 +73,7 @@ function NavBar() {
                   cy="5.5"
                   r="4.3"
                   stroke="#2B3674"
-                  stroke-width="1.4"
+                  strokeWidth="1.4"
                 />
                 <line
                   x1="10.0101"
@@ -78,8 +81,8 @@ function NavBar() {
                   x2="8"
                   y2="9.48995"
                   stroke="#2B3674"
-                  stroke-width="1.4"
-                  stroke-linecap="round"
+                  strokeWidth="1.4"
+                  strokeLinecap="round"
                 />
               </svg>
             </button>
@@ -98,7 +101,7 @@ function NavBar() {
                 viewBox="0 0 24 25"
                 fill="none"
               >
-                <g clip-path="url(#clip0_214_3796)">
+                <g clipPath="url(#clip0_214_3796)">
                   <path
                     d="M19.2896 17.79L17.9996 16.5V11.5C17.9996 8.43 16.3596 5.86 13.4996 5.18V4.5C13.4996 3.67 12.8296 3 11.9996 3C11.1696 3 10.4996 3.67 10.4996 4.5V5.18C7.62956 5.86 5.99956 8.42 5.99956 11.5V16.5L4.70956 17.79C4.07956 18.42 4.51956 19.5 5.40956 19.5H18.5796C19.4796 19.5 19.9196 18.42 19.2896 17.79ZM15.9996 17.5H7.99956V11.5C7.99956 9.02 9.50956 7 11.9996 7C14.4896 7 15.9996 9.02 15.9996 11.5V17.5ZM11.9996 22.5C13.0996 22.5 13.9996 21.6 13.9996 20.5H9.99956C9.99956 21.6 10.8896 22.5 11.9996 22.5Z"
                     fill="#A3AED0"
@@ -162,9 +165,9 @@ function NavBar() {
                 </defs>
               </svg>
             </button>
-            <button className="ButtonSvg">
+            <Link to="/UserProfile" className="ButtonSvg">
               <img className="ProfileLogo" alt="Logo" src={ProfileLogo} />
-            </button>
+            </Link>
           </div>
         </div>
       </div>

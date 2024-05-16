@@ -55,11 +55,19 @@ function ShowAllPosts() {
   });
 
   const CREATE_POST = gql`
-    mutation CreatePositionPost($post: PositionPostInput!, $companyId: Int!) {
-      createPositionPost(post: $post, companyId: $companyId) {
-        _id
+  mutation CreatePositionPost($post: PositionPostInput!, $companyId: Int!) {
+    createPositionPost(post: $post, companyId: $companyId) {
+      Company {
+        CompanyName
       }
+      Content
+      CreatedDate
+      User {
+        id
+      }
+      _id
     }
+  }
   `;
 
   const [createPost] = useMutation(CREATE_POST);
@@ -73,7 +81,24 @@ function ShowAllPosts() {
   }, [page]);
 
   const [opened, { open, close }] = useDisclosure(false);
-
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    createPost({
+      variables: {
+        post: { Content: description },
+        companyId: parseInt(companyId),
+      },
+    })
+      .then(() => {
+        close();
+        getPosts({
+          variables: { userId: localStorage.getItem("id"), page, limit },
+        });
+      })
+      .catch((error) => {
+        console.error("Error creating post:", error);
+      });
+  };
   return (
     <div className="ShowAllPostsAll" id="man">
       <SideBar colorSide={receivedData} />
@@ -137,8 +162,8 @@ function ShowAllPosts() {
                     fill="none"
                   >
                     <path
-                      fill-rule="evenodd"
-                      clip-rule="evenodd"
+                      fillRule="evenodd"
+                      clipRule="evenodd"
                       d="M11.3547 12.9681C8.67003 15.0575 4.78756 14.869 2.31969 12.4011C-0.352547 9.72885 -0.352769 5.39584 2.31969 2.72338C4.99215 0.0509178 9.32517 0.0511395 11.9974 2.72338C14.4653 5.19124 14.6538 9.07371 12.5645 11.7584L15.6265 14.8205C15.7872 14.9812 15.8712 15.1902 15.8766 15.3998C15.8832 15.6271 15.8001 15.8567 15.6265 16.0302C15.2925 16.3643 14.7512 16.3646 14.4168 16.0302L11.3547 12.9681ZM10.7877 3.93309C12.7925 5.93786 12.792 9.18705 10.7877 11.1914C8.78336 13.1957 5.53418 13.1961 3.52941 11.1914C1.52464 9.18661 1.52508 5.93742 3.52941 3.93309C5.53373 1.92877 8.78292 1.92832 10.7877 3.93309Z"
                       fill="white"
                     />
@@ -154,25 +179,12 @@ function ShowAllPosts() {
                     yOffset={"10%"}
                     opened={opened}
                     onClose={close}
-                    title="Create New Post"
                     centered={true}
                   >
                     <h4>Add Post</h4>
                     <br />
                     <form
-                      onSubmit={(e) => {
-                        e.preventDefault();
-                        createPost({
-                          variables: {
-                            post: {
-                              Content: description,
-                            },
-                            CompanyId: companyId,
-                          },
-                        });
-
-                        close();
-                      }}
+                     onSubmit={handleSubmit}
                     >
                       <div className="htmlInputGroup">
                         <label htmlFor="PostCompany">Company</label>

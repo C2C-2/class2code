@@ -1,9 +1,8 @@
-import {useState,useEffect} from "react";
+import { useState, useEffect } from "react";
 import "./CreateCompany.css";
 import SideBar from "../../../components/SideBar/SideBar";
 import NavBar from "../../../components/NavBar/NavBar";
 import { Button } from "@mantine/core";
-import GreenBox2 from "../../../components/GreenBox/GreenBox2";
 import { useMutation, gql } from "@apollo/client";
 import { Link } from "react-router-dom";
 
@@ -13,40 +12,35 @@ const CREATE_NEW_COMPANY = gql`
       CompanyDescription
       CompanyName
       Domain
-      Teams {
-        TeamName
-      }
-      Project {
-        ProjectName
-      }
     }
   }
 `;
+
 function CreateCompany() {
   const [receivedData, setReceivedData] = useState("");
-  const [isDarkMode, setIsDarkMode] = useState(false);
   const [companyData, setCompanyData] = useState({
-    company: null,
-    userId: null,
+    CompanyName: "",
+    CompanyDescription: "",
+    Domain: "",
   });
+  const user_id = localStorage.getItem("id");
+
   const [createCompany] = useMutation(CREATE_NEW_COMPANY);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setCompanyData((prevData) => ({
       ...prevData,
-      company: {
-        ...prevData.company,
-        [name]: value,
-      },
+      [name]: value,
     }));
   };
 
   const handleCreateCompany = () => {
-    createCompany({ variables: companyData })
+    createCompany({ variables: { company: companyData, userId: user_id } })
       .then((res) => {
         // Handle success, e.g., show a success message
         console.log("Company created successfully:", res.data.createNewCompany);
+        // Redirect or perform other actions after successful creation
       })
       .catch((error) => {
         // Handle error, e.g., show an error message
@@ -54,137 +48,112 @@ function CreateCompany() {
       });
   };
 
-
-  useEffect(() => {
-    setIsDarkMode(receivedData === "dark");
-  }, [receivedData]);
-  const receiveDataFromChild = (data) => {
-    setReceivedData(data);
-  };
-
   useEffect(() => {
     document.getElementById("man").style.backgroundColor =
       receivedData === "light" ? "#fff" : "";
   }, [receivedData]);
 
+  const receiveDataFromChild = (data) => {
+    setReceivedData(data);
+  };
+
   return (
     <div className="CreateCompany" id="man">
-        <SideBar colorSide={receivedData}/>
+      <SideBar colorSide={receivedData} />
       <div className="CreateComp">
-          <NavBar sendDataToParent={receiveDataFromChild} /> 
+        <NavBar sendDataToParent={receiveDataFromChild} />
         <div className="Part2CreateCompany">
           <div className="FakeDivNews"></div>
           <div className="ContentCreateCompany">
-          <div className="CreateCompanyButtonBack">
-            <Link to="/Dashboard">
-            <Button
-              justify="center "
-              variant="filled"
-              color="#283739"
-              radius="md"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="18"
-                height="12"
-                viewBox="0 0 18 12"
-                fill="none"
-              >
-                <path
-                  d="M1.5 6H16.5"
-                  stroke="white"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M6.49999 11L1.5 6L6.49999 1"
-                  stroke="white"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </Button>
-            </Link>
-          </div>
-          <div className="CreateCompanyInputs">
-            <div className="Part1Inputs">
-              <div className="GeneralInformationCreateCompany">General Information</div>
-              <div className="InputsCreateCompanyAll">
-                <div className="InputOverAll">
-                  <h6 className="TextPartCmopany">Company Name</h6>
-                  <input
-                    type="text"
-                    name="CompanyName"
-                    onChange={handleInputChange}
-                    placeholder="Enter Company Name"
-                    className="TextInputCreateCompany"
-                  />
-                </div>
-                <div className="InputOverAll">
-                  <h6 className="TextPartCmopany">Company Description</h6>
-                  <input
-                    type="text"
-                    name="CompanyDescription"
-                    onChange={handleInputChange}
-                    placeholder="Enter Company Description"
-                    className="TextInputCreateCompany"
-                  />
-                </div>
-                <div className="InputOverAll">
-                  <h6 className="TextPartCmopany">Company Admin</h6>
-                  <input
-                    type="text"
-                    placeholder="Enter Company Admin"
-                    name="CompanyAdmin"
-                    onChange={handleInputChange}
-                    className="TextInputCreateCompany"
-                  />
-                </div>
-                <div className="InputOverAll">
-                  <h6 className="TextPartCmopany">Company Domain</h6>
-                  <input
-                    type="text"
-                    placeholder="Enter Company Domain"
-                    name="Domain"
-                    onChange={handleInputChange}
-                    className="TextInputCreateCompany"
-                  />
-                </div>
-                <div className="InputOverAll">
-                  <h6 className="TextPartCmopany">Select Project</h6>
-                  <input
-                    type="text"
-                    placeholder="Select Project"
-                    name="Project"
-                    onChange={handleInputChange}
-                    className="TextInputCreateCompany"
-                  />
-                </div>
-              </div>
-            </div>
-            <div className="Part2Teams">
-              <div className="TextTeamCreateCompany">Teams</div>
-              <div className="InputOverAllTeam">
-                <h6 className="TextPartCmopany">Select Team</h6>
-                <input
-                  type="text"
-                  placeholder="Select Team"
-                  name="Team"
-                  onChange={handleInputChange}
-                  className="TextInputCreateCompany"
-                />
-              </div>
-              <div className="AddTeamsCreateCompany">
-              </div>
-              <Link to="/MyCompanies" className="ButtonCreateCompany">
-                <Button variant="filled"  size="md"color="#388E3C" w={200} h={40}  onClick={handleCreateCompany}>
-                  Create
+            <div className="CreateCompanyButtonBack">
+              <Link to="/Dashboard">
+                <Button
+                  justify="center "
+                  variant="filled"
+                  color="#283739"
+                  radius="md"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="18"
+                    height="12"
+                    viewBox="0 0 18 12"
+                    fill="none"
+                  >
+                    <path
+                      d="M1.5 6H16.5"
+                      stroke="white"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                    <path
+                      d="M6.49999 11L1.5 6L6.49999 1"
+                      stroke="white"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
                 </Button>
               </Link>
             </div>
-          </div>
+            <div className="CreateCompanyInputs">
+              <div className="Part1Inputs">
+                <div className="GeneralInformationCreateCompany">
+                  General Information
+                </div>
+                <div className="InputsCreateCompanyAll">
+                  <div className="InputOverAll">
+                    <h6 className="TextPartCmopany">Company Name</h6>
+                    <input
+                      type="text"
+                      name="CompanyName"
+                      value={companyData.CompanyName}
+                      onChange={handleInputChange}
+                      placeholder="Enter Company Name"
+                      className="TextInputCreateCompany"
+                    />
+                  </div>
+                  <div className="InputOverAll">
+                    <h6 className="TextPartCmopany">Company Description</h6>
+                    <input
+                      type="text"
+                      name="CompanyDescription"
+                      value={companyData.CompanyDescription}
+                      onChange={handleInputChange}
+                      placeholder="Enter Company Description"
+                      className="TextInputCreateCompany"
+                    />
+                  </div>
+                  <div className="InputOverAll">
+                    <h6 className="TextPartCmopany">Company Domain</h6>
+                    <input
+                      type="text"
+                      name="Domain"
+                      value={companyData.Domain}
+                      onChange={handleInputChange}
+                      placeholder="Enter Company Domain"
+                      className="TextInputCreateCompany"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="Part2Teams">
+                <Link to="/MyCompanies" className="ButtonCreateCompany">
+                  <Button
+                    variant="filled"
+                    size="md"
+                    color="#388E3C"
+                    w={200}
+                    h={40}
+                    onClick={handleCreateCompany}
+                  >
+                    Create
+                  </Button>
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       </div>
