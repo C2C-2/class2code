@@ -65,7 +65,7 @@ function App() {
             }
           />
           <Route
-            path="/AIChat"
+            path={Paths.AIChat}
             element={
               <TokenChecker>
                 <AIChat />
@@ -73,7 +73,7 @@ function App() {
             }
           />
           <Route
-            path="/FAQQuestion"
+            path={Paths.FAQuestion}
             element={
               <TokenChecker>
                 <FAQuestion />
@@ -81,7 +81,7 @@ function App() {
             }
           />
           <Route
-            path="/Dashboard"
+            path={Paths.Dashboard}
             element={
               <TokenChecker>
                 <Dashboard />
@@ -98,7 +98,7 @@ function App() {
             }
           />
           <Route
-            path="/AvailableProject"
+            path={Paths.AvailableProject}
             element={
               <TokenChecker>
                 <AvailableProjects />

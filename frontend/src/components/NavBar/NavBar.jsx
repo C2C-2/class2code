@@ -2,14 +2,17 @@ import {
   ActionIcon,
   useMantineColorScheme,
   useComputedColorScheme,
+  Menu,
+  Button,
 } from "@mantine/core";
 import { IconSun, IconMoon } from "@tabler/icons-react";
 import clsx from "clsx";
 import classes from "./Light_DarkMode/LightDarkMode.module.css";
 import "./NavBar.css";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import MainLogo from "./logo2 2.png";
 import ProfileLogo from "./Profile.png";
+import { write, read, updateData } from "../../config/firebase";
 // import LightDarkMode from "./Light_DarkMode/LightDarkMode";
 function NavBar() {
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -19,10 +22,13 @@ function NavBar() {
   const computedColorScheme = useComputedColorScheme("light", {
     getInitialValueInEffect: true,
   });
+  const [notifications, setNotifications] = useState([]);
+  const [userId, setUserId] = useState(localStorage.getItem("id"));
 
   useEffect(() => {
     setIsDarkMode(computedColorScheme === "dark");
   }, [computedColorScheme]);
+
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth > 1200) {
@@ -40,6 +46,7 @@ function NavBar() {
     // Cleanup function to remove event listener
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
   return (
     <div
       className="MainNav"
@@ -90,32 +97,42 @@ function NavBar() {
             ></input>
           </span>
           <div className="Svg">
-            <button className="ButtonSvg">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="25"
-                viewBox="0 0 24 25"
-                fill="none"
-              >
-                <g clip-path="url(#clip0_214_3796)">
-                  <path
-                    d="M19.2896 17.79L17.9996 16.5V11.5C17.9996 8.43 16.3596 5.86 13.4996 5.18V4.5C13.4996 3.67 12.8296 3 11.9996 3C11.1696 3 10.4996 3.67 10.4996 4.5V5.18C7.62956 5.86 5.99956 8.42 5.99956 11.5V16.5L4.70956 17.79C4.07956 18.42 4.51956 19.5 5.40956 19.5H18.5796C19.4796 19.5 19.9196 18.42 19.2896 17.79ZM15.9996 17.5H7.99956V11.5C7.99956 9.02 9.50956 7 11.9996 7C14.4896 7 15.9996 9.02 15.9996 11.5V17.5ZM11.9996 22.5C13.0996 22.5 13.9996 21.6 13.9996 20.5H9.99956C9.99956 21.6 10.8896 22.5 11.9996 22.5Z"
-                    fill="#A3AED0"
-                  />
-                </g>
-                <defs>
-                  <clipPath id="clip0_214_3796">
-                    <rect
-                      width="24"
-                      height="24"
-                      fill="white"
-                      transform="translate(0 0.5)"
-                    />
-                  </clipPath>
-                </defs>
-              </svg>
-            </button>
+            <Menu trigger="click-hover" openDelay={100} closeDelay={400}>
+              <Menu.Target>
+                <Button variant="subtle">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="25"
+                    viewBox="0 0 24 25"
+                    fill="none"
+                  >
+                    <g clip-path="url(#clip0_214_3796)">
+                      <path
+                        d="M19.2896 17.79L17.9996 16.5V11.5C17.9996 8.43 16.3596 5.86 13.4996 5.18V4.5C13.4996 3.67 12.8296 3 11.9996 3C11.1696 3 10.4996 3.67 10.4996 4.5V5.18C7.62956 5.86 5.99956 8.42 5.99956 11.5V16.5L4.70956 17.79C4.07956 18.42 4.51956 19.5 5.40956 19.5H18.5796C19.4796 19.5 19.9196 18.42 19.2896 17.79ZM15.9996 17.5H7.99956V11.5C7.99956 9.02 9.50956 7 11.9996 7C14.4896 7 15.9996 9.02 15.9996 11.5V17.5ZM11.9996 22.5C13.0996 22.5 13.9996 21.6 13.9996 20.5H9.99956C9.99956 21.6 10.8896 22.5 11.9996 22.5Z"
+                        fill="#A3AED0"
+                      />
+                    </g>
+                    <defs>
+                      <clipPath id="clip0_214_3796">
+                        <rect
+                          width="24"
+                          height="24"
+                          fill="white"
+                          transform="translate(0 0.5)"
+                        />
+                      </clipPath>
+                    </defs>
+                  </svg>
+                </Button>
+              </Menu.Target>
+
+              <Menu.Dropdown>
+                <Menu.Label>Notifications</Menu.Label>
+                <Menu.Divider />
+                <Menu.Item>Danger zone</Menu.Item>
+              </Menu.Dropdown>
+            </Menu>
             <ActionIcon
               onClick={() =>
                 setColorScheme(

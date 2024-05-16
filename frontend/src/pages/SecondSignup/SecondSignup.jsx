@@ -12,7 +12,7 @@ import { useRef, useState } from "react";
 import { uploadImage } from "../../config/firebase";
 import { gql, useMutation } from "@apollo/client";
 
-const SecondSignup = () => {
+const SecondSignup = ({ close }) => {
   const ref = useRef(null);
   const [skills, setSkills] = useState([]);
   const [skill, setSkill] = useState("");

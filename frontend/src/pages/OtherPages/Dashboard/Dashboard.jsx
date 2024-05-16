@@ -115,9 +115,9 @@ function Dashboard() {
   // if (loading) return <p>Loading...</p>;
   // if (error) return <p>Error : {error.message}</p>;
 
-  // const [opened, { open, close }] = useDisclosure(
-  //   localStorage.getItem("type") ? true : false
-  // );
+  const [opened, { open, close }] = useDisclosure(
+    localStorage.getItem("type") ? true : false
+  );
 
   return (
     <div className="DashboardAll" id="man">

@@ -48,6 +48,7 @@ const Login = () => {
         mutation Mutation($user: UserInput!) {
             createNewUser(user: $user) {
                 id
+                type
             }
         }
     `;
@@ -140,15 +141,19 @@ const Login = () => {
                 }
             })
 
-            if (user?.type == "new") {
+            if (user?.data?.createNewUser?.type == "new") {
                 localStorage.setItem("type", "new");
-            } else if (user?.type == "old") {
+                localStorage.setItem("token", result?.user?.accessToken);
+                localStorage.setItem("name", userName);
+                localStorage.setItem("id", result?.user?.uid);
+            } else if (user?.data?.createNewUser?.type == "old") {
                 localStorage.setItem("type", "old");
+                localStorage.setItem("token", result?.user?.accessToken);
+                localStorage.setItem("name", userName);
+                localStorage.setItem("id", result?.user?.uid);
             }
 
-            localStorage.setItem("token", result?.user?.accessToken);
-            localStorage.setItem("name", userName);
-            localStorage.setItem("id", result?.user?.uid);
+
 
         } catch (err) {
             setError(err.message);

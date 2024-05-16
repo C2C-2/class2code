@@ -66,8 +66,6 @@ const Chat = () => {
     fetchOldChats();
   }, [userId]);
 
-  useEffect(() => {}, []);
-
   useEffect(() => {
     fetchData();
   }, [fetchData]);

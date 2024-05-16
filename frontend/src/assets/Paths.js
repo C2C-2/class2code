@@ -1,4 +1,3 @@
-
 export const Paths = {
   Login: "/Login",
   SignUpFigma: "/SignUpFigma",
@@ -26,4 +25,5 @@ export const Paths = {
   SecondSignup: "/SecondSignup",
   AIChat: "/AIChat",
   MyPosts: "/MyPosts",
+  FAQuestion: "FAQuestion",
 };
