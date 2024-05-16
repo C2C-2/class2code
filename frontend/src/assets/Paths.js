@@ -1,3 +1,5 @@
+import EditPassword from "../pages/OtherPages/EditPassword/EditPassword";
+
 export const Paths = {
   Login: "/Login",
   SignUpFigma: "/SignUpFigma",
@@ -26,4 +28,7 @@ export const Paths = {
   AIChat: "/AIChat",
   MyPosts: "/MyPosts",
   FAQuestion: "FAQuestion",
+  UserProfile : "/UserProfile",
+  EditPassword : "/EditPassword",
+  EditEmail :"/EditEmail",
 };

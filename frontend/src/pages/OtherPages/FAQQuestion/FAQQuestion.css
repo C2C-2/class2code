@@ -1,40 +1,37 @@
 .FAQQuestionAll {
-    width: 100%;
-    height: 100%;
     display: flex;
     flex-direction: row;
 }
 
 .FAQQuestionMain {
-    width: 100%;
-    height: 100%;
     display: flex;
     flex-direction: column;
-    align-items: flex-end;
+    align-items: flex-start;
 }
 
 .FAQQuestionCenter {
     display: flex;
     flex-direction: row;
-    align-items: center;
-    height: 90%;
-    width: 85%;
+    align-items: flex-start;
+    gap: 5vw;
+
 }
 
-.FAQQuestionCenterButtonBack {
-    width: 7.5%;
-    height: 90%;
+.FAQQuestionFakeDiv {
+    width: 40vh;
+}
+
+.FAQQuestionCenterDesign {
+    padding-top: 6vw;
     display: flex;
-    flex-direction: column;
-    align-items: flex-end;
+    flex-direction: row;
+    gap: 2vw;
 }
 
 .FAQQuestionCenterContent {
     display: flex;
     flex-direction: column;
-    padding-top: 30px;
-    height: 80%;
-    width: 90%;
+    padding-top: 5vw;
     align-items: flex-start;
     gap: 10px;
 }
@@ -48,6 +45,7 @@
     font-weight: 700;
     line-height: 66px;
 }
+
 .FAQQuestionCenterContentText1Dark {
     color: #fff;
     font-feature-settings: 'clig'off, 'liga'off;
@@ -63,18 +61,21 @@
     height: 1px;
     width: 90%;
 }
+
 .FAQQuestionCenterContentLineDark {
     color: #fff;
     height: 1px;
     width: 90%;
 }
-.FAQQuestionCenterContentDivText{
-    width: 90%;
+
+.FAQQuestionCenterContentDivText {
     display: flex;
     flex-direction: row;
     align-items: flex-start;
     justify-content: space-between;
+    width: 90%;
 }
+
 .FAQQuestionCenterContentText2 {
     color: var(--dark, #283739);
     font-feature-settings: 'clig'off, 'liga'off;
@@ -84,6 +85,7 @@
     font-weight: 700;
     line-height: 28px;
 }
+
 .FAQQuestionCenterContentText2Dark {
     color: #fff;
     font-feature-settings: 'clig'off, 'liga'off;
@@ -93,8 +95,8 @@
     font-weight: 700;
     line-height: 28px;
 }
+
 .FAQQuestionCenterContentText3 {
-    width:40% ;
     color: var(--dark, #283739);
     font-feature-settings: 'clig'off, 'liga'off;
     font-family: "DM Sans";
@@ -103,8 +105,8 @@
     font-weight: 700;
     line-height: 28px;
 }
+
 .FAQQuestionCenterContentText3Dark {
-    width:40% ;
     color: #fff;
     font-feature-settings: 'clig'off, 'liga'off;
     font-family: "DM Sans";
@@ -113,39 +115,45 @@
     font-weight: 700;
     line-height: 28px;
 }
-.FAQQuestionCenterContentDivTextInside{
-    width: 40%;
+
+.FAQQuestionCenterContentDivTextInside {
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-end;
+
+
 }
-.FAQQuestionCenterContentText4{
-    width: 80%;
+
+.FAQQuestionCenterContentText4 {
+    width: 50%;
+    text-wrap: wrap;
     color: var(--dark, #283739);
-    font-feature-settings: 'clig' off;
+    font-feature-settings: 'clig'off;
     font-family: "DM Sans";
     font-size: 16px;
     font-style: normal;
     font-weight: 500;
     line-height: 28px;
 }
-.FAQQuestionCenterContentText4Dark{
-    width: 80%;
+
+.FAQQuestionCenterContentText4Dark {
     color: #fff;
-    font-feature-settings: 'clig' off;
+    font-feature-settings: 'clig'off;
     font-family: "DM Sans";
     font-size: 16px;
     font-style: normal;
     font-weight: 500;
     line-height: 28px;
 }
-.FAQQuestionCenterContentButton{
+
+.FAQQuestionCenterContentButton {
     border: none;
     border-radius: 25px;
     background-color: transparent;
 }
-.FAQQuestionCenterContentButton1{
+
+.FAQQuestionCenterContentButton1 {
     border: none;
     border-radius: 25px;
     background-color: transparent;

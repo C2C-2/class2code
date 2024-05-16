@@ -1,110 +1,57 @@
 import { useState, useEffect } from "react";
 import "./EditMyCompanyProfile.css";
+import { Button, Textarea, TextInput } from "@mantine/core";
 import SideBar from "../../../components/SideBar/SideBar";
 import NavBar from "../../../components/NavBar/NavBar";
-import { Button } from "@mantine/core";
 import CurrentProject from "../../../components/CurrentProject/CurrentProject";
 import EditTeamMyCompanyProfile from "../../../components/EditTeamMyCompanyProfile/EditTeamMyCompanyProfile";
-import { gql, useMutation } from "@apollo/client";
-import { Link } from "react-router-dom";
+import { gql, useMutation, useQuery } from "@apollo/client";
+import { Link, useParams } from "react-router-dom";
+
 function EditMyCompanyProfile() {
+  const { company_id } = useParams();
   const [receivedData, setReceivedData] = useState("");
   const [isDarkMode, setIsDarkMode] = useState(false);
-  const [companyName, setCompanyName] = useState("Company ABC");
-  const [domain, setDomain] = useState("www.companyabc.com");
-  const [description, setDescription] = useState(
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-  );
-  const [rate, setRate] = useState(4.9);
-  const [project, setProject] = useState("Project XYZ");
-  const [teams, setTeams] = useState([
-    { TeamName: "Team 1" },
-    { TeamName: "Team 2" },
-    { TeamName: "Team 3" },
-  ]);
 
   useEffect(() => {
     setIsDarkMode(receivedData === "dark");
   }, [receivedData]);
-
-  const receiveDataFromChild = (data) => {
-    setReceivedData(data);
-  };
-
-  useEffect(() => {
-    document.getElementById("man").style.backgroundColor =
-      receivedData === "light" ? "#fff" : "#000";
-  }, [receivedData]);
-
-  const UPDATE_COMPANY_MUTATION = gql`
-    mutation UpdateCompany($companyId: Int!, $company: CompanyInput!) {
-      updateCompany(companyId: $companyId, company: $company) {
-        CompanyDescription
-        CompanyName
-        Domain
-        CreateDate
-        Project {
-          ProjectName
-        }
-        Teams {
-          TeamName
-        }
+  const GET_COMPANY_DATA = gql`
+    query GetCompany($companyId: Int!) {
+      getCompany(companyId: $companyId) {
+        _id
         Rate
+        CompanyName
+        CreateDate
+        Domain
+        CompanyDescription
       }
     }
   `;
-  const [updateCompany, { data, loading, error }] = useMutation(
-    UPDATE_COMPANY_MUTATION
-  );
+  const { loading, error, data } = useQuery(GET_COMPANY_DATA, {
+    variables: { companyId: Number(company_id) },
+  });
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    if (name === "companyName") {
-      setCompanyName(value);
-    } else if (name === "domain") {
-      setDomain(value);
-    } else if (name === "description") {
-      setDescription(value);
-    } else if (name === "rate") {
-      setRate(parseFloat(value));
-    } else if (name === "project") {
-      setProject(value);
-    }
-  };
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error.message}</p>;
 
-  const handleProjectChange = (newProject) => {
-    setProject(newProject);
-  };
-  const handleRemoveTeamMember = (teamName) => {
-    setTeams(teams.filter((team) => team.TeamName !== teamName));
-  };
-
-  const handleSubmit = () => {
-    updateCompany({
-      variables: {
-        companyId: companyId,
-        company: {
-          CompanyName: companyName,
-          Domain: domain,
-          CompanyDescription: description,
-          Rate: rate,
-          Project: {
-            ProjectName: project,
-          },
-          Teams: teams,
-        },
-      },
-    });
-  };
+  const {
+    CompanyName,
+    Domain,
+    CreateDate,
+    CompanyDescription,
+    teams,
+    project,
+  } = data.getCompany;
   return (
-    <div className="EditMyCompanyProfileAll" id="man">
-      <SideBar colorSide={receivedData} />
-      <div className="MainEditMyCompanyProfile">
-        <NavBar sendDataToParent={receiveDataFromChild} />
-        <div className="CenterEditMyCompanyProfile">
-          <div className="AllEditMyCompanyProfile">
-            <div className="EditMyCompanyProfileButtonBack">
-              <Link to="/MyCompanies">
+    <div className="EditMyCompaniesAll">
+      <SideBar />
+      <div className="EditMyCompaniesMain">
+        <NavBar />
+        <div className="EditMyCompaniesCenter">
+          <div className="EditMyCompaniesFakeDiv"></div>
+          <div className="EditMyCompaniesContent">
+            <Link to="/MyCompanies" className="EditMyCompanyProfileButtonBack">
               <Button
                 justify="center "
                 variant="filled"
@@ -121,34 +68,27 @@ function EditMyCompanyProfile() {
                   <path
                     d="M1.5 6H16.5"
                     stroke="white"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                   <path
                     d="M6.49999 11L1.5 6L6.49999 1"
                     stroke="white"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                 </svg>
               </Button>
-              </Link>
-            </div>
-            <div className="Part2EditCenter">
-              <div className="DescriptionEditMyCompanyProfile">
-                <div className="CompanyName">
-                  <div className="EditC1">
-                    <span className="EditC1Text">{companyName}</span>
-                    <span
-                      className="EditC1Number"
-                      type="number"
-                      name="rate"
-                      value={rate}
-                      onChange={handleInputChange}
-                    >
-                      4.9
+            </Link>
+            <div className="EditMyCompaniesContentData">
+              <div className="EditMyCompaniesContentDataTop">
+                <div className="EditMyCompaniesContentDataTopDesign">
+                  <div className="EditMyCompaniesContentDataTopDesignInside">
+                    <h4>{CompanyName}</h4>
+                    <div className="EditMyCompaniesContentDataTopDesignInsideRate">
+                      <h6>4.9</h6>
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="17"
@@ -161,180 +101,61 @@ function EditMyCompanyProfile() {
                           fill="#F4CE14"
                         />
                       </svg>
-                    </span>
+                    </div>
                   </div>
-                  <div className="EditC2">
-                    <span className="EditC2Text">Andrew Smith</span>
-                  </div>
+                  <h4>Osama Ghneem</h4>
                 </div>
-                <div className="EditDomain">
-                  <div className="EditD1">
-                    <span className="EditD1Text">{domain}</span>
-                  </div>
-                  <div className="EditD2">
-                    <span className="EditD2Text">Company Domain</span>
-                  </div>
+                <div className="EditMyCompaniesContentDataTopDesign">
+                  <h4>Domain</h4>
+                  <h5>{Domain}</h5>
                 </div>
-                <div className="EditCreateDate">
-                  <div className="EditCD1">
-                    <span className="CD1Text">Created Date</span>
-                  </div>
-                  <div className="EditCD2">
-                    <span className="EditCD2Text">22/4/2022</span>
-                  </div>
+                <div className="EditMyCompaniesContentDataTopDesign">
+                  <h4>Create Date</h4>
+                  <h6>{CreateDate}</h6>
                 </div>
               </div>
-              <div className="ContentEditMyCompanyProfile">
-                <div className="Part1EditMyCompanyProfile">
-                  <div className="DescriptionText">
-                    <div className={`${isDarkMode ? "EditDU1Dark" : "EditDU1"}`}>
-                      Description
-                    </div>
-                    <div className="EditDU2">
-                      <textarea
-                        cols="70"
-                        rows="4"
-                        name="description"
-                        placeholder="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. "
-                        className={`${
-                          isDarkMode ? "textareaDark" : "textareaLight"
-                        }`}
-                        value={description}
-                        onChange={handleInputChange}
-                      ></textarea>
-                    </div>
-                  </div>
-                  <div className="InputsTextEditMyCompanyProfile">
-                    <div
-                      className={`${
-                        isDarkMode
-                          ? "GeneralInformationDark"
-                          : "GeneralInformation"
-                      }`}
-                    >
-                      General Information
-                    </div>
-                    <div className="InputsMyCompanyProfile">
-                      <div className="InputOverAll">
-                        <span
-                          className={`${
-                            isDarkMode
-                              ? "TextPartCompanyDark"
-                              : "TextPartCompany"
-                          }`}
-                        >
-                          Name
-                        </span>
-                        <input
-                          type="text"
-                          name="companyName"
-                          placeholder="Company Name"
-                          className="TextInput"
-                          value={companyName}
-                          onChange={handleInputChange}
-                        />
-                      </div>
-                      <div className="InputOverAll">
-                        <span
-                          className={`${
-                            isDarkMode
-                              ? "TextPartCompanyDark"
-                              : "TextPartCompany"
-                          }`}
-                        >
-                          Domain
-                        </span>
-                        <input
-                          type="text"
-                          name="domain"
-                          placeholder="Domain"
-                          className="TextInput"
-                          value={domain}
-                          onChange={handleInputChange}
-                        />
-                      </div>
-                    </div>
-                    <div className="ButtonEdit">
-                    <Link to="/MyCompanies">
-                      <Button
-                        variant="filled"
-                        color="#388E3C"
-                        w={135}
-                        h={40}
-                        onClick={handleSubmit}
-                      >
-                        Update Profile
-                      </Button>
-                      </Link>
-                      <Button
-                        variant="transparent"
-                        color={`${isDarkMode ? "#fff" : "#000"}`}
-                        w={105}
-                        h={30}
-                        size="compact-md"
-                      >
-                        Reset
-                      </Button>
-                    </div>
+              <div className="EditMyCompaniesContentDataCenter">
+                <div className="EditMyCompaniesContentDataCenterPart1">
+                  <Textarea
+                    label="Description"
+                    placeholder={CompanyDescription}
+                    size="lg"
+                    w={500}
+                  />
+                  <div className="EditMyCompaniesContentDataCenterPart1General">
+                    <h3>General Information</h3>
+                    <TextInput
+                      label="Company Name"
+                      placeholder={CompanyName}
+                      size="lg"
+                      w={500}
+                    />
+                    <TextInput
+                      label="Domain"
+                      placeholder={Domain}
+                      size="lg"
+                      w={500}
+                    />
                   </div>
                 </div>
-                <div className="Part2EditUnderOther">
-                  <div className="EditCurrentProjects">
-                    <div
-                      className={`${isDarkMode ? "EditCP1Dark" : "EditCP1"}`}
-                    >
-                      Current Projects
-                    </div>
-                    <div className="ChangeProject">
-                      <span
-                        className={`${
-                          isDarkMode
-                            ? "ChangeProjectTextDark"
-                            : "ChangeProjectText"
-                        }`}
-                      >
-                        Change Project
-                      </span>
-                      <input
-                        type="text"
-                        className="ChangeProjectDivs"
-                        value={project}
-                        onChange={(e) => handleProjectChange(e.target.value)}
-                      />
-                    </div>
-                    <div className="CardOfCurrentProject">
-                      <CurrentProject project={project} />
-                    </div>
+                <div className="EditMyCompaniesContentDataCenterPart2">
+                  <div className="EditMyCompaniesContentDataCenterPart2Project">
+                    <h5>Current Project</h5>
+                    <TextInput
+                      label="Create Project"
+                      placeholder="Input placeholder"
+                      w={300}
+                      size="lg"
+                    />
                   </div>
-                  <div className="PartTeams">
-                    <div
-                      className={`${
-                        isDarkMode ? "EditTeamsDark" : "EditTeams"
-                      }`}
-                    >
-                      Teams
-                    </div>
-                    <div className="CreateTeam">
-                      <span
-                        className={`${
-                          isDarkMode ? "ChangeTeamTextDark" : "ChangeTeamText"
-                        }`}
-                      >
-                        Create Team
-                      </span>
-                      <button className="ChangeTeamDivs">
-                        <span className="TextChange">Create Team</span>
-                      </button>
-                    </div>
-                    <div className="EditCurrentTeams">
-                      {teams.map((team) => (
-                        <EditTeamMyCompanyProfile
-                          key={team.TeamName}
-                          team={team}
-                          onRemove={handleRemoveTeamMember}
-                        />
-                      ))}
-                    </div>
+                  <div className="EditMyCompaniesContentDataCenterPart2Project">
+                    <h5>Current Team</h5>
+                    <TextInput
+                      label="Create Team"
+                      placeholder="Input placeholder"
+                      w={300}
+                      size="lg"
+                    />
                   </div>
                 </div>
               </div>

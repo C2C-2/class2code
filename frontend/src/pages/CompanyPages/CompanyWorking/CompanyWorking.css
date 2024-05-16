@@ -11,21 +11,29 @@
 
 .Part2CompanyWorkingOn {
     display: flex;
-    padding-left: 4vw;
     flex-direction: row;
     align-items: flex-start;
-    padding-top: 6vw;
+    gap: 3vw;
+
 
 }
 
 .FakeDivWorkingOn {
     width: 30vh;
 }
+
+.CompanyWorkOnCenter {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    padding-top: 6vw;
+    gap: 5vw;
+}
+
 .ContentCompanyWorkOn {
     display: flex;
     flex-direction: column;
-
-    padding-top: 1vw;
+    padding-top: 3vw;
     gap: 1.5vw;
 }
 
@@ -33,11 +41,12 @@
 .SearchCompanyWorkOn {
     display: flex;
     flex-direction: column;
-    gap:1vw ;
+    gap: 2vw;
 
 }
 
 .SearchPartCompanyWorkOn {
+    padding-left: 15vw;
     align-items: center;
     display: flex;
     justify-content: center;
@@ -53,7 +62,7 @@
     padding-right: 10vw;
     border-radius: var(--12, 12px) var(--0, 0px) var(--0, 0px) var(--12, 12px);
     border: 1px solid rgba(56, 142, 60, 0.40);
-    
+
 }
 
 

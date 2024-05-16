@@ -7,8 +7,12 @@
 }
 .CompanyImWorkOn{
     display: flex;
-    padding-left: 7vw;
     flex-direction: row;
     align-items: flex-start;
     padding-top: 6vw;
+}
+.Part2CompanyWorkingOn{
+    display: flex;
+    flex-direction: row;
+    gap: 5vw;
 }

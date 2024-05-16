@@ -75,10 +75,11 @@ function MyCompanyTask() {
   const [receivedData, setReceivedData] = useState("");
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [filterType, setFilterType] = useState(null);
+  const user_id = localStorage.getItem("id");
   const [taskData, setTaskData] = useState({
     task: null,
     teamId: null,
-    userId: null,
+    userId: user_id,
   });
   const [opened, { open, close }] = useDisclosure(false);
   useEffect(() => {
@@ -93,22 +94,21 @@ function MyCompanyTask() {
   }, [receivedData]);
 
   const { loading, error, data } = useQuery(GET_USER_TASKS, {
-    variables: { userId: null }, // Pass your user ID here
+    variables: { userId: user_id }, // Pass your user ID here
   });
   const { loadingTeams, errorTeams, dataTeams } = useQuery(GET_USER_TEAMS, {
-    variables: { userId: null }, // Pass your user ID here
+    variables: { userId: user_id }, // Pass your user ID here
   });
   const {
     loading: filterLoading,
     error: filterError,
     data: filteredData,
   } = useQuery(FILTER_TASKS, {
-    variables: { userId: null, filterType: filterType },
+    variables: { userId: user_id, filterType: filterType },
     skip: !filterType, // Skip this query if filterType is not set
   });
   const handleFilter = (type) => {
     setFilterType(type);
-    refetch();
   };
   const [createTask] = useMutation(CREATE_TASK);
   const handleInputChange = (e) => {

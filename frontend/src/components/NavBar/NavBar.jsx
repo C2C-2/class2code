@@ -13,6 +13,7 @@ import { useCallback, useEffect, useState } from "react";
 import MainLogo from "./logo2 2.png";
 import ProfileLogo from "./Profile.png";
 import { write, read, updateData } from "../../config/firebase";
+import { Link } from "react-router-dom";
 // import LightDarkMode from "./Light_DarkMode/LightDarkMode";
 function NavBar() {
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -55,12 +56,14 @@ function NavBar() {
       }}
     >
       <div className={`${isDarkMode ? "NavDark" : navClass}`}>
+        <Link to="/Dashboard">
         <div className={topClass}>
           <img className="NavMainLogo" alt="Logo" src={MainLogo} />
           <span className={`${isDarkMode ? "NavTextBarDark" : "NavTextBar"}`}>
             Class2Code
           </span>
         </div>
+        </Link>
         <div className="TopPartNavBar">
           <span className="BackSearch">
             <button className="ButtonSvg">
@@ -77,7 +80,7 @@ function NavBar() {
                   cy="5.5"
                   r="4.3"
                   stroke="#2B3674"
-                  stroke-width="1.4"
+                  strokeWidth="1.4"
                 />
                 <line
                   x1="10.0101"
@@ -85,8 +88,8 @@ function NavBar() {
                   x2="8"
                   y2="9.48995"
                   stroke="#2B3674"
-                  stroke-width="1.4"
-                  stroke-linecap="round"
+                  strokeWidth="1.4"
+                  strokeLinecap="round"
                 />
               </svg>
             </button>
@@ -179,9 +182,9 @@ function NavBar() {
                 </defs>
               </svg>
             </button>
-            <button className="ButtonSvg">
+            <Link to="/UserProfile" className="ButtonSvg">
               <img className="ProfileLogo" alt="Logo" src={ProfileLogo} />
-            </button>
+            </Link>
           </div>
         </div>
       </div>

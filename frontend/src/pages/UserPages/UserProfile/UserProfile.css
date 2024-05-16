@@ -1,0 +1,161 @@
+.AllUserProfile {
+    display: flex;
+}
+
+.MainUserProfile {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    overflow-y: scroll;
+}
+
+.FakeDivUserProfile {
+    width: 25vh;
+}
+
+.UserProfileCenter {
+    display: flex;
+    padding-top: 4.5vw;
+    flex-direction: column;
+}
+
+.UserProfileImage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1vw;
+}
+
+.UserProfileBackGroundColor {
+    height: 25vh;
+    width: 189vh;
+    padding-top: 2vw;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    padding-left: 7vw;
+    background-color: #ffff00;
+}
+
+.UserProfileContent {
+    display: flex;
+    gap: 2vw;
+    flex-direction: column;
+    transform: translateY(-10%)
+}
+
+.UserProfileImg {
+    border-radius: 60px;
+    width: 120px;
+    height: 120px;
+    flex-shrink: 0;
+    background: url("./Avatar.png") lightgray 50% / cover no-repeat;
+}
+
+.UserProfileImageText {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5vw;
+}
+
+.UserProfileImageText1 {
+    color: var(--dark, #283739);
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 12px;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+}
+
+.UserProfileImageText2 {
+    color: var(--dark, #283739);
+    font-family: Inter;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 12px;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+}
+
+.UserProfileData {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 3vw;
+}
+
+.UserProfileDataDesign {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1vw;
+}
+
+.UserProfileDataTextNumber {
+    color: #000;
+    font-family: Inter;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.UserProfileDataText {
+    color: #6C6C6C;
+    font-family: Inter;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: normal;
+}
+
+.UserProfileDataLine {
+    width: 2px;
+    height: 70px;
+    background: #6C6C6C;
+}
+
+.UserProfileButtons {
+    padding-top: 1vw;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 2vw;
+}
+
+.UserProfileDetails {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    padding-top: 3vw;
+
+}
+
+.UserProfileDetails1 {
+    gap: 2vw;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+.DivAboutMe{
+    display: flex;
+    flex-direction: column;
+    gap: 0.5vw;
+}
+.UserProfileDetails2 {
+    gap: 2vw;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+.UserProfileDetails2Skills{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}

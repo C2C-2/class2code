@@ -9,6 +9,7 @@ import { RiTeamLine } from "react-icons/ri";
 import { AiOutlineTeam, AiOutlineQuestionCircle } from "react-icons/ai";
 import { CgProfile } from "react-icons/cg";
 import { Paths } from "../../assets/Paths";
+import { Link } from "react-router-dom";
 
 function SideBar() {
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -67,7 +68,7 @@ function SideBar() {
     {
       icon: CgProfile,
       label: "Profile",
-      link: Paths.Profile,
+      link: Paths.UserProfile,
     },
     {
       icon: CiSettings,
@@ -76,11 +77,11 @@ function SideBar() {
       links: [
         {
           label: "Change Password",
-          link: Paths.ChangePassword,
+          link: Paths.EditPassword,
         },
         {
           label: "Change Email",
-          link: Paths.ChangeEmail,
+          link: Paths.EditEmail,
         },
       ],
     },
@@ -95,11 +96,13 @@ function SideBar() {
     <div className={`${isDarkMode ? "SideBarMainDark" : "SideBarMain"}`}>
       <div className="SideBarSectionProfile">
         <div className="SideBarSectionProfilePart1">
+          <Link to="/UserProfile">
           <img
             className="SideBarSectionProfilePart1Img"
             alt="Avatar"
             src={ProImg}
           />
+          </Link>
           <div className="SideBarSectionProfilePart1Texts">
             <span className="SideBarSectionProfilePart1Text1">
               PRODUCT MANAGER

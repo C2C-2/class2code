@@ -8,7 +8,6 @@
     position: fixed;
     background-color: (--white-100, #FFF);
     top: 0;
-    width: 100%;
     right: 0;
     z-index: 1000;
 }
@@ -21,7 +20,7 @@
     position: fixed;
     background-color: (--white-100, #FFF);
     top: 0;
-    width: 85%;
+    width: 87%;
     right: 0;
     z-index: 1000;
 }
@@ -117,6 +116,7 @@ padding-left: 100px;
 }
 
 .Svg {
+    padding-right: 1vw;
     display: flex;
     width: fit-content;
     flex-direction: row;

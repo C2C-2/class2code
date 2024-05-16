@@ -32,7 +32,9 @@ import MyPosts from "./pages/CompanyAdsPages/ShowMyPost/ShowMyPost";
 import OtherCompanyProfile from "./pages/CompanyPages/OtherCompanyProfile/OtherCompanyProfile";
 import EditMyCompanyProfile from "./pages/CompanyPages/EditMyCompanyProfile/EditMyCompanyProfile";
 import { Paths } from "./assets/Paths";
-
+import UserProfile from "./pages/UserPages/UserProfile/UserProfile";
+import EditPassword from "./pages/OtherPages/EditPassword/EditPassword";
+import EditEmail from "./pages/OtherPages/EditEmail/EditEmail"
 const TokenChecker = ({ children }) => {
   if (!localStorage.getItem("token")) {
     return <Navigate to="/LogIn" />;
@@ -121,11 +123,35 @@ function App() {
               </TokenChecker>
             }
           />
+           <Route
+            path="/UserProfile"
+            element={
+              <TokenChecker>
+                <UserProfile />
+              </TokenChecker>
+            }
+          />
           <Route
             path="/MyCompaniesTeams"
             element={
               <TokenChecker>
                 <MyCompaniesTeams />
+              </TokenChecker>
+            }
+          />
+           <Route
+            path="/EditPassword"
+            element={
+              <TokenChecker>
+                <EditPassword/>
+              </TokenChecker>
+            }
+          />
+            <Route
+            path="/EditEmail"
+            element={
+              <TokenChecker>
+                <EditEmail/>
               </TokenChecker>
             }
           />

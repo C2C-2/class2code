@@ -5,6 +5,7 @@ import './Login.css'
 import MainLogo from "./logo2 2.png";
 import { useToggle, upperFirst } from '@mantine/hooks';
 import { useForm } from '@mantine/form';
+
 import {
     TextInput,
     PasswordInput,
@@ -27,7 +28,6 @@ import { FaGithub } from 'react-icons/fa';
 import { gql, useMutation } from '@apollo/client';
 
 const Login = () => {
-
     const [error, setError] = useState(null);
     const [type, toggle] = useToggle(['login', 'register']);
     const form = useForm({
@@ -140,6 +140,7 @@ const Login = () => {
                     }
                 }
             })
+            console.log(user.data.createNewUser);
 
             if (user?.data?.createNewUser?.type == "new") {
                 localStorage.setItem("type", "new");
@@ -152,7 +153,6 @@ const Login = () => {
                 localStorage.setItem("name", userName);
                 localStorage.setItem("id", result?.user?.uid);
             }
-
 
 
         } catch (err) {
