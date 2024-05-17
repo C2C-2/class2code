@@ -3,7 +3,7 @@ import EditPassword from "../pages/OtherPages/EditPassword/EditPassword";
 export const Paths = {
   Login: "/Login",
   SignUpFigma: "/SignUpFigma",
-  Home: "/",
+  Home: "/Home",
   Dashboard: "/Dashboard",
   AvailableProject: "/AvailableProject",
   Posts: "/Posts",
@@ -28,7 +28,8 @@ export const Paths = {
   AIChat: "/AIChat",
   MyPosts: "/MyPosts",
   FAQuestion: "FAQuestion",
-  UserProfile : "/UserProfile",
-  EditPassword : "/EditPassword",
-  EditEmail :"/EditEmail",
+  UserProfile: "/UserProfile",
+  EditPassword: "/EditPassword",
+  EditEmail: "/EditEmail",
+  ContactUs: "/ContactUs"
 };

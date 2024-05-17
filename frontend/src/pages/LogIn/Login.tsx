@@ -58,7 +58,7 @@ const Login = () => {
         localStorage.getItem("token") &&
         localStorage.getItem("token") !== "null"
     ) {
-        window.location.replace("/");
+        window.location.replace(Paths.Dashboard);
     }
 
     const login = async (e) => {
@@ -139,8 +139,8 @@ const Login = () => {
                         LastName: LastName,
                     }
                 }
-            })
-            console.log(user.data.createNewUser);
+            }).catch(err => {
+            });
 
             if (user?.data?.createNewUser?.type == "new") {
                 localStorage.setItem("type", "new");

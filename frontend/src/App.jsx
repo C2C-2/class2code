@@ -34,7 +34,9 @@ import EditMyCompanyProfile from "./pages/CompanyPages/EditMyCompanyProfile/Edit
 import { Paths } from "./assets/Paths";
 import UserProfile from "./pages/UserPages/UserProfile/UserProfile";
 import EditPassword from "./pages/OtherPages/EditPassword/EditPassword";
-import EditEmail from "./pages/OtherPages/EditEmail/EditEmail"
+import EditEmail from "./pages/OtherPages/EditEmail/EditEmail";
+import Home from "./pages/Home/Home";
+
 const TokenChecker = ({ children }) => {
   if (!localStorage.getItem("token")) {
     return <Navigate to="/LogIn" />;
@@ -50,8 +52,9 @@ function App() {
           <Route path={Paths.Login} element={<LogInFigma />} />
           <Route path={Paths.SignUpFigma} element={<SignUpFigma />} />
           <Route path={Paths.ForgetPassword} element={<ForgetPassword />} />
+          <Route path={Paths.Home} element={<Home />} />
           <Route
-            path="/ContactUs"
+            path={Paths.ContactUs}
             element={
               <TokenChecker>
                 <ContactUs />
@@ -91,14 +94,7 @@ function App() {
             }
           />
 
-          <Route
-            path="/"
-            element={
-              <TokenChecker>
-                <Dashboard />
-              </TokenChecker>
-            }
-          />
+          <Route path="/" element={<Home />} />
           <Route
             path={Paths.AvailableProject}
             element={
@@ -123,7 +119,7 @@ function App() {
               </TokenChecker>
             }
           />
-           <Route
+          <Route
             path="/UserProfile"
             element={
               <TokenChecker>
@@ -139,19 +135,19 @@ function App() {
               </TokenChecker>
             }
           />
-           <Route
+          <Route
             path="/EditPassword"
             element={
               <TokenChecker>
-                <EditPassword/>
+                <EditPassword />
               </TokenChecker>
             }
           />
-            <Route
+          <Route
             path="/EditEmail"
             element={
               <TokenChecker>
-                <EditEmail/>
+                <EditEmail />
               </TokenChecker>
             }
           />
