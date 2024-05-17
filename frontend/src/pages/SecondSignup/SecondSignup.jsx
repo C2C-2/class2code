@@ -1,8 +1,10 @@
 import "./SecondSignup.css";
 import {
+  Alert,
   Button,
   FileInput,
   Input,
+  Loader,
   Pill,
   PillsInput,
   TextInput,
@@ -21,6 +23,7 @@ const SecondSignup = ({ close }) => {
   const [gender, setGender] = useState("male");
   const [specialty, setSpecialty] = useState("");
   const [country, setCountry] = useState("");
+  const [error, setError] = useState(null);
 
   const UPDATE_PROFILE = gql`
     mutation Mutation($userId: String!, $user: UserInput!) {
@@ -41,52 +44,60 @@ const SecondSignup = ({ close }) => {
   `;
 
   const [createSkill] = useMutation(CREATE_SKILL);
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true); // Set loading state to true
+
+    try {
+      const url = await uploadImage(image);
+      await createProfile({
+        variables: {
+          userId: localStorage.getItem("id"),
+          user: {
+            ImageUrl: url,
+            DateOfBirth: dateOfBirth,
+            Gender: gender,
+            Work: specialty,
+            Country: country,
+          },
+        },
+      });
+
+      for (const skill of skills) {
+        await createSkill({
+          variables: {
+            userId: localStorage.getItem("id"),
+            skill: { Skill: skill },
+          },
+        });
+      }
+
+      localStorage.setItem("type", "");
+    } catch (error) {
+      setError("Error submitting form:", error);
+    } finally {
+      setLoading(false);
+      close();
+      window.location.reload();
+    }
+  };
 
   return (
     <div className="SecondSignupAll">
+      {error && <Alert text={error} color="red" title="Error" />}
+
       <div className="SecondSignupTitle">
-        <h4>Lets Complete Your Profile !</h4>
+        <h4>Lets Complete Your Profile!</h4>
         <p className="SecondSignupCenterTopPart1Text2">
           Add Your Information & Skills
         </p>
       </div>
 
       <div className="Second_SignUp_body">
-        <form
-          onSubmit={async (e) => {
-            e.preventDefault();
-
-            const url = await uploadImage(image);
-
-            await createProfile({
-              variables: {
-                userId: localStorage.getItem("id"),
-                user: {
-                  ImageUrl: url,
-                  DateOfBirth: dateOfBirth,
-                  Gender: gender,
-                  Work: specialty,
-                  Country: country,
-                },
-              },
-            });
-
-            skills.forEach(async (skill) => {
-              await createSkill({
-                variables: {
-                  userId: localStorage.getItem("id"),
-                  skill: {
-                    Skill: skill,
-                  },
-                },
-              });
-            });
-
-            close();
-            localStorage.setItem("type", "");
-          }}
-          className="inputs"
-        >
+        {loading ? <Loader color="green" /> : null}
+        <form onSubmit={handleSubmit} className="inputs">
           <FileInput
             label="Upload Your Image"
             description="Select a file or drag and drop here"

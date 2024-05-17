@@ -123,7 +123,7 @@ function Dashboard() {
     <div className="DashboardAll" id="man">
       <SideBar colorSide={receivedData} />
 
-      {localStorage.getItem("type") && (
+      {localStorage.getItem("type") == "new" && (
         <Modal opened={opened}>
           <SecondSignup close={close} />
         </Modal>

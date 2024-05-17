@@ -27,7 +27,7 @@ export const Paths = {
   SecondSignup: "/SecondSignup",
   AIChat: "/AIChat",
   MyPosts: "/MyPosts",
-  FAQuestion: "FAQuestion",
+  FAQuestion: "/FAQuestion",
   UserProfile: "/UserProfile",
   EditPassword: "/EditPassword",
   EditEmail: "/EditEmail",

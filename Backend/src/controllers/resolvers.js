@@ -1,4 +1,3 @@
-
 const axios = require("axios");
 const base64 = require("base-64");
 const nodemailer = require("nodemailer");
@@ -111,6 +110,8 @@ const resolvers = {
           );
           throw new Error("User not found");
         }
+
+        console.log({ id: userId, ...result.properties(), page, limit });
 
         return { id: userId, ...result.properties(), page, limit };
       } catch (error) {
@@ -1478,23 +1479,23 @@ const resolvers = {
           );
         }
 
-        user.IsActive = true;
-
-        // find user by id
         const existingUser = await NeodeObject?.first("User", "id", user?.id);
 
         if (existingUser) {
-          existingUser.type = "old";
-          return existingUser;
+          return {
+            ...existingUser.properties(),
+            type: "old",
+          };
         }
+
+        user.IsActive = true;
+        user.type = "new";
 
         redisClientSet(
           "users",
           JSON.stringify(user),
           60 * 60 * 24 * 7 // 7 days
         );
-
-        user.type = "new";
 
         return user;
 

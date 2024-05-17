@@ -49,6 +49,7 @@ const Login = () => {
             createNewUser(user: $user) {
                 id
                 type
+                IsActive
             }
         }
     `;
@@ -139,19 +140,20 @@ const Login = () => {
                         LastName: LastName,
                     }
                 }
-            }).catch(err => {
             });
 
             if (user?.data?.createNewUser?.type == "new") {
                 localStorage.setItem("type", "new");
                 localStorage.setItem("token", result?.user?.accessToken);
-                localStorage.setItem("name", userName);
                 localStorage.setItem("id", result?.user?.uid);
-            } else if (user?.data?.createNewUser?.type == "old") {
+            } else if (user?.data?.createNewUser?.type == "old" && user?.data?.createNewUser?.IsActive == true) {
                 localStorage.setItem("type", "old");
                 localStorage.setItem("token", result?.user?.accessToken);
-                localStorage.setItem("name", userName);
                 localStorage.setItem("id", result?.user?.uid);
+            } else {
+                setError("You are not active user");
+                const time = setTimeout(() => setError(null), 3000);
+                return () => clearTimeout(time);
             }
 
 

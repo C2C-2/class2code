@@ -15,6 +15,7 @@ import {
   ref as storageRef,
   uploadBytesResumable,
   getDownloadURL,
+  deleteObject,
 } from "firebase/storage";
 
 const firebaseConfig = {
@@ -92,6 +93,18 @@ export function uploadImage(file) {
       }
     );
   });
+}
+
+export function deleteImage(imagePath) {
+  const imageRef = storageRef(storage, imagePath);
+
+  return deleteObject(imageRef)
+    .then(() => {
+      console.log("Image deleted successfully");
+    })
+    .catch((error) => {
+      console.error("Error deleting image:", error);
+    });
 }
 
 export const auth = getAuth(app);

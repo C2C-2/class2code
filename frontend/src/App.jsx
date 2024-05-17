@@ -120,7 +120,7 @@ function App() {
             }
           />
           <Route
-            path="/UserProfile"
+            path={Paths.UserProfile}
             element={
               <TokenChecker>
                 <UserProfile />
@@ -136,7 +136,7 @@ function App() {
             }
           />
           <Route
-            path="/EditPassword"
+            path={Paths?.EditPassword}
             element={
               <TokenChecker>
                 <EditPassword />
@@ -144,7 +144,7 @@ function App() {
             }
           />
           <Route
-            path="/EditEmail"
+            path={Paths?.EditEmail}
             element={
               <TokenChecker>
                 <EditEmail />

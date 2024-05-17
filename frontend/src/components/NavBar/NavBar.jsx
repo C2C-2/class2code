@@ -5,15 +5,31 @@ import {
   Menu,
   Button,
 } from "@mantine/core";
-import { IconSun, IconMoon } from "@tabler/icons-react";
+import {
+  IconSun,
+  IconMoon,
+  IconUser,
+  IconPassword,
+  IconMail,
+  IconQuestionMark,
+  IconLogout,
+} from "@tabler/icons-react";
 import clsx from "clsx";
 import classes from "./Light_DarkMode/LightDarkMode.module.css";
 import "./NavBar.css";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import MainLogo from "./logo2 2.png";
-import ProfileLogo from "./Profile.png";
-import { write, read, updateData } from "../../config/firebase";
 import { Link } from "react-router-dom";
+import { gql, useLazyQuery, useQuery } from "@apollo/client";
+import { Paths } from "../../assets/Paths";
+import {
+  getAuth,
+  deleteUser,
+  reauthenticateWithCredential,
+  signInWithEmailAndPassword,
+  EmailAuthProvider,
+} from "firebase/auth";
+import { deleteImage } from "../../config/firebase";
 // import LightDarkMode from "./Light_DarkMode/LightDarkMode";
 function NavBar() {
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -25,6 +41,40 @@ function NavBar() {
   });
   const [notifications, setNotifications] = useState([]);
   const [userId, setUserId] = useState(localStorage.getItem("id"));
+  const [userImage, setUserImage] = useState("");
+
+  const GET_USER_IMAGE = gql`
+    query Friends($userId: String!) {
+      getUser(userId: $userId) {
+        ImageUrl
+      }
+    }
+  `;
+
+  const {
+    loading,
+    error,
+    data: userImageData,
+  } = useQuery(GET_USER_IMAGE, {
+    variables: { userId },
+  });
+
+  useEffect(() => {
+    if (userImageData?.getUser?.ImageUrl) {
+      setUserImage(userImageData.getUser.ImageUrl);
+    }
+  }, [userImageData]);
+
+  const DELETE_USER = gql`
+    query Query($userId: String!) {
+      deleteUser(userId: $userId)
+    }
+  `;
+
+  const [
+    deleteUserFromNeo,
+    { loading: deleteUserLoading, error: deleteUserError },
+  ] = useLazyQuery(DELETE_USER);
 
   useEffect(() => {
     setIsDarkMode(computedColorScheme === "dark");
@@ -57,48 +107,14 @@ function NavBar() {
     >
       <div className={`${isDarkMode ? "NavDark" : navClass}`}>
         <Link to="/Dashboard">
-        <div className={topClass}>
-          <img className="NavMainLogo" alt="Logo" src={MainLogo} />
-          <span className={`${isDarkMode ? "NavTextBarDark" : "NavTextBar"}`}>
-            Class2Code
-          </span>
-        </div>
+          <div className={topClass}>
+            <img className="NavMainLogo" alt="Logo" src={MainLogo} />
+            <span className={`${isDarkMode ? "NavTextBarDark" : "NavTextBar"}`}>
+              Class2Code
+            </span>
+          </div>
         </Link>
         <div className="TopPartNavBar">
-          <span className="BackSearch">
-            <button className="ButtonSvg">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="11"
-                height="13"
-                viewBox="0 0 11 13"
-                fill="none"
-                className="Svg"
-              >
-                <circle
-                  cx="5"
-                  cy="5.5"
-                  r="4.3"
-                  stroke="#2B3674"
-                  strokeWidth="1.4"
-                />
-                <line
-                  x1="10.0101"
-                  y1="11.5"
-                  x2="8"
-                  y2="9.48995"
-                  stroke="#2B3674"
-                  strokeWidth="1.4"
-                  strokeLinecap="round"
-                />
-              </svg>
-            </button>
-            <input
-              type="text"
-              placeholder="Search"
-              className="TextSearch"
-            ></input>
-          </span>
           <div className="Svg">
             <Menu trigger="click-hover" openDelay={100} closeDelay={400}>
               <Menu.Target>
@@ -136,7 +152,7 @@ function NavBar() {
                 <Menu.Item>Danger zone</Menu.Item>
               </Menu.Dropdown>
             </Menu>
-            <ActionIcon
+            {/* <ActionIcon
               onClick={() =>
                 setColorScheme(
                   computedColorScheme === "light" ? "dark" : "light"
@@ -155,36 +171,70 @@ function NavBar() {
                 className={clsx(classes.icon, classes.dark)}
                 stroke={1.5}
               />
-            </ActionIcon>
-            <button className="ButtonSvg">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="25"
-                viewBox="0 0 24 25"
-                fill="none"
-              >
-                <g clip-path="url(#clip0_214_3789)">
-                  <path
-                    d="M11 7.5H13V9.5H11V7.5ZM12 17.5C12.55 17.5 13 17.05 13 16.5V12.5C13 11.95 12.55 11.5 12 11.5C11.45 11.5 11 11.95 11 12.5V16.5C11 17.05 11.45 17.5 12 17.5ZM12 2.5C6.48 2.5 2 6.98 2 12.5C2 18.02 6.48 22.5 12 22.5C17.52 22.5 22 18.02 22 12.5C22 6.98 17.52 2.5 12 2.5ZM12 20.5C7.59 20.5 4 16.91 4 12.5C4 8.09 7.59 4.5 12 4.5C16.41 4.5 20 8.09 20 12.5C20 16.91 16.41 20.5 12 20.5Z"
-                    fill="#A3AED0"
-                  />
-                </g>
-                <defs>
-                  <clipPath id="clip0_214_3789">
-                    <rect
-                      width="24"
-                      height="24"
-                      fill="white"
-                      transform="translate(0 0.5)"
-                    />
-                  </clipPath>
-                </defs>
-              </svg>
-            </button>
-            <Link to="/UserProfile" className="ButtonSvg">
-              <img className="ProfileLogo" alt="Logo" src={ProfileLogo} />
-            </Link>
+            </ActionIcon> */}
+
+            <Menu shadow="md" width={200}>
+              <Menu.Target>
+                <img className="ProfileLogo" alt="Logo" src={userImage} />
+              </Menu.Target>
+
+              <Menu.Dropdown>
+                <Link to={Paths?.UserProfile}>
+                  <Menu.Item leftSection={<IconUser size={14} />}>
+                    My Account
+                  </Menu.Item>
+                </Link>
+                <Link to={Paths?.EditPassword}>
+                  <Menu.Item leftSection={<IconPassword size={14} />}>
+                    Change Password
+                  </Menu.Item>
+                </Link>
+                <Link to={Paths?.EditEmail}>
+                  <Menu.Item leftSection={<IconMail size={14} />}>
+                    Change Email
+                  </Menu.Item>
+                </Link>
+                <Link to={Paths?.FAQuestion}>
+                  <Menu.Item leftSection={<IconQuestionMark size={14} />}>
+                    Any Questions
+                  </Menu.Item>
+                </Link>
+
+                <Menu.Divider />
+
+                <Menu.Label>Logout</Menu.Label>
+                <Menu.Item>
+                  <Button
+                    color="red"
+                    onClick={() => {
+                      const confirm = window.confirm(
+                        "Are you sure you want to logout?"
+                      );
+                      if (!confirm) {
+                        return;
+                      }
+                      localStorage.clear();
+                      window.location.reload();
+                    }}
+                    leftSection={<IconLogout size={14} />}
+                  >
+                    Logout Account
+                  </Button>
+                </Menu.Item>
+                <Menu.Item
+                  color="red"
+                  className="text-center"
+                  onClick={async () => {
+                    await deleteUserFromNeo({ variables: { userId: userId } });
+                    // deleteImage(userImage);
+                    localStorage.clear();
+                    window.location.reload();
+                  }}
+                >
+                  Delete my account
+                </Menu.Item>
+              </Menu.Dropdown>
+            </Menu>
           </div>
         </div>
       </div>
