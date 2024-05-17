@@ -1,9 +1,7 @@
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import "./MyCompaniesTeams.css";
-import SideBar from "../../../components/SideBar/SideBar";
-import NavBar from "../../../components/NavBar/NavBar";
 import { useDisclosure } from "@mantine/hooks";
-import { Modal, Button, Input, TextInput, Select } from "@mantine/core";
+import { Modal, Button, TextInput } from "@mantine/core";
 import MyCompaniesTeamsCard from "../../../components/MyCompaniesTeamsCard/MyCompaniesTeamsCard";
 import { gql, useMutation, useQuery } from "@apollo/client";
 import CreateTeamAddOnsCard from "../../../components/CreateTeamAddOnsCard/CreateTeamAddOnsCard";
@@ -53,23 +51,11 @@ const ADD_USER_TO_TEAM = gql`
 function MyCompaniesTeams(
 ) {
   const user_id = localStorage.getItem("id");
-  const [receivedData, setReceivedData] = useState("");
-  const [isDarkMode, setIsDarkMode] = useState(false);
   const [teamData, setTeamData] = useState({
     team: null,
     companyId: null,
   });
   const [opened, { open, close }] = useDisclosure(false);
-  useEffect(() => {
-    setIsDarkMode(receivedData === "dark");
-  }, [receivedData]);
-  const receiveDataFromChild = (data) => {
-    setReceivedData(data);
-  };
-  useEffect(() => {
-    document.getElementById("man").style.backgroundColor =
-      receivedData === "light" ? "#fff" : "";
-  }, [receivedData]);
   const { loading, error, data } = useQuery(GET_MY_COMPANIES_TEAMS, {
     variables: { user_id },
   });
@@ -100,9 +86,7 @@ function MyCompaniesTeams(
   };
   return (
     <div className="MyCompaniesTeamsAll" id="man">
-      <SideBar colorSide={receivedData} />
       <div className="MyCompaniesTeamsMain">
-        <NavBar sendDataToParent={receiveDataFromChild} />
         <div className="MyCompaniesTeamsCenter">
           <div className="FakeDiveMyCompaniesTeams"></div>
           <div className="MyCompaniesTeamsCenterButtonBack">
@@ -224,7 +208,6 @@ function MyCompaniesTeams(
                     teamName={team.TeamName}
                     createDate={team.CreateDate}
                     teamId={team._id}
-                    color={receivedData}
                     imagesUser={team.images}
                     teamLead={team.TeamLead}
                   />

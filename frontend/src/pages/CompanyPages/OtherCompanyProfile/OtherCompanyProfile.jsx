@@ -44,8 +44,6 @@ const CREATE_COMMENT_MUTATION = gql`
   }
 `;
 function OtherCompanyProfile() {
-  const [receivedData, setReceivedData] = useState("");
-  const [isDarkMode, setIsDarkMode] = useState(false);
   const [commentText, setCommentText] = useState("");
   const { loading, error, data } = useQuery(GET_COMPANY_QUERY, {
     variables: {
@@ -55,21 +53,6 @@ function OtherCompanyProfile() {
     },
   });
   const [createComment] = useMutation(CREATE_COMMENT_MUTATION);
-  useEffect(() => {
-    setIsDarkMode(receivedData === "dark");
-  }, [receivedData]);
-
-  const receiveDataFromChild = (data) => {
-    setReceivedData(data);
-  };
-
-  useEffect(() => {
-    const element = document.getElementById("man");
-    if (element) {
-      element.style.backgroundColor =
-        receivedData === "light" ? "#fff" : "#000";
-    }
-  }, [receivedData]);
 
   if (loading) return <p>Loading...</p>;
 
@@ -125,9 +108,7 @@ function OtherCompanyProfile() {
 
   return (
     <div className="OtherProfileCompany" id="man">
-      <SideBar />
       <div className="OtherCompany">
-        <NavBar sendDataToParent={receiveDataFromChild} />
         <div className="Part2OtherProfile">
           <div className="OtherProfileButtonBack">
             <Link to="/Dashboard">

@@ -1,28 +1,10 @@
-
 import "./TrainPage.css";
-import { useState, useEffect } from "react";
-import SideBar from "../../../components/SideBar/SideBar";
-import NavBar from "../../../components/NavBar/NavBar";
 import { Link } from "react-router-dom";
 import { Button } from "@mantine/core";
 function TrainPage() {
-  const [isDarkMode, setIsDarkMode] = useState(false);
-  const [receivedData, setReceivedData] = useState("");
-  const receiveDataFromChild = (data) => {
-    setReceivedData(data);
-  };
-  useEffect(() => {
-    document.getElementById("man").style.backgroundColor =
-      receivedData === "light" ? "#fff" : "#000";
-  }, [receivedData]);
-  useEffect(() => {
-    setIsDarkMode(receivedData === "dark");
-  }, [receivedData]);
   return (
-    <div className="TrainPageAll" id="man">
-      <SideBar colorSide={receivedData}/>
+    <div className="TrainPageAll" >
       <div className="TrainPageMain">
-        <NavBar sendDataToParent={receiveDataFromChild} />
         <div className="TrainPageCenter">
           <div className="TrainPageButtonBack">
           <Link to="/Dashboard">
@@ -59,27 +41,27 @@ function TrainPage() {
           </div>
           <div className="TrainPageContent">
             <div className="HeaderTitle">
-              <span className="Tags">“</span>Get better by reading tips – it's
+              <span className="Tags">“</span>Get better by reading tips it's
               like having a secret weapon for success!
               <span className="Tags">”</span>
             </div>
             <div className="TrainPageTexts">
               <div className="TrainPageText1">
                 <div className="TextAllTrain">
-                  <span className={`${isDarkMode ? "TPTDark" : "TPT"}`}>
+                  <span className= "TPT">
                     Sed ut perspiciatis
                   </span>
-                  <p className={`${isDarkMode ? "PTPDark" : "PTP"}`}>
+                  <p className= "PTP">
                     Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut
                     odit aut fugit, sed quia consequuntur magni dolores eos qui
                     ratione voluptatem sequi nesciunt. Neque porro quisquam est.
                   </p>
                 </div>
                 <div className="TextAllTrain">
-                  <span className={`${isDarkMode ? "TPTDark" : "TPT"}`}>
+                  <span className="TPT">
                     Lorem ipsum dolor
                   </span>
-                  <p className={`${isDarkMode ? "PTPDark" : "PTP"}`}>
+                  <p className= "PTP">
                     Amet, consectetur adipiscing elit, sed do eiusmod tempor
                     incididunt ut labore et dolore magna aliqua. Ut enim ad
                     minim veniam, quis nostrud exercitation ullamco laboris
@@ -89,10 +71,10 @@ function TrainPage() {
               </div>
               <div className="TrainPageText1">
                 <div className="TextAllTrain">
-                  <span className={`${isDarkMode ? "TPTDark" : "TPT"}`}>
+                  <span className= "TPT">
                     Nemo enim ipsam
                   </span>
-                  <p className={`${isDarkMode ? "PTPDark" : "PTP"}`}>
+                  <p className="PTP">
                     Consequuntur magni dolores eos qui ratione voluptatem sequi
                     nesciunt. Neque porro quisquam est, qui dolorem ipsum quia
                     dolor sit amet, consectetur, adipisci velit, sed quia non
@@ -100,10 +82,10 @@ function TrainPage() {
                   </p>
                 </div>
                 <div className="TextAllTrain">
-                  <span className={`${isDarkMode ? "TPTDark" : "TPT"}`}>
+                  <span className= "TPT">
                     Tempor incididunt
                   </span>
-                  <p className={`${isDarkMode ? "PTPDark" : "PTP"}`}>
+                  <p className= "PTP">
                     Eos qui ratione voluptatem sequi nesciunt. Neque porro
                     quisquam est, qui dolorem ipsum quia dolor sit amet,
                     consectetur, adipisci velit, sed quia non numquam eius modi

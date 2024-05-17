@@ -1,15 +1,11 @@
 import { useEffect, useState } from "react";
 import "./ShowAllPosts.css";
-import SideBar from "../../../components/SideBar/SideBar";
-import NavBar from "../../../components/NavBar/NavBar";
 import { Button, Input, Pagination } from "@mantine/core";
 import { useQuery, useMutation, gql, useLazyQuery } from "@apollo/client";
 import { Link } from "react-router-dom";
 import { Paths } from "../../../assets/Paths";
 
 function ShowAllPosts() {
-  const [receivedData, setReceivedData] = useState("");
-  const [isDarkMode, setIsDarkMode] = useState(false);
   const [searchWord, setSearchWord] = useState("");
 
   const [page, setPage] = useState(1);
@@ -46,10 +42,8 @@ function ShowAllPosts() {
   }, [page]);
 
   return (
-    <div className="ShowAllPostsAll" id="man">
-      <SideBar colorSide={receivedData} />
+    <div className="ShowAllPostsAll">
       <div className="ShowAllPostsMain">
-        <NavBar />
         <div className="ShowAllPostsContent">
           <div className="sideBareFake"></div>
           <div className="postsBody">

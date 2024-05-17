@@ -1,7 +1,5 @@
-import { useEffect, useState } from "react";
+import {useState } from "react";
 import "./EditTeam.css";
-import SideBar from "../../../components/SideBar/SideBar";
-import NavBar from "../../../components/NavBar/NavBar";
 import CreateTeamCard from "../../../components/CreateTeamCard/CreateTeamCard";
 import CreateTeamCardRole from "../../../components/CreateTeamCardRole/CreateTeamCardRole";
 import CreateTeamAddOnsCard from "../../../components/CreateTeamAddOnsCard/CreateTeamAddOnsCard";
@@ -26,8 +24,6 @@ const UPDATE_TEAM_MUTATION = gql`
 
 function EditTeam() {
   const { teamId } = useParams();
-  const [receivedData, setReceivedData] = useState("");
-  const [isDarkMode, setIsDarkMode] = useState(false);
   const [teamData, setTeamData] = useState({
     teamName: "",
     teamLead: "",
@@ -36,16 +32,6 @@ function EditTeam() {
     members: [],
   });
 
-  useEffect(() => {
-    setIsDarkMode(receivedData === "dark");
-  }, [receivedData]);
-  const receiveDataFromChild = (data) => {
-    setReceivedData(data);
-  };
-  useEffect(() => {
-    document.getElementById("man").style.backgroundColor =
-      receivedData === "light" ? "#fff" : "#000";
-  }, [receivedData]);
 
   const handleMemberUpdate = (index, newFirstName, newLastName) => {
     const updatedMembers = [...teamData.members];
@@ -77,9 +63,7 @@ function EditTeam() {
 
   return (
     <div className="EditTeamAll" id="man">
-      <SideBar colorSide={receivedData} />
       <div className="EditTeamMain">
-        <NavBar sendDataToParent={receiveDataFromChild} />
         <div className="EditTeamContent">
           <div className="EditTeamCenter">
             <span className="EditTeamHeader">Edit Team</span>

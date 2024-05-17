@@ -6,9 +6,7 @@ import NavBar from "../../../components/NavBar/NavBar";
 function EditEmail() {
   return (
     <div className="EditEmailMain">
-      <SideBar />
       <div className="EditEmailCenter">
-        <NavBar />
         <div className="EditEmailContent">
           <div className="EditEmailContentFake"></div>
           <div className="EditEmailContentData">

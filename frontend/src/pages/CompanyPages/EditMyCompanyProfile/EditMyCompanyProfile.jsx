@@ -1,8 +1,6 @@
-import { useState, useEffect } from "react";
+
 import "./EditMyCompanyProfile.css";
 import { Button, Textarea, TextInput } from "@mantine/core";
-import SideBar from "../../../components/SideBar/SideBar";
-import NavBar from "../../../components/NavBar/NavBar";
 import CurrentProject from "../../../components/CurrentProject/CurrentProject";
 import EditTeamMyCompanyProfile from "../../../components/EditTeamMyCompanyProfile/EditTeamMyCompanyProfile";
 import { gql, useMutation, useQuery } from "@apollo/client";
@@ -10,12 +8,6 @@ import { Link, useParams } from "react-router-dom";
 
 function EditMyCompanyProfile() {
   const { company_id } = useParams();
-  const [receivedData, setReceivedData] = useState("");
-  const [isDarkMode, setIsDarkMode] = useState(false);
-
-  useEffect(() => {
-    setIsDarkMode(receivedData === "dark");
-  }, [receivedData]);
   const GET_COMPANY_DATA = gql`
     query GetCompany($companyId: Int!) {
       getCompany(companyId: $companyId) {
@@ -45,9 +37,7 @@ function EditMyCompanyProfile() {
   } = data.getCompany;
   return (
     <div className="EditMyCompaniesAll">
-      <SideBar />
       <div className="EditMyCompaniesMain">
-        <NavBar />
         <div className="EditMyCompaniesCenter">
           <div className="EditMyCompaniesFakeDiv"></div>
           <div className="EditMyCompaniesContent">

@@ -1,25 +1,14 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import "./AvailableProjects.css";
-import SideBar from "../../../components/SideBar/SideBar";
-import NavBar from "../../../components/NavBar/NavBar";
 import AvailableProjectCard from "../../../components/AvailableProjectsCard/AvailableProjectsCard";
 import { Button, Input, Pagination } from "@mantine/core";
 import { Link } from "react-router-dom";
 import { gql, useQuery } from "@apollo/client";
 
 function AvailableProjects() {
-  const [receivedData, setReceivedData] = useState("");
-  const [isDarkMode, setIsDarkMode] = useState(false);
   const [searchWord, setSearchWord] = useState("");
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
-  useEffect(() => {
-    setIsDarkMode(receivedData === "dark");
-  }, [receivedData]);
-
-  const receiveDataFromChild = (data) => {
-    setReceivedData(data);
-  };
 
   const searchInProjects = gql`
     query SearchInProjects($word: String!) {
@@ -82,9 +71,7 @@ function AvailableProjects() {
 
   return (
     <div className="ShowAllPostsAll" id="man">
-      <SideBar colorSide={receivedData} />
       <div className="ShowAllPostsMain">
-        <NavBar />
         <div className="ShowAllPostsContent">
           <div className="sideBareFake"></div>
           <div className="postsBody">
@@ -125,11 +112,7 @@ function AvailableProjects() {
                 <Input
                   type="text"
                   placeholder="Search for Posts"
-                  className={`${
-                    isDarkMode
-                      ? "TextPartShowAllPostsDark"
-                      : "TextPartShowAllPosts"
-                  }`}
+                  className= "TextPartShowAllPosts"
                   value={searchWord}
                   onChange={(e) => setSearchWord(e.target.value)}
                   radius="md"
@@ -143,8 +126,8 @@ function AvailableProjects() {
                     fill="none"
                   >
                     <path
-                      fill-rule="evenodd"
-                      clip-rule="evenodd"
+                      fillRule="evenodd"
+                      clipRule="evenodd"
                       d="M11.3547 12.9681C8.67003 15.0575 4.78756 14.869 2.31969 12.4011C-0.352547 9.72885 -0.352769 5.39584 2.31969 2.72338C4.99215 0.0509178 9.32517 0.0511395 11.9974 2.72338C14.4653 5.19124 14.6538 9.07371 12.5645 11.7584L15.6265 14.8205C15.7872 14.9812 15.8712 15.1902 15.8766 15.3998C15.8832 15.6271 15.8001 15.8567 15.6265 16.0302C15.2925 16.3643 14.7512 16.3646 14.4168 16.0302L11.3547 12.9681ZM10.7877 3.93309C12.7925 5.93786 12.792 9.18705 10.7877 11.1914C8.78336 13.1957 5.53418 13.1961 3.52941 11.1914C1.52464 9.18661 1.52508 5.93742 3.52941 3.93309C5.53373 1.92877 8.78292 1.92832 10.7877 3.93309Z"
                       fill="white"
                     />
@@ -164,7 +147,6 @@ function AvailableProjects() {
                     applications={project.applications}
                     project_id={project._id}
                     requirements={project.Requirements.map((req) => req.Value)}
-                    colorProp={receivedData}
                   />
                 ))
               ) : (

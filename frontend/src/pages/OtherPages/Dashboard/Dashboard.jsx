@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
 import "./Dashboard.css";
-import SideBar from "../../../components/SideBar/SideBar";
-import NavBar from "../../../components/NavBar/NavBar";
 import DashboardStatusCard from "../../../components/DashboardStatusCard/DashboardStatusCard";
 import DashboardProfileCard from "../../../components/DashboardProfileCard/DashboardProfileCard";
 import { Button, Modal, Table } from "@mantine/core";
@@ -9,8 +7,6 @@ import { gql, useMutation, useQuery } from "@apollo/client";
 import SecondSignup from "../../SecondSignup/SecondSignup";
 import { useDisclosure } from "@mantine/hooks";
 function Dashboard() {
-  const [receivedData, setReceivedData] = useState("");
-  const [isDarkMode, setIsDarkMode] = useState(false);
   const [projectsNumber, setProjectsNumber] = useState(0);
   const [tasksNumber, setTasksNumber] = useState(0);
   const [companiesNumber, setCompaniesNumber] = useState(0);
@@ -78,7 +74,6 @@ function Dashboard() {
 
   useEffect(() => {
     if (data) {
-      setReceivedData(data);
       setProjectsNumber(data.getProfileStatistics.NumberOfProjects);
       setTasksNumber(data.getProfileStatistics.NumberOfTasks);
       setCompaniesNumber(data.getProfileStatistics.NumberOfMyCompanies);
@@ -121,16 +116,13 @@ function Dashboard() {
 
   return (
     <div className="DashboardAll" id="man">
-      <SideBar colorSide={receivedData} />
-
-      {localStorage.getItem("type") == "new" && (
+      {localStorage.getItem("type") && (
         <Modal opened={opened}>
           <SecondSignup close={close} />
         </Modal>
       )}
 
       <div className="DashboardMain">
-        <NavBar />
         <div className="grid">
           <div className="sideBareFake"></div>
           <div className="rightGrid">
@@ -238,12 +230,7 @@ function Dashboard() {
               <div className="DashboardUnder">
                 <div className="DashboardUnderPart1">
                   <span
-                    className={`${
-                      isDarkMode
-                        ? "DashboardUnderPart1Text1Dark"
-                        : "DashboardUnderPart1Text1"
-                    }`}
-                  >
+                    className="DashboardUnderPart1Text1">
                     New Tasks
                   </span>
                   <span className="DashboardUnderPart1Text2">
@@ -267,27 +254,17 @@ function Dashboard() {
                           <Table.Td>{task?.TaskName}</Table.Td>
                           <Table.Td>
                             <div
-                              className={`TableDesign ${
-                                isDarkMode ? "bg-black" : "bg-white"
-                              }`}
+                              className="TableDesign"
                             >
                               <span
-                                className={`TableDesignText1 justify-content-center ${
-                                  isDarkMode
-                                    ? "TableDesignText1Dark text-white"
-                                    : " TableDesignText1 text-dark"
-                                }`}
+                                className="TableDesignText1 justify-content-center"
+                                 
                               >
                                 {task?.EndDate}
                               </span>
                               <span
-                                className={` ${
-                                  isDarkMode
-                                    ? "TableDesignText2Dark text-white"
-                                    : "TableDesignText2 text-dark"
-                                }`}
-                              >
-                                IN{" "}
+                                className= "TableDesignText2 text-dark">
+                                IN
                                 {getDaysDifference(
                                   task.StartDate,
                                   task.EndDate
