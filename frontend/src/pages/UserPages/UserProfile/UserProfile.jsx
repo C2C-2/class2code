@@ -1,22 +1,15 @@
 import "./UserProfile.css";
-import SideBar from "../../../components/SideBar/SideBar";
-import NavBar from "../../../components/NavBar/NavBar";
 import { Link } from "react-router-dom";
-import RequirementNeed from "../../../components/RequirementNeed/RequirementNeed"
 import GreenBox2 from "../../../components/GreenBox/GreenBox2"
 import {
   Button,
-  Autocomplete,
   Input,
-  TextInput,
   Textarea,
 } from "@mantine/core";
 function UserProfile() {
   return (
     <div className="AllUserProfile">
-      <SideBar />
       <div className="MainUserProfile">
-        <NavBar />
         <div className="FakeDivUserProfile"></div>
         <div className="UserProfileCenter">
           <div className="UserProfileBackGroundColor">

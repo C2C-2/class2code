@@ -1,7 +1,5 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import "./CreateTask.css";
-import SideBar from "../../../components/SideBar/SideBar";
-import NavBar from "../../../components/NavBar/NavBar";
 import CreateTeamAddOnsCard from "../../../components/CreateTeamAddOnsCard/CreateTeamAddOnsCard";
 import { Button } from "@mantine/core";
 import CreateTaskCard from "../../../components/CreateTaskCard/CreateTaskCard";
@@ -29,8 +27,6 @@ const CREATE_TASK = gql`
 `;
 
 function CreateTask() {
-  const [receivedData, setReceivedData] = useState("");
-  const [isDarkMode, setIsDarkMode] = useState(false);
   const [taskData, setTaskData] = useState({
     task: null,
     teamId: null,
@@ -62,49 +58,16 @@ function CreateTask() {
         console.error("Error creating task:", error);
       });
   };
-
-  useEffect(() => {
-    setIsDarkMode(receivedData === "dark");
-  }, [receivedData]);
-  const receiveDataFromChild = (data) => {
-    setReceivedData(data);
-  };
-  useEffect(() => {
-    document.getElementById("man").style.backgroundColor =
-      receivedData === "light" ? "#fff" : "#000";
-  }, [receivedData]);
   return (
     <div className="CreateTaskAll" id="man">
-      <SideBar colorSide={receivedData}/>
       <div className="CreateTaskMain">
-        <NavBar sendDataToParent={receiveDataFromChild} />
-        <div
-          className={`${
-            isDarkMode ? "CreateTaskContent bg-black" : "CreateTaskContent"
-          }`}
-        >
-          <div
-            className={`${
-              isDarkMode ? "CreateTaskCenterDark " : "CreateTaskCenter"
-            }`}
-          >
-            <span
-              className={`${
-                isDarkMode ? "CreateTaskHeaderDark" : "CreateTaskHeader"
-              }`}
-            >
-              Add Task
-            </span>
+        <div className="CreateTaskContent">
+          <div className="CreateTaskCenter">
+            <span className="CreateTaskHeader">Add Task</span>
             <div className="InputsAll">
               <div className="CreateTaskInput1">
                 <div className="CreateTaskDataInput">
-                  <span
-                    className={`${
-                      isDarkMode ? "CreateTaskLabelDark" : "CreateTaskLabel"
-                    }`}
-                  >
-                    Name
-                  </span>
+                  <span className="CreateTaskLabel">Name</span>
                   <input
                     type="text"
                     placeholder="Task Name"
@@ -114,13 +77,7 @@ function CreateTask() {
                   />
                 </div>
                 <div className="CreateTaskDataInput">
-                  <span
-                    className={`${
-                      isDarkMode ? "CreateTaskLabelDark" : "CreateTaskLabel"
-                    }`}
-                  >
-                    Priority
-                  </span>
+                  <span className="CreateTaskLabel">Priority</span>
                   <input
                     type="number"
                     placeholder="2"
@@ -132,29 +89,16 @@ function CreateTask() {
               </div>
               <div className="CreateTaskInput2">
                 <div className="CreateTaskDataInput">
-                  <span
-                    className={`${
-                      isDarkMode ? "CreateTaskLabelDark" : "CreateTaskLabel"
-                    }`}
-                  >
-                    Start Date
-                  </span>
+                  <span className="CreateTaskLabel">Start Date</span>
                   <input
                     placeholder="12/3/2005"
                     className="CreateTaskTextInput"
                     name="StartDate"
                     onChange={handleInputChange}
-
                   />
                 </div>
                 <div className="CreateTaskDataInput">
-                  <span
-                    className={`${
-                      isDarkMode ? "CreateTaskLabelDark" : "CreateTaskLabel"
-                    }`}
-                  >
-                    End Date
-                  </span>
+                  <span className="CreateTaskLabel">End Date</span>
                   <input
                     placeholder="22/9/2005"
                     className="CreateTaskTextInput"
@@ -165,13 +109,7 @@ function CreateTask() {
               </div>
               <div className="CreateTaskInput2">
                 <div className="CreateTaskDataInput">
-                  <span
-                    className={`${
-                      isDarkMode ? "CreateTaskLabelDark" : "CreateTaskLabel"
-                    }`}
-                  >
-                    For
-                  </span>
+                  <span className="CreateTaskLabel">For</span>
                   <input
                     type="text"
                     placeholder="User of Team Name"
@@ -181,13 +119,7 @@ function CreateTask() {
                   />
                 </div>
                 <div className="CreateTaskDataInput">
-                  <span
-                    className={`${
-                      isDarkMode ? "CreateTaskLabelDark" : "CreateTaskLabel"
-                    }`}
-                  >
-                    Comment
-                  </span>
+                  <span className="CreateTaskLabel">Comment</span>
                   <input
                     type="text"
                     placeholder="Your Comment"
@@ -199,23 +131,27 @@ function CreateTask() {
               </div>
             </div>
             <div className="CreateTaskSteps">
-              <span
-                className={`${
-                  isDarkMode ? "CreateTaskLabelDark" : "CreateTaskLabel"
-                }`}
-              >
-                Steps
-              </span>
+              <span className="CreateTaskLabel">Steps</span>
               {dummySteps.map((step, index) => (
-                <CreateTaskCard key={index} number={Number}  description={Descriptions}/>
+                <CreateTaskCard
+                  key={index}
+                  number={Number}
+                  description={Descriptions}
+                />
               ))}
               <CreateTeamAddOnsCard />
             </div>
             <div className="CreateTaskButton">
               <Link to="/MyCompanyTask">
-              <Button variant="filled" color="#388E3C" w={130} h={40} onClick={handleCreateTask}>
-                Create
-              </Button>
+                <Button
+                  variant="filled"
+                  color="#388E3C"
+                  w={130}
+                  h={40}
+                  onClick={handleCreateTask}
+                >
+                  Create
+                </Button>
               </Link>
             </div>
           </div>

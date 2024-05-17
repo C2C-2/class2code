@@ -1,26 +1,9 @@
 import "./EditPost.css";
-import { useEffect, useState } from "react";
-import SideBar from "../../../components/SideBar/SideBar";
-import NavBar from "../../../components/NavBar/NavBar";
 import { Button} from "@mantine/core";
 function EditPost() {
-  const [receivedData, setReceivedData] = useState("");
-  const [isDarkMode, setIsDarkMode] = useState(false);
-  useEffect(() => {
-    setIsDarkMode(receivedData === "dark");
-  }, [receivedData]);
-  const receiveDataFromChild = (data) => {
-    setReceivedData(data);
-  };
-  useEffect(() => {
-    document.getElementById("man").style.backgroundColor =
-      receivedData === "light" ? "#fff" : "#000";
-  }, [receivedData]);
   return (
     <div className="EditPostAll" id="man">
-      <SideBar />
       <div className="EditPostMain">
-        <NavBar sendDataToParent={receiveDataFromChild}/>
         <div className="EditPostCenter">
           <div className="EditPostContent">
             <span className="EditPostHeader">Edit Post</span>

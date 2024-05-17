@@ -1,14 +1,10 @@
 import "./EditPassword.css";
 import { Button, TextInput } from "@mantine/core";
 import { Link } from "react-router-dom";
-import SideBar from "../../../components/SideBar/SideBar";
-import NavBar from "../../../components/NavBar/NavBar";
 function EditPassword() {
   return (
     <div className="EditPasswordMain">
-      <SideBar />
       <div className="EditPasswordCenter">
-        <NavBar />
         <div className="EditPasswordContent">
           <div className="EditPasswordContentFake"></div>
           <div className="EditPasswordContentData">

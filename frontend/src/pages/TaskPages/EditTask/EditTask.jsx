@@ -1,15 +1,11 @@
 import { useState, useEffect } from 'react';
 import "./EditTask.css";
-import SideBar from "../../../components/SideBar/SideBar";
-import NavBar from "../../../components/NavBar/NavBar";
 import CreateTeamAddOnsCard from "../../../components/CreateTeamAddOnsCard/CreateTeamAddOnsCard";
 import { Button } from "@mantine/core";
 import { useMutation, useQuery, gql } from '@apollo/client';
 import CreateTaskCard from '../../../components/CreateTaskCard/CreateTaskCard';
 
 function EditTask({task_id}) {
-  const [receivedData, setReceivedData] = useState("");
-  const [isDarkMode, setIsDarkMode] = useState(false);
   const [taskData, setTaskData] = useState({
     name: '',
     priority: 2,
@@ -19,19 +15,6 @@ function EditTask({task_id}) {
     comment: '',
     steps: [],
   });
-
-  useEffect(() => {
-    setIsDarkMode(receivedData === "dark");
-  }, [receivedData]);
-
-  const receiveDataFromChild = (data) => {
-    setReceivedData(data);
-  };
-
-  useEffect(() => {
-    document.getElementById("man").style.backgroundColor =
-      receivedData === "light" ? "#fff" : "#000";
-  }, [receivedData]);
 
   const UPDATE_TASK = gql`
     mutation UpdateTask($taskId: Int!, $task: TaskInput!) {
@@ -107,9 +90,7 @@ function EditTask({task_id}) {
 
   return (
     <div className="EditTaskAll" id="man"> 
-      <SideBar colorSide={receivedData}/>
       <div className="EditTaskMain">
-        <NavBar sendDataToParent={receiveDataFromChild} />
         <div className="EditTaskContent">
           <div className="EditTaskCenter">
             <span className="EditTaskHeader">Edit Task</span>

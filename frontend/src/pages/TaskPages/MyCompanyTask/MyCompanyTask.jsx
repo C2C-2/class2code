@@ -1,14 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import "./MyCompanyTask.css";
-import SideBar from "../../../components/SideBar/SideBar";
-import NavBar from "../../../components/NavBar/NavBar";
 import MyCompanyTaskCard from "../../../components/MyCompanyTaskCard/MyCompanyTaskCard";
 import { useQuery, gql, useMutation } from "@apollo/client";
 import { Link } from "react-router-dom";
-import CreateTaskCard from "../../../components/CreateTaskCard/CreateTaskCard";
-import CreateTeamAddOnsCard from "../../../components/CreateTeamAddOnsCard/CreateTeamAddOnsCard";
 import { useDisclosure } from "@mantine/hooks";
-import { Modal, Button, Input, TextInput, Select } from "@mantine/core";
+import { Modal, Button,TextInput, Select } from "@mantine/core";
 const GET_USER_TASKS = gql`
   query Tasks($userId: String!) {
     getUser(userId: $userId) {
@@ -72,8 +68,6 @@ const CREATE_TASK = gql`
   }
 `;
 function MyCompanyTask() {
-  const [receivedData, setReceivedData] = useState("");
-  const [isDarkMode, setIsDarkMode] = useState(false);
   const [filterType, setFilterType] = useState(null);
   const user_id = localStorage.getItem("id");
   const [taskData, setTaskData] = useState({
@@ -82,16 +76,6 @@ function MyCompanyTask() {
     userId: user_id,
   });
   const [opened, { open, close }] = useDisclosure(false);
-  useEffect(() => {
-    setIsDarkMode(receivedData === "dark");
-  }, [receivedData]);
-  const receiveDataFromChild = (data) => {
-    setReceivedData(data);
-  };
-  useEffect(() => {
-    document.getElementById("man").style.backgroundColor =
-      receivedData === "light" ? "#fff" : "";
-  }, [receivedData]);
 
   const { loading, error, data } = useQuery(GET_USER_TASKS, {
     variables: { userId: user_id }, // Pass your user ID here
@@ -227,10 +211,8 @@ function MyCompanyTask() {
   };
 
   return (
-    <div className="MyCompanyTaskAll" id="man">
-      <SideBar colorSide={receivedData} />
+    <div className="MyCompanyTaskAll">
       <div className="MyCompanyTaskAllMain">
-        <NavBar sendDataToParent={receiveDataFromChild} />
         <div className="MyCompanyTaskAllCenter">
           <div className="FackDivMyCompanyTask"></div>
           <div className="MyCompanyTaskAllCenterButtonBack">

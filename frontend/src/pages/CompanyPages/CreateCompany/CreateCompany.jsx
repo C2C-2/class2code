@@ -1,7 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import "./CreateCompany.css";
-import SideBar from "../../../components/SideBar/SideBar";
-import NavBar from "../../../components/NavBar/NavBar";
 import { Button } from "@mantine/core";
 import { useMutation, gql } from "@apollo/client";
 import { Link } from "react-router-dom";
@@ -17,7 +15,6 @@ const CREATE_NEW_COMPANY = gql`
 `;
 
 function CreateCompany() {
-  const [receivedData, setReceivedData] = useState("");
   const [companyData, setCompanyData] = useState({
     CompanyName: "",
     CompanyDescription: "",
@@ -48,20 +45,9 @@ function CreateCompany() {
       });
   };
 
-  useEffect(() => {
-    document.getElementById("man").style.backgroundColor =
-      receivedData === "light" ? "#fff" : "";
-  }, [receivedData]);
-
-  const receiveDataFromChild = (data) => {
-    setReceivedData(data);
-  };
-
   return (
     <div className="CreateCompany" id="man">
-      <SideBar colorSide={receivedData} />
       <div className="CreateComp">
-        <NavBar sendDataToParent={receiveDataFromChild} />
         <div className="Part2CreateCompany">
           <div className="FakeDivNews"></div>
           <div className="ContentCreateCompany">

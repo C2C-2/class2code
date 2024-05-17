@@ -28,13 +28,12 @@
   align-items: center;
   gap: 0.6rem;
 }
+
 .Home_logo img {
   width: 40px;
   height: 40px;
 }
 
-.Home_logo h5 {
-}
 
 .Home_links {
   display: flex;
@@ -106,12 +105,10 @@
   justify-content: center;
   padding: 4rem;
   gap: 8vw;
-  background: linear-gradient(
-    179deg,
-    rgba(255, 245, 235, 1) 0%,
-    rgba(255, 255, 255, 1) 100%,
-    rgba(238, 130, 238, 1) 100%
-  );
+  background: linear-gradient(179deg,
+      rgba(255, 245, 235, 1) 0%,
+      rgba(255, 255, 255, 1) 100%,
+      rgba(238, 130, 238, 1) 100%);
 }
 
 .home_about h1 {
@@ -164,7 +161,7 @@
   font-weight: 700;
 }
 
-.home_about_sec1_ph > p {
+.home_about_sec1_ph>p {
   width: 24vw;
 }
 
@@ -205,7 +202,7 @@
   font-size: 18px;
 }
 
-.home_services_cards{
+.home_services_cards {
   display: flex;
   align-items: center;
   justify-content: center;

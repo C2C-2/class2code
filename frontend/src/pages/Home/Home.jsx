@@ -4,6 +4,10 @@ import logo from "../../components/NavBar/logo2 2.png";
 import { Button, Card, Divider, Image, Text, Timeline } from "@mantine/core";
 import heroImage from "./heroImage.png";
 import sec1 from "./sec1.png";
+import imgAIChat from "./155Z_2305.w017.n001.52B.p12.52.jpg";
+import imgTaskSubSystem from "./istockphoto-1336546162-1024x1024.jpg";
+import imgLogo from "./logo2 2.png";
+import imgCompanySubSystem from "./20944999.jpg";
 import sec2 from "./sec2.png";
 import { Link } from "react-router-dom";
 import { Paths } from "../../assets/Paths";
@@ -65,7 +69,7 @@ const Home = () => {
           <h1>Develop</h1>
           <h2>Collaborate</h2>
           <div>
-            <h6>Scroll for more</h6>
+            <h6 >Scroll for more</h6>
           </div>
         </div>
       </div>
@@ -87,7 +91,11 @@ const Home = () => {
               a virtual software company simulation platform for
               students/graduates to gain practical experience.
             </p>
-            <Button color="green">Get Started</Button>
+            <Link to="/Login">
+              <Button color="green" w={350}>
+                Get Started
+              </Button>
+            </Link>
           </div>
         </div>
         <div className="home_about_sec1">
@@ -100,7 +108,11 @@ const Home = () => {
               Bridging the academia-industry gap, providing hands-on project
               experience, fostering teamwork and communication skills.
             </p>
-            <Button color="green">Start For Free</Button>
+            <Link to={Paths.Login}>
+              <Button color="green" w={350}>
+                Start For Free
+              </Button>
+            </Link>
           </div>
           <img className="sec2_image" src={sec2} alt="" />
         </div>
@@ -117,76 +129,51 @@ const Home = () => {
         </div>
 
         <div className="home_services_cards">
-          <Card
-            shadow="sm"
-            padding="xl"
-            component="a"
-            href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
-            target="_blank"
-          >
+          <Card shadow="sm" padding="xl" component="a" target="_blank">
             <Card.Section>
-              <Image
-                src="https://images.unsplash.com/photo-1579227114347-15d08fc37cae?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2550&q=80"
-                h={160}
-                alt="No way!"
-              />
+              <Image src={imgAIChat} h={160} alt="No way!" />
             </Card.Section>
 
             <Text fw={500} size="lg" mt="md">
-              You&apos;ve won a million dollars in cash!
+              AI Chat: Your Virtual Project Manager for Real-World Experience
             </Text>
 
             <Text mt="xs" c="dimmed" size="sm">
-              Please click anywhere on this card to claim your reward, this is
-              not a fraud, trust us
+              The AI Chat in "Class2Code" assists with projects, answers
+              questions, and manages tasks, offering a practical learning
+              experience that connects classroom knowledge with real-world
+              skills.
             </Text>
           </Card>
-          <Card
-            shadow="sm"
-            padding="xl"
-            component="a"
-            href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
-            target="_blank"
-          >
+          <Card shadow="sm" padding="xl" component="a" target="_blank">
             <Card.Section>
-              <Image
-                src="https://images.unsplash.com/photo-1579227114347-15d08fc37cae?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2550&q=80"
-                h={160}
-                alt="No way!"
-              />
+              <Image src={imgTaskSubSystem} h={160} alt="No way!" />
             </Card.Section>
 
             <Text fw={500} size="lg" mt="md">
-              You&apos;ve won a million dollars in cash!
+              Task Tracker: Your Personal Project Assistant
             </Text>
 
             <Text mt="xs" c="dimmed" size="sm">
-              Please click anywhere on this card to claim your reward, this is
-              not a fraud, trust us
+              Task Tracker: Simplify Project Management Task Tracker in
+              Class2Code streamlines teamwork. Assign, track, and communicate
+              tasks easily. Simplify your projects with Task Tracker.
             </Text>
           </Card>
-          <Card
-            shadow="sm"
-            padding="xl"
-            component="a"
-            href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
-            target="_blank"
-          >
+          <Card shadow="sm" padding="xl" component="a" target="_blank">
             <Card.Section>
-              <Image
-                src="https://images.unsplash.com/photo-1579227114347-15d08fc37cae?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2550&q=80"
-                h={160}
-                alt="No way!"
-              />
+              <Image src={imgCompanySubSystem} h={160} alt="No way!" />
             </Card.Section>
 
             <Text fw={500} size="lg" mt="md">
-              You&apos;ve won a million dollars in cash!
+              Class2Code: Bridging Academia with Industry - Revolutionizing
+              Education
             </Text>
 
             <Text mt="xs" c="dimmed" size="sm">
-              Please click anywhere on this card to claim your reward, this is
-              not a fraud, trust us
+              The company subsystem in "Class2Code" helps students work on real
+              projects, fostering practical skills and understanding team
+              dynamics.
             </Text>
           </Card>
         </div>
@@ -278,54 +265,54 @@ const Home = () => {
 const Footer = () => {
   return (
     <>
-      <footer className="footer bg-dark text-light p-5 pb-0 mt-5" id="footer">
+      <footer
+        className="footer bg-white text-black p-5 pb-0 mt-5 pb-5 border"
+        id="footer"
+      >
         <div className="container">
-          <div className="info row">
-            <div className="col-md-3">
-              <h5 className="mb-3">Our Mission</h5>
-              <p>
-                University Device Registration and Reservation System is a
-                Catholic co-educational institution in the Lasallian tradition
-                whose mission is to provide quality higher education to the
-                people of Palestine and to serve them in its role as a center
-                for the advancement, sharing, and use of knowledge.
-              </p>
-            </div>
-            <div className="col-md-1"></div>
-            <div className="col-md-3">
-              <h5 className="mb-3">Contact Us</h5>
-              <p className="mb-2">Email: info@bethlehem.edu</p>
-              <p className="mb-2">Phone: +970-2-274-1241/2/3/4/5/6</p>
-              <p>Address: 5 Rue des Frères Bethlehem, Palestine</p>
-            </div>
-            <div className="col-md-1"></div>
-            <div className="col-md-3">
-              <h5 className="mb-3">Follow Us</h5>
-              <ul className="list-unstyled">
-                <li className="mb-2">
-                  <a href="#" className="text-light">
-                    Facebook
-                  </a>
-                </li>
-                <li className="mb-2">
-                  <a href="#" className="text-light">
-                    Twitter
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="text-light">
-                    LinkedIn
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div className="row">
-            <div className="col">
-              <p className="text-center">
-                &copy; {new Date().getFullYear()} University Device Registration
-                and Reservation System
-              </p>
+          <div className="info col">
+            <div className="d-flex flex-column gap-4">
+              <div className="d-flex flex-row align-items-center  gap-2">
+                <img src={imgLogo} alt="Logo" width={50} height={50} />
+                <h5 className="">Class2Code</h5>
+              </div>
+              <div className="d-flex flex-row  justify-content-md-between">
+                <div className="d-flex flex-column align-items-start w-50 ">
+                  <h5>Our Mission</h5>
+                  <p className="pt-2 w-75">
+                    We're here to make learning practical and fun. Using
+                    artificial intelligence, we provide real-life projects for
+                    students to work on together, preparing them for the world
+                    of software development.
+                  </p>
+                </div>
+                <div className="d-flex flex-column align-items-start g-4 pe-5">
+                  <h5>Contact Us</h5>
+                  <div className="d-flex flex-column align-items-start gap-1 pt-3">
+                    <h6>Mohammed Abu Salh</h6>
+                    <p>Email:</p>
+                    <p>Phone:</p>
+                  </div>
+                  <div className="d-flex flex-column align-items-start gap-1 pt-2">
+                    <h6>Osama Ghneem</h6>
+                    <p>Email: ghneem7@gmail.com</p>
+                    <p>Phone: +972056979817</p>
+                  </div>
+                </div>
+                <div className="d-flex flex-column align-items-center g-4 ">
+                  <Link to="/Login">
+                    <Button variant="filled" color="#388E3C" size="md" w={150}>
+                      Login
+                    </Button>
+                  </Link>
+                  <span className="pt-2 pb-2">Or</span>
+                  <Link to="/Login">
+                    <Button variant="filled" color="#388E3C" size="md" w={150}>
+                      Signup
+                    </Button>
+                  </Link>
+                </div>
+              </div>
             </div>
           </div>
         </div>

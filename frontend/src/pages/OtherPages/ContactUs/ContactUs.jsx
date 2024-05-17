@@ -1,30 +1,15 @@
-import { useEffect, useState } from "react";
+
 import "./ContactUs.css";
-import NewNavBar from "../../../components/NewNavBar/NewNavBar";
 function ContactUs() {
-  const [receivedData, setReceivedData] = useState("");
-  const [isDarkMode, setIsDarkMode] = useState(false);
-  useEffect(() => {
-    setIsDarkMode(receivedData === "dark");
-  }, [receivedData]);
-  const receiveDataFromChild = (data) => {
-    setReceivedData(data);
-  };
-  useEffect(() => {
-    document.getElementById("man").style.backgroundColor =
-      receivedData === "light" ? "#fff" : "#000";
-  }, [receivedData]);
+
   return (
-    <div className="ContactUsAll" id="man">
-      <NewNavBar sendDataToParent={receiveDataFromChild} />
+    <div className="ContactUsAll">
       <div className="ContactUsCenter">
         <span>
           <span
-            className={`${
-              isDarkMode ? "ContactUsCenterText1Dark" : "ContactUsCenterText1"
-            }`}
+            className="ContactUsCenterText1"
           >
-            Contact{" "}
+            Contact
           </span>
           <span className="ContactUsCenterText2">Us</span>
         </span>

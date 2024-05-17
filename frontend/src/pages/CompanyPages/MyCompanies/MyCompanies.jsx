@@ -1,8 +1,6 @@
 import "./LightMyCompanies.css";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button } from "@mantine/core";
-import SideBar from "../../../components/SideBar/SideBar";
-import NavBar from "../../../components/NavBar/NavBar";
 import MyCompaniesCard from "../../../components/MyCompaniesCard/MyCompaniesCard";
 import { useQuery, gql } from "@apollo/client";
 import { Link } from "react-router-dom";
@@ -62,15 +60,6 @@ function MyCompanies() {
   } = useQuery(SEARCH_IN_MY_COMPANIES, {
     variables: { userId: user_id, word: searchWord },
   });
-  const [receivedData, setReceivedData] = useState("");
-  const receiveDataFromChild = (data) => {
-    setReceivedData(data);
-  };
-
-  useEffect(() => {
-    document.getElementById("man").style.backgroundColor =
-      receivedData === "light" ? "#fff" : "#";
-  }, [receivedData]);
   const handleFilter = (type) => {
     setFilterType(type);
     SetDesc(true);
@@ -82,9 +71,7 @@ function MyCompanies() {
   };
   return (
     <div className="MainMyCompanies" id="man">
-      <SideBar />
       <div className="MyCompanies">
-        <NavBar sendDataToParent={receiveDataFromChild} />
         <div className="Part2My">
           <div className="FakeDivNew"></div>
           <div className="ButtonBack">
@@ -146,7 +133,7 @@ function MyCompanies() {
                     />
                   </svg>
                 </span> */}
-                  <Button
+                <Button
                   variant="filled"
                   color="#388E3C"
                   onClick={handleSearch}
@@ -196,30 +183,31 @@ function MyCompanies() {
               </div>
             </div>
             <div className="Part3My">
-            {loading && <p>Loading...</p>}
+              {loading && <p>Loading...</p>}
               {error && <p>Error: {error.message}</p>}
               {loadingSearch && <p>Searching...</p>}
               {errorSearch && <p>Error searching: {errorSearch.message}</p>}
-              {(data && data.getUser && data.getUser.MyCompanies.map((company) => (
+              {(data &&
+                data.getUser &&
+                data.getUser.MyCompanies.map((company) => (
                   <MyCompaniesCard
                     key={company._id}
-                    colorProp={receivedData}
                     Company_id={company._id}
                     CompanyName={company.CompanyName}
                     CompanyDescription={company.CompanyDescription}
                     Rate={company.Rate}
                   />
                 ))) ||
-                (dataSearch && dataSearch.searchInMyCompanies.map((company) => (
-                  <MyCompaniesCard
-                    key={company._id}
-                    colorProp={receivedData}
-                    Company_id={company._id}
-                    CompanyName={company.CompanyName}
-                    CompanyDescription={company.CompanyDescription}
-                    Rate={company.Rate}
-                  />
-                )))}
+                (dataSearch &&
+                  dataSearch.searchInMyCompanies.map((company) => (
+                    <MyCompaniesCard
+                      key={company._id}
+                      Company_id={company._id}
+                      CompanyName={company.CompanyName}
+                      CompanyDescription={company.CompanyDescription}
+                      Rate={company.Rate}
+                    />
+                  )))}
             </div>
           </div>
         </div>
