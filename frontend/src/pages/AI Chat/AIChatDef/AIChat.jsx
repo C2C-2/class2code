@@ -1,5 +1,6 @@
 import "./AIChat.css";
 import {
+  ActionIcon,
   Button,
   Dialog,
   Divider,
@@ -13,7 +14,7 @@ import { Link } from "react-router-dom";
 import { AppShell, Burger } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import MainLogo from "../../../assets/Images/logo2 21.png";
-import { IconPlus, IconTrash } from "@tabler/icons-react";
+import { IconArrowLeft, IconPlus, IconTrash } from "@tabler/icons-react";
 import { AiFillWechat } from "react-icons/ai";
 import { Paths } from "../../../assets/Paths";
 import { gql, useLazyQuery, useMutation, useQuery } from "@apollo/client";
@@ -292,6 +293,21 @@ function AIChat() {
         </AppShell.Navbar>
 
         <AppShell.Main>
+          <Link to={Paths.Dashboard}>
+            <ActionIcon
+              variant="filled"
+              color="#283739"
+              size="lg"
+              aria-label="Settings"
+              w={"4rem"}
+            >
+              <IconArrowLeft
+                style={{ width: "70%", height: "70%" }}
+                stroke={1.5}
+              />
+            </ActionIcon>
+          </Link>
+
           <div className="Title">
             <h2>{getChatData?.getAIChat?.Name}</h2>
           </div>

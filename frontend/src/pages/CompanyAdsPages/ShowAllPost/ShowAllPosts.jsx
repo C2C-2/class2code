@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import "./ShowAllPosts.css";
 import { Button, Input, Pagination } from "@mantine/core";
-import { useQuery, useMutation, gql, useLazyQuery } from "@apollo/client";
+import { gql, useLazyQuery } from "@apollo/client";
 import { Link } from "react-router-dom";
 import { Paths } from "../../../assets/Paths";
 
@@ -84,11 +84,7 @@ function ShowAllPosts() {
                 <Input
                   type="text"
                   placeholder="Search for Posts"
-                  className={`${
-                    isDarkMode
-                      ? "TextPartShowAllPostsDark"
-                      : "TextPartShowAllPosts"
-                  }`}
+                  className={"TextPartShowAllPosts"}
                   value={searchWord}
                   onChange={(e) => setSearchWord(e.target.value)}
                   radius="md"

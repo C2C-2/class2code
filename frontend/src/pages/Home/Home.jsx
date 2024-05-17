@@ -1,4 +1,3 @@
-import React from "react";
 import "./Home.css";
 import logo from "../../components/NavBar/logo2 2.png";
 import { Button, Card, Divider, Image, Text, Timeline } from "@mantine/core";
@@ -69,7 +68,7 @@ const Home = () => {
           <h1>Develop</h1>
           <h2>Collaborate</h2>
           <div>
-            <h6 >Scroll for more</h6>
+            <h6>Scroll for more</h6>
           </div>
         </div>
       </div>
@@ -290,8 +289,8 @@ const Footer = () => {
                   <h5>Contact Us</h5>
                   <div className="d-flex flex-column align-items-start gap-1 pt-3">
                     <h6>Mohammed Abu Salh</h6>
-                    <p>Email:</p>
-                    <p>Phone:</p>
+                    <p>Email: abusalhm102@gmail.com</p>
+                    <p>Phone: 0592455040</p>
                   </div>
                   <div className="d-flex flex-column align-items-start gap-1 pt-2">
                     <h6>Osama Ghneem</h6>

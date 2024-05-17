@@ -138,9 +138,7 @@ const Chat = () => {
 
   return (
     <div className="ShowAllPostsAll" id="man">
-      <SideBar />
       <div className="ShowAllPostsMain">
-        <NavBar />
         <div className="ShowAllPostsContent">
           <div className="sideBareFake"></div>
           <div className="messages d-flex p-4 gap-4 justify-content-center">

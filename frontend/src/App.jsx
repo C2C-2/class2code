@@ -36,12 +36,27 @@ import UserProfile from "./pages/UserPages/UserProfile/UserProfile";
 import EditPassword from "./pages/OtherPages/EditPassword/EditPassword";
 import EditEmail from "./pages/OtherPages/EditEmail/EditEmail";
 import Home from "./pages/Home/Home";
+import NavBar from "./components/NavBar/NavBar";
+import SideBar from "./components/SideBar/SideBar";
 
 const TokenChecker = ({ children }) => {
   if (!localStorage.getItem("token")) {
     return <Navigate to="/LogIn" />;
   }
-  return children;
+  return (
+    <>
+      <NavBar />
+      <SideBar />
+      {children}
+    </>
+  );
+};
+
+const TokenChecker2 = ({ children }) => {
+  if (!localStorage.getItem("token")) {
+    return <Navigate to="/LogIn" />;
+  }
+  return <>{children}</>;
 };
 
 function App() {
@@ -72,9 +87,9 @@ function App() {
           <Route
             path={Paths.AIChat}
             element={
-              <TokenChecker>
+              <TokenChecker2>
                 <AIChat />
-              </TokenChecker>
+              </TokenChecker2>
             }
           />
           <Route
@@ -104,7 +119,7 @@ function App() {
             }
           />
           <Route
-            path="/Posts"
+            path={Paths.Posts}
             element={
               <TokenChecker>
                 <ShowAllPosts />
@@ -112,7 +127,7 @@ function App() {
             }
           />
           <Route
-            path="/Chat"
+            path={Paths.Chat}
             element={
               <TokenChecker>
                 <Chat />
@@ -128,7 +143,7 @@ function App() {
             }
           />
           <Route
-            path="/MyCompaniesTeams"
+            path={Paths.MyCompaniesTeams}
             element={
               <TokenChecker>
                 <MyCompaniesTeams />
