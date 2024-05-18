@@ -31,5 +31,6 @@ export const Paths = {
   UserProfile: "/UserProfile",
   EditPassword: "/EditPassword",
   EditEmail: "/EditEmail",
-  ContactUs: "/ContactUs"
+  ContactUs: "/ContactUs",
+  OtherCompanyProfile: "/OtherCompanyProfile",
 };

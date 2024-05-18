@@ -3343,6 +3343,27 @@ const resolvers = {
     },
   },
   Company: {
+    Admin: async (parent) => {
+      try {
+        const companyId = parent._id;
+
+        if (!companyId) {
+          throw new Error("CompanyID is null");
+        }
+
+        const cypherQuery = `
+           MATCH (admin:User)-[:ADMIN_OF]->(company:Company)
+           WHERE ID(company) = ${companyId}
+           RETURN admin`;
+
+        const result = await NeodeObject.cypher(cypherQuery);
+
+        return result.records[0].get("admin").properties;
+      } catch (error) {
+        Logging.error(`${new Date()}, in resolvers.js => Admin, ${error}`);
+        throw error;
+      }
+    },
     Teams: async (parent) => {
       try {
         const companyId = parent._id;
@@ -3456,8 +3477,8 @@ const resolvers = {
         const result = await NeodeObject.cypher(cypherQuery);
 
         return {
-          ...result?.records[0].get("p").properties,
-          _id: result?.records[0].get("p").identity.low,
+          ...result?.records[0]?.get("p")?.properties,
+          _id: result?.records[0]?.get("p")?.identity.low,
         };
       } catch (error) {
         Logging.error(`${new Date()}, in resolvers.js => Project, ${error}`);

@@ -50,7 +50,6 @@ function SideBar() {
       label: "My Companies",
       rightSection: <IconChevronRight size="1rem" stroke={1.5} />,
       links: [
-        { label: "Create Company", link: Paths.CreateCompany },
         { label: "My Companies", link: Paths.MyCompanies },
         {
           label: "Companies I am working in it ",

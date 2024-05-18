@@ -103,7 +103,7 @@ function NavBar() {
         </Link>
         <div className="TopPartNavBar">
           <div className="Svg">
-            <Menu trigger="click-hover" openDelay={100} closeDelay={400}>
+            <Menu zIndex={10001} trigger="click-hover" openDelay={100} closeDelay={400}>
               <Menu.Target>
                 <Button variant="subtle">
                   <svg

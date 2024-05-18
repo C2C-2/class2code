@@ -1,5 +1,3 @@
-import React from "react";
-import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { MantineProvider } from "@mantine/core";
 import "@mantine/core/styles.css";
@@ -9,7 +7,6 @@ import SignUpFigma from "./pages/SignUp/SignUpFigma";
 import LogInFigma from "./pages/LogIn/Login";
 import AIChat from "./pages/AI Chat/AIChatDef/AIChat";
 import MyCompanies from "./pages/CompanyPages/MyCompanies/MyCompanies";
-import CreateCompany from "./pages/CompanyPages/CreateCompany/CreateCompany";
 import CompanyWorking from "./pages/CompanyPages/CompanyWorking/CompanyWorking";
 import AvailableProjects from "./pages/ProjectPages/AvailableProjects/AvailableProjects";
 import ShowAllPosts from "./pages/CompanyAdsPages/ShowAllPost/ShowAllPosts";
@@ -231,14 +228,6 @@ function App() {
             }
           />
           <Route
-            path="/CreateCompany"
-            element={
-              <TokenChecker>
-                <CreateCompany />
-              </TokenChecker>
-            }
-          />
-          <Route
             path="/MyCompanies"
             element={
               <TokenChecker>
@@ -263,7 +252,7 @@ function App() {
             }
           />
           <Route
-            path="/OtherCompanyProfile/:company_id"
+            path={`${Paths.OtherCompanyProfile}/:company_id`}
             element={
               <TokenChecker>
                 <OtherCompanyProfile />

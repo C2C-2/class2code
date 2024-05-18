@@ -1,13 +1,26 @@
-
 import "./EditMyCompanyProfile.css";
-import { Button, Textarea, TextInput } from "@mantine/core";
-import CurrentProject from "../../../components/CurrentProject/CurrentProject";
-import EditTeamMyCompanyProfile from "../../../components/EditTeamMyCompanyProfile/EditTeamMyCompanyProfile";
-import { gql, useMutation, useQuery } from "@apollo/client";
-import { Link, useParams } from "react-router-dom";
+import { Button, Modal, Textarea, TextInput } from "@mantine/core";
+import { gql, useLazyQuery, useMutation, useQuery } from "@apollo/client";
+import { useNavigate, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useDisclosure } from "@mantine/hooks";
+import { GoTrash } from "react-icons/go";
 
 function EditMyCompanyProfile() {
   const { company_id } = useParams();
+  const navigation = useNavigate();
+
+  const [companyName, setCompanyName] = useState("");
+  const [companyDescription, setCompanyDescription] = useState("");
+  const [companyDomain, setCompanyDomain] = useState("");
+  const [rate, setRate] = useState(0);
+  const [createDate, setCreateDate] = useState("");
+  const [fullName, setFullName] = useState("");
+  const [projectName, setProjectName] = useState("");
+  const [teams, setTeams] = useState([]);
+  const [teamName, setTeamName] = useState("");
+  const [teamRole, setTeamRole] = useState("");
+
   const GET_COMPANY_DATA = gql`
     query GetCompany($companyId: Int!) {
       getCompany(companyId: $companyId) {
@@ -17,36 +30,79 @@ function EditMyCompanyProfile() {
         CreateDate
         Domain
         CompanyDescription
+        Admin {
+          FirstName
+          LastName
+        }
+        Project {
+          ProjectName
+        }
+        Teams {
+          TeamName
+          _id
+        }
       }
     }
   `;
-  const { loading, error, data } = useQuery(GET_COMPANY_DATA, {
-    variables: { companyId: Number(company_id) },
-  });
+  const { data: companyData, refetch: refetchCompany } = useQuery(
+    GET_COMPANY_DATA,
+    {
+      variables: { companyId: parseInt(company_id) },
+    }
+  );
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error.message}</p>;
+  const CREATE_TEAM = gql`
+    mutation Mutation($team: TeamInput!, $companyId: Int!) {
+      createNewTeam(team: $team, companyId: $companyId) {
+        _id
+      }
+    }
+  `;
 
-  const {
-    CompanyName,
-    Domain,
-    CreateDate,
-    CompanyDescription,
-    teams,
-    project,
-  } = data.getCompany;
+  const [createTeam] = useMutation(CREATE_TEAM);
+
+  const DELETE_TEAM = gql`
+    query Query($teamId: Int!) {
+      deleteTeam(teamId: $teamId)
+    }
+  `;
+
+  const [deleteTeam] = useLazyQuery(DELETE_TEAM);
+
+  useEffect(() => {
+    if (companyData) {
+      setCompanyName(companyData?.getCompany?.CompanyName);
+      setCompanyDescription(companyData?.getCompany?.CompanyDescription);
+      setCompanyDomain(companyData?.getCompany?.Domain);
+      setRate(companyData?.getCompany?.Rate);
+      setCreateDate(companyData?.getCompany?.CreateDate);
+      setFullName(
+        companyData?.getCompany?.Admin?.FirstName +
+          " " +
+          companyData?.getCompany?.Admin?.LastName
+      );
+      setProjectName(companyData?.getCompany?.Project?.ProjectName);
+      setTeams(companyData?.getCompany?.Teams);
+    }
+  }, [companyData]);
+
+  const [opened, { open, close }] = useDisclosure(false);
+
   return (
-    <div className="EditMyCompaniesAll">
-      <div className="EditMyCompaniesMain">
-        <div className="EditMyCompaniesCenter">
-          <div className="EditMyCompaniesFakeDiv"></div>
-          <div className="EditMyCompaniesContent">
-            <Link to="/MyCompanies" className="EditMyCompanyProfileButtonBack">
+    <div className="ShowAllPostsAll">
+      <div className="ShowAllPostsMain">
+        <div className="ShowAllPostsContent">
+          <div className="sideBareFake"></div>
+          <div className="postsBody">
+            <div className="navbarFake"></div>
+            <div className="EditMyCompaniesContentData">
               <Button
+                w={"fit-content"}
                 justify="center "
                 variant="filled"
                 color="#283739"
                 radius="md"
+                onClick={() => navigation(-1)}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -71,14 +127,12 @@ function EditMyCompanyProfile() {
                   />
                 </svg>
               </Button>
-            </Link>
-            <div className="EditMyCompaniesContentData">
-              <div className="EditMyCompaniesContentDataTop">
-                <div className="EditMyCompaniesContentDataTopDesign">
-                  <div className="EditMyCompaniesContentDataTopDesignInside">
-                    <h4>{CompanyName}</h4>
-                    <div className="EditMyCompaniesContentDataTopDesignInsideRate">
-                      <h6>4.9</h6>
+              <div className="EditMyCompaniesHead  d-flex justify-content-around align-items-center">
+                <div className="d-flex flex-column gap-1">
+                  <div className="d-flex gap-3 align-items-center">
+                    <h4>{companyName}</h4>
+                    <div className="d-flex gap-1">
+                      <h6>{rate}</h6>
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="17"
@@ -93,59 +147,157 @@ function EditMyCompanyProfile() {
                       </svg>
                     </div>
                   </div>
-                  <h4>Osama Ghneem</h4>
+                  <span>{fullName}</span>
                 </div>
-                <div className="EditMyCompaniesContentDataTopDesign">
+                <div className="d-flex flex-column gap-1">
                   <h4>Domain</h4>
-                  <h5>{Domain}</h5>
+                  <span>{companyDomain}</span>
                 </div>
-                <div className="EditMyCompaniesContentDataTopDesign">
+                <div className="d-flex flex-column gap-1">
                   <h4>Create Date</h4>
-                  <h6>{CreateDate}</h6>
+                  <span>{createDate?.slice(0, 10)}</span>
                 </div>
               </div>
-              <div className="EditMyCompaniesContentDataCenter">
-                <div className="EditMyCompaniesContentDataCenterPart1">
+              <div className="EditMyCompaniesBody">
+                <div className="d-flex flex-column gap-4" style={{ flex: 1 }}>
                   <Textarea
+                    resize="vertical"
+                    size="md"
+                    variant="filled"
                     label="Description"
-                    placeholder={CompanyDescription}
-                    size="lg"
-                    w={500}
+                    value={companyDescription}
+                    w={"100%"}
                   />
-                  <div className="EditMyCompaniesContentDataCenterPart1General">
-                    <h3>General Information</h3>
-                    <TextInput
-                      label="Company Name"
-                      placeholder={CompanyName}
-                      size="lg"
-                      w={500}
-                    />
-                    <TextInput
-                      label="Domain"
-                      placeholder={Domain}
-                      size="lg"
-                      w={500}
-                    />
+                  <TextInput
+                    label="Company Name"
+                    value={companyName}
+                    size="md"
+                    w={"100%"}
+                  />
+                  <TextInput
+                    label="Domain"
+                    value={companyDomain}
+                    size="md"
+                    w={"100%"}
+                  />
+
+                  <div className="d-flex gap-3 justify-content-end">
+                    <Button variant="filled" color="green">
+                      Update
+                    </Button>
+                    <Button variant="outline" color="red">
+                      Reset
+                    </Button>
                   </div>
                 </div>
-                <div className="EditMyCompaniesContentDataCenterPart2">
-                  <div className="EditMyCompaniesContentDataCenterPart2Project">
-                    <h5>Current Project</h5>
-                    <TextInput
-                      label="Create Project"
-                      placeholder="Input placeholder"
-                      w={300}
-                      size="lg"
-                    />
-                  </div>
-                  <div className="EditMyCompaniesContentDataCenterPart2Project">
-                    <h5>Current Team</h5>
-                    <TextInput
-                      label="Create Team"
-                      placeholder="Input placeholder"
-                      w={300}
-                      size="lg"
-                    />
+                <div
+                  className="d-flex flex-column gap-4"
+                  style={{ minWidth: 300 }}
+                >
+                  {projectName && (
+                    <div className="d-flex flex-column gap-2">
+                      <TextInput
+                        label="Change Project"
+                        placeholder="Project Name"
+                        size="md"
+                      />
+                      <div className="project_name">
+                        <h6>{"projectName"}</h6>
+                        <Button variant="filled" color="green" size="xs">
+                          Done!
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+                  <div>
+                    <h4>Teams</h4>
+                    <br />
+                    <Modal
+                      xOffset={"30%"}
+                      yOffset={"9%"}
+                      padding={"xl"}
+                      opened={opened}
+                      onClose={close}
+                      title="Create Team"
+                      centered
+                    >
+                      <form
+                        onSubmit={async (e) => {
+                          e.preventDefault();
+                          await createTeam({
+                            variables: {
+                              team: {
+                                TeamName: teamName,
+                                TeamRole: teamRole,
+                              },
+                              companyId: parseInt(company_id),
+                            },
+                          }).then(() => {
+                            refetchCompany();
+                            setTeamName("");
+                            setTeamRole("");
+                            close();
+                          });
+                        }}
+                      >
+                        <TextInput
+                          value={teamName}
+                          onChange={(e) => {
+                            setTeamName(e.target.value);
+                          }}
+                          label="Team Name"
+                          placeholder=""
+                          size="sm"
+                          required
+                        />
+                        <br />
+                        <TextInput
+                          value={teamRole}
+                          onChange={(e) => {
+                            setTeamRole(e.target.value);
+                          }}
+                          label="Team Role"
+                          placeholder=""
+                          size="sm"
+                          required
+                        />
+                        <br />
+                        <div className="d-flex gap-3 justify-content-end">
+                          <Button type="submit" color="green">
+                            Create Team
+                          </Button>
+                        </div>
+                      </form>
+                    </Modal>
+                    <Button color="green" onClick={open}>
+                      Create Team
+                    </Button>
+                    <div style={{ overflow: "auto", maxHeight: 300 }}>
+                      {teams?.map((team) => (
+                        <div
+                          className="team_name my-3 d-flex align-items-center justify-content-between"
+                          key={team._id}
+                        >
+                          <h6>{team.TeamName}</h6>
+                          <Button
+                            variant="outline"
+                            color="red"
+                            radius={"xl"}
+                            onClick={() => {
+                              deleteTeam({
+                                variables: {
+                                  teamId: parseInt(team._id),
+                                },
+                              }).then(() => {
+                                refetchCompany();
+                              });
+                            }}
+                          >
+                            <GoTrash size={12} />
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>

@@ -44,6 +44,7 @@ const typeDefs = gql`
 
   type Company {
     _id: ID
+    Admin: User
     CompanyName: String
     CompanyDescription: String
     Rate: Float

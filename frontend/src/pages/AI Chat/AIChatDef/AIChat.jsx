@@ -10,7 +10,7 @@ import {
   Text,
 } from "@mantine/core";
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AppShell, Burger } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import MainLogo from "../../../assets/Images/logo2 21.png";
@@ -153,6 +153,8 @@ function AIChat() {
 
   const [deleteChatQuery] = useLazyQuery(DELETE_CHAT);
 
+  const navigate = useNavigate();
+
   return (
     <div className="MainAiDef">
       <AppShell
@@ -171,7 +173,7 @@ function AIChat() {
               <img src={MainLogo} /> Class<span>2</span>Code
             </h4>
             <div className="HeaderLinks">
-              <Link to={Paths.Home}>
+              <Link to={Paths.Dashboard}>
                 <Button color="#283739">Home</Button>
               </Link>
               <Button
@@ -293,20 +295,21 @@ function AIChat() {
         </AppShell.Navbar>
 
         <AppShell.Main>
-          <Link to={Paths.Dashboard}>
-            <ActionIcon
-              variant="filled"
-              color="#283739"
-              size="lg"
-              aria-label="Settings"
-              w={"4rem"}
-            >
-              <IconArrowLeft
-                style={{ width: "70%", height: "70%" }}
-                stroke={1.5}
-              />
-            </ActionIcon>
-          </Link>
+          <ActionIcon
+            variant="filled"
+            color="#283739"
+            size="lg"
+            aria-label="Settings"
+            w={"4rem"}
+            onClick={() => {
+              navigate(-1);
+            }}
+          >
+            <IconArrowLeft
+              style={{ width: "70%", height: "70%" }}
+              stroke={1.5}
+            />
+          </ActionIcon>
 
           <div className="Title">
             <h2>{getChatData?.getAIChat?.Name}</h2>
