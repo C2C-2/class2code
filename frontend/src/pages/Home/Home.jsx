@@ -128,7 +128,7 @@ const Home = () => {
         </div>
 
         <div className="home_services_cards">
-          <Card shadow="sm" padding="xl" component="a" target="_blank">
+          <Card style={{flex: 1}} shadow="sm" padding="xl" component="a" target="_blank">
             <Card.Section>
               <Image src={imgAIChat} h={160} alt="No way!" />
             </Card.Section>
@@ -144,7 +144,7 @@ const Home = () => {
               skills.
             </Text>
           </Card>
-          <Card shadow="sm" padding="xl" component="a" target="_blank">
+          <Card style={{flex: 1}} shadow="sm" padding="xl" component="a" target="_blank">
             <Card.Section>
               <Image src={imgTaskSubSystem} h={160} alt="No way!" />
             </Card.Section>
@@ -159,7 +159,7 @@ const Home = () => {
               tasks easily. Simplify your projects with Task Tracker.
             </Text>
           </Card>
-          <Card shadow="sm" padding="xl" component="a" target="_blank">
+          <Card style={{flex: 1}} shadow="sm" padding="xl" component="a" target="_blank">
             <Card.Section>
               <Image src={imgCompanySubSystem} h={160} alt="No way!" />
             </Card.Section>
