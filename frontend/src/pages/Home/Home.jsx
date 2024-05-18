@@ -265,54 +265,46 @@ const Footer = () => {
   return (
     <>
       <footer
-        className="footer bg-white text-black p-5 pb-0 mt-5 pb-5 border"
+        className="footer border p-5 d-flex flex-column gap-4"
         id="footer"
       >
-        <div className="container">
-          <div className="info col">
-            <div className="d-flex flex-column gap-4">
-              <div className="d-flex flex-row align-items-center  gap-2">
-                <img src={imgLogo} alt="Logo" width={50} height={50} />
-                <h5 className="">Class2Code</h5>
-              </div>
-              <div className="d-flex flex-row  justify-content-md-between">
-                <div className="d-flex flex-column align-items-start w-50 ">
-                  <h5>Our Mission</h5>
-                  <p className="pt-2 w-75">
-                    We're here to make learning practical and fun. Using
-                    artificial intelligence, we provide real-life projects for
-                    students to work on together, preparing them for the world
-                    of software development.
-                  </p>
-                </div>
-                <div className="d-flex flex-column align-items-start g-4 pe-5">
-                  <h5>Contact Us</h5>
-                  <div className="d-flex flex-column align-items-start gap-1 pt-3">
-                    <h6>Mohammed Abu Salh</h6>
-                    <p>Email: abusalhm102@gmail.com</p>
-                    <p>Phone: 0592455040</p>
-                  </div>
-                  <div className="d-flex flex-column align-items-start gap-1 pt-2">
-                    <h6>Osama Ghneem</h6>
-                    <p>Email: ghneem7@gmail.com</p>
-                    <p>Phone: +972056979817</p>
-                  </div>
-                </div>
-                <div className="d-flex flex-column align-items-center g-4 ">
-                  <Link to="/Login">
-                    <Button variant="filled" color="#388E3C" size="md" w={150}>
-                      Login
-                    </Button>
-                  </Link>
-                  <span className="pt-2 pb-2">Or</span>
-                  <Link to="/Login">
-                    <Button variant="filled" color="#388E3C" size="md" w={150}>
-                      Signup
-                    </Button>
-                  </Link>
-                </div>
-              </div>
+        <div className="d-flex flex-row align-items-center gap-2">
+          <img src={imgLogo} alt="Logo" width={50} height={50} />
+          <h5 className="">Class2Code</h5>
+        </div>
+        <div className="footer_sections">
+          <div className="footer_sections_our_mission d-flex flex-column gap-3">
+            <h5>Our Mission</h5>
+            <p>
+              We're here to make learning practical and fun. Using artificial
+              intelligence, we provide real-life projects for students to work
+              on together, preparing them for the world of software development.
+            </p>
+          </div>
+          <div className="d-flex flex-column gap-3">
+            <h5>Contact Us</h5>
+            <div className="d-flex flex-column align-items-start gap-1">
+              <h6>Mohammed Abu Salh</h6>
+              <p>Email: abusalhm102@gmail.com</p>
+              <p>Phone: 0592455040</p>
             </div>
+            <div className="d-flex flex-column align-items-start gap-1">
+              <h6>Osama Ghneem</h6>
+              <p>Email: ghneem7@gmail.com</p>
+              <p>Phone: +972056979817</p>
+            </div>
+          </div>
+          <div className="d-flex flex-column gap-3">
+            <Link to="/Login">
+              <Button variant="filled" color="#388E3C" size="md" w={150}>
+                Login
+              </Button>
+            </Link>
+            <Link to="/Login">
+              <Button variant="filled" color="#388E3C" size="md" w={150}>
+                Signup
+              </Button>
+            </Link>
           </div>
         </div>
       </footer>

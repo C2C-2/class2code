@@ -1,35 +1,22 @@
 import {
-  ActionIcon,
   useMantineColorScheme,
   useComputedColorScheme,
   Menu,
   Button,
 } from "@mantine/core";
 import {
-  IconSun,
-  IconMoon,
   IconUser,
   IconPassword,
   IconMail,
   IconQuestionMark,
   IconLogout,
 } from "@tabler/icons-react";
-import clsx from "clsx";
-import classes from "./Light_DarkMode/LightDarkMode.module.css";
 import "./NavBar.css";
 import { useEffect, useState } from "react";
 import MainLogo from "./logo2 2.png";
 import { Link } from "react-router-dom";
 import { gql, useLazyQuery, useQuery } from "@apollo/client";
 import { Paths } from "../../assets/Paths";
-import {
-  getAuth,
-  deleteUser,
-  reauthenticateWithCredential,
-  signInWithEmailAndPassword,
-  EmailAuthProvider,
-} from "firebase/auth";
-import { deleteImage } from "../../config/firebase";
 // import LightDarkMode from "./Light_DarkMode/LightDarkMode";
 function NavBar() {
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -173,7 +160,7 @@ function NavBar() {
               />
             </ActionIcon> */}
 
-            <Menu shadow="md" width={200}>
+            <Menu zIndex={10001} shadow="md" width={200}>
               <Menu.Target>
                 <img className="ProfileLogo" alt="Logo" src={userImage} />
               </Menu.Target>

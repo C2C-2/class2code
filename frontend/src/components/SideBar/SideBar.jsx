@@ -1,5 +1,4 @@
 import "./SideBar.css";
-import ProImg from "./Avatar.png";
 import { Box, Button, NavLink } from "@mantine/core";
 import { IconChevronRight, IconGauge } from "@tabler/icons-react";
 import { BsChatDots, BsPostcard, BsClipboard2Data } from "react-icons/bs";
@@ -7,7 +6,8 @@ import { RiTeamLine } from "react-icons/ri";
 import { AiOutlineTeam } from "react-icons/ai";
 import { Paths } from "../../assets/Paths";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { gql, useQuery } from "@apollo/client";
 
 function SideBar() {
   const data = [
@@ -63,26 +63,6 @@ function SideBar() {
 
   return (
     <div className={"SideBarMain"}>
-      <div className="SideBarSectionProfile">
-        <div className="SideBarSectionProfilePart1">
-          <Link to="/UserProfile">
-            <img
-              className="SideBarSectionProfilePart1Img"
-              alt="Avatar"
-              src={ProImg}
-            />
-          </Link>
-          <div className="SideBarSectionProfilePart1Texts">
-            <span className="SideBarSectionProfilePart1Text1">
-              PRODUCT MANAGER
-            </span>
-            <span className={"SideBarSectionProfilePart1Text2"}>
-              Andrew Smith
-            </span>
-          </div>
-        </div>
-        <hr className={"SideBarSectionProfilePart2"} />
-      </div>
       <div className="SideBarBody">
         <div className="SideBarSectionCenter">
           <div className="SideBarSectionCenterMain">

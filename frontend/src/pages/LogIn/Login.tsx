@@ -145,10 +145,12 @@ const Login = () => {
             if (user?.data?.createNewUser?.type == "new") {
                 localStorage.setItem("type", "new");
                 localStorage.setItem("token", result?.user?.accessToken);
+                localStorage.setItem("name", userName);
                 localStorage.setItem("id", result?.user?.uid);
             } else if (user?.data?.createNewUser?.type == "old" && user?.data?.createNewUser?.IsActive == true) {
                 localStorage.setItem("type", "old");
                 localStorage.setItem("token", result?.user?.accessToken);
+                localStorage.setItem("name", userName);
                 localStorage.setItem("id", result?.user?.uid);
             } else {
                 setError("You are not active user");

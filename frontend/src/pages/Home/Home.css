@@ -34,7 +34,6 @@
   height: 40px;
 }
 
-
 .Home_links {
   display: flex;
   align-items: center;
@@ -105,10 +104,12 @@
   justify-content: center;
   padding: 4rem;
   gap: 8vw;
-  background: linear-gradient(179deg,
-      rgba(255, 245, 235, 1) 0%,
-      rgba(255, 255, 255, 1) 100%,
-      rgba(238, 130, 238, 1) 100%);
+  background: linear-gradient(
+    179deg,
+    rgba(255, 245, 235, 1) 0%,
+    rgba(255, 255, 255, 1) 100%,
+    rgba(238, 130, 238, 1) 100%
+  );
 }
 
 .home_about h1 {
@@ -161,7 +162,7 @@
   font-weight: 700;
 }
 
-.home_about_sec1_ph>p {
+.home_about_sec1_ph > p {
   width: 24vw;
 }
 
@@ -207,4 +208,23 @@
   align-items: center;
   justify-content: center;
   gap: 4vw;
+  flex-wrap: wrap;
+}
+
+.footer {
+  background-color: #f2f9f1;
+}
+
+.footer_sections {
+  display: flex;
+  padding: 0 4rem;
+  justify-content: space-around;
+}
+
+.footer_sections_our_mission {
+  width: 30%;
+}
+
+.footer_sections_our_mission p {
+  width: 100%;
 }
