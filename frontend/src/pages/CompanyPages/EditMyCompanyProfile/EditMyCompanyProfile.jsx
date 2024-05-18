@@ -2,7 +2,7 @@ import "./EditMyCompanyProfile.css";
 import { Button, Modal, Textarea, TextInput } from "@mantine/core";
 import { gql, useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import { useNavigate, useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useDisclosure } from "@mantine/hooks";
 import { GoTrash } from "react-icons/go";
 
@@ -20,6 +20,7 @@ function EditMyCompanyProfile() {
   const [teams, setTeams] = useState([]);
   const [teamName, setTeamName] = useState("");
   const [teamRole, setTeamRole] = useState("");
+  const [selectedTeamId, setSelectedTeamId] = useState(null);
 
   const GET_COMPANY_DATA = gql`
     query GetCompany($companyId: Int!) {
@@ -51,6 +52,25 @@ function EditMyCompanyProfile() {
     }
   );
 
+  const GET_TEAM = gql`
+    query GetTeam($teamId: Int!) {
+      getTeam(teamId: $teamId) {
+        CreateDate
+        Members {
+          FirstName
+          LastName
+          Work
+        }
+        TeamName
+        TeamRole
+      }
+    }
+  `;
+  const { data: teamData } = useQuery(GET_TEAM, {
+    variables: { teamId: parseInt(selectedTeamId) },
+    skip: !selectedTeamId,
+  });
+
   const CREATE_TEAM = gql`
     mutation Mutation($team: TeamInput!, $companyId: Int!) {
       createNewTeam(team: $team, companyId: $companyId) {
@@ -58,6 +78,64 @@ function EditMyCompanyProfile() {
       }
     }
   `;
+  const UPDATE_TEAM = gql`
+    mutation UpdateTeam($teamId: Int!, $team: TeamInput!) {
+      updateTeam(teamId: $teamId, team: $team) {
+        TeamRole
+        TeamName
+      }
+    }
+  `;
+  const [updateTeam] = useMutation(UPDATE_TEAM);
+  const handleUpdateTeam = () => {
+    updateTeam({
+      variables: {
+        teamId: parseInt(selectedTeamId),
+        team: {
+          TeamName: teamName,
+          TeamRole: teamRole,
+        },
+      },
+    }).then(() => {
+      refetchCompany();
+      closeTeam();
+    });
+  };
+
+  const UPDATE_COMPANY_MUTATION = gql`
+    mutation UpdateCompany($companyId: Int!, $company: CompanyInput!) {
+      updateCompany(companyId: $companyId, company: $company) {
+        CompanyDescription
+        CompanyName
+        Domain
+        CreateDate
+        Project {
+          ProjectName
+        }
+        Teams {
+          TeamName
+        }
+        Rate
+      }
+    }
+  `;
+
+  const [updateCompany] = useMutation(UPDATE_COMPANY_MUTATION);
+
+  const handleSubmit = () => {
+    updateCompany({
+      variables: {
+        companyId: parseInt(company_id),
+        company: {
+          CompanyName: companyName,
+          Domain: companyDomain,
+          CompanyDescription: companyDescription,
+        },
+      },
+    }).then(() => {
+      refetchCompany();
+    });
+  };
 
   const [createTeam] = useMutation(CREATE_TEAM);
 
@@ -69,7 +147,7 @@ function EditMyCompanyProfile() {
 
   const [deleteTeam] = useLazyQuery(DELETE_TEAM);
 
-  useEffect(() => {
+  const fetch = useCallback(() => {
     if (companyData) {
       setCompanyName(companyData?.getCompany?.CompanyName);
       setCompanyDescription(companyData?.getCompany?.CompanyDescription);
@@ -86,7 +164,20 @@ function EditMyCompanyProfile() {
     }
   }, [companyData]);
 
+  useEffect(() => {
+    if (teamData) {
+      setTeamName(teamData?.getTeam?.TeamName);
+      setTeamRole(teamData?.getTeam?.TeamRole);
+    }
+  }, [teamData]);
+
+  useEffect(() => {
+    fetch();
+  }, [fetch]);
+
   const [opened, { open, close }] = useDisclosure(false);
+  const [openedTeam, { open: openTeam, close: closeTeam }] =
+    useDisclosure(false);
 
   return (
     <div className="ShowAllPostsAll">
@@ -166,26 +257,45 @@ function EditMyCompanyProfile() {
                     variant="filled"
                     label="Description"
                     value={companyDescription}
+                    onChange={(e) => {
+                      setCompanyDescription(e.target.value);
+                    }}
                     w={"100%"}
                   />
                   <TextInput
                     label="Company Name"
                     value={companyName}
+                    onChange={(e) => {
+                      setCompanyName(e.target.value);
+                    }}
                     size="md"
                     w={"100%"}
                   />
                   <TextInput
                     label="Domain"
                     value={companyDomain}
+                    onChange={(e) => {
+                      setCompanyDomain(e.target.value);
+                    }}
                     size="md"
                     w={"100%"}
                   />
 
                   <div className="d-flex gap-3 justify-content-end">
-                    <Button variant="filled" color="green">
+                    <Button
+                      variant="filled"
+                      color="green"
+                      onClick={handleSubmit}
+                    >
                       Update
                     </Button>
-                    <Button variant="outline" color="red">
+                    <Button
+                      variant="outline"
+                      color="red"
+                      onClick={() => {
+                        fetch();
+                      }}
+                    >
                       Reset
                     </Button>
                   </div>
@@ -278,7 +388,61 @@ function EditMyCompanyProfile() {
                           className="team_name my-3 d-flex align-items-center justify-content-between"
                           key={team._id}
                         >
-                          <h6>{team.TeamName}</h6>
+                          <>
+                            <Modal
+                              opened={openedTeam}
+                              onClose={closeTeam}
+                              title="Edit Team"
+                              centered
+                            >
+                              <form
+                                onSubmit={async (e) => {
+                                  e.preventDefault();
+                                  handleUpdateTeam();
+                                }}
+                              >
+                                <TextInput
+                                  value={teamName}
+                                  onChange={(e) => setTeamName(e.target.value)}
+                                  label="Team Name"
+                                  placeholder=""
+                                  size="sm"
+                                  required
+                                />
+                                <br />
+                                <TextInput
+                                  value={teamRole}
+                                  onChange={(e) => setTeamRole(e.target.value)}
+                                  label="Team Role"
+                                  placeholder=""
+                                  size="sm"
+                                  required
+                                />
+                                <br />
+                                <div className="d-flex gap-3 justify-content-end">
+                                  <Button
+                                    type="submit"
+                                    color="green"
+                                    onClick={handleUpdateTeam}
+                                  >
+                                    Update Team
+                                  </Button>
+                                </div>
+                              </form>
+                            </Modal>
+                            <Button
+                              variant="transparent"
+                              color="#000"
+                              size="md"
+                              onClick={() => {
+                                setSelectedTeamId(team._id);
+                                openTeam();
+                              }}
+                            >
+                              {team.TeamName}
+                            </Button>
+                          </>
+
                           <Button
                             variant="outline"
                             color="red"
