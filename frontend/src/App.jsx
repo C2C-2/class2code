@@ -13,7 +13,6 @@ import ShowAllPosts from "./pages/CompanyAdsPages/ShowAllPost/ShowAllPosts";
 import EditTask from "./pages/TaskPages/EditTask/EditTask";
 import ProjectPage from "./pages/ProjectPages/ProjectPage/ProjectPage";
 import CreateTeam from "./pages/TeamPages/CreateTeam/CreateTeam";
-import MyCompaniesTeams from "./pages/TeamPages/MyCompaniesTeams/MyCompaniesTeams";
 import CreateTask from "./pages/TaskPages/CreateTask/CreateTask";
 import TaskPage from "./pages/TaskPages/TaskPage/TaskPage";
 import MyCompanyTask from "./pages/TaskPages/MyCompanyTask/MyCompanyTask";
@@ -140,14 +139,6 @@ function App() {
             }
           />
           <Route
-            path={Paths.MyCompaniesTeams}
-            element={
-              <TokenChecker>
-                <MyCompaniesTeams />
-              </TokenChecker>
-            }
-          />
-          <Route
             path={Paths?.EditPassword}
             element={
               <TokenChecker>
@@ -216,14 +207,6 @@ function App() {
             element={
               <TokenChecker>
                 <TaskPage />
-              </TokenChecker>
-            }
-          />
-          <Route
-            path="/TeamsWorkingWith"
-            element={
-              <TokenChecker>
-                <MyCompaniesTeams />
               </TokenChecker>
             }
           />

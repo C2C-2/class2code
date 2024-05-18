@@ -38,12 +38,8 @@ function SideBar() {
     },
     {
       icon: AiOutlineTeam,
-      label: "My Teams",
-      rightSection: <IconChevronRight size="1rem" stroke={1.5} />,
-      links: [
-        { label: "My companies Teams", link: Paths.MyCompaniesTeams },
-        { label: "Teams I am working In it", link: Paths.TeamsWorkingWith },
-      ],
+      label: "teams I am working In it",
+      link: Paths.CompanyWorkingWith,
     },
     {
       icon: RiTeamLine,
