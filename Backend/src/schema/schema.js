@@ -295,6 +295,7 @@ const typeDefs = gql`
   type Query {
     getAIChat(chatId: Int!, page: Int, limit: Int): AIChat
     getUser(userId: String!, page: Int, limit: Int): User
+    getAllUsers: [User]
     deleteTeam(teamId: Int!): Boolean
     deleteCompany(companyId: Int!): Boolean
     deleteSkill(skillId: Int!): Boolean

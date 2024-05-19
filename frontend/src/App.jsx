@@ -36,6 +36,7 @@ import NavBar from "./components/NavBar/NavBar";
 import SideBar from "./components/SideBar/SideBar";
 import Applys from "./pages/CompanyAdsPages/Applys/Applys";
 import { TeamTask } from "./pages/TaskPages/TeamTasks/TeamTask";
+import TeamUsers from "./pages/TeamPages/TeamUsers/TeamUsers";
 
 const TokenChecker = ({ children }) => {
   if (!localStorage.getItem("token")) {
@@ -68,10 +69,19 @@ function App() {
           <Route path={Paths.Home} element={<Home />} />
 
           <Route
-            path={Paths.Applys+"/:id"}
+            path={Paths.Applys + "/:id"}
             element={
               <TokenChecker>
                 <Applys />
+              </TokenChecker>
+            }
+          />
+
+          <Route
+            path={Paths.TeamUsers + "/:id"}
+            element={
+              <TokenChecker>
+                <TeamUsers />
               </TokenChecker>
             }
           />
@@ -190,7 +200,7 @@ function App() {
               </TokenChecker>
             }
           />
-        
+
           <Route
             path="/EditTask/:task_id"
             element={
@@ -199,7 +209,7 @@ function App() {
               </TokenChecker>
             }
           />
-           <Route
+          <Route
             path="/TeamTasks/:team_id/company/:company_id"
             element={
               <TokenChecker>

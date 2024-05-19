@@ -119,6 +119,19 @@ const resolvers = {
         throw new Error(`Error in getUser: ${error.message}`);
       }
     },
+
+    getAllUsers: async () => {
+      try {
+        const users = await NeodeObject.all("User");
+        return users.map((user) => user.properties());
+      } catch (error) {
+        Logging.error(
+          `${new Date()}, in resolvers.js => getAllUsers, ${error}`
+        );
+        throw new Error(`Error in getAllUsers: ${error.message}`);
+      }
+    },
+
     /**
      * A function to delete a team.
      *

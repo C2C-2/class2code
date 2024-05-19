@@ -6,6 +6,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useDisclosure } from "@mantine/hooks";
 import { GoTrash } from "react-icons/go";
 import { Link } from "react-router-dom";
+import { Paths } from "../../../assets/Paths";
 function EditMyCompanyProfile() {
   const { company_id } = useParams();
   const navigation = useNavigate();
@@ -448,14 +449,19 @@ function EditMyCompanyProfile() {
                           </>
 
                           <div className="d-flex gap-2">
-                            <Link to={`/TeamTasks/${team._id}/company/${company_id}`}>
-                            <Button
-                              color="orange"
-                              radius={"xl"}
-                             
+                          <Link
+                              to={`${Paths.TeamUsers}/${team._id}`}
                             >
-                              tasks
-                            </Button>
+                              <Button radius={"xl"}>
+                                users
+                              </Button>
+                            </Link>
+                            <Link
+                              to={`/TeamTasks/${team._id}/company/${company_id}`}
+                            >
+                              <Button color="orange" radius={"xl"}>
+                                tasks
+                              </Button>
                             </Link>
                             <Button
                               variant="outline"

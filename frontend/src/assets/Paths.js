@@ -34,5 +34,6 @@ export const Paths = {
   OtherCompanyProfile: "/OtherCompanyProfile",
   Applys: "/Applys",
   TeamTask:"/TeamTasks",
-  NewTasksUser: "/NewTasksUser"
+  NewTasksUser: "/NewTasksUser",
+  TeamUsers: "/TeamUsers",
 };
