@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import "./Dashboard.css";
 import DashboardStatusCard from "../../../components/DashboardStatusCard/DashboardStatusCard";
-import DashboardProfileCard from "../../../components/DashboardProfileCard/DashboardProfileCard";
 import { Button, Modal, Table } from "@mantine/core";
 import { gql, useMutation, useQuery } from "@apollo/client";
 import SecondSignup from "../../SecondSignup/SecondSignup";

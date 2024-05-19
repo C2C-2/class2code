@@ -8,7 +8,9 @@ import { useDisclosure } from "@mantine/hooks";
 const TeamUsers = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [applies, setApplies] = useState([]);
+
+  const [userId, setUserId] = useState("");
+  const [role, setRole] = useState("Member");
 
   const GET_APPLIES = gql`
     query GetTeam($teamId: Int!) {
@@ -46,8 +48,7 @@ const TeamUsers = () => {
     query Query {
       getAllUsers {
         id
-        FirstName
-        LastName
+        Username
       }
     }
   `;
@@ -56,7 +57,14 @@ const TeamUsers = () => {
     data: users,
     loading: loading2,
     error: error2,
+    refetch: refetchUsers,
   } = useQuery(GET_ALL_USERS);
+
+  useEffect(() => {
+    if (users) {
+      setUserId(users?.getAllUsers[0]?.id);
+    }
+  }, [users]);
 
   const [opened, { open, close }] = useDisclosure(false);
 
@@ -99,7 +107,7 @@ const TeamUsers = () => {
               </svg>
             </Button>
 
-            <div className="postApplies">
+            <>
               <Modal
                 xOffset={"30%"}
                 yOffset={"8%"}
@@ -115,20 +123,25 @@ const TeamUsers = () => {
                     addUserToTeam({
                       variables: {
                         teamId: parseInt(id),
-                        userId: "621f2c7b8a0f0d0b8f5a5c8",
-                        role: "Member",
+                        userId: userId,
+                        role: role,
                       },
+                    }).then(() => {
+                      refetchUsers();
+                      close();
                     });
-                    close();
                   }}
                 >
                   <Select
-                    label="Select Users"
-                    placeholder="User Name"
-                    data={users?.getAllUsers?.map(
-                      (user) => user?.FirstName + " " + user?.LastName
-                    )}
+                    id="users-select"
+                    placeholder="Pick a user"
                     searchable
+                    nothingFound="No users found"
+                    data={users?.getAllUsers.map((user) => ({
+                      value: user.id,
+                      label: user.Username,
+                    }))}
+                    onChange={setUserId}
                   />
 
                   <br />
@@ -136,6 +149,7 @@ const TeamUsers = () => {
                     label="Role"
                     placeholder="Leader"
                     data={["Member", "Leader"]}
+                    onChange={(e) => setRole(e)}
                   />
 
                   <br />
@@ -145,9 +159,12 @@ const TeamUsers = () => {
                 </form>
               </Modal>
 
-              <Button onClick={open} color="orange">
+              <Button w={"fit-content"} onClick={open} color="orange">
                 New
               </Button>
+            </>
+
+            <div className="postApplies">
               {data?.getTeam?.Members?.map((user, index) => (
                 <div className="apply" key={index}>
                   <img src={user?.ImageUrl} />
@@ -167,9 +184,15 @@ const TeamUsers = () => {
                       </div>
                     ))}
                   </div>
+
+                  <div className="d-flex gap-2">
+                    <Button color="orange">View Profile</Button>
+                    <Button color="red">Delete</Button>
+                  </div>
                 </div>
               ))}
             </div>
+            <br /><br />
           </div>
         </div>
       </div>

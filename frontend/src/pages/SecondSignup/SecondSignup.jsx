@@ -23,6 +23,7 @@ const SecondSignup = ({ close }) => {
   const [gender, setGender] = useState("male");
   const [specialty, setSpecialty] = useState("");
   const [country, setCountry] = useState("");
+  const [username, setUsername] = useState("");
   const [error, setError] = useState(null);
 
   const UPDATE_PROFILE = gql`
@@ -61,6 +62,7 @@ const SecondSignup = ({ close }) => {
             Gender: gender,
             Work: specialty,
             Country: country,
+            UserName: username,
           },
         },
       });
@@ -136,6 +138,14 @@ const SecondSignup = ({ close }) => {
               <option value="female">Female</option>
             </select>
           </div>
+
+          <Input
+            value={username}
+            onChange={(e) => setUsername(() => e.target.value)}
+            label="Your Username"
+            placeholder="Username"
+            required
+          />
 
           <TextInput
             value={specialty}
