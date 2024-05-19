@@ -1,21 +1,23 @@
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import "./AvailableProjects.css";
 import AvailableProjectCard from "../../../components/AvailableProjectsCard/AvailableProjectsCard";
 import { Button, Input, Pagination } from "@mantine/core";
-import { Link } from "react-router-dom";
-import { gql, useQuery } from "@apollo/client";
+import { Link, useNavigate } from "react-router-dom";
+import { gql, useLazyQuery, useQuery } from "@apollo/client";
 
 function AvailableProjects() {
   const [searchWord, setSearchWord] = useState("");
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
+  const [projects, setProjects] = useState([]);
+
+  const navigate = useNavigate();
 
   const searchInProjects = gql`
-    query SearchInProjects($word: String!) {
-      searchInProjects(word: $word) {
+    query Query($word: String!, $limit: Int, $page: Int) {
+      searchInProjects(word: $word, limit: $limit, page: $page) {
         FileName
         ProjectName
-        applications
         ProjectDescription
         Requirements {
           Value
@@ -24,28 +26,8 @@ function AvailableProjects() {
     }
   `;
 
-  const { loading, error, data } = useQuery(searchInProjects, {
-    variables: { word: searchWord },
-  });
-
-  const dummyProjects = [
-    {
-      _id: "1",
-      applications: "5",
-      ProjectName: "Dummy Project 1",
-      ProjectDescription:
-        "Emmelie is a traditional book-worm and has always been from a young age. She is a housekeeper mom with two kids and she has a lot of time to read and relax.",
-      Requirements: [{ Value: "Rest" }, { Value: "Rest" }],
-    },
-    {
-      _id: "2",
-      applications: "7",
-      ProjectName: "Dummy Project 2",
-      ProjectDescription:
-        "Emmelie is a traditional book-worm and has always been from a young age. She is a housekeeper mom with two kids and she has a lot of time to read and relax.",
-      Requirements: [{ Value: "React" }, { Value: "Rest" }],
-    },
-  ];
+  const [search, { data: searchData, loading }] =
+    useLazyQuery(searchInProjects);
 
   const GET_PROJECTS = gql`
     query GetProjects {
@@ -59,15 +41,22 @@ function AvailableProjects() {
       }
     }
   `;
+
   const {
     loading: projectsLoading,
     error: projectsError,
     data: projectsData,
   } = useQuery(GET_PROJECTS);
 
-  const handleSearchInputChange = (e) => {
-    setSearchWord(e.target.value);
-  };
+  const fetch = useCallback(() => {
+    if (projectsData) {
+      setProjects(projectsData.getProjects);
+    }
+  }, [projectsData, page, limit]);
+
+  useEffect(() => {
+    fetch();
+  }, [fetch]);
 
   return (
     <div className="ShowAllPostsAll" id="man">
@@ -77,47 +66,65 @@ function AvailableProjects() {
           <div className="postsBody">
             <div className="navbarFake"></div>
             <div className="PostsSearchPart">
-              <Link to="/Dashboard">
-                <Button
-                  justify="center"
-                  variant="filled"
-                  color="#283739"
-                  radius="md"
+              <Button
+                justify="center"
+                variant="filled"
+                color="#283739"
+                radius="md"
+                onClick={() => navigate(-1)}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="18"
+                  height="12"
+                  viewBox="0 0 18 12"
+                  fill="none"
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="18"
-                    height="12"
-                    viewBox="0 0 18 12"
-                    fill="none"
-                  >
-                    <path
-                      d="M1.5 6H16.5"
-                      stroke="white"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M6.49999 11L1.5 6L6.49999 1"
-                      stroke="white"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </Button>
-              </Link>
-              <div className="SearchPartShowAllPosts">
+                  <path
+                    d="M1.5 6H16.5"
+                    stroke="white"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M6.49999 11L1.5 6L6.49999 1"
+                    stroke="white"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </Button>
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  if (searchWord === "") {
+                    fetch();
+                    return;
+                  }
+                  search({
+                    variables: { word: searchWord, page: page - 1, limit },
+                  }).then((e) => {
+                    setProjects(() => e?.data?.searchInProjects);
+                  });
+                }}
+                className="SearchPartShowAllPosts"
+              >
                 <Input
                   type="text"
                   placeholder="Search for Posts"
-                  className= "TextPartShowAllPosts"
+                  className="TextPartShowAllPosts"
                   value={searchWord}
                   onChange={(e) => setSearchWord(e.target.value)}
                   radius="md"
                 ></Input>
-                <Button variant="filled" color="green" radius="md">
+                <Button
+                  type="submit"
+                  variant="filled"
+                  color="green"
+                  radius="md"
+                >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="16"
@@ -133,13 +140,13 @@ function AvailableProjects() {
                     />
                   </svg>
                 </Button>
-              </div>
+              </form>
             </div>
             <div className="AvailableProjectCardAll">
               {loading ? (
                 <p>Loading...</p>
-              ) : dummyProjects ? (
-                dummyProjects.map((project, index) => (
+              ) : projects ? (
+                projects.map((project, index) => (
                   <AvailableProjectCard
                     key={index}
                     projectName={project.ProjectName}
@@ -155,12 +162,13 @@ function AvailableProjects() {
             </div>
             <div className="w-100 d-flex align-items-center justify-content-center">
               <Pagination
-                total={Math.ceil(dummyProjects?.length / limit) || 1}
+                total={Math.ceil(projects?.length / limit) || 1}
                 color="orange"
                 value={page}
                 onChange={setPage}
               />
             </div>
+            <br />
           </div>
         </div>
       </div>

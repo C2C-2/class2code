@@ -46,6 +46,34 @@ function ShowAllPosts() {
   const [getPosts, { data: queryPostsData, refetch: refetchPosts }] =
     useLazyQuery(GET_POSTS);
 
+  const SEARCH_IN_POSTS = gql`
+    query Query($word: String!, $userId: String!, $limit: Int, $page: Int) {
+      searchInMyPosts(
+        word: $word
+        userId: $userId
+        limit: $limit
+        page: $page
+      ) {
+        _id
+        Content
+        CreatedDate
+        User {
+          id
+          FirstName
+          LastName
+          ImageUrl
+        }
+        Company {
+          _id
+          CompanyName
+        }
+      }
+    }
+  `;
+
+  const [searchInPosts, { data: searchInPostsData }] =
+    useLazyQuery(SEARCH_IN_POSTS);
+
   const GET_MY_COMPANIES = gql`
     query GetUser($userId: String!) {
       getUser(userId: $userId) {
@@ -152,7 +180,25 @@ function ShowAllPosts() {
                   />
                 </svg>
               </Button>
-              <div className="SearchPartShowAllPosts">
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  if (searchWord === "") {
+                    fetch();
+                  }
+                  searchInPosts({
+                    variables: {
+                      word: searchWord,
+                      userId: localStorage.getItem("id"),
+                      page: page - 1,
+                      limit,
+                    },
+                  }).then((e) => {
+                    setPostsData(() => e?.data?.searchInMyPosts);
+                  });
+                }}
+                className="SearchPartShowAllPosts"
+              >
                 <Input
                   type="text"
                   placeholder="Search for Posts"
@@ -177,7 +223,7 @@ function ShowAllPosts() {
                     />
                   </svg>
                 </Button>
-              </div>
+              </form>
             </div>
             <div className="ShowAllPostsData">
               <div className="ShowAllPostsButtons">
