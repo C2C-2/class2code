@@ -40,7 +40,7 @@ function SideBar() {
     {
       icon: FaTasks,
       label: "New Tasks",
-      link: "",
+      link: Paths.NewTasksUser,
     },
     {
       icon: AiOutlineTeam,

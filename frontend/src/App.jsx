@@ -35,6 +35,7 @@ import Home from "./pages/Home/Home";
 import NavBar from "./components/NavBar/NavBar";
 import SideBar from "./components/SideBar/SideBar";
 import { TeamTask } from "./pages/TaskPages/TeamTasks/TeamTask";
+import { UserTask } from "./pages/TaskPages/UserTasks/UserTask";
 
 const TokenChecker = ({ children }) => {
   if (!localStorage.getItem("token")) {
@@ -185,6 +186,14 @@ function App() {
             element={
               <TokenChecker>
                 <EditTask />
+              </TokenChecker>
+            }
+          />
+             <Route
+            path="/NewTasksUser"
+            element={
+              <TokenChecker>
+                <UserTask />
               </TokenChecker>
             }
           />

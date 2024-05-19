@@ -112,12 +112,13 @@ function Dashboard() {
 
   const [opened, { open, close }] = useDisclosure(
     localStorage.getItem("type") ? true : false
+
   );
 
   return (
     <div className="DashboardAll" id="man">
-      {localStorage.getItem("type") && (
-        <Modal opened={opened}>
+      {localStorage.getItem("type") == "new" && (
+        <Modal opened={opened} centered>
           <SecondSignup close={close} />
         </Modal>
       )}
@@ -243,7 +244,7 @@ function Dashboard() {
                       <Table.Tr>
                         <Table.Th>Name</Table.Th>
                         <Table.Th>Deadline</Table.Th>
-                        <Table.Th>Leader + Team</Table.Th>
+                        <Table.Th>Team</Table.Th>
                         <Table.Th>Company</Table.Th>
                         <Table.Th>Status</Table.Th>
                       </Table.Tr>
@@ -268,7 +269,7 @@ function Dashboard() {
                                 {getDaysDifference(
                                   task.StartDate,
                                   task.EndDate
-                                )}{" "}
+                                )}
                                 DAYS
                               </span>
                             </div>
@@ -323,6 +324,9 @@ function Dashboard() {
                                 ? "Start"
                                 : "Done"}
                             </Button>
+                          </Table.Td>
+                          <Table.Td>
+                          <Button variant="filled">Start</Button>
                           </Table.Td>
                         </Table.Tr>
                       ))}
