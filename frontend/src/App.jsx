@@ -34,6 +34,7 @@ import EditEmail from "./pages/OtherPages/EditEmail/EditEmail";
 import Home from "./pages/Home/Home";
 import NavBar from "./components/NavBar/NavBar";
 import SideBar from "./components/SideBar/SideBar";
+import { TeamTask } from "./pages/TaskPages/TeamTasks/TeamTask";
 
 const TokenChecker = ({ children }) => {
   if (!localStorage.getItem("token")) {
@@ -178,11 +179,20 @@ function App() {
               </TokenChecker>
             }
           />
+        
           <Route
             path="/EditTask/:task_id"
             element={
               <TokenChecker>
                 <EditTask />
+              </TokenChecker>
+            }
+          />
+           <Route
+            path="/TeamTasks/:team_id/company/:company_id"
+            element={
+              <TokenChecker>
+                <TeamTask />
               </TokenChecker>
             }
           />

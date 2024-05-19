@@ -1,4 +1,3 @@
-import EditPassword from "../pages/OtherPages/EditPassword/EditPassword";
 
 export const Paths = {
   Login: "/Login",
@@ -33,4 +32,6 @@ export const Paths = {
   EditEmail: "/EditEmail",
   ContactUs: "/ContactUs",
   OtherCompanyProfile: "/OtherCompanyProfile",
+  TeamTask:"/TeamTasks",
+  NewTasksUser: "/NewTasksUser"
 };
