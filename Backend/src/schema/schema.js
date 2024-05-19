@@ -105,6 +105,7 @@ const typeDefs = gql`
     CreatedDate: String
     User: User
     Company: Company
+    Applies: [User]
   }
 
   input PositionPostInput {
@@ -357,6 +358,7 @@ const typeDefs = gql`
       userId: String!
     ): [PositionPost]
     getTeam(teamId: Int!): Team
+    getPost(postId: Int!): PositionPost
     deleteEducation(educationId: Int!): Boolean
     deleteUserFromTeam(userId: String!, teamId: Int!): Boolean
     deletePost(postId: Int!): Boolean
@@ -368,6 +370,7 @@ const typeDefs = gql`
     deleteProjectRequirement(projectRequirementId: Int!): Boolean
     deleteProjectNote(projectNoteId: Int!): Boolean
     deleteProjectNoteTask(projectNoteTaskId: Int!): Boolean
+    deletePostPositionApply(postId: Int!, userId: String!): Boolean
   }
 
   type Mutation {

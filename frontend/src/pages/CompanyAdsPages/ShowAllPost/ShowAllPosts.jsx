@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import "./ShowAllPosts.css";
 import { Button, Input, Pagination } from "@mantine/core";
-import { gql, useLazyQuery } from "@apollo/client";
+import { gql, useLazyQuery, useMutation } from "@apollo/client";
 import { Link } from "react-router-dom";
 import { Paths } from "../../../assets/Paths";
 
@@ -14,7 +14,7 @@ function ShowAllPosts() {
   const [postsData, setPostsData] = useState([]);
 
   const GET_POSTS = gql`
-    query Query($userId: String!, $page: Int, $limit: Int) {
+    query GetAllPosts($userId: String!, $page: Int, $limit: Int) {
       getAllPosts(userId: $userId, page: $page, limit: $limit) {
         _id
         Content
@@ -35,11 +35,19 @@ function ShowAllPosts() {
 
   useEffect(() => {
     getPosts({
-      variables: { userId: localStorage.getItem("id"), page, limit },
+      variables: { userId: localStorage.getItem("id"), page: page - 1, limit },
+    }).then((e) => {
+      setPostsData(e?.data?.getAllPosts);
     });
-
-    setPostsData(queryPostsData);
   }, [page]);
+
+  const APPLAY_FOR_POST = gql`
+    mutation Mutation($postId: Int!, $userId: String!) {
+      applyToPost(postId: $postId, userId: $userId)
+    }
+  `;
+
+  const [applyToPost] = useMutation(APPLAY_FOR_POST);
 
   return (
     <div className="ShowAllPostsAll">
@@ -124,7 +132,7 @@ function ShowAllPosts() {
                 </Button>
               </div>
               <div className="ShowAllPostsCards">
-                {postsData?.getAllPosts?.map((post, index) => (
+                {postsData?.map((post, index) => (
                   <div key={index} className="PostsCardDesign">
                     <div className="PostsCardProfile">
                       <img
@@ -149,7 +157,15 @@ function ShowAllPosts() {
                         color="#388E3C"
                         size="xs"
                         h={30}
-                        w={110} // Pass post id to handleApplyClick
+                        w={110}
+                        onClick={() => {
+                          applyToPost({
+                            variables: {
+                              postId: parseInt(post?._id),
+                              userId: localStorage.getItem("id"),
+                            },
+                          });
+                        }}
                       >
                         Apply
                       </Button>
@@ -160,7 +176,7 @@ function ShowAllPosts() {
             </div>
             <div className="w-100 d-flex align-items-center justify-content-center">
               <Pagination
-                total={postsData?.getAllPosts?.length / limit || 1}
+                total={Math.ceil(postsData?.length / limit) || 1}
                 color="orange"
                 value={page}
                 onChange={setPage}

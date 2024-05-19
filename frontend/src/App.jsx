@@ -34,6 +34,7 @@ import EditEmail from "./pages/OtherPages/EditEmail/EditEmail";
 import Home from "./pages/Home/Home";
 import NavBar from "./components/NavBar/NavBar";
 import SideBar from "./components/SideBar/SideBar";
+import Applys from "./pages/CompanyAdsPages/Applys/Applys";
 
 const TokenChecker = ({ children }) => {
   if (!localStorage.getItem("token")) {
@@ -64,6 +65,16 @@ function App() {
           <Route path={Paths.SignUpFigma} element={<SignUpFigma />} />
           <Route path={Paths.ForgetPassword} element={<ForgetPassword />} />
           <Route path={Paths.Home} element={<Home />} />
+
+          <Route
+            path={Paths.Applys+"/:id"}
+            element={
+              <TokenChecker>
+                <Applys />
+              </TokenChecker>
+            }
+          />
+
           <Route
             path={Paths.ContactUs}
             element={

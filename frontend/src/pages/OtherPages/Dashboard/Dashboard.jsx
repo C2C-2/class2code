@@ -116,7 +116,7 @@ function Dashboard() {
 
   return (
     <div className="DashboardAll" id="man">
-      {localStorage.getItem("type") && (
+      {localStorage.getItem("type") == "new" && (
         <Modal opened={opened}>
           <SecondSignup close={close} />
         </Modal>

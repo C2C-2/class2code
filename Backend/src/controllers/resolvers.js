@@ -727,10 +727,10 @@ const resolvers = {
         }
 
         const posts = await NeodeObject?.cypher(
-          `MATCH (c:Company) -[:HAS_A_POST]-> (p:PositionPost)
-           MATCH (u:User {id: "${userId}"}) -[:ADMIN_OF] -> (c1:Company)
-           WHERE ID(c) <> ID(c1)
-           RETURN p, c
+          `MATCH (p:PositionPost) <-[:HAS_A_POST]- (c:Company)
+           MATCH (u:User {id: "${userId}"})
+           WHERE NOT (u)-[:ADMIN_OF]->(c)
+           RETURN p
            SKIP ${page} * ${limit} LIMIT ${limit}`
         );
 
@@ -1313,6 +1313,66 @@ const resolvers = {
         throw new Error(`Error in deleteProjectNoteTask: ${error.message}`);
       }
     },
+    getPost: async (parent, args) => {
+      try {
+        const { postId } = args;
+
+        if (!postId) {
+          throw new Error(
+            `Are you send postId? postId is required, postId value is ${postId}. please check postId value before send`
+          );
+        }
+
+        const post = await NeodeObject?.findById("PositionPost", postId);
+
+        if (!post) {
+          throw new Error(
+            `Post not found, postId value is ${postId}. please check postId value before send`
+          );
+        }
+
+        return {
+          ...post.properties(),
+          _id: `${post.identity().low}`,
+        };
+      } catch (error) {
+        Logging.error(`${new Date()}, in resolvers.js => getPost, ${error}`);
+        throw new Error(`Error in getPost: ${error.message}`);
+      }
+    },
+    deletePostPositionApply: async (parent, args) => {
+      try {
+        const { postId, userId } = args;
+
+        if (!postId) {
+          throw new Error(
+            `Are you send postId? postId is required, postId value is ${postId}. please check postId value before send`
+          );
+        }
+
+        if (!userId) {
+          throw new Error(
+            `Are you send userId? userId is required, userId value is ${userId}. please check userId value before send`
+          );
+        }
+
+        const query = `
+          MATCH (u:User)-[r:APPLY_TO]->(p:PositionPost)
+          WHERE ID(p) = ${postId} AND ID(u) = ${userId}
+          DETACH DELETE r
+        `;
+
+        await NeodeObject?.query(query);
+        await backup.info(query);
+
+        return true;
+      } catch (error) {
+        Logging.error(
+          `${new Date()}, in resolvers.js => deletePostPositionApply, ${error}`
+        );
+        throw new Error(`Error in deletePostPositionApply: ${error.message}`);
+      }
+    },
   },
   Mutation: {
     /* this to send message to AI module and get answer about a project from
@@ -1326,12 +1386,7 @@ const resolvers = {
 
         // this string args from frontend as parameters to AI chat
         const { message } = args;
-
-        // ########################################################
-        // this will be change after create team object to Team ID so
-        // we get company then project then file name from project
         const { fileName } = args;
-        // ########################################################
 
         // this int args from to check if chat already exist or create new
         const { AIchatId } = args;
@@ -1364,6 +1419,8 @@ const resolvers = {
             },
           }
         );
+
+        console.log(response);
 
         // Create AIChat and AIMessage nodes
         // I save it in database to get it when user need it from old chats
@@ -3041,7 +3098,7 @@ const resolvers = {
     Skills: async (parent) => {
       try {
         const userId = parent.id;
-        const { page, limit } = parent;
+        const { page = 0, limit = 5 } = parent;
 
         if (!userId) {
           throw new Error("UserID is null");
@@ -3707,6 +3764,30 @@ const resolvers = {
         };
       } catch (error) {
         Logging.error(`${new Date()}, in resolvers.js => Company, ${error}`);
+        throw error;
+      }
+    },
+    Applies: async (parent) => {
+      try {
+        const postId = parent._id;
+
+        if (!postId) {
+          throw new Error("PostID is null");
+        }
+
+        const cypherQuery = `
+           MATCH (u:User)-[:APPLY_TO]->(p:PositionPost)
+           WHERE ID(p) = ${postId}
+           RETURN u`;
+
+        const result = await NeodeObject.cypher(cypherQuery);
+
+        return result?.records?.map((record) => ({
+          ...record.get("u").properties,
+          _id: record.get("u").identity.low,
+        }));
+      } catch (error) {
+        Logging.error(`${new Date()}, in resolvers.js => Applys, ${error}`);
         throw error;
       }
     },

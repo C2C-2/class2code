@@ -1,448 +1,449 @@
 .ProjectPageAll {
-    display: flex;
-    flex-direction: row;
+  display: flex;
+  flex-direction: row;
 }
 
 .ProjectPageMain {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
 }
 
 .ProjectPageCenter {
-    display: flex;
-    flex-direction: row;
+  display: flex;
+  flex-direction: row;
 }
 
 .ProjectPagePart1 {
-    width: 60%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    padding-left: 40px;
-    padding-top: 30px;
-    gap: 20px;
-    padding-bottom: 10px;
+  width: 60%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding-left: 40px;
+  padding-top: 30px;
+  gap: 20px;
+  padding-bottom: 10px;
 }
 
 .ProjectPageTitle {
-    display: flex;
-    width: 100%;
-    height: 30%;
-    border-radius: 14.01px;
-    background: var(--GreenLight, rgba(131, 194, 157, 0.20));
-    flex-direction: row;
-    align-items: center;
-    padding-left: 20px;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    padding-right: 20px;
-    gap: 10px;
+  display: flex;
+  width: 100%;
+  height: 30%;
+  border-radius: 14.01px;
+  background: var(--GreenLight, rgba(131, 194, 157, 0.2));
+  flex-direction: row;
+  align-items: center;
+  padding-left: 20px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-right: 20px;
+  gap: 10px;
 }
 .ProjectPageTitleDark {
-    display: flex;
-    width: 100%;
-    height: 30%;
-    border-radius: 14.01px;
-    background: var(--GreenLight, rgba(55, 170, 103, 0.447));
-    flex-direction: row;
-    align-items: center;
-    padding-left: 20px;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    padding-right: 20px;
-    gap: 10px;
+  display: flex;
+  width: 100%;
+  height: 30%;
+  border-radius: 14.01px;
+  background: var(--GreenLight, rgba(55, 170, 103, 0.447));
+  flex-direction: row;
+  align-items: center;
+  padding-left: 20px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-right: 20px;
+  gap: 10px;
 }
 
 .ProjectPageImg {
-    width: 170px;
-    height: 170px;
+  width: 170px;
+  height: 170px;
 }
 
 .ProjectPageTitleContent {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    width: 60%;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 60%;
 }
 
 .PTTop {
-    display: flex;
-    flex-direction: row;
-    height: 60%;
-    width: 100%;
+  display: flex;
+  flex-direction: row;
+  height: 60%;
+  width: 100%;
 }
 
 .PTText {
-
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    justify-content: flex-end;
-    width: 50%;
-    height: 93%;
-
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  justify-content: flex-end;
+  width: 50%;
+  height: 93%;
 }
 
 .PTSpan1 {
-    color: #1A1A1A;
-    font-feature-settings: 'clig'off;
-    font-family: Poppins;
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: normal;
+  color: #1a1a1a;
+  font-feature-settings: "clig" off;
+  font-family: Poppins;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
 }
 .PTSpan1Dark {
-    color: #fff;
-    font-feature-settings: 'clig'off;
-    font-family: Poppins;
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: normal;
+  color: #fff;
+  font-feature-settings: "clig" off;
+  font-family: Poppins;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
 }
 
 .PTSpan2 {
-    color: #1A1A1A;
-    font-feature-settings: 'clig'off;
-    font-family: Poppins;
-    font-size: 22px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: normal;
+  color: #1a1a1a;
+  font-feature-settings: "clig" off;
+  font-family: Poppins;
+  font-size: 22px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
 }
 .PTSpan2Dark {
-    color: #fff;
-    font-feature-settings: 'clig'off;
-    font-family: Poppins;
-    font-size: 22px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: normal;
+  color: #fff;
+  font-feature-settings: "clig" off;
+  font-family: Poppins;
+  font-size: 22px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
 }
 
 .PTParagraph {
-    width: 95%;
-    color: #1A1A1A;
-    font-feature-settings: 'clig'off, 'liga'off;
-    font-family: Poppins;
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: normal;
-}
-.PTParagraphDark {
-    width: 95%;
-    color: #fff;
-    font-feature-settings: 'clig'off, 'liga'off;
-    font-family: Poppins;
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: normal;
+  font-size: 10px;
+  box-sizing: border-box;
+  font-weight: 400;
+  color: rgb(26, 26, 26, 0.6);
+  overflow: auto;
 }
 
+.PTParagraphDark {
+  width: 95%;
+  color: #fff;
+  font-feature-settings: "clig" off, "liga" off;
+  font-family: Poppins;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
 
 .PTSvg {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    width: 40%;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 40%;
 }
 
 .ProjectPageUnder {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    height: 65%;
-    border-radius: var(--16, 16px);
-    border: 1px solid var(--30, #388E3C);
-    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
-    padding: 1rem;
-    gap: 15px;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 65%;
+  border-radius: var(--16, 16px);
+  border: 1px solid var(--30, #388e3c);
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  padding: 1rem;
+  gap: 15px;
 }
 
 .ProjectUnderTime {
-    display: flex;
-    flex-direction: row;
-    height: 10%;
-    width: 100%;
+  display: flex;
+  flex-direction: row;
+  height: 10%;
+  width: 100%;
 }
 
 .TimeAll {
-    display: flex;
-    flex-direction: row;
-    height: 100%;
-    width: 50%;
-    align-items: center;
-    gap: 2px;
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  width: 50%;
+  align-items: center;
+  gap: 2px;
 }
 
 .TimeText {
-    color: var(--dark, #283739);
-    font-feature-settings: 'clig'off, 'liga'off;
-    font-family: Roboto;
-    font-size: 12px;
-    font-style: normal;
-    font-weight: 700;
-    line-height: 20px;
+  color: var(--dark, #283739);
+  font-feature-settings: "clig" off, "liga" off;
+  font-family: Roboto;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 20px;
 }
 .TimeTextDark {
-    color: var(--white, #d9d7d7);
-    font-feature-settings: 'clig'off, 'liga'off;
-    font-family: Roboto;
-    font-size: 12px;
-    font-style: normal;
-    font-weight: 700;
-    line-height: 20px;
+  color: var(--white, #d9d7d7);
+  font-feature-settings: "clig" off, "liga" off;
+  font-family: Roboto;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 20px;
 }
-.TimeAllSvg{
-    color: #fff !important;
+.TimeAllSvg {
+  color: #fff !important;
 }
 
 .ProjectUnderText {
-    display: flex;
-    flex-direction: column;
-    height: 75%;
-    width: 100%;
-    align-items: flex-start;
-    gap: 10px;
+  display: flex;
+  flex-direction: column;
+  height: 75%;
+  width: 100%;
+  align-items: flex-start;
+  gap: 10px;
 }
 
 .ProjectUnderName {
-    width: 100%;
-    height: 10%;
-    display: flex;
-    flex-direction: row;
-    gap: 20px;
+  width: 100%;
+  height: 10%;
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
 }
 
 .ProjectNameText {
-    color: #000;
-    font-family: "Open Sans";
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 20px;
-    letter-spacing: 0.25px;
+  color: #000;
+  font-family: "Open Sans";
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+  letter-spacing: 0.25px;
 }
 .ProjectNameTextDark {
-    color: #fff;
-    font-family: "Open Sans";
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 20px;
-    letter-spacing: 0.25px;
+  color: #fff;
+  font-family: "Open Sans";
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+  letter-spacing: 0.25px;
 }
 
 .ProjectNameText1 {
-    color: var(--dark, #283739);
-    font-family: "Open Sans";
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 20px;
-    letter-spacing: 0.25px;
+  color: var(--dark, #283739);
+  font-family: "Open Sans";
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+  letter-spacing: 0.25px;
 }
 .ProjectNameText1Dark {
-    color: var(--white, #fff);
-    font-family: "Open Sans";
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 20px;
-    letter-spacing: 0.25px;
+  color: var(--white, #fff);
+  font-family: "Open Sans";
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+  letter-spacing: 0.25px;
 }
 
 .ProjectUnderDetails {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    height: 35%;
-    gap: 5px;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 35%;
+  gap: 5px;
 }
 
 .ProjectDetailsText {
-    color: #000;
-    font-family: "Open Sans";
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 20px;
-    letter-spacing: 0.25px;
+  color: #000;
+  font-family: "Open Sans";
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+  letter-spacing: 0.25px;
 }
 .ProjectDetailsTextDark {
-    color: #fff;
-    font-family: "Open Sans";
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 20px;
-    letter-spacing: 0.25px;
+  color: #fff;
+  font-family: "Open Sans";
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+  letter-spacing: 0.25px;
 }
 
 .ProjectDetailsParagraph {
-    width: 95%;
-    color:  rgba(0, 0, 0, 0.60);
-    font-family: "Open Sans";
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 20px;
-    letter-spacing: 0.25px;
+  width: 95%;
+  color: rgba(0, 0, 0, 0.6);
+  font-family: "Open Sans";
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+  letter-spacing: 0.25px;
+  padding: 0 0.5rem;
 }
 .ProjectDetailsParagraphDark {
-    width: 95%;
-    color:  #fff;
-    font-family: "Open Sans";
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 20px;
-    letter-spacing: 0.25px;
+  width: 95%;
+  color: #fff;
+  font-family: "Open Sans";
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+  letter-spacing: 0.25px;
 }
 
 .ProjectUnderRequirements {
-    display: flex;
-    flex-direction: row;
-    height: 50%;
-    width: 100%;
-    gap: 20px;
+  display: flex;
+  flex-direction: row;
+  height: 50%;
+  width: 100%;
+  gap: 20px;
+}
+
+.ProjectRequirement {
+  background-color: #f2f9f1;
+  padding: 0.5rem 2rem;
+  border-radius: 12px;
 }
 
 .ProjectRequirementsText {
-    color: #000;
-    text-align: center;
-    font-family: "Open Sans";
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: normal;
-    letter-spacing: 0.14px;
-    text-transform: capitalize;
+  color: #000;
+  text-align: center;
+  font-family: "Open Sans";
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: 0.14px;
+  text-transform: capitalize;
 }
 .ProjectRequirementsTextDark {
-    color: #fff;
-    text-align: center;
-    font-family: "Open Sans";
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: normal;
-    letter-spacing: 0.14px;
-    text-transform: capitalize;
+  color: #fff;
+  text-align: center;
+  font-family: "Open Sans";
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: 0.14px;
+  text-transform: capitalize;
 }
 
 .ProjectRequirementsCard {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    width: 70%;
-    height: 100%;
-    gap: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 70%;
+  height: 100%;
+  gap: 10px;
 }
 
 .ProjectUnderButton {
-    width: 100%;
-    height: 15%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  width: 100%;
+  height: 15%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .ProjectPagePart2 {
-    width: 40%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    padding-right: 40px;
-    padding-top: 30px;
-    padding-bottom: 13px;
+  width: 40%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  padding-right: 40px;
+  padding-top: 30px;
+  padding-bottom: 13px;
 }
 
 .Part2AllProjectPage {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    width: 70%;
-    padding-left: 20px;
-    border-radius: 16px;
-    border: 1px solid var(--30, #388E3C);
-    background: var(--white-100, #FFF);
-    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
-    gap: 20px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 70%;
+  padding-left: 20px;
+  border-radius: 16px;
+  border: 1px solid var(--30, #388e3c);
+  background: var(--white-100, #fff);
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  gap: 20px;
 }
 .Part2AllProjectPageDark {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    width: 70%;
-    padding-left: 20px;
-    border-radius: 16px;
-    border: 1px solid var(--30, #388E3C);
-    background: var(--white-100, #030303);
-    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
-    gap: 20px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 70%;
+  padding-left: 20px;
+  border-radius: 16px;
+  border: 1px solid var(--30, #388e3c);
+  background: var(--white-100, #030303);
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  gap: 20px;
 }
 
-
 .ProjectPagePart2Title {
-    width: 100%;
-    height: 10%;
-    display: flex;
-    flex-direction: row;
-    padding-top: 10px;
-    padding-right: 20px;
-    padding-bottom: 10px;
-    justify-content: space-between;
+  width: 100%;
+  height: 10%;
+  display: flex;
+  flex-direction: row;
+  padding-top: 10px;
+  padding-right: 20px;
+  padding-bottom: 10px;
+  justify-content: space-between;
 }
 
 .CompanyWorkOnText {
-    color: var(--DMV-Black, #23262F);
-    font-family: Manrope;
-    font-size: 18px;
-    font-style: normal;
-    font-weight: 700;
-    line-height: 40.028px;
+  color: var(--DMV-Black, #23262f);
+  font-family: Manrope;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 40.028px;
 }
 .CompanyWorkOnTextDark {
-    color: var(--DMV-Black, #c6c9d2);
-    font-family: Manrope;
-    font-size: 18px;
-    font-style: normal;
-    font-weight: 700;
-    line-height: 40.028px;
+  color: var(--DMV-Black, #c6c9d2);
+  font-family: Manrope;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 40.028px;
 }
 
 .ViewAllButton {
-    border: none;
-    background-color: #FFF;
-    color:  #36C;
-    font-family: Inter;
-    font-size: 15px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 24.017px;
+  border: none;
+  background-color: #fff;
+  color: #36c;
+  font-family: Inter;
+  font-size: 15px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24.017px;
 }
 .ViewAllButtonDark {
-    border: none;
-    background-color: #050505;
-    color:  #36C;
-    font-family: Inter;
-    font-size: 15px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 24.017px;
+  border: none;
+  background-color: #050505;
+  color: #36c;
+  font-family: Inter;
+  font-size: 15px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24.017px;
 }
-.ProjectPagePart2Content{
-    padding-left: 5px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 15px;
-    height: 90%;
-    width: 90%;
+.ProjectPagePart2Content {
+  padding-left: 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  height: 90%;
+  width: 90%;
 }

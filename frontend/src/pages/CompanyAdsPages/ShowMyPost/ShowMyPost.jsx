@@ -5,6 +5,7 @@ import { useQuery, useMutation, gql, useLazyQuery } from "@apollo/client";
 import { Link, useNavigate } from "react-router-dom";
 import { useDisclosure } from "@mantine/hooks";
 import { FaArrowDown, FaArrowUp } from "react-icons/fa";
+import { Paths } from "../../../assets/Paths";
 
 function ShowAllPosts() {
   const [searchWord, setSearchWord] = useState("");
@@ -403,19 +404,24 @@ const PostCard = ({ post, index, fetch }) => {
             </form>
           </Modal>
 
-          <Button
-            onClick={() => {
-              setDescription(post?.Content);
-              editOpen();
-            }}
-            variant="filled"
-            color="#388E3C"
-            size="xs"
-            h={30}
-            w={110} // Pass post id to handleApplyClick
-          >
-            Edit
-          </Button>
+          <div className="d-flex gap-2">
+            <Button
+              onClick={() => {
+                setDescription(post?.Content);
+                editOpen();
+              }}
+              variant="filled"
+              color="#388E3C"
+              size="xs"
+            >
+              Edit
+            </Button>
+            <Link to={`${Paths.Applys}/${post?._id}`}>
+              <Button onClick={() => {}} variant="filled" size="xs">
+                Apples
+              </Button>
+            </Link>
+          </div>
         </>
       </div>
     </div>

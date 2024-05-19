@@ -1,11 +1,13 @@
 import "./ProjectPage.css";
 import ProjectImg from "./ProjectTitle.png";
 import Alram from "./alarm_on.png";
-import { Button } from "@mantine/core";
-import { useQuery, gql } from "@apollo/client";
+import { Button, Modal } from "@mantine/core";
+import { useQuery, gql, useMutation } from "@apollo/client";
 import { useParams } from "react-router-dom";
 import CompanyWorkOnCard from "../../../components/CompanyWorkOnCard/CompanyWorkOnCard";
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useDisclosure } from "@mantine/hooks";
 
 const GET_PROJECT = gql`
   query GetProject($projectId: Int!) {
@@ -25,26 +27,41 @@ const GET_PROJECT = gql`
 
 function ProjectPage() {
   const { projectId } = useParams();
+  const [companyId, setCompanyId] = useState("");
+  const [opened, { open, close }] = useDisclosure(false);
 
-  const { loading, error, data } = useQuery(GET_PROJECT, {
-    variables: { projectId },
+  const GET_MY_COMPANIES = gql`
+    query GetUser($userId: String!) {
+      getUser(userId: $userId) {
+        MyCompanies {
+          CompanyName
+          _id
+        }
+      }
+    }
+  `;
+
+  const { data: CompaniesData } = useQuery(GET_MY_COMPANIES, {
+    variables: { userId: localStorage.getItem("id") },
   });
 
-  const dummyProject = {
-    ProjectDescription:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-    ProjectName: "Web Project",
-    Requirements: [
-      { Value: "React js" },
-      { Value: "Java Script" },
-      { Value: "Html and Css" },
-    ],
-    Applies: [
-      { CompanyName: "Company A", CreateDate: "2024-04-16" },
-      { CompanyName: "Company B", CreateDate: "2024-04-17" },
-      { CompanyName: "Company C", CreateDate: "2024-04-18" },
-    ],
-  };
+  useEffect(() => {
+    if (CompaniesData) {
+      setCompanyId(CompaniesData?.getUser?.MyCompanies[0]?._id);
+    }
+  }, [CompaniesData]);
+
+  const APPLY_TO_PROJECT = gql`
+    mutation Mutation($projectId: Int!, $companyId: Int!) {
+      applyForProject(projectId: $projectId, companyId: $companyId)
+    }
+  `;
+
+  const [applyToProject] = useMutation(APPLY_TO_PROJECT);
+
+  const { loading, error, data } = useQuery(GET_PROJECT, {
+    variables: { projectId: parseInt(projectId) },
+  });
 
   return (
     <div className="ShowAllPostsAll" id="man">
@@ -64,9 +81,11 @@ function ProjectPage() {
                   <div className="ProjectPageTitleContent">
                     <div className="PTTop">
                       <div className="PTText">
-                        <span className="PTSpan1">Hi, Vanshika Pandey</span>
+                        <span className="PTSpan1">
+                          Hi, {localStorage.getItem("name")}
+                        </span>
                         <span className="PTSpan2">
-                          {dummyProject.ProjectName}
+                          {data?.getProject?.ProjectName}
                         </span>
                       </div>
                       <div className="PTSvg">
@@ -128,56 +147,33 @@ function ProjectPage() {
                       </div>
                     </div>
                     <p className="PTParagraph">
-                      Project activity will be updated here. Click on the name
-                      section to set your configuration.
+                      {data?.getProject?.ProjectDescription}
                     </p>
                   </div>
                 </div>
+                <br />
                 <div className="ProjectPageUnder">
-                  <div className="ProjectUnderTime">
-                    <div className="TimeAll">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="31"
-                        height="31"
-                        viewBox="0 0 31 31"
-                        fill="none"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          clipRule="evenodd"
-                          d="M15.49 5.5C9.97 5.5 5.5 9.98 5.5 15.5C5.5 21.02 9.97 25.5 15.49 25.5C21.02 25.5 25.5 21.02 25.5 15.5C25.5 9.98 21.02 5.5 15.49 5.5ZM15.5 23.5C11.08 23.5 7.5 19.92 7.5 15.5C7.5 11.08 11.08 7.5 15.5 7.5C19.92 7.5 23.5 11.08 23.5 15.5C23.5 19.92 19.92 23.5 15.5 23.5ZM15.28 10.5H15.22C14.82 10.5 14.5 10.82 14.5 11.22V15.94C14.5 16.29 14.68 16.62 14.99 16.8L19.14 19.29C19.48 19.49 19.92 19.39 20.12 19.05C20.33 18.71 20.22 18.26 19.87 18.06L16 15.76V11.22C16 10.82 15.68 10.5 15.28 10.5Z"
-                          fill="#283739"
-                        />
-                      </svg>
-                      <span className="TimeText">End Date: Sep 22, 9pm</span>
-                    </div>
-                    <div className="TimeAll">
-                      <img src={Alram} alt="Alram" />
-                      <span className="TimeText">Start Date: Sep 22, 9pm</span>
-                    </div>
-                  </div>
+                  <br />
                   <div className="ProjectUnderText">
                     <div className="ProjectUnderName">
                       <span className="ProjectNameText">Project Name:</span>
-                      <span className="ProjectNameText1">
-                        {dummyProject.ProjectName}
-                      </span>
+                      <h6>{data?.getProject?.ProjectName}</h6>
                     </div>
                     <div className="ProjectUnderDetails">
                       <span className="ProjectDetailsText">
                         Project Details :
                       </span>
                       <p className="ProjectDetailsParagraph">
-                        {dummyProject.ProjectDescription}
+                        {data?.getProject?.ProjectDescription}
                       </p>
                     </div>
+                    <br />
                     <div className="ProjectUnderRequirements">
                       <span className="ProjectRequirementsText">
                         Project Requirements :
                       </span>
                       <div className="ProjectRequirementsCard">
-                        {dummyProject.Requirements?.map(
+                        {data?.getProject?.Requirements?.map(
                           (requirement, index) => (
                             <div key={index} className="ProjectRequirement">
                               {requirement.Value}
@@ -187,17 +183,68 @@ function ProjectPage() {
                       </div>
                     </div>
                   </div>
+                  <br />
                   <div className="ProjectUnderButton">
-                    <Link to="/AvailableProject">
-                      <Button
-                        variant="filled"
-                        color="#388E3C"
-                        w={150}
-                        radius="md"
+                    <Modal
+                      xOffset={"30%"}
+                      yOffset={"10%"}
+                      opened={opened}
+                      onClose={close}
+                      title="Take Project By Company"
+                      centered
+                    >
+                      <form
+                        onSubmit={(e) => {
+                          e.preventDefault();
+                          applyToProject({
+                            variables: {
+                              projectId: parseInt(projectId),
+                              companyId: parseInt(companyId),
+                            },
+                          });
+                          close();
+                        }}
                       >
-                        Apply
-                      </Button>
-                    </Link>
+                        <div className="htmlInputGroup">
+                          <label htmlFor="PostCompany">Company</label>
+                          <select
+                            className="htmlInput"
+                            name="Company"
+                            id="PostCompany"
+                            required
+                            onChange={(e) => setCompanyId(e.target.value)}
+                          >
+                            {CompaniesData?.getUser?.MyCompanies?.map(
+                              (company, index) => {
+                                return (
+                                  <option key={index} value={company?._id}>
+                                    {company?.CompanyName}
+                                  </option>
+                                );
+                              }
+                            )}
+                          </select>
+                        </div>
+                        <br />
+                        <div className="w-100 d-flex justify-content-end">
+                          <Button variant="filled" color="green" type="submit">
+                            Apply
+                          </Button>
+                        </div>
+                      </form>
+                    </Modal>
+                    <Button
+                      variant="filled"
+                      color="#388E3C"
+                      w={150}
+                      radius="md"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        open();
+                      }}
+                    >
+                      Apply
+                    </Button>
                   </div>
                 </div>
               </div>
@@ -208,11 +255,11 @@ function ProjectPage() {
                     <button className="ViewAllButton">View All</button>
                   </div>
                   <div className="ProjectPagePart2Content">
-                    {dummyProject.Applies.map((company, index) => (
+                    {data?.getProject?.Applies?.map((company, index) => (
                       <CompanyWorkOnCard
                         key={index}
-                        companyName={company.CompanyName}
-                        createDate={company.CreateDate}
+                        companyName={company?.CompanyName}
+                        createDate={company?.CreateDate?.slice(0, 10)}
                       />
                     ))}
                   </div>

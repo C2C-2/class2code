@@ -18,13 +18,13 @@ import { IconArrowLeft, IconPlus, IconTrash } from "@tabler/icons-react";
 import { AiFillWechat } from "react-icons/ai";
 import { Paths } from "../../../assets/Paths";
 import { gql, useLazyQuery, useMutation, useQuery } from "@apollo/client";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 
 function AIChat() {
   const [opened, { toggle }] = useDisclosure();
   const [message, setMessage] = useState("");
-  const [projectName, setProjectName] = useState("aaa");
-  const [projectId, setProjectId] = useState(0);
+  const [companyName, setCompanyName] = useState("");
+  const [companyId, setCompanyId] = useState(0);
 
   const [openedNewChat, { toggle: toggleNewChat, close: closeNewChat }] =
     useDisclosure(false);
@@ -53,6 +53,16 @@ function AIChat() {
     query Query($userId: String!) {
       getUser(userId: $userId) {
         WorkCompanies {
+          _id
+          CompanyName
+          Project {
+            _id
+            ProjectName
+          }
+        }
+        MyCompanies {
+          _id
+          CompanyName
           Project {
             _id
             ProjectName
@@ -69,6 +79,25 @@ function AIChat() {
   } = useQuery(GET_WORKS_COMPANIES, {
     variables: { userId: localStorage.getItem("id") },
   });
+
+  // Combine WorkCompanies and MyCompanies data, filtering out invalid entries
+  const combinedCompanies = [
+    ...(workCompanies?.getUser?.WorkCompanies || []),
+    ...(workCompanies?.getUser?.MyCompanies || []),
+  ].filter((e) => e?._id != null); // Filter out entries with null/undefined IDs
+
+  // Create a Set to ensure uniqueness of project IDs
+  const uniqueProjects = new Map();
+
+  combinedCompanies.forEach((e) => {
+    uniqueProjects.set(e?._id, e?.CompanyName);
+  });
+
+  // Map the unique data for the <Select> component
+  const selectData = Array.from(uniqueProjects, ([value, label]) => ({
+    value: String(value),
+    label,
+  }));
 
   const GET_CHAT = gql`
     query GetUser($chatId: Int!) {
@@ -111,14 +140,7 @@ function AIChat() {
     }
   `;
 
-  const [
-    sendMessageQuery,
-    {
-      loading: sendMessageLoading,
-      error: sendMessageError,
-      data: sendMessageData,
-    },
-  ] = useMutation(SEND_MESSAGE);
+  const [sendMessageQuery] = useMutation(SEND_MESSAGE);
 
   const sendMessage = async (e, chatId) => {
     e.preventDefault();
@@ -129,10 +151,12 @@ function AIChat() {
         fileName: getChatData?.getAIChat?.FileName,
         aIchatId: parseInt(chatId),
       },
-    }).catch((error) => console.log(error));
-
-    setMessage(() => "");
-    refetchChat();
+    })
+      .then(() => {
+        setMessage(() => "");
+        refetchChat();
+      })
+      .catch((error) => console.log(error));
   };
 
   const CREATE_CHAT = gql`
@@ -181,6 +205,7 @@ function AIChat() {
                 color="red"
                 onClick={() => {
                   localStorage.clear();
+                  navigate(Paths?.Login);
                 }}
               >
                 LogOut
@@ -211,8 +236,7 @@ function AIChat() {
                       e.stopPropagation();
                       deleteChatQuery({
                         variables: { aIchatId: parseInt(oldChat._id) },
-                      });
-                      refetchOldChats();
+                      }).then(() => refetchOldChats());
                     }}
                   />
                 }
@@ -252,7 +276,7 @@ function AIChat() {
               radius="md"
               position={{ bottom: "5rem", left: "1rem" }}
             >
-              <Text size="sm" mb="xs" fw={500}>
+              <Text className="mb-2" size="sm" mb="xs" fw={500}>
                 Select Company
               </Text>
 
@@ -260,33 +284,37 @@ function AIChat() {
                 <form
                   onSubmit={async (e) => {
                     e.preventDefault();
+
+                    // get projectId from combinedCompanies
+                    const findCompany = combinedCompanies.filter((company) => {
+                      if (company.CompanyName === companyName) {
+                        return company;
+                      }
+                    });
+
                     await createChatQuery({
                       variables: {
                         userId: localStorage.getItem("id"),
-                        name: projectName,
-                        projectId: parseInt(projectId),
+                        name: companyName,
+                        projectId: parseInt(findCompany[0]?.Project?._id),
                       },
+                    }).then(() => {
+                      refetchOldChats();
+                      closeNewChat();
                     });
-
-                    refetchOldChats();
-                    closeNewChat();
                   }}
                 >
                   <Select
                     label="Your Company"
                     placeholder="Pick value"
-                    data={workCompanies?.getUser?.WorkCompanies?.map((e) => {
-                      return {
-                        value: e?.Project?._id,
-                        label: e?.Project?.ProjectName,
-                      };
-                    })}
+                    data={selectData}
                     searchable
                     onChange={(value, { label }) => {
-                      setProjectName(label);
-                      setProjectId(value);
+                      setCompanyName(label);
+                      setCompanyId(value);
                     }}
                   />
+                  <br />
                   <Button type="submit">Select</Button>
                 </form>
               </Group>

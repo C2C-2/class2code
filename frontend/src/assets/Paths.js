@@ -33,4 +33,5 @@ export const Paths = {
   EditEmail: "/EditEmail",
   ContactUs: "/ContactUs",
   OtherCompanyProfile: "/OtherCompanyProfile",
+  Applys: "/Applys",
 };
