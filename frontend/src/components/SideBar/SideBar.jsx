@@ -6,8 +6,9 @@ import { RiTeamLine } from "react-icons/ri";
 import { AiOutlineTeam } from "react-icons/ai";
 import { Paths } from "../../assets/Paths";
 import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { gql, useQuery } from "@apollo/client";
+import { BsChatText } from "react-icons/bs";
+import { FaTasks } from "react-icons/fa";
+import { useState } from "react";
 
 function SideBar() {
   const data = [
@@ -27,7 +28,7 @@ function SideBar() {
       link: Paths.Posts,
     },
     {
-      icon: BsChatDots,
+      icon: BsChatText,
       label: "Chat",
       link: Paths.Chat,
     },
@@ -35,6 +36,11 @@ function SideBar() {
       icon: BsClipboard2Data,
       label: "Available Projects",
       link: Paths.AvailableProject,
+    },
+    {
+      icon: FaTasks,
+      label: "New Tasks",
+      link: "",
     },
     {
       icon: AiOutlineTeam,
@@ -51,7 +57,6 @@ function SideBar() {
           label: "Companies I am working in it ",
           link: Paths.CompanyWorkingWith,
         },
-        { label: "Companies Tasks ", link: Paths.MyCompanyTask },
       ],
     },
   ];

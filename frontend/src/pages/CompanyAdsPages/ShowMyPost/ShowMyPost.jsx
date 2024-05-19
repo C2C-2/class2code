@@ -1,14 +1,17 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import "./ShowMyPost.css";
 import { Button, Input, Pagination, Modal, Textarea } from "@mantine/core";
 import { useQuery, useMutation, gql, useLazyQuery } from "@apollo/client";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDisclosure } from "@mantine/hooks";
+import { FaArrowDown, FaArrowUp } from "react-icons/fa";
 
 function ShowAllPosts() {
   const [searchWord, setSearchWord] = useState("");
   const [companyId, setCompanyId] = useState("");
   const [description, setDescription] = useState("");
+  const [isDesc, setIsDesc] = useState(true);
+  const navigation = useNavigate();
 
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
@@ -16,24 +19,32 @@ function ShowAllPosts() {
   const [postsData, setPostsData] = useState([]);
 
   const GET_POSTS = gql`
-    query Query($userId: String!, $page: Int, $limit: Int) {
-      getAllMyPostsSortedByDate(userId: $userId, page: $page, limit: $limit) {
+    query Query($limit: Int, $page: Int, $userId: String!, $isDesc: Boolean) {
+      getAllMyPostsSortedByDate(
+        limit: $limit
+        page: $page
+        userId: $userId
+        isDESC: $isDesc
+      ) {
         _id
         Content
         CreatedDate
-        Company {
-          CompanyName
-        }
         User {
+          id
           FirstName
-          ImageUrl
           LastName
+          ImageUrl
+        }
+        Company {
+          _id
+          CompanyName
         }
       }
     }
   `;
 
-  const [getPosts, { data: queryPostsData }] = useLazyQuery(GET_POSTS);
+  const [getPosts, { data: queryPostsData, refetch: refetchPosts }] =
+    useLazyQuery(GET_POSTS);
 
   const GET_MY_COMPANIES = gql`
     query GetUser($userId: String!) {
@@ -51,45 +62,51 @@ function ShowAllPosts() {
   });
 
   const CREATE_POST = gql`
-  mutation CreatePositionPost($post: PositionPostInput!, $companyId: Int!) {
-    createPositionPost(post: $post, companyId: $companyId) {
-      Company {
-        CompanyName
+    mutation Mutation($post: PositionPostInput!, $companyId: Int!) {
+      createPositionPost(post: $post, companyId: $companyId) {
+        _id
       }
-      Content
-      CreatedDate
-      User {
-        id
-      }
-      _id
     }
-  }
   `;
 
   const [createPost] = useMutation(CREATE_POST);
 
-  useEffect(() => {
+  const fetch = useCallback(() => {
     getPosts({
-      variables: { userId: localStorage.getItem("id"), page, limit },
+      variables: {
+        userId: localStorage.getItem("id"),
+        page: page - 1,
+        limit,
+        isDesc,
+      },
+    }).then(() => {
+      refetchPosts().then((e1) => {
+        setPostsData(e1?.data?.getAllMyPostsSortedByDate);
+      });
     });
+  }, [page, limit, isDesc]);
 
-    setPostsData(queryPostsData);
-  }, [page]);
+  useEffect(() => {
+    fetch();
+  }, [fetch]);
+
+  useEffect(() => {
+    setCompanyId(() => CompaniesData?.getUser?.MyCompanies[0]?._id);
+  }, []);
 
   const [opened, { open, close }] = useDisclosure(false);
   const handleSubmit = (e) => {
     e.preventDefault();
     createPost({
       variables: {
-        post: { Content: description },
+        post: {
+          Content: description,
+        },
         companyId: parseInt(companyId),
       },
     })
       .then(() => {
         close();
-        getPosts({
-          variables: { userId: localStorage.getItem("id"), page, limit },
-        });
       })
       .catch((error) => {
         console.error("Error creating post:", error);
@@ -103,46 +120,43 @@ function ShowAllPosts() {
           <div className="postsBody">
             <div className="navbarFake"></div>
             <div className="PostsSearchPart">
-              <Link to="/Dashboard">
-                <Button
-                  justify="center"
-                  variant="filled"
-                  color="#283739"
-                  radius="md"
+              <Button
+                justify="center"
+                variant="filled"
+                color="#283739"
+                radius="md"
+                onClick={() => {
+                  navigation(-1);
+                }}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="18"
+                  height="12"
+                  viewBox="0 0 18 12"
+                  fill="none"
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="18"
-                    height="12"
-                    viewBox="0 0 18 12"
-                    fill="none"
-                  >
-                    <path
-                      d="M1.5 6H16.5"
-                      stroke="white"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M6.49999 11L1.5 6L6.49999 1"
-                      stroke="white"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </Button>
-              </Link>
+                  <path
+                    d="M1.5 6H16.5"
+                    stroke="white"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M6.49999 11L1.5 6L6.49999 1"
+                    stroke="white"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </Button>
               <div className="SearchPartShowAllPosts">
                 <Input
                   type="text"
                   placeholder="Search for Posts"
-                  className={`${
-                    isDarkMode
-                      ? "TextPartShowAllPostsDark"
-                      : "TextPartShowAllPosts"
-                  }`}
+                  className={"TextPartShowAllPosts"}
                   value={searchWord}
                   onChange={(e) => setSearchWord(e.target.value)}
                   radius="md"
@@ -177,9 +191,7 @@ function ShowAllPosts() {
                   >
                     <h4>Add Post</h4>
                     <br />
-                    <form
-                     onSubmit={handleSubmit}
-                    >
+                    <form onSubmit={handleSubmit}>
                       <div className="htmlInputGroup">
                         <label htmlFor="PostCompany">Company</label>
                         <select
@@ -189,12 +201,14 @@ function ShowAllPosts() {
                           required
                           onChange={(e) => setCompanyId(e.target.value)}
                         >
-                          {CompaniesData?.getUser?.MyCompanies.map(
-                            (company, index) => (
-                              <option key={index} value={company.id}>
-                                {company.CompanyName}
-                              </option>
-                            )
+                          {CompaniesData?.getUser?.MyCompanies?.map(
+                            (company, index) => {
+                              return (
+                                <option key={index} value={company?._id}>
+                                  {company?.CompanyName}
+                                </option>
+                              );
+                            }
                           )}
                         </select>
                       </div>
@@ -222,46 +236,27 @@ function ShowAllPosts() {
                 </>
                 <Button
                   variant="filled"
-                  color="rgba(202, 204, 202, 1)"
-                  w={70}
-                  onClick={() => {}}
+                  color="gray"
+                  onClick={() => {
+                    setIsDesc(!isDesc);
+                  }}
+                  rightSection={isDesc ? <FaArrowUp /> : <FaArrowDown />}
                 >
-                  <span style={{ color: "#000000" }}>Date</span>
+                  Date
                 </Button>
               </div>
               <div className="ShowAllPostsCards">
-                {postsData?.getAllPosts?.map((post, index) => (
-                  <div key={index} className="PostsCardDesign">
-                    <div className="PostsCardProfile">
-                      <img
-                        src={post?.User?.ImageUrl}
-                        alt="Profile"
-                        className="PostsCardImg"
-                      />
-                      <div className="PostsCardImgText">
-                        <h6>
-                          {post?.User?.FirstName} {post?.User?.LastName}
-                        </h6>
-                        <p>{post?.Company?.CompanyName}</p>
-                      </div>
-                    </div>
-                    <p>{post?.Content}</p>
-                    <div className="PostsCardTime">
-                      <p className="PostTime">
-                        {post?.CreatedDate?.slice(0, 15)}
-                      </p>
-                      <Button
-                        variant="filled"
-                        color="#388E3C"
-                        size="xs"
-                        h={30}
-                        w={110} // Pass post id to handleApplyClick
-                      >
-                        Apply
-                      </Button>
-                    </div>
-                  </div>
-                ))}
+                {postsData?.map((post, index) => {
+                  return (
+                    <PostCard
+                      key={index}
+                      post={post}
+                      index={index}
+                      CompaniesData={CompaniesData}
+                      fetch={fetch}
+                    />
+                  );
+                })}
               </div>
             </div>
             <div className="w-100 d-flex align-items-center justify-content-center">
@@ -278,5 +273,107 @@ function ShowAllPosts() {
     </div>
   );
 }
+
+const PostCard = ({ post, index, fetch }) => {
+  const [editOpened, { open: editOpen, close: editClose }] =
+    useDisclosure(false);
+
+  const [description, setDescription] = useState("");
+
+  const UPDATE_POST = gql`
+    mutation Mutation(
+      $positionPostId: Int!
+      $positionPost: PositionPostInput!
+    ) {
+      updatePositionPost(
+        positionPostId: $positionPostId
+        positionPost: $positionPost
+      ) {
+        _id
+      }
+    }
+  `;
+
+  const [updatePost] = useMutation(UPDATE_POST);
+
+  return (
+    <div key={index} className="PostsCardDesign">
+      <div className="PostsCardProfile">
+        <img
+          src={post?.User?.ImageUrl}
+          alt="Profile"
+          className="PostsCardImg"
+        />
+        <div className="PostsCardImgText">
+          <h6>
+            {post?.User?.FirstName} {post?.User?.LastName}
+          </h6>
+          <p>{post?.Company?.CompanyName}</p>
+        </div>
+      </div>
+      <p>{post?.Content}</p>
+      <div className="PostsCardTime">
+        <p className="PostTime">{post?.CreatedDate?.slice(0, 15)}</p>
+        <>
+          <Modal
+            xOffset={"30%"}
+            yOffset={"10%"}
+            opened={editOpened}
+            onClose={editClose}
+            centered={true}
+          >
+            <h4>Add Post</h4>
+            <br />
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                updatePost({
+                  variables: {
+                    positionPostId: parseInt(post?._id),
+                    positionPost: {
+                      Content: description,
+                    },
+                  },
+                }).then(() => {
+                  fetch();
+                  editClose();
+                });
+              }}
+            >
+              <Textarea
+                label="Description"
+                placeholder="Enter your description here"
+                required
+                onChange={(e) => setDescription(e.target.value)}
+                value={description}
+              />
+              <br />
+              <br />
+              <div className="w-100 d-flex justify-content-end">
+                <Button variant="filled" color="green" type="submit">
+                  Edit
+                </Button>
+              </div>
+            </form>
+          </Modal>
+
+          <Button
+            onClick={() => {
+              setDescription(post?.Content);
+              editOpen();
+            }}
+            variant="filled"
+            color="#388E3C"
+            size="xs"
+            h={30}
+            w={110} // Pass post id to handleApplyClick
+          >
+            Edit
+          </Button>
+        </>
+      </div>
+    </div>
+  );
+};
 
 export default ShowAllPosts;

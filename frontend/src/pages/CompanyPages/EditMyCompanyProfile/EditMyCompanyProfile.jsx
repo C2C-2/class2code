@@ -45,6 +45,7 @@ function EditMyCompanyProfile() {
       }
     }
   `;
+
   const { data: companyData, refetch: refetchCompany } = useQuery(
     GET_COMPANY_DATA,
     {
@@ -390,6 +391,9 @@ function EditMyCompanyProfile() {
                         >
                           <>
                             <Modal
+                              xOffset={"30%"}
+                              yOffset={"9%"}
+                              padding={"xl"}
                               opened={openedTeam}
                               onClose={closeTeam}
                               title="Edit Team"
@@ -443,22 +447,35 @@ function EditMyCompanyProfile() {
                             </Button>
                           </>
 
-                          <Button
-                            variant="outline"
-                            color="red"
-                            radius={"xl"}
-                            onClick={() => {
-                              deleteTeam({
-                                variables: {
-                                  teamId: parseInt(team._id),
-                                },
-                              }).then(() => {
-                                refetchCompany();
-                              });
-                            }}
-                          >
-                            <GoTrash size={12} />
-                          </Button>
+                          <div className="d-flex gap-2">
+                            <Button
+                              color="orange"
+                              radius={"xl"}
+                              onClick={() => {}}
+                            >
+                              tasks
+                            </Button>
+                            <Button
+                              variant="outline"
+                              color="red"
+                              radius={"xl"}
+                              onClick={() => {
+                                const ask = confirm("Are you sure?");
+                                if (!ask) return;
+                                else {
+                                  deleteTeam({
+                                    variables: {
+                                      teamId: parseInt(team._id),
+                                    },
+                                  }).then(() => {
+                                    refetchCompany();
+                                  });
+                                }
+                              }}
+                            >
+                              <GoTrash size={12} />
+                            </Button>
+                          </div>
                         </div>
                       ))}
                     </div>
