@@ -111,8 +111,6 @@ const resolvers = {
           throw new Error("User not found");
         }
 
-        console.log({ id: userId, ...result.properties(), page, limit });
-
         return { id: userId, ...result.properties(), page, limit };
       } catch (error) {
         Logging.error(`${new Date()}, in resolvers.js => getUser, ${error}`);
@@ -1012,17 +1010,21 @@ const resolvers = {
           );
         }
 
-        await NeodeObject?.writeCypher(
-          `MATCH (u:User) -[r:IN_TEAM]-> (t:Team) WHERE ID(u) = $userId AND ID(t) = $teamId
-           DETACH DELETE r`,
-          { userId, teamId }
+        console.log(userId, teamId);
+
+        const team = await NeodeObject?.writeCypher(
+          `MATCH (u:User) -[r:IN_TEAM]-> (t:Team) WHERE u.id = "${userId}" AND ID(t) = ${teamId}
+           DETACH DELETE r`
         );
 
-        await backup.info(`MATCH (u:User) -[r:IN_TEAM]-> (t:Team) WHERE ID(u) = ${userId} AND ID(t) = ${teamId}
+        console.log(team);
+
+        await backup.info(`MATCH (u:User) -[r:IN_TEAM]-> (t:Team) WHERE u.id = "${userId}" AND ID(t) = ${teamId}
         DETACH DELETE r`);
 
         return true;
       } catch (error) {
+        console.log(error);
         Logging.error(
           `${new Date()}, in resolvers.js => deleteUserFromTeam, ${error}`
         );
@@ -1432,8 +1434,6 @@ const resolvers = {
             },
           }
         );
-
-        console.log(response);
 
         // Create AIChat and AIMessage nodes
         // I save it in database to get it when user need it from old chats

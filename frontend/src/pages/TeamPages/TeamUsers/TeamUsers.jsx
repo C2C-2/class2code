@@ -12,10 +12,19 @@ const TeamUsers = () => {
   const [userId, setUserId] = useState("");
   const [role, setRole] = useState("Member");
 
+  const DELETE_USER_FROM_TEAM = gql`
+    query Query($userId: String!, $teamId: Int!) {
+      deleteUserFromTeam(userId: $userId, teamId: $teamId)
+    }
+  `;
+
+  const [deleteUser] = useLazyQuery(DELETE_USER_FROM_TEAM);
+
   const GET_APPLIES = gql`
     query GetTeam($teamId: Int!) {
       getTeam(teamId: $teamId) {
         Members {
+          id
           FirstName
           ImageUrl
           LastName
@@ -30,7 +39,12 @@ const TeamUsers = () => {
     }
   `;
 
-  const { data, loading, error } = useQuery(GET_APPLIES, {
+  const {
+    data,
+    loading,
+    error,
+    refetch: refetchApplies,
+  } = useQuery(GET_APPLIES, {
     variables: {
       teamId: parseInt(id),
     },
@@ -57,7 +71,6 @@ const TeamUsers = () => {
     data: users,
     loading: loading2,
     error: error2,
-    refetch: refetchUsers,
   } = useQuery(GET_ALL_USERS);
 
   useEffect(() => {
@@ -118,17 +131,36 @@ const TeamUsers = () => {
                 title="Add New User"
               >
                 <form
-                  onSubmit={(e) => {
+                  onSubmit={async (e) => {
                     e.preventDefault();
-                    addUserToTeam({
+                    if (
+                      data?.getTeam?.Members?.find(
+                        (member) => member?.id === userId
+                      )
+                    ) {
+                      alert("User already in team");
+                      return;
+                    }
+
+                    if (
+                      data?.getTeam?.Members?.find(
+                        (member) => member?.role === "Leader"
+                      )
+                    ) {
+                      alert("Team already has a leader");
+                      return;
+                    }
+
+                    await addUserToTeam({
                       variables: {
                         teamId: parseInt(id),
                         userId: userId,
                         role: role,
                       },
                     }).then(() => {
-                      refetchUsers();
-                      close();
+                      refetchApplies().then(() => {
+                        close();
+                      });
                     });
                   }}
                 >
@@ -185,14 +217,24 @@ const TeamUsers = () => {
                     ))}
                   </div>
 
-                  <div className="d-flex gap-2">
+                  <for className="d-flex gap-2">
                     <Button color="orange">View Profile</Button>
-                    <Button color="red">Delete</Button>
-                  </div>
+                    <Button
+                      color="red"
+                      onClick={async () =>
+                        await deleteUser({
+                          variables: { userId: user?.id, teamId: parseInt(id) },
+                        }).then(() => refetchApplies())
+                      }
+                    >
+                      Delete
+                    </Button>
+                  </for>
                 </div>
               ))}
             </div>
-            <br /><br />
+            <br />
+            <br />
           </div>
         </div>
       </div>
