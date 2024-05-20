@@ -453,14 +453,14 @@ function EditMyCompanyProfile() {
                               to={`${Paths.TeamUsers}/${team._id}`}
                             >
                               <Button radius={"xl"}>
-                                users
+                                Users
                               </Button>
                             </Link>
                             <Link
                               to={`/TeamTasks/${team._id}/company/${company_id}`}
                             >
                               <Button color="orange" radius={"xl"}>
-                                tasks
+                                Tasks
                               </Button>
                             </Link>
                             <Button
