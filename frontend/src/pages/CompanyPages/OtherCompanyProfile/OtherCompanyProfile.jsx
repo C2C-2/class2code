@@ -1,12 +1,12 @@
 import { useState } from "react";
 import "./OtherCompanyProfile.css";
-import { Button } from "@mantine/core";
+import { Button, Modal, Textarea, TextInput } from "@mantine/core";
 import CommentComp from "../../../components/Comments/CommentComp";
 import CurrentProject from "../../../components/CurrentProject/CurrentProject";
 import TeamOther from "../../../components/TeamOther/TeamOther";
 import { useQuery, useMutation } from "@apollo/client";
 import { gql } from "@apollo/client";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const GET_COMPANY_QUERY = gql`
   query Comments($companyId: Int!) {
@@ -43,11 +43,10 @@ const CREATE_COMMENT_MUTATION = gql`
 
 function OtherCompanyProfile() {
   const [commentText, setCommentText] = useState("");
+  const company_id = useParams();
   const { loading, error, data } = useQuery(GET_COMPANY_QUERY, {
     variables: {
-      companyId: null,
-      company: null,
-      teamId: null,
+      companyId: parseInt(company_id),
     },
   });
 
@@ -62,7 +61,7 @@ function OtherCompanyProfile() {
           comment: {
             Value: commentText,
           },
-          companyId: null,
+          companyId: parseInt(company_id),
         },
       });
     } catch (error) {
@@ -81,44 +80,44 @@ function OtherCompanyProfile() {
           <div className="sideBareFake"></div>
           <div className="postsBody">
             <div className="navbarFake"></div>
-            <Button
-              justify="center"
-              variant="filled"
-              color="#283739"
-              onClick={() => navigate(-1)}
-              w={"fit-content"}
-              size="md"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="18"
-                height="12"
-                viewBox="0 0 18 12"
-                fill="none"
+            <div className="EditMyCompaniesContentData">
+              <Button
+                justify="center"
+                variant="filled"
+                color="#283739"
+                onClick={() => navigate(-1)}
+                w={"fit-content"}
               >
-                <path
-                  d="M1.5 6H16.5"
-                  stroke="white"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M6.49999 11L1.5 6L6.49999 1"
-                  stroke="white"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </Button>
-            <div className="OtherProfileDescriptionCenter">
-              <div className="OtherProfileDescription">
-                <div className="CompanyName">
-                  <div className="C1">
-                    <span className="C1Text">{companyData.CompanyName}</span>
-                    <span className="C1Number">
-                      {companyData.Rate}
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="18"
+                  height="12"
+                  viewBox="0 0 18 12"
+                  fill="none"
+                >
+                  <path
+                    d="M1.5 6H16.5"
+                    stroke="white"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M6.49999 11L1.5 6L6.49999 1"
+                    stroke="white"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </Button>
+              <div className="EditMyCompaniesHead  d-flex justify-content-around align-items-center">
+                <div className="d-flex flex-column gap-1">
+                  <div className="d-flex gap-3 align-items-center">
+                    <h4>Company Name</h4>
+                    <h4>{data?.getCompany?.CompanyName}</h4>
+                    <div className="d-flex gap-1">
+                      <h6>{data?.getCompany?.Rate}</h6>
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="17"
@@ -131,37 +130,31 @@ function OtherCompanyProfile() {
                           fill="#F4CE14"
                         />
                       </svg>
-                    </span>
+                    </div>
                   </div>
-                  <div className="C2">
-                    <span className="C2Text">Andrew Smith</span>
-                  </div>
+                  <span>{}</span>
                 </div>
-                <div className="Domain">
-                  <div className="D1">
-                    <span className="D1Text">{companyData.Domain}</span>
-                  </div>
-                  <div className="D2">
-                    <span className="D2Text">Domain</span>
-                  </div>
+                <div className="d-flex flex-column gap-1">
+                  <h4>Domain</h4>
+                  <span>{data?.getCompany?.Domain}</span>
                 </div>
-                <div className="CreateDate">
-                  <div className="CD1">
-                    <span className="CD1Text"> {companyData.CreateDate}</span>
-                  </div>
-                  <div className="CD2">
-                    <span className="CD2Text">Created Date </span>
-                  </div>
+                <div className="d-flex flex-column gap-1">
+                  <h4>Create Date</h4>
+                  <span>{data?.getCompany?.CreateDate?.slice(0, 10)}</span>
                 </div>
               </div>
-              <div className="UnderOtherProfile">
-                <div className="Part1UnderOther">
-                  <div className="UnderDescription">
-                    <h6>Description</h6>
-                    <p className="Para">{companyData.CompanyDescription}</p>
-                  </div>
-                  <div className="CommentsCard">
-                    {companyData.Comments.map((comment) => (
+              <div className="EditMyCompaniesBody">
+                <div className="d-flex flex-column gap-4" style={{ flex: 1 }}>
+                  <Textarea
+                    resize="vertical"
+                    size="md"
+                    variant="filled"
+                    label="Description"
+                    value={data?.getCompany?.CompanyDescription}
+                    w={"100%"}
+                  />
+                  <div className="d-flex flex-column align-items-start gap-3">
+                    {data?.getCompany?.Comments.map((comment) => (
                       <CommentComp
                         key={comment._id}
                         commenterName={comment.UserName}
@@ -171,37 +164,40 @@ function OtherCompanyProfile() {
                       />
                     ))}
                   </div>
-                  <div className="Part1UnderAddComments">
-                    <input
+
+                  <div className="d-flex gap-3 justify-content-start">
+                    <TextInput
                       type="text"
-                      className="Part1UnderAddCommentsInputs"
+                      w="70%"
                       value={commentText}
                       onChange={handleCommentChange}
-                    ></input>
+                    ></TextInput>
                     <Button
                       variant="filled"
                       color="#388E3C"
-                      h={50}
-                      w={90}
+                      size="md"
                       onClick={handleSendComment}
                     >
                       Send
                     </Button>
                   </div>
                 </div>
-                <div className="Part2UnderOther">
-                  <div className="CurrentProjects">
-                    <div className={"CP1"}>Current Projects</div>
-                    {companyData.Project.map((project) => (
+                <div
+                  className="d-flex flex-column gap-4"
+                  style={{ minWidth: 350 }}
+                >
+                  <div className="d-flex flex-column gap-2">
+                    <h4 className={"CP1"}>Current Projects</h4>
+                    {data?.getCompany?.CurrentProjects.map((project) => (
                       <CurrentProject
                         key={project._id}
                         project={project.ProjectName}
                       />
                     ))}
                   </div>
-                  <div className="TeamAll">
-                    <div className={"TA1"}>Teams</div>
-                    {companyData.Teams?.map((team) => (
+                  <div className="d-flex flex-column gap-2">
+                    <h4 className={"TA1"}>Teams</h4>
+                    {data?.getCompany?.Teams?.map((team) => (
                       <TeamOther key={team._id} team={team} />
                     ))}
                   </div>
