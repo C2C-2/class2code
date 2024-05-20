@@ -4,7 +4,7 @@ import MyCompaniesCard from "../../../components/MyCompaniesCard/MyCompaniesCard
 import { useQuery, gql, useLazyQuery, useMutation } from "@apollo/client";
 import { Link, useNavigate } from "react-router-dom";
 import { useDisclosure } from "@mantine/hooks";
-import { FaArrowDown, FaArrowUp } from "react-icons/fa";
+import { FaArrowDown, FaArrowUp, FaStar, FaTrash } from "react-icons/fa";
 import { Paths } from "../../../assets/Paths";
 
 const GET_WORKING_COMPANIES = gql`
@@ -52,9 +52,6 @@ function MyCompanies() {
   const [searchWord, setSearchWord] = useState("");
   const user_id = localStorage.getItem("id");
   const [companies, setCompanies] = useState([]);
-  const [CompanyDescription, setCompanyDescription] = useState("");
-  const [CompanyName, setCompanyName] = useState("");
-  const [Domain, setDomain] = useState("");
 
   const navigate = useNavigate();
 
@@ -71,13 +68,13 @@ function MyCompanies() {
 
   useEffect(() => {
     if (companiesData) {
-      setCompanies(companiesData?.getUser?.MyCompanies);
+      setCompanies(companiesData?.getUser?.WorkCompanies);
     }
   }, [companiesData]);
 
   useEffect(() => {
     if (filteredData) {
-      setCompanies(filteredData?.filterMyCompanies);
+      setCompanies(filteredData?.filterWorksCompanies);
     }
   }, [filteredData]);
 
@@ -87,11 +84,9 @@ function MyCompanies() {
 
   useEffect(() => {
     if (searchData) {
-      setCompanies(searchData?.searchInMyCompanies);
+      setCompanies(searchData?.searchInWorksCompanies);
     }
   }, [searchData]);
-
-  const [opened, { open, close }] = useDisclosure(false);
 
   return (
     <div className="ShowAllPostsAll">
@@ -261,11 +256,12 @@ const WorkingCompaniesCard = ({
     <Link
       to={`${Paths.OtherCompanyProfile}/${Company_id}`}
       className="MyCompaniesCard shadow"
+      style={{maxWidth: "22rem"}}
       key={Company_id}
     >
       <h4>{CompanyName}</h4>
       <p>{CompanyDescription}</p>
-      <h2>{Rate}</h2>
+      <h2>{Rate} <FaStar color="yellow" size={20} /></h2>
       <hr />
       <Button
         onClick={(e) => {

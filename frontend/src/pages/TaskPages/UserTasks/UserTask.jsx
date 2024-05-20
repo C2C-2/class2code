@@ -1,25 +1,36 @@
 import "./UserTask.css";
-import { Button, Modal, Textarea, TextInput, Table } from "@mantine/core";
-import { gql, useLazyQuery, useMutation, useQuery } from "@apollo/client";
+import { Button, Table } from "@mantine/core";
+import { gql, useMutation, useQuery } from "@apollo/client";
 import { useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { useDisclosure } from "@mantine/hooks";
+import DashboardStatusCard from "../../../components/DashboardStatusCard/DashboardStatusCard";
 
-const GET_TASK_USER = gql`
-query GetUser($userId: String!) {
+const GET_TASKS = gql`
+  query Query($userId: String!) {
     getUser(userId: $userId) {
       WorkCompanies {
-        Teams {
-          Tasks {
-            CompanyName
-            EndDate
-            TaskName
-            TaskStatus
-            TeamName
-            Comments
-          }
+        Tasks {
+          TaskName
+          TaskStatus
+          StartDate
+          EndDate
+          Priority
+          Comments
+          CompanyName
+          TeamName
+          IsMarked
+          CreateDate
+          _id
         }
       }
+    }
+  }
+`;
+
+const UPDATE_TASK = gql`
+  mutation Mutation($taskId: Int!, $task: TaskInput!) {
+    updateTask(taskId: $taskId, task: $task) {
+      _id
     }
   }
 `;
@@ -35,22 +46,30 @@ export const UserTask = () => {
   const [comments, setComments] = useState("");
   const [priority, setPriority] = useState();
   const [currentTaskId, setCurrentTaskId] = useState(null);
+
   const {
-    loading: loadingTeams,
-    error: errorTeams,
-    data: dataTeams,
-  } = useQuery(GET_TASK_USER, {
-    variables: { userId: user_id},
+    loading: loadingTasks,
+    error: errorTasks,
+    data: dataTasks,
+    refetch: refetchTasks,
+  } = useQuery(GET_TASKS, {
+    variables: { userId: localStorage.getItem("id") },
   });
 
-  useEffect(() => {
-    if (dataTeams) {
-      setTaskName(dataTeams?.getTeam?.TaskName);
-      setTaskStatus(dataTeams?.getTeam?.TaskStatus);
-      setComments(dataTeams?.getTeam?.Comments);
-      setEndDate(dataTeams?.getTeam?.EndDate);
-    }
-  }, [dataTeams]);
+  const [
+    updateTask,
+    {
+      data: dataUpdateTask,
+      loading: loadingUpdateTask,
+      error: errorUpdateTask,
+    },
+  ] = useMutation(UPDATE_TASK);
+
+  const combinedTasks = dataTasks?.getUser?.WorkCompanies?.map(
+    (company) => company.Tasks
+  );
+
+  const Tasks = combinedTasks?.flat();
 
   return (
     <div className="ShowAllPostsAll">
@@ -93,7 +112,7 @@ export const UserTask = () => {
                   />
                 </svg>
               </Button>
-              <div className="DashboardUnderPart2 pt-5">
+              <div className="DashboardUnderPart2">
                 <Table>
                   <Table.Thead>
                     <Table.Tr>
@@ -102,29 +121,78 @@ export const UserTask = () => {
                       <Table.Th>Team</Table.Th>
                       <Table.Th>Company</Table.Th>
                       <Table.Th>Status</Table.Th>
-
-                      <Table.Th className="d-flex  w-50 justify-content-center">
-                        Actions
-                      </Table.Th>
+                      <Table.Th>Action</Table.Th>
                     </Table.Tr>
                   </Table.Thead>
                   <Table.Tbody>
-                    {dataTeams?.getTeam?.Tasks.map((task, index) => (
+                    {Tasks?.map((task, index) => (
                       <Table.Tr key={index}>
                         <Table.Td>{task?.TaskName}</Table.Td>
                         <Table.Td>
                           <div className="TableDesign">
                             <span className="TableDesignText1 justify-content-center">
-                              IN {task?.EndDate}
+                              {task?.EndDate}
+                            </span>
+                            <span className="TableDesignText2 text-dark">
+                              IN
+                              {getDaysDifference(task.StartDate, task.EndDate)}
+                              DAYS
                             </span>
                           </div>
                         </Table.Td>
-                        <Table.Td>{dataTeams?.getTeam?.TeamName}</Table.Td>
+                        <Table.Td>{task?.TeamName}</Table.Td>
                         <Table.Td>{task?.CompanyName}</Table.Td>
-                        <Table.Td>{task?.TaskStatus}</Table.Td>
-                        <Table.Td className="d-flex gap-2">
-                          
-                        
+                        <Table.Td>
+                          <DashboardStatusCard
+                            status={task?.TaskStatus}
+                            color={
+                              task?.TaskStatus == "Pending"
+                                ? "red"
+                                : task.TaskStatus == "new"
+                                ? "yellow"
+                                : "green"
+                            }
+                          />
+                        </Table.Td>
+                        <Table.Td>
+                          <Button
+                            variant="filled"
+                            color="#EE7214"
+                            disabled={
+                              task?.TaskStatus == "Finish" ? "disabled" : null
+                            }
+                            onClick={async (e) => {
+                              e.preventDefault();
+                              await updateTask({
+                                variables: {
+                                  taskId: parseInt(task._id),
+                                  task: {
+                                    TaskName: task.TaskName,
+                                    TaskStatus:
+                                      task.TaskStatus == "New"
+                                        ? "Pending"
+                                        : task.TaskStatus == "Pending"
+                                        ? "Finish"
+                                        : "New",
+                                    StartDate: task.StartDate,
+                                    EndDate: task.EndDate,
+                                    Priority: task.Priority,
+                                    Comments: task.Comments,
+                                    IsMarked: task.IsMarked,
+                                    CreateDate: task.CreateDate,
+                                  },
+                                },
+                              }).then(() => {
+                                refetchTasks();
+                              });
+                            }}
+                          >
+                            {task?.TaskStatus == "Pending"
+                              ? "Finish"
+                              : task?.TaskStatus == "New"
+                              ? "Start"
+                              : "Done"}
+                          </Button>
                         </Table.Td>
                       </Table.Tr>
                     ))}
@@ -137,4 +205,22 @@ export const UserTask = () => {
       </div>
     </div>
   );
+
+  function getDaysDifference(startDateString, endDateString) {
+    if (!startDateString || !endDateString) {
+      return 0; // Return 0 if either date is falsy (e.g., null or undefined)
+    }
+
+    const startDate = new Date(startDateString);
+    const endDate = new Date(endDateString);
+
+    if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
+      return 0; // Return 0 if either date is invalid
+    }
+
+    const diffInMilliseconds = endDate.getTime() - startDate.getTime();
+    const diffInDays = diffInMilliseconds / (1000 * 60 * 60 * 24);
+
+    return Math.round(diffInDays); // Round the result to the nearest integer
+  }
 };

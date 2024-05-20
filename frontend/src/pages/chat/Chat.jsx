@@ -12,8 +12,6 @@ import {
 import "./Chat.css";
 import { write, read, updateData } from "../../config/firebase.js";
 import { Link } from "react-router-dom";
-import SideBar from "../../components/SideBar/SideBar.jsx";
-import NavBar from "../../components/NavBar/NavBar.jsx";
 import { gql, useLazyQuery, useQuery } from "@apollo/client";
 import { useDisclosure } from "@mantine/hooks";
 
@@ -23,6 +21,7 @@ const Chat = () => {
   const [friends, setFriends] = React.useState([]);
   const [chatId, setChatId] = React.useState("");
   const [message, setMessage] = React.useState("");
+  const [friend, setFriend] = React.useState("");
   const listRef = useRef(null);
 
   const userId = localStorage.getItem("id");
