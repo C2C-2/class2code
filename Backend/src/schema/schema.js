@@ -195,7 +195,7 @@ const typeDefs = gql`
 
   input TaskInput {
     TaskName: String!
-    TaskStatus: String!
+    TaskStatus: String
     StartDate: String!
     EndDate: String!
     Priority: Int!
@@ -280,9 +280,10 @@ const typeDefs = gql`
     Chats: [Chat]
     Educations: [Education]
     AIChats: [AIChat]
-    Friends: Friends
+    Friends: [User]
     CreatedTasks: [Task]
     type: String
+    Role: String
   }
 
   type UserStatistics {
@@ -361,7 +362,6 @@ const typeDefs = gql`
     getTeam(teamId: Int!): Team
     getPost(postId: Int!): PositionPost
     deleteEducation(educationId: Int!): Boolean
-    deleteUserFromTeam(userId: String!, teamId: Int!): Boolean
     deletePost(postId: Int!): Boolean
     deleteUser(userId: String!): Boolean
     deleteAIChat(AIchatId: Int!): Boolean
@@ -444,6 +444,7 @@ const typeDefs = gql`
     applyForProject(projectId: Int!, companyId: Int!): Boolean
     updateEducation(educationId: Int!, education: EducationInput!): Education
     updateTeam(teamId: Int!, team: TeamInput!): Team
+    deleteUserFromTeam(userId: String!, teamId: Int!): Boolean
   }
 `;
 

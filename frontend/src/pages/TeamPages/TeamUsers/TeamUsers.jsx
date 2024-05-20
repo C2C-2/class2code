@@ -12,14 +12,6 @@ const TeamUsers = () => {
   const [userId, setUserId] = useState("");
   const [role, setRole] = useState("Member");
 
-  const DELETE_USER_FROM_TEAM = gql`
-    query Query($userId: String!, $teamId: Int!) {
-      deleteUserFromTeam(userId: $userId, teamId: $teamId)
-    }
-  `;
-
-  const [deleteUser] = useLazyQuery(DELETE_USER_FROM_TEAM);
-
   const GET_APPLIES = gql`
     query GetTeam($teamId: Int!) {
       getTeam(teamId: $teamId) {
@@ -28,6 +20,7 @@ const TeamUsers = () => {
           FirstName
           ImageUrl
           LastName
+          Role
           Skills {
             Skill
             _id
@@ -78,6 +71,26 @@ const TeamUsers = () => {
       setUserId(users?.getAllUsers[0]?.id);
     }
   }, [users]);
+
+  const DELETE_USER_FROM_TEAM = gql`
+    mutation DeleteUserFromTeam($userId: String!, $teamId: Int!) {
+      deleteUserFromTeam(userId: $userId, teamId: $teamId)
+    }
+  `;
+
+  const [deleteUser, { loading: deleteUserLoading }] = useMutation(
+    DELETE_USER_FROM_TEAM,
+    {
+      refetchQueries: [
+        {
+          query: GET_APPLIES,
+          variables: {
+            teamId: parseInt(id),
+          },
+        },
+      ],
+    }
+  );
 
   const [opened, { open, close }] = useDisclosure(false);
 
@@ -144,8 +157,8 @@ const TeamUsers = () => {
 
                     if (
                       data?.getTeam?.Members?.find(
-                        (member) => member?.role === "Leader"
-                      )
+                        (member) => member?.Role === "Leader"
+                      ) && role === "Leader"
                     ) {
                       alert("Team already has a leader");
                       return;
@@ -217,19 +230,19 @@ const TeamUsers = () => {
                     ))}
                   </div>
 
-                  <for className="d-flex gap-2">
+                  <div className="d-flex gap-2">
                     <Button color="orange">View Profile</Button>
                     <Button
                       color="red"
-                      onClick={async () =>
+                      onClick={async () => {
                         await deleteUser({
                           variables: { userId: user?.id, teamId: parseInt(id) },
-                        }).then(() => refetchApplies())
-                      }
+                        });
+                      }}
                     >
-                      Delete
+                      {deleteUserLoading ? "Deleting..." : "Delete"}
                     </Button>
-                  </for>
+                  </div>
                 </div>
               ))}
             </div>

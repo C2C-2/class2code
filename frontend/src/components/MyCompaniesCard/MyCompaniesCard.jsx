@@ -1,6 +1,6 @@
 import "./MyCompaniesCard.css";
 import { Button } from "@mantine/core";
-import { FaTrash } from "react-icons/fa";
+import { FaStar, FaTrash } from "react-icons/fa";
 import { gql, useLazyQuery, useMutation } from "@apollo/client";
 import { Link } from "react-router-dom";
 export default function MyCompaniesCard({
@@ -33,7 +33,9 @@ export default function MyCompaniesCard({
     >
       <h4>{CompanyName}</h4>
       <p>{CompanyDescription}</p>
-      <h2>{Rate}</h2>
+      <h2>
+        {Rate} <FaStar color="yellow" size={20} />
+      </h2>
       <hr />
       <Button
         onClick={(e) => {

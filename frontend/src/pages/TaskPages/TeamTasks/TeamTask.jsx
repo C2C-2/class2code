@@ -1,5 +1,12 @@
 import "./TeamTask.css";
-import { Button, Modal, Textarea, TextInput, Table } from "@mantine/core";
+import {
+  Button,
+  Modal,
+  Textarea,
+  TextInput,
+  Table,
+  NumberInput,
+} from "@mantine/core";
 import { gql, useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import { useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
@@ -69,12 +76,12 @@ export const TeamTask = () => {
   const user_id = localStorage.getItem("id");
   const { team_id, company_id } = useParams();
   const [taskName, setTaskName] = useState("");
-  const [taskStatus, setTaskStatus] = useState("Open");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [comments, setComments] = useState("");
-  const [priority, setPriority] = useState();
+  const [priority, setPriority] = useState(1);
   const [currentTaskId, setCurrentTaskId] = useState(null);
+
   const {
     loading: loadingTeams,
     error: errorTeams,
@@ -83,7 +90,9 @@ export const TeamTask = () => {
   } = useQuery(GET_TEAM, {
     variables: { teamId: parseInt(team_id) },
   });
+
   const [deleteTask] = useLazyQuery(DELETE_Task);
+
   const handleDeleteTask = (taskId) => {
     deleteTask({
       variables: {
@@ -93,8 +102,23 @@ export const TeamTask = () => {
       refetchTask();
     });
   };
-  const [createTask] = useMutation(CREATE_TASK_TEAM);
+
+  const [createTask, { loading: loadingCreateTask }] =
+    useMutation(CREATE_TASK_TEAM);
+
   const handleCreateTask = async () => {
+    console.log({
+      companyId: parseInt(company_id),
+      teamId: parseInt(team_id),
+      userId: user_id,
+      task: {
+        TaskName: taskName,
+        StartDate: startDate,
+        EndDate: endDate,
+        Priority: parseInt(priority),
+        Comments: comments,
+      },
+    });
     await createTask({
       variables: {
         companyId: parseInt(company_id),
@@ -102,7 +126,6 @@ export const TeamTask = () => {
         userId: user_id,
         task: {
           TaskName: taskName,
-          TaskStatus: taskStatus,
           StartDate: startDate,
           EndDate: endDate,
           Priority: parseInt(priority),
@@ -113,14 +136,15 @@ export const TeamTask = () => {
       refetchTask();
     });
   };
+
   const [updateTask] = useMutation(UPDATE_TASK_TEAM);
+
   const handleUpdateTask = () => {
     updateTask({
       variables: {
         taskId: parseInt(currentTaskId),
         task: {
           TaskName: taskName,
-          TaskStatus: taskStatus,
           StartDate: startDate,
           EndDate: endDate,
           Priority: parseInt(priority),
@@ -131,28 +155,25 @@ export const TeamTask = () => {
       refetchTask();
     });
   };
+
   useEffect(() => {
     if (dataTeams) {
       setTaskName(dataTeams?.getTeam?.TaskName);
-      setTaskStatus(dataTeams?.getTeam?.TaskStatus);
       setComments(dataTeams?.getTeam?.Comments);
       setEndDate(dataTeams?.getTeam?.EndDate);
     }
   }, [dataTeams]);
+
   const openEditTaskWithDetails = (task) => {
     setCurrentTaskId(task._id);
     setTaskName(task.TaskName);
-    setTaskStatus(task.TaskStatus);
     setStartDate(task.StartDate || "");
     setEndDate(task.EndDate || "");
     setPriority(task.Priority || "");
     setComments(task.Comments || "");
     openEditTask();
   };
-  console.log(taskName);
-  console.log(taskStatus);
-  console.log(startDate);
-  console.log(endDate);
+
   const [openedTask, { open: openTask, close: closeTask }] =
     useDisclosure(false);
   const [openedEditTask, { open: openEditTask, close: closeEditTask }] =
@@ -201,68 +222,85 @@ export const TeamTask = () => {
               </Button>
               <div>
                 <Modal
+                  xOffset={"30%"}
+                  yOffset={"8%"}
+                  padding={"xl"}
+                  size={"lg"}
                   opened={openedTask}
                   onClose={closeTask}
                   title="Create Task"
                   centered
                 >
-                  <TextInput
-                    label="Task Name"
-                    placeholder="Enter task name"
-                    value={taskName}
-                    onChange={(e) => setTaskName(e.target.value)}
-                  />
-                  <br />
-                  <TextInput
-                    label="Start Date"
-                    placeholder="Enter start date"
-                    type="Date"
-                    value={startDate}
-                    onChange={(e) => setStartDate(e.target.value)}
-                  />
-                  <br />
-                  <TextInput
-                    label="End Date"
-                    placeholder="Enter end date"
-                    value={endDate}
-                    type="Date"
-                    onChange={(e) => setEndDate(e.target.value)}
-                  />
-                  <br />
-                  <TextInput
-                    label="Task Status"
-                    placeholder="Enter task status"
-                    value={taskStatus}
-                    onChange={(e) => setTaskStatus(e.target.value)}
-                  />
-                  <br />
-                  <TextInput
-                    label="Priority"
-                    placeholder="Enter priority"
-                    type="number"
-                    value={priority}
-                    onChange={(e) => setPriority(Number(e.target.value))}
-                  />
-                  <br />
-                  <Textarea
-                    label="Comments"
-                    placeholder="Enter comments"
-                    value={comments}
-                    onChange={(e) => setComments(e.target.value)}
-                  />
-                  <br />
-                  <div className="d-flex gap-3 justify-content-end">
-                    <Button
-                      variant="filled"
-                      color="orange"
-                      onClick={() => {
-                        handleCreateTask();
-                        closeTask();
-                      }}
-                    >
-                      Create Task
-                    </Button>
-                  </div>
+                  <form
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      handleCreateTask().then(() => closeTask());
+                    }}
+                  >
+                    <div className="d-flex gap-5">
+                      <div className="flex-grow-1">
+                        <TextInput
+                          label="Task Name"
+                          placeholder="Enter task name"
+                          value={taskName}
+                          onChange={(e) => {
+                            setTaskName(e.target.value);
+                          }}
+                          required
+                        />
+                        <br />
+                        <TextInput
+                          label="Start Date"
+                          placeholder="Enter start date"
+                          type="Date"
+                          value={startDate}
+                          onChange={(e) => setStartDate(e.target.value)}
+                          required
+                        />
+                        <br />
+                        <TextInput
+                          label="End Date"
+                          placeholder="Enter end date"
+                          value={endDate}
+                          type="Date"
+                          onChange={(e) => {
+                            setEndDate(e.target.value);
+                          }}
+                          required
+                        />
+                      </div>
+                      <div className="flex-grow-1">
+                        <NumberInput
+                          label="Priority"
+                          placeholder="Enter priority"
+                          type="number"
+                          min={1}
+                          max={10}
+                          value={priority}
+                          onChange={(e) => {
+                            const value = Number(e);
+                            if (value >= 1 && value <= 10) {
+                              setPriority(value);
+                            }
+                          }}
+                          required
+                        />
+                        <br />
+                        <Textarea
+                          label="Comments"
+                          placeholder="Enter comments"
+                          value={comments}
+                          onChange={(e) => setComments(e.target.value)}
+                        />
+                      </div>
+                    </div>
+                    <br />
+                    <div className="d-flex gap-3 justify-content-end">
+                      <Button type="submit" variant="filled" color="orange">
+                        {loadingCreateTask ? "Saving..." : "Save"}
+                      </Button>
+                    </div>
+                  </form>
                 </Modal>
 
                 <Button
@@ -337,14 +375,6 @@ export const TeamTask = () => {
                                   type="Date"
                                   value={endDate}
                                   onChange={(e) => setEndDate(e.target.value)}
-                                />
-                                <TextInput
-                                  label="Task Status"
-                                  placeholder="Enter task status"
-                                  value={taskStatus}
-                                  onChange={(e) =>
-                                    setTaskStatus(e.target.value)
-                                  }
                                 />
                                 <TextInput
                                   label="Priority"

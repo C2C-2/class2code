@@ -127,6 +127,7 @@ const Chat = () => {
 
   useEffect(() => {
     if (Friends) {
+      console.log(Friends);
       setFriends(() => Friends.getUser?.MyCompanies?.Teams?.Members);
       setFriends((e) =>
         e?.concat(Friends.getUser?.WorkCompanies?.Teams?.Members)

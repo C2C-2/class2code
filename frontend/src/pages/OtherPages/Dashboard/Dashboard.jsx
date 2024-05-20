@@ -25,18 +25,20 @@ function Dashboard() {
   const GET_TASKS = gql`
     query Query($userId: String!) {
       getUser(userId: $userId) {
-        Tasks {
-          TaskName
-          TaskStatus
-          StartDate
-          EndDate
-          Priority
-          Comments
-          CompanyName
-          TeamName
-          IsMarked
-          CreateDate
-          _id
+        WorkCompanies {
+          Tasks {
+            TaskName
+            TaskStatus
+            StartDate
+            EndDate
+            Priority
+            Comments
+            CompanyName
+            TeamName
+            IsMarked
+            CreateDate
+            _id
+          }
         }
       }
     }
@@ -58,9 +60,16 @@ function Dashboard() {
     loading: loadingTasks,
     error: errorTasks,
     data: dataTasks,
+    refetch: refetchTasks,
   } = useQuery(GET_TASKS, {
     variables: { userId: localStorage.getItem("id") },
   });
+
+  const combinedTasks = dataTasks?.getUser?.WorkCompanies?.map(
+    (company) => company.Tasks
+  );
+
+  const Tasks = combinedTasks?.flat();
 
   const [
     updateTask,
@@ -79,39 +88,9 @@ function Dashboard() {
       setTeamsNumber(data.getProfileStatistics.NumberOfTeams);
     }
   }, [data]);
-  // const userId = 
-
-  // const GET_LOCATIONS = gql`
-  //   query Query($userId: String!) {
-  //     getProfileStatistics(userId: $userId) {
-  //       NumberOfProjects
-  //       NumberOfTeams
-  //       NumberOfTasks
-  //       NumberOfMyCompanies
-  //     }
-  //   }
-  // `;
-
-  // const { loading, error, data } = useQuery(GET_LOCATIONS, {
-  //   variables: { userId: localStorage.getItem("id") },
-  // });
-
-  // useEffect(() => {
-  //   if (data) {
-  //     setReceivedData(data);
-  //     setProjectsNumber(data.getProfileStatistics.NumberOfProjects);
-  //     setTasksNumber(data.getProfileStatistics.NumberOfTasks);
-  //     setCompaniesNumber(data.getProfileStatistics.NumberOfMyCompanies);
-  //     setTeamsNumber(data.getProfileStatistics.NumberOfTeams);
-  //   }
-  // }, [data]);
-
-  // if (loading) return <p>Loading...</p>;
-  // if (error) return <p>Error : {error.message}</p>;
 
   const [opened, { open, close }] = useDisclosure(
     localStorage.getItem("type") ? true : false
-
   );
 
   return (
@@ -229,10 +208,7 @@ function Dashboard() {
               </div>
               <div className="DashboardUnder">
                 <div className="DashboardUnderPart1">
-                  <span
-                    className="DashboardUnderPart1Text1">
-                    New Tasks
-                  </span>
+                  <span className="DashboardUnderPart1Text1">New Tasks</span>
                   <span className="DashboardUnderPart1Text2">
                     {tasksNumber} Tasks
                   </span>
@@ -246,24 +222,19 @@ function Dashboard() {
                         <Table.Th>Team</Table.Th>
                         <Table.Th>Company</Table.Th>
                         <Table.Th>Status</Table.Th>
+                        <Table.Th>Action</Table.Th>
                       </Table.Tr>
                     </Table.Thead>
                     <Table.Tbody>
-                      {dataTasks?.getUser?.Tasks.map((task, index) => (
+                      {Tasks?.map((task, index) => (
                         <Table.Tr key={index}>
                           <Table.Td>{task?.TaskName}</Table.Td>
                           <Table.Td>
-                            <div
-                              className="TableDesign"
-                            >
-                              <span
-                                className="TableDesignText1 justify-content-center"
-                                 
-                              >
+                            <div className="TableDesign">
+                              <span className="TableDesignText1 justify-content-center">
                                 {task?.EndDate}
                               </span>
-                              <span
-                                className= "TableDesignText2 text-dark">
+                              <span className="TableDesignText2 text-dark">
                                 IN
                                 {getDaysDifference(
                                   task.StartDate,
@@ -291,30 +262,33 @@ function Dashboard() {
                             <Button
                               variant="filled"
                               color="#EE7214"
-                              w={100}
-                              h={40}
                               disabled={
                                 task?.TaskStatus == "Finish" ? "disabled" : null
                               }
                               onClick={async (e) => {
                                 e.preventDefault();
-                                if (task?.TaskStatus == "Pending") {
-                                  await updateTask({
-                                    variables: {
-                                      taskId: parseInt(task._id),
-                                      task: {
-                                        TaskName: task.TaskName,
-                                        TaskStatus: "Finish",
-                                        StartDate: task.StartDate,
-                                        EndDate: task.EndDate,
-                                        Priority: task.Priority,
-                                        Comments: task.Comments,
-                                        IsMarked: task.IsMarked,
-                                        CreateDate: task.CreateDate,
-                                      },
+                                await updateTask({
+                                  variables: {
+                                    taskId: parseInt(task._id),
+                                    task: {
+                                      TaskName: task.TaskName,
+                                      TaskStatus:
+                                        task.TaskStatus == "New"
+                                          ? "Pending"
+                                          : task.TaskStatus == "Pending"
+                                          ? "Finish"
+                                          : "New",
+                                      StartDate: task.StartDate,
+                                      EndDate: task.EndDate,
+                                      Priority: task.Priority,
+                                      Comments: task.Comments,
+                                      IsMarked: task.IsMarked,
+                                      CreateDate: task.CreateDate,
                                     },
-                                  });
-                                }
+                                  },
+                                }).then(() => {
+                                  refetchTasks();
+                                });
                               }}
                             >
                               {task?.TaskStatus == "Pending"
@@ -323,9 +297,6 @@ function Dashboard() {
                                 ? "Start"
                                 : "Done"}
                             </Button>
-                          </Table.Td>
-                          <Table.Td>
-                          <Button variant="filled">Start</Button>
                           </Table.Td>
                         </Table.Tr>
                       ))}

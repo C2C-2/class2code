@@ -994,43 +994,6 @@ const resolvers = {
         throw new Error(`Error in deleteEducation: ${error.message}`);
       }
     },
-    deleteUserFromTeam: async (parent, args) => {
-      try {
-        const { userId, teamId } = args;
-
-        if (!userId) {
-          throw new Error(
-            `Are you send userId? userId is required, userId value is ${userId}. please check userId value before send`
-          );
-        }
-
-        if (!teamId) {
-          throw new Error(
-            `Are you send teamId? teamId is required, teamId value is ${teamId}. please check teamId value before send`
-          );
-        }
-
-        console.log(userId, teamId);
-
-        const team = await NeodeObject?.writeCypher(
-          `MATCH (u:User) -[r:IN_TEAM]-> (t:Team) WHERE u.id = "${userId}" AND ID(t) = ${teamId}
-           DETACH DELETE r`
-        );
-
-        console.log(team);
-
-        await backup.info(`MATCH (u:User) -[r:IN_TEAM]-> (t:Team) WHERE u.id = "${userId}" AND ID(t) = ${teamId}
-        DETACH DELETE r`);
-
-        return true;
-      } catch (error) {
-        console.log(error);
-        Logging.error(
-          `${new Date()}, in resolvers.js => deleteUserFromTeam, ${error}`
-        );
-        throw new Error(`Error in deleteUserFromTeam: ${error.message}`);
-      }
-    },
     deletePost: async (parent, args) => {
       try {
         const { postId } = args;
@@ -2987,6 +2950,39 @@ const resolvers = {
         throw new Error(`Error in updateTeam: ${error.message}`);
       }
     },
+    deleteUserFromTeam: async (parent, args) => {
+      try {
+        const { userId, teamId } = args;
+
+        if (!userId) {
+          throw new Error(
+            `Are you send userId? userId is required, userId value is ${userId}. please check userId value before send`
+          );
+        }
+
+        if (!teamId) {
+          throw new Error(
+            `Are you send teamId? teamId is required, teamId value is ${teamId}. please check teamId value before send`
+          );
+        }
+
+        await NeodeObject?.writeCypher(
+          `MATCH (u:User) -[r:IN_TEAM]-> (t:Team) <- [cr:HAS_A_TEAM]-(c:Company) -[tp:TAKE_A_PROJECT]-> (p:Project) <- [wr:WORK_ON]-(u) WHERE u.id = "${userId}" AND ID(t) = ${teamId}
+           DETACH DELETE r, wr`
+        );
+
+        await backup.info(`MATCH (u:User) -[r:IN_TEAM]-> (t:Team) WHERE u.id = "${userId}" AND ID(t) = ${teamId}
+        DETACH DELETE r`);
+
+        return true;
+      } catch (error) {
+        console.log(error);
+        Logging.error(
+          `${new Date()}, in resolvers.js => deleteUserFromTeam, ${error}`
+        );
+        throw new Error(`Error in deleteUserFromTeam: ${error.message}`);
+      }
+    },
   },
   AIChat: {
     Messages: async (parent) => {
@@ -3303,31 +3299,26 @@ const resolvers = {
         }
 
         const cypherQuery = `
-           MATCH (user:User {id: "${userId}"})-[:ADMIN_OF]->(myCompany:Company)
-           MATCH (user:User {id: "${userId}"})-[:WORK_ON]->(company:Company)
-           MATCH (myCompany)-[:HAS_A_TEAM]->(myTeam:Team)
-           MATCH (company)-[:HAS_A_TEAM]->(team)
-           MATCH (myFriends:User)-[:IN_TEAM]->(myTeam)
-           MATCH (friends:User)-[:IN_TEAM]->(team)
-           WHERE ID(myFriends) <> ID(friends) 
-           and ID(myTeam) <> ID(team) 
-           and ID(myCompany) <> ID(company)
-           and user.id <> friends.id
-           and user.id <> myFriends.id
-           RETURN friends, myFriends`;
+        MATCH (u:User {id: "${userId}"})-[:ADMIN_OF]->(myCompany:Company)-[:HAS_A_TEAM]->(myTeam:Team)<-[:IN_TEAM]-(friends:User)
+        WITH friends
+        MATCH (u1:User)-[:IN_TEAM]->(t:Team)<-[:HAS_A_TEAM]-(c:Company)
+        WITH friends, u1
+        WITH collect(distinct friends) + collect(distinct u1) AS allUsers
+        UNWIND allUsers AS user
+        RETURN distinct user
+        `;
 
         const result = await NeodeObject.cypher(cypherQuery);
 
-        return result?.records?.map((record) => ({
-          friends: {
-            ...record.get("friends").properties,
-            id: record.get("friends").identity.low,
-          },
-          myFriends: {
-            ...record.get("myFriends").properties,
-            id: record.get("myFriends").identity.low,
-          },
-        }));
+        const uniqueUsers = result.records.map((record) => {
+          const user = record.get("user");
+          return {
+            ...user.properties,
+            id: user.identity.low,
+          };
+        });
+
+        return uniqueUsers;
       } catch (error) {
         Logging.error(`${new Date()}, in resolvers.js => Friends, ${error}`);
         throw error;
@@ -3714,15 +3705,16 @@ const resolvers = {
         }
 
         const cypherQuery = `
-           MATCH (users:User)-[:IN_TEAM]->(team:Team)
+           MATCH (users:User)-[r:IN_TEAM]->(team:Team)
            WHERE ID(team) = ${teamId}
-           RETURN users`;
+           RETURN users, r`;
 
         const result = await NeodeObject.cypher(cypherQuery);
 
         return result?.records?.map((record) => ({
           ...record.get("users").properties,
           _id: record.get("users").identity.low,
+          Role: record.get("r").properties.role,
         }));
       } catch (error) {
         Logging.error(`${new Date()}, in resolvers.js => Members, ${error}`);
