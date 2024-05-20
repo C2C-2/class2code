@@ -38,6 +38,7 @@ import Applys from "./pages/CompanyAdsPages/Applys/Applys";
 import { TeamTask } from "./pages/TaskPages/TeamTasks/TeamTask";
 import TeamUsers from "./pages/TeamPages/TeamUsers/TeamUsers";
 import { UserTask } from "./pages/TaskPages/UserTasks/UserTask";
+import OtherUserProfile from "./pages/OtherPages/OtherUserProfile/OtherUserProfile";
 
 const TokenChecker = ({ children }) => {
   if (!localStorage.getItem("token")) {
@@ -74,6 +75,14 @@ function App() {
             element={
               <TokenChecker>
                 <Applys />
+              </TokenChecker>
+            }
+          />
+           <Route
+            path={Paths.OtherUserProfile + "/:user_id"}
+            element={
+              <TokenChecker>
+                <OtherUserProfile />
               </TokenChecker>
             }
           />

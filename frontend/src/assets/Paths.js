@@ -1,3 +1,4 @@
+import OtherUserProfile from "../pages/OtherPages/OtherUserProfile/OtherUserProfile";
 
 export const Paths = {
   Login: "/Login",
@@ -36,4 +37,5 @@ export const Paths = {
   TeamTask:"/TeamTasks",
   NewTasksUser: "/NewTasksUser",
   TeamUsers: "/TeamUsers",
+  OtherUserProfile : "/OtherUserProfile"
 };
