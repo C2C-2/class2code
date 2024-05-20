@@ -20,18 +20,53 @@ import { useDisclosure } from "@mantine/hooks";
 const Chat = () => {
   const [oldChats, setOldChats] = React.useState([]);
   const [messages, setMessages] = React.useState([]);
+  const [friends, setFriends] = React.useState([]);
   const [chatId, setChatId] = React.useState("");
   const [message, setMessage] = React.useState("");
-  const [userId, setUserId] = React.useState(localStorage.getItem("id"));
-  const [userId2, setUserId2] = React.useState(0);
   const listRef = useRef(null);
 
-  const [friends, setFriends] = React.useState([]);
-  const [friendID, setFriendID] = React.useState(0);
+  const userId = localStorage.getItem("id");
+
+  const GET_USER = gql`
+    query Query($userId: String!) {
+      getUser(userId: $userId) {
+        id
+        FirstName
+        LastName
+        ImageUrl
+      }
+    }
+  `;
+
+  // useLazyQuery
+
+  const [getUser, { data: UserData }] = useLazyQuery(GET_USER);
 
   const fetchOldChats = () => {
+    // Fetching old chats from Firebase
     read("users/" + userId, (data) => {
-      setOldChats(data?.chats || []);
+      const chatsData = data?.chats || {}; // Ensure chats data is available
+
+      // Mapping through each chat key
+      const chatKeys = Object.keys(chatsData);
+      const updatedChats = chatKeys.map(async (key) => {
+        const recipientId =
+          chatsData[key][Object.keys(chatsData[key])[0]].recipientId;
+
+        const userDetails = await getUser({
+          variables: { userId: recipientId },
+        });
+
+        return {
+          chatKey: key,
+          recipientId: recipientId,
+          userDetails: userDetails.data.getUser, // Adding user details to each chat object
+        };
+      });
+
+      Promise.all(updatedChats).then((updatedChatsData) => {
+        setOldChats(updatedChatsData);
+      });
     });
   };
 
@@ -41,24 +76,21 @@ const Chat = () => {
     });
   };
 
-  const sendMessage = async (chatId, e) => {
+  const sendMessage = async (chatId, sender, recipient, e) => {
     e.preventDefault();
     await updateData("/chats/" + chatId + "/messages", {
       content: message,
       timestamp: new Date().toISOString(),
-      senderId: userId,
     });
 
-    await write("/users/" + userId + "/chats/" + chatId, {
+    await write("/users/" + sender + "/chats/" + chatId, {
       lastMessage: message,
       timestamp: new Date().toISOString(),
-      senderId: userId,
     });
 
-    await write("/users/" + userId2 + "/chats/" + chatId, {
+    await write("/users/" + recipient + "/chats/" + chatId, {
       lastMessage: message,
       timestamp: new Date().toISOString(),
-      senderId: userId,
     });
   };
 
@@ -74,48 +106,27 @@ const Chat = () => {
     listRef.current?.scrollIntoView();
   }, [messages]);
 
-  const createChat = async (e, friendId) => {
+  const createChat = async (e, sender, recipient) => {
     e.preventDefault();
-
-    const key = await updateData(`/chats`, { name: "" });
-    await updateData(`/users/${userId}/chats/${key}`, { name: "" });
-    await updateData(`/users/${friendId}/chats/${key}`, { name: "" });
+    const key = await updateData(`/chats`, {
+      recipientId: recipient,
+    });
+    await updateData(`/users/${userId}/chats/${key}`, {
+      recipientId: recipient,
+    });
+    await updateData(`/users/${recipient}/chats/${key}`, {
+      recipientId: sender,
+    });
   };
-
-  const GET_USER = gql`
-    query Query($userId: String!) {
-      getUser(userId: $userId) {
-        FirstName
-        LastName
-        ImageUrl
-      }
-    }
-  `;
-
-  // useLazyQuery
-
-  const [getPosts, { data: UserData }] = useLazyQuery(GET_USER);
 
   const GET_Friends = gql`
     query Query($userId: String!) {
       getUser(userId: $userId) {
-        MyCompanies {
-          Teams {
-            Members {
-              FirstName
-              LastName
-              id
-            }
-          }
-        }
-        WorkCompanies {
-          Teams {
-            Members {
-              LastName
-              FirstName
-              id
-            }
-          }
+        Friends {
+          FirstName
+          LastName
+          id
+          ImageUrl
         }
       }
     }
@@ -127,11 +138,7 @@ const Chat = () => {
 
   useEffect(() => {
     if (Friends) {
-      console.log(Friends);
-      setFriends(() => Friends.getUser?.MyCompanies?.Teams?.Members);
-      setFriends((e) =>
-        e?.concat(Friends.getUser?.WorkCompanies?.Teams?.Members)
-      );
+      setFriends(() => Friends.getUser?.Friends);
     }
   }, [Friends]);
 
@@ -167,9 +174,7 @@ const Chat = () => {
                 >
                   <form
                     onSubmit={(e) => {
-                      createChat(e, friendID);
                       e.preventDefault();
-                      close();
                     }}
                   >
                     <div id="friends_search">
@@ -184,9 +189,7 @@ const Chat = () => {
                         })}
                         searchable
                         zIndex={10}
-                        onChange={(e) => {
-                          setFriendID(e);
-                        }}
+                        onChange={(e) => {}}
                       />
                     </div>
                     <br />
@@ -224,18 +227,25 @@ const Chat = () => {
                   size="md"
                 />
                 <div className="chat_chats_body_chats d-flex flex-column gap-1">
-                  {Object.values(oldChats)?.map((messages, index) => (
-                    <ChatItem
-                      onClike={() => {
-                        const chatId = Object.keys(oldChats)[index];
-                        setChatId(chatId);
-                        fetchChat(chatId);
-                      }}
-                      key={index}
-                      lastMessage={messages?.lastMessage}
-                      image="https://i.pravatar.cc/300"
-                    />
-                  ))}
+                  {Object.values(oldChats)?.map((messages, index) => {
+                    return (
+                      <ChatItem
+                        onClike={() => {
+                          const chatId = Object.keys(oldChats)[index];
+                          setChatId(chatId);
+                          fetchChat(chatId);
+                        }}
+                        key={index}
+                        lastMessage={messages?.lastMessage}
+                        image={messages?.userDetails?.ImageUrl}
+                        userName={
+                          messages?.userDetails?.FirstName +
+                          " " +
+                          messages?.userDetails?.LastName
+                        }
+                      />
+                    );
+                  })}
                 </div>
               </div>
             </div>
@@ -243,15 +253,9 @@ const Chat = () => {
               <div className="chat_messages_head d-flex">
                 {UserData?.getUser && (
                   <div className="d-flex chat_messages_head_user gap-4 align-content-center">
-                    <img src={UserData?.getUser?.ImageUrl} alt={"User 1"} />
-                    <div className="d-flex flex-column">
-                      <Text fw={700} size="md">
-                        {UserData?.getUser?.FirstName +
-                          " " +
-                          UserData?.getUser?.LastName}
-                      </Text>
+                    <img alt={"User 1"} />
+                    <div className="d-flex flex-column justify-content-center">
                       <Text size="xs" color="green">
-                        {" "}
                         <FaDotCircle size={7} /> online
                       </Text>
                     </div>
@@ -264,7 +268,7 @@ const Chat = () => {
                     key={index}
                     userName="User 1"
                     message={message.content}
-                    image="https://i.pravatar.cc/300"
+                    image={""}
                     dir={message.senderId === userId ? "ltr" : "rtl"}
                   />
                 ))}

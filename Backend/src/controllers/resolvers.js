@@ -3299,26 +3299,25 @@ const resolvers = {
         }
 
         const cypherQuery = `
-        MATCH (u:User {id: "${userId}"})-[:ADMIN_OF]->(myCompany:Company)-[:HAS_A_TEAM]->(myTeam:Team)<-[:IN_TEAM]-(friends:User)
-        WITH friends
-        MATCH (u1:User)-[:IN_TEAM]->(t:Team)<-[:HAS_A_TEAM]-(c:Company)
-        WITH friends, u1
-        WITH collect(distinct friends) + collect(distinct u1) AS allUsers
-        UNWIND allUsers AS user
-        RETURN distinct user
+        MATCH (u:User {id: "33BYmVcYwfQcyPhZ23Liu7Cg2aK2"})-[:ADMIN_OF]->(myCompany:Company)-[:HAS_A_TEAM]->(myTeam:Team)<-[:IN_TEAM]-(friends:User)
+        WHERE friends <> u
+        WITH u, collect(friends) AS friendsList
+        MATCH (u)-[:IN_TEAM]->(t:Team)<-[:IN_TEAM]-(u1:User)
+        WHERE u1 <> u
+        WITH friendsList, collect(u1) AS u1List
+        WITH friendsList + u1List AS combinedList
+        UNWIND combinedList AS user
+        WITH DISTINCT user.id AS id, user
+        RETURN collect(user) AS uniqueUsers
         `;
 
         const result = await NeodeObject.cypher(cypherQuery);
 
-        const uniqueUsers = result.records.map((record) => {
-          const user = record.get("user");
-          return {
-            ...user.properties,
-            id: user.identity.low,
-          };
-        });
+        const uniqueUsers = result.records[0].get("uniqueUsers");
 
-        return uniqueUsers;
+        return uniqueUsers.map((user) => ({
+          ...user.properties,
+        }));
       } catch (error) {
         Logging.error(`${new Date()}, in resolvers.js => Friends, ${error}`);
         throw error;
