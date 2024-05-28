@@ -1,22 +1,23 @@
-.MyCompaniesCard{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 2rem;
-    gap: 1rem;
-    border-radius: 12px;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    min-width: 14vw;
-    min-height: 18vw;
-    flex: 1;
-    height: 100%;
+.MyCompaniesCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  gap: 1rem;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  min-width: 14vw;
+  min-height: 18vw;
+  flex: 1;
+  height: 100%;
+  max-width: 33%;
 }
 
-.MyCompaniesCard hr{
-    width: 100%;
+.MyCompaniesCard hr {
+  width: 100%;
 }
 
-.MyCompaniesCard p{
-    text-align: center;
+.MyCompaniesCard p {
+  text-align: center;
 }

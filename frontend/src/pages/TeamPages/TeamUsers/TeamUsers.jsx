@@ -1,16 +1,31 @@
 import { useEffect, useState } from "react";
 import "./Team.css";
-import { useNavigate, useParams } from "react-router-dom";
-import { gql, useLazyQuery, useMutation, useQuery } from "@apollo/client";
-import { Button, Modal, MultiSelect, Select, TextInput } from "@mantine/core";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { gql, useMutation, useQuery } from "@apollo/client";
+import {
+  Alert,
+  Button,
+  Modal,
+  NumberInput,
+  Select,
+  Textarea,
+  TextInput,
+} from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
+import { Paths } from "../../../assets/Paths";
 
 const TeamUsers = () => {
-  const { id } = useParams();
+  const { id, company_id } = useParams();
   const navigate = useNavigate();
 
   const [userId, setUserId] = useState("");
   const [role, setRole] = useState("Member");
+  const [err, setErr] = useState(null);
+  const [comments, setComments] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [priority, setPriority] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [taskName, setTaskName] = useState("");
 
   const GET_APPLIES = gql`
     query GetTeam($teamId: Int!) {
@@ -92,10 +107,56 @@ const TeamUsers = () => {
     }
   );
 
+  const ADD_TASK_TO_USER = gql`
+    mutation CreateTaskForUser(
+      $task: TaskInput!
+      $userId: String!
+      $userCreateTaskId: String!
+      $companyId: Int!
+      $teamId: Int!
+    ) {
+      createTaskForUser(
+        task: $task
+        userId: $userId
+        userCreateTaskId: $userCreateTaskId
+        companyId: $companyId
+        teamId: $teamId
+      ) {
+        _id
+      }
+    }
+  `;
+
+  const [createTaskForUser, { loading: loadingCreateTask }] =
+    useMutation(ADD_TASK_TO_USER);
+
   const [opened, { open, close }] = useDisclosure(false);
+  const [addTaskOpened, { open: openAddTask, close: closeAddTask }] =
+    useDisclosure(false);
 
   return (
     <div className="ShowAllPostsAll">
+      {err && (
+        <div
+          style={{
+            zIndex: 1000000000000000,
+            position: "absolute",
+            top: "2%",
+            right: 0,
+            left: 0,
+            width: "100%",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Alert
+            style={{ width: "fit-content" }}
+            color="red"
+            title={"Error: " + err}
+          />
+        </div>
+      )}
       <div className="ShowAllPostsMain">
         <div className="ShowAllPostsContent">
           <div className="sideBareFake"></div>
@@ -158,7 +219,8 @@ const TeamUsers = () => {
                     if (
                       data?.getTeam?.Members?.find(
                         (member) => member?.Role === "Leader"
-                      ) && role === "Leader"
+                      ) &&
+                      role === "Leader"
                     ) {
                       alert("Team already has a leader");
                       return;
@@ -170,10 +232,15 @@ const TeamUsers = () => {
                         userId: userId,
                         role: role,
                       },
-                    }).then(() => {
-                      refetchApplies().then(() => {
+                    }).then((e) => {
+                      if (e?.data?.addUserToTeam == false) {
+                        setErr("Check if this company has project");
+                        const time = setTimeout(() => setErr(null), 3000);
                         close();
-                      });
+                        return () => clearTimeout(time);
+                      }
+                      refetchApplies();
+                      close();
                     });
                   }}
                 >
@@ -212,7 +279,7 @@ const TeamUsers = () => {
             <div className="postApplies">
               {data?.getTeam?.Members?.map((user, index) => (
                 <div className="apply" key={index}>
-                  <img src={user?.ImageUrl} />
+                  <img style={{maxWidth: "100px", maxHeight: "100px"}} src={user?.ImageUrl} />
                   <div className="d-flex flex-column gap-1 text-center">
                     <h4>
                       {user?.FirstName} {user?.LastName}
@@ -230,8 +297,10 @@ const TeamUsers = () => {
                     ))}
                   </div>
 
-                  <div className="d-flex gap-2">
-                    <Button color="orange">View Profile</Button>
+                  <div className="d-flex gap-2 align-items-center justify-content-center flex-wrap">
+                    <Link to={`${Paths.OtherUserProfile}/${user?.id}`}>
+                      <Button color="orange">View Profile</Button>
+                    </Link>
                     <Button
                       color="red"
                       onClick={async () => {
@@ -242,6 +311,10 @@ const TeamUsers = () => {
                     >
                       {deleteUserLoading ? "Deleting..." : "Delete"}
                     </Button>
+
+                    <Link to={`${Paths.UserTasks}/${company_id}/${id}/${user?.id}`}>
+                      <Button color="yellow">Tasks</Button>
+                    </Link>
                   </div>
                 </div>
               ))}

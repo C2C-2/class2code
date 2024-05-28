@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from "react";
 import "./Applys.css";
 import { useNavigate, useParams } from "react-router-dom";
-import { Button } from "@mantine/core";
-import { gql, useLazyQuery, useQuery } from "@apollo/client";
+import { Button, Input, InputLabel, Modal, TextInput } from "@mantine/core";
+import { gql, useLazyQuery, useMutation, useQuery } from "@apollo/client";
+import { useDisclosure } from "@mantine/hooks";
 const Applys = () => {
-  const { id } = useParams();
+  const { id, companyId } = useParams();
   const navigate = useNavigate();
   const [applies, setApplies] = useState([]);
+  const [role, setRole] = useState("Member");
+  const [teamId, setTeamId] = useState(null);
 
   const GET_APPLIES = gql`
     query GetPost($postId: Int!) {
@@ -27,7 +30,12 @@ const Applys = () => {
     }
   `;
 
-  const { data, loading, error } = useQuery(GET_APPLIES, {
+  const {
+    data,
+    loading,
+    error,
+    refetch: refetchApplies,
+  } = useQuery(GET_APPLIES, {
     variables: {
       postId: parseInt(id),
     },
@@ -41,11 +49,44 @@ const Applys = () => {
 
   const [deleteApply] = useLazyQuery(DELETE_APPLY);
 
+  const GET_MY_Teams = gql`
+    query GetCompany($companyId: Int!) {
+      getCompany(companyId: $companyId) {
+        Teams {
+          _id
+          TeamName
+        }
+      }
+    }
+  `;
+
+  const { data: myTeams } = useQuery(GET_MY_Teams, {
+    variables: {
+      companyId: parseInt(companyId),
+    },
+  });
+
+  useEffect(() => {
+    if (myTeams) {
+      setTeamId(myTeams?.getCompany?.Teams[0]?._id);
+    }
+  }, [myTeams]);
+
+  const ADD_USER_TO_TEAM = gql`
+    mutation Mutation($teamId: Int!, $userId: String!, $role: String!) {
+      addUserToTeam(teamId: $teamId, userId: $userId, role: $role)
+    }
+  `;
+
+  const [addUserToTeam] = useMutation(ADD_USER_TO_TEAM);
+
   useEffect(() => {
     if (!data) {
       setApplies(data?.getPost?.Applies);
     }
   }, [data]);
+
+  const [opened, { open, close }] = useDisclosure(false);
 
   return (
     <div className="ShowAllPostsAll">
@@ -87,42 +128,118 @@ const Applys = () => {
             </Button>
 
             <div className="postApplies">
-              {data?.getPost?.Applies?.map((user, index) => (
-                <div className="apply" key={index}>
-                  <img src={user?.ImageUrl} />
-                  <div className="d-flex flex-column gap-1 text-center">
-                    <h4>
-                      {user?.FirstName} {user?.LastName}
-                    </h4>
-                    <h6>{user?.Work}</h6>
-                  </div>
+              {data?.getPost?.Applies?.length === 0 ? (
+                <h1 className="text-center w-100">No Applies</h1>
+              ) : (
+                data?.getPost?.Applies?.map((user, index) => (
+                  <div className="apply" key={index}>
+                    <img src={user?.ImageUrl} />
+                    <div className="d-flex flex-column gap-1 text-center">
+                      <h4>
+                        {user?.FirstName} {user?.LastName}
+                      </h4>
+                      <h6>{user?.Work}</h6>
+                    </div>
 
-                  <p>{user?.Bio || "No Bio"}</p>
+                    <p>{user?.Bio || "No Bio"}</p>
 
-                  <div className="d-flex gap-2 flex-wrap">
-                    {user?.Skills?.map((skill, index) => (
-                      <div className="skill" key={index}>
-                        <h6>{skill?.Skill}</h6>
-                      </div>
-                    ))}
-                  </div>
+                    <div className="d-flex gap-2 flex-wrap">
+                      {user?.Skills?.map((skill, index) => (
+                        <div className="skill" key={index}>
+                          <h6>{skill?.Skill}</h6>
+                        </div>
+                      ))}
+                    </div>
 
-                  <div className="d-flex gap-2">
-                    <Button color="green">Approve</Button>
-                    <Button
-                      color="red"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        deleteApply({
-                          variables: { postId: parseInt(id), userId: user?.id },
-                        });
-                      }}
-                    >
-                      Disapprove
-                    </Button>
+                    <div className="d-flex gap-2">
+                      <Modal
+                        xOffset={"30%"}
+                        yOffset={"8%"}
+                        padding={"xl"}
+                        size={"lg"}
+                        opened={opened}
+                        onClose={close}
+                        title="Select Team"
+                        centered
+                      >
+                        <form
+                          onSubmit={async (e) => {
+                            e.preventDefault();
+                            await addUserToTeam({
+                              variables: {
+                                teamId: parseInt(teamId),
+                                userId: user?.id,
+                                role: role,
+                              },
+                            }).then(() => {
+                              deleteApply({
+                                variables: {
+                                  postId: parseInt(id),
+                                  userId: user?.id,
+                                },
+                              }).then(() => {
+                                refetchApplies();
+                                close();
+                              });
+                            });
+                          }}
+                        >
+                          <label htmlFor="team" className="form-label">
+                            Team Name
+                          </label>
+                          <select
+                            name="team"
+                            className="form-select"
+                            aria-label="Default select example"
+                            required
+                            onChange={(e) => setTeamId(e.target.value)}
+                          >
+                            {myTeams?.getCompany?.Teams?.map((team, index) => (
+                              <option key={index} value={team?._id}>
+                                {team?.TeamName}
+                              </option>
+                            ))}
+                          </select>
+                          <br />
+
+                          <TextInput
+                            label="Role"
+                            onChange={(e) => setRole(e.target.value)}
+                            placeholder="Role"
+                            required
+                            value={role}
+                          />
+                          <br />
+
+                          <div className="w-100 d-flex justify-content-end">
+                            <Button color="green" type="submit">
+                              Add
+                            </Button>
+                          </div>
+                        </form>
+                      </Modal>
+                      <Button onClick={open} color="green">
+                        Approve
+                      </Button>
+
+                      <Button
+                        color="red"
+                        onClick={async (e) => {
+                          e.stopPropagation();
+                          await deleteApply({
+                            variables: {
+                              postId: parseInt(id),
+                              userId: user?.id,
+                            },
+                          }).then(() => refetchApplies());
+                        }}
+                      >
+                        Disapprove
+                      </Button>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))
+              )}
             </div>
           </div>
         </div>

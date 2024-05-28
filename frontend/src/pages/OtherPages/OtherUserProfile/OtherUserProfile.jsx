@@ -9,12 +9,11 @@ import {
   TextInput,
 } from "@mantine/core";
 import { useCallback, useEffect, useState } from "react";
-import { gql, useQuery } from "@apollo/client";
-import { DateInput } from "@mantine/dates";
-function OtherUserProfile() {
+import { gql, useMutation, useQuery } from "@apollo/client";
+function UserProfile() {
   const [skills, setSkills] = useState([]);
   const [skill, setSkill] = useState("");
-  const user_id = useParams();
+  const { user_id: userId } = useParams();
   const [image, setImage] = useState("");
   const [fullName, setFullName] = useState("");
   const [dateOfBirth, setDateOfBirth] = useState(new Date());
@@ -23,9 +22,19 @@ function OtherUserProfile() {
   const [country, setCountry] = useState("");
   const [rate, setRate] = useState(0);
   const [Bio, setBio] = useState("");
-  const [error, setError] = useState(null);
 
   const navigate = useNavigate();
+
+  const UPDATE_USER = gql`
+    mutation Mutation($userId: String!, $user: UserInput!) {
+      updateUser(userId: $userId, user: $user) {
+        id
+      }
+    }
+  `;
+
+  const [updateUser, { loading: updateLoading, error: updateError }] =
+    useMutation(UPDATE_USER);
 
   const GET_USER_IMAGE = gql`
     query Friends($userId: String!) {
@@ -53,7 +62,7 @@ function OtherUserProfile() {
     data: userData,
     refetch: userRefetch,
   } = useQuery(GET_USER_IMAGE, {
-    variables: { user_id },
+    variables: { userId },
   });
 
   const GET_STATISTICS = gql`
@@ -73,7 +82,7 @@ function OtherUserProfile() {
     data: statisticsData,
     refetch: statisticsRefetch,
   } = useQuery(GET_STATISTICS, {
-    variables: { user_id },
+    variables: { userId: userId },
   });
 
   const fetch = useCallback(() => {
@@ -86,7 +95,7 @@ function OtherUserProfile() {
       setCountry(userData?.getUser?.Country);
       setRate(userData?.getUser?.Rate);
       setBio(userData?.getUser?.Bio);
-      setDateOfBirth(new Date(userData?.getUser?.DateOfBirth));
+      setDateOfBirth(userData?.getUser?.DateOfBirth);
       setSkills(userData?.getUser?.Skills?.map((e) => e.Skill));
       setGender(userData?.getUser?.Gender);
     }
@@ -96,8 +105,17 @@ function OtherUserProfile() {
     fetch();
   }, [fetch]);
 
+  const UPDATE_SKILLS = gql`
+    mutation UpdateUserSkills($userId: String!, $skills: [String]!) {
+      updateUserSkills(userId: $userId, skills: $skills)
+    }
+  `;
+
+  const [updateSkills, { loading: skillsLoading, error: skillsError }] =
+    useMutation(UPDATE_SKILLS);
+
   return (
-    <div className="ShowAllPostsAll">
+    <div className="ShowAllPostsAll" id="man">
       <div className="ShowAllPostsMain">
         <div className="ShowAllPostsContent">
           <div className="sideBareFake"></div>
@@ -137,7 +155,11 @@ function OtherUserProfile() {
             </Button>
             <div className="UserProfileContent">
               <div className="UserProfileImage">
-                <img src={image} alt="Img"/>
+                <img
+                  src={image}
+                  className="UserProfileImg"
+                  alt="User Profile"
+                />
                 <div className="UserProfileImageText">
                   <h6 className="UserProfileImageText1">{fullName}</h6>
                   <h6 className="UserProfileImageText2">
@@ -183,34 +205,34 @@ function OtherUserProfile() {
                 <div className="UserProfileDetails1">
                   <Textarea
                     label="About me"
-                    value={Bio}
-                    onChange={(e) => setBio(e.target.value)}
+                    value={Bio || "No bio"}
                     disabled
                   />
                   <TextInput
                     label="Full Name"
                     value={fullName}
-                    onChange={(e) => {
-                      setFullName(e.target.value);
-                    }}
                     disabled
                   />
                   <TextInput
                     label="Your Work"
                     value={specialty}
-                    onChange={(e) => setSpecialty(e.target.value)}
                     disabled
                   />
-                  <DateInput
-                    label="Date Of Birth"
-                    value={dateOfBirth}
-                    onChange={(e) => setDateOfBirth(e.target.value)}
-                    disabled
-                  />
+                  <div>
+                    <label htmlFor="dateOfBirth">Date Of Birth</label>
+                    <input
+                      type="date"
+                      name="dateOfBirth"
+                      id="dateOfBirth"
+                      className="form-control"
+                      placeholder="Date Of Birth"
+                      value={dateOfBirth}
+                      disabled
+                    />
+                  </div>
                   <TextInput
                     label="Country"
                     value={country}
-                    onChange={(e) => setCountry(e.target.value)}
                     disabled
                   />
                   <div className="genderContainer">
@@ -220,7 +242,7 @@ function OtherUserProfile() {
                       name="gender"
                       id="gender"
                       value={gender}
-                      onChange={(e) => setGender(e.target.value)}
+                      disabled
                     >
                       <option value="male">Male</option>
                       <option value="female">Female</option>
@@ -235,6 +257,8 @@ function OtherUserProfile() {
                           <Pill
                             key={skill}
                             value={skill}
+                            withRemoveButton
+                            disabled
                             size="md"
                           >
                             {skill}
@@ -242,14 +266,7 @@ function OtherUserProfile() {
                         ))}
                       </Pill.Group>
                     </PillsInput>
-                    <form
-                      action="#"
-                      className="addSkillForm"
-                    >
-                    
-                    </form>
                   </div>
-                  
                 </div>
               </div>
             </div>
@@ -259,4 +276,50 @@ function OtherUserProfile() {
     </div>
   );
 }
-export default OtherUserProfile;
+
+const UserProfileImg = ({ image, setImage }) => {
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImage(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  return (
+    <div
+      className="UserProfileImgContainer"
+      onClick={() => document.getElementById("fileInput").click()}
+    >
+      <img src={image} className="UserProfileImg" alt="User Profile" />
+      <div className="EditIcon">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="feather feather-edit-2"
+        >
+          <path d="M17 3l4 4L7 21H3v-4L17 3z"></path>
+        </svg>
+      </div>
+      <input
+        id="fileInput"
+        type="file"
+        style={{ display: "none" }}
+        onChange={handleImageChange}
+        accept="image/*"
+      />
+    </div>
+  );
+};
+
+export default UserProfile;

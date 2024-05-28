@@ -37,6 +37,7 @@ function EditMyCompanyProfile() {
           LastName
         }
         Project {
+          _id
           ProjectName
         }
         Teams {
@@ -146,8 +147,14 @@ function EditMyCompanyProfile() {
       deleteTeam(teamId: $teamId)
     }
   `;
-
   const [deleteTeam] = useLazyQuery(DELETE_TEAM);
+
+  const DONE = gql`
+    mutation Mutation($projectId: Int!, $companyId: Int!) {
+      makeProjectDone(projectId: $projectId, companyId: $companyId)
+    }
+  `;
+  const [done] = useMutation(DONE);
 
   const fetch = useCallback(() => {
     if (companyData) {
@@ -306,24 +313,42 @@ function EditMyCompanyProfile() {
                   className="d-flex flex-column gap-4"
                   style={{ minWidth: 300 }}
                 >
-                  {projectName && (
+                  {(projectName && (
                     <div className="d-flex flex-column gap-2">
-                      <TextInput
-                        label="Change Project"
-                        placeholder="Project Name"
-                        size="md"
-                      />
+                      <h4>Project</h4>
                       <div className="project_name">
-                        <h6>{"projectName"}</h6>
-                        <Button variant="filled" color="green" size="xs">
+                        <h6>{projectName}</h6>
+                        <Button
+                          onClick={() => {
+                            done({
+                              variables: {
+                                companyId: parseInt(company_id),
+                                projectId: parseInt(
+                                  companyData?.getCompany?.Project?._id
+                                ),
+                              },
+                            }).then(() => {
+                              refetchCompany();
+                            });
+                          }}
+                          variant="filled"
+                          color="green"
+                          size="xs"
+                        >
                           Done!
                         </Button>
                       </div>
                     </div>
+                  )) || (
+                    <div className="d-flex flex-column gap-2">
+                      <h4>Project</h4>
+                      <div className="project_name">
+                        <h6>No Project</h6>
+                      </div>
+                    </div>
                   )}
                   <div>
-                    <h4>Teams</h4>
-                    <br />
+                    <h4 className="mb-2">Teams</h4>
                     <Modal
                       xOffset={"30%"}
                       yOffset={"9%"}
@@ -449,12 +474,10 @@ function EditMyCompanyProfile() {
                           </>
 
                           <div className="d-flex gap-2">
-                          <Link
-                              to={`${Paths.TeamUsers}/${team._id}`}
+                            <Link
+                              to={`${Paths.TeamUsers}/${company_id}/${team._id}`}
                             >
-                              <Button radius={"xl"}>
-                                Users
-                              </Button>
+                              <Button radius={"xl"}>Users</Button>
                             </Link>
                             <Link
                               to={`/TeamTasks/${team._id}/company/${company_id}`}

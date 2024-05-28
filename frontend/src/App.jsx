@@ -38,6 +38,7 @@ import Applys from "./pages/CompanyAdsPages/Applys/Applys";
 import { TeamTask } from "./pages/TaskPages/TeamTasks/TeamTask";
 import TeamUsers from "./pages/TeamPages/TeamUsers/TeamUsers";
 import { UserTask } from "./pages/TaskPages/UserTasks/UserTask";
+import {MyTasks} from "./pages/TaskPages/MyTasks/MyTasks";
 import OtherUserProfile from "./pages/OtherPages/OtherUserProfile/OtherUserProfile";
 
 const TokenChecker = ({ children }) => {
@@ -71,14 +72,14 @@ function App() {
           <Route path={Paths.Home} element={<Home />} />
 
           <Route
-            path={Paths.Applys + "/:id"}
+            path={Paths.Applys + "/:companyId/:id"}
             element={
               <TokenChecker>
                 <Applys />
               </TokenChecker>
             }
           />
-           <Route
+          <Route
             path={Paths.OtherUserProfile + "/:user_id"}
             element={
               <TokenChecker>
@@ -88,7 +89,16 @@ function App() {
           />
 
           <Route
-            path={Paths.TeamUsers + "/:id"}
+            path={`${Paths.UserTasks}/:company_id/:team_id/:id`}
+            element={
+              <TokenChecker>
+                <UserTask />
+              </TokenChecker>
+            }
+          />
+
+          <Route
+            path={`${Paths.TeamUsers}/:company_id/:id`}
             element={
               <TokenChecker>
                 <TeamUsers />
@@ -223,7 +233,7 @@ function App() {
             path="/NewTasksUser"
             element={
               <TokenChecker>
-                <UserTask />
+                <MyTasks />
               </TokenChecker>
             }
           />

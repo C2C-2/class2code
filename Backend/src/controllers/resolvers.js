@@ -178,23 +178,30 @@ const resolvers = {
         // int args from client
         const { companyId } = args;
 
-        if (!companyId) {
+        console.log(companyId);
+
+        if (companyId === null || companyId === undefined) {
           throw new Error(
             `Are you send companyId? companyId is required, companyId value is ${companyId}. please check companyId value before send`
           );
         }
 
-        const company = await NeodeObject?.findById("Company", companyId);
+        const query = `
+      MATCH (company:Company) WHERE ID(company) = ${companyId}
+      OPTIONAL MATCH (company)-[:HAS_A_TEAM]->(team:Team)
+      OPTIONAL MATCH (team)-[:HAS_A_TASK]->(task:Task)
+      OPTIONAL MATCH (task)-[:HAS_A]->(taskStep:TaskStep)
+      DETACH DELETE company, team, task, taskStep
+    `;
 
-        if (!company) {
-          throw new Error("Company not found");
-        }
-
-        await company.delete();
+        await NeodeObject.writeCypher(query);
 
         await backup.info(`
-        Match (company:Company) where ID(company) = ${companyId}
-        delete company
+        MATCH (company:Company) WHERE ID(company) = ${companyId}
+      OPTIONAL MATCH (company)-[:HAS_A_TEAM]->(team:Team)
+      OPTIONAL MATCH (team)-[:HAS_A_TASK]->(task:Task)
+      OPTIONAL MATCH (task)-[:HAS_A]->(taskStep:TaskStep)
+      DETACH DELETE company, team, task, taskStep
         `);
 
         return true;
@@ -451,8 +458,8 @@ const resolvers = {
 
         const numberOfTasks = await NeodeObject?.cypher(
           `
-          MATCH (u:User {id: "${userId}"}) -[:HAS_A_TASK]-> (t:Task)
-          RETURN count(t)
+          MATCH (u:User {id: "${userId}"}) -[:IN_TEAM]-> (team:Team) - [:HAS_A_TASK] -> (task:Task)
+          RETURN count(task) as tasks
           `
         );
 
@@ -466,7 +473,7 @@ const resolvers = {
         return {
           NumberOfProjects: numberOfProjects.records[0].get("count(p)").low,
           NumberOfTeams: numberOfTeams.records[0].get("count(t)").low,
-          NumberOfTasks: numberOfTasks.records[0].get("count(t)").low,
+          NumberOfTasks: numberOfTasks.records[0].get("tasks").low,
           NumberOfMyCompanies:
             numberOfMyCompanies.records[0].get("myCompaniesCount").low,
         };
@@ -667,7 +674,7 @@ const resolvers = {
       try {
         const { companyId } = args;
 
-        if (!companyId) {
+        if (companyId === null || companyId === undefined) {
           throw new Error(
             `Are you send companyId? companyId is required, companyId value is ${companyId}. please check companyId value before send`
           );
@@ -1322,6 +1329,9 @@ const resolvers = {
       try {
         const { postId, userId } = args;
 
+        console.log(postId);
+        console.log(userId);
+
         if (!postId) {
           throw new Error(
             `Are you send postId? postId is required, postId value is ${postId}. please check postId value before send`
@@ -1335,8 +1345,8 @@ const resolvers = {
         }
 
         const query = `
-          MATCH (u:User)-[r:APPLY_TO]->(p:PositionPost)
-          WHERE ID(p) = ${postId} AND ID(u) = ${userId}
+          MATCH (u:User {id: "${userId}"})-[r:APPLY_TO]->(p:PositionPost)
+          WHERE ID(p) = ${postId}
           DETACH DELETE r
         `;
 
@@ -1349,6 +1359,76 @@ const resolvers = {
           `${new Date()}, in resolvers.js => deletePostPositionApply, ${error}`
         );
         throw new Error(`Error in deletePostPositionApply: ${error.message}`);
+      }
+    },
+    getUserTasksInTeam: async (parent, args) => {
+      try {
+        const { teamId, userId, page = 0, limit = 10 } = args;
+
+        if (!teamId) {
+          throw new Error(
+            `Are you send teamId? teamId is required, teamId value is ${teamId}. please check teamId value before send`
+          );
+        }
+
+        if (!userId) {
+          throw new Error(
+            `Are you send userId? userId is required, userId value is ${userId}. please check userId value before send`
+          );
+        }
+
+        const query = `
+          MATCH (u:User {id: "${userId}"})-[r:HAS_A_TASK]->(t:Task)
+          WHERE r.teamId = "${teamId}"
+          RETURN t
+          SKIP ${page * limit} LIMIT ${limit}
+        `;
+
+        const tasks = await NeodeObject?.cypher(query);
+
+        return tasks?.records?.map((record) => ({
+          ...record?.get("t")?.properties,
+          _id: record?.get("t")?.identity?.low,
+          Priority: record?.get("t")?.properties?.Priority?.low,
+        }));
+      } catch (error) {
+        Logging.error(
+          `${new Date()}, in resolvers.js => getUserTasksInTeam, ${error}`
+        );
+        throw new Error(`Error in getUserTasksInTeam: ${error.message}`);
+      }
+    },
+    // getCompanyRateForUser(userId: String!, companyId: Int): Float
+    getCompanyRateForUser: async (parent, args) => {
+      try {
+        const { userId, companyId } = args;
+
+        if (userId === undefined || userId === null) {
+          throw new Error(
+            `Are you send userId? userId is required, userId value is ${userId}. please check userId value before send`
+          );
+        }
+
+        if (companyId === undefined || companyId === null) {
+          throw new Error(
+            `Are you send companyId? companyId is required, companyId value is ${companyId}. please check companyId value before send`
+          );
+        }
+
+        const query = `
+          MATCH (u:User {id: "${userId}"})-[r:RATED]->(c:Company)
+          WHERE ID(c) = ${companyId}
+          RETURN r.rate
+        `;
+
+        const rate = await NeodeObject?.cypher(query);
+
+        return rate?.records?.[0]?.get("r.rate")?.low;
+      } catch (error) {
+        Logging.error(
+          `${new Date()}, in resolvers.js => getCompanyRateForUser, ${error}`
+        );
+        throw new Error(`Error in getCompanyRateForUser: ${error.message}`);
       }
     },
   },
@@ -1992,31 +2072,43 @@ const resolvers = {
           );
         }
 
-        await NeodeObject.writeCypher(
+        const a = await NeodeObject.writeCypher(
           `
           Match (t:Team) WHERE ID(t) = ${teamId}
-          MATCH (c:Company)-[cr:HAS_A_TEAM]->(t)
-          MATCH (c) -[tp:TAKE_A_PROJECT]-> (p:Project)
           MATCH (n:User {id: "${userId}"})
           CREATE (n) -[tr:IN_TEAM {role: "${role}"}] -> (t)
-          CREATE (n) -[wr:WORK_ON] -> (p)
-          RETURN p
+          RETURN n
           `
         );
+
+        if (a.records.length === 0) {
+          return false;
+        }
 
         await backup.info(
           `
           Match (t:Team) WHERE ID(t) = ${teamId}
-          MATCH (c:Company)-[cr:HAS_A_TEAM]->(t)
-          CREATE (n:User {id: "${userId}"}) -[tr:IN_TEAM {role: "${role}"}] -> (t)
-          MATCH (c) -[tp:TAKE_A_PROJECT]-> (p:Project)
-          CREATE (n) -[wr:WORK_ON] -> (p)
-          RETURN p
+          MATCH (n:User {id: "${userId}"})
+          CREATE (n) -[tr:IN_TEAM {role: "${role}"}] -> (t)
+          RETURN n
           `
         );
 
+        // await backup.info(
+        //   `
+        //   Match (t:Team) WHERE ID(t) = ${teamId}
+        //   MATCH (c:Company)-[cr:HAS_A_TEAM]->(t)
+        //   MATCH (c) -[tp:TAKE_A_PROJECT]-> (p:Project)
+        //   MATCH (n:User {id: "${userId}"})
+        //   CREATE (n) -[tr:IN_TEAM {role: "${role}"}] -> (t)
+        //   CREATE (n) -[wr:WORK_ON] -> (p)
+        //   RETURN p
+        //   `
+        // );
+
         return true;
       } catch (error) {
+        console.log(error);
         Logging.error(
           `${new Date()}, in resolvers.js => addUserToTeam, ${error}`
         );
@@ -2198,7 +2290,7 @@ const resolvers = {
     createTaskForUser: async (parent, args) => {
       try {
         // userCreateTaskId for user who need to create task for other user
-        const { task, userId, userCreateTaskId, companyId, teamId } = args;
+        const { task, userId, userCreateTaskId, teamId } = args;
 
         if (!userId) {
           throw new Error(
@@ -2210,18 +2302,6 @@ const resolvers = {
 
         if (!user) {
           throw new Error("User not found");
-        }
-
-        if (!companyId) {
-          throw new Error(
-            `Are you send companyId? companyId is required, companyId value is ${companyId}. please check companyId value before send`
-          );
-        }
-
-        const company = await NeodeObject?.findById("Company", companyId);
-
-        if (!company) {
-          throw new Error("Company not found");
         }
 
         const newTask = await NeodeObject?.create("Task", { ...task });
@@ -2242,37 +2322,26 @@ const resolvers = {
           throw new Error("User need to Create Task is not found");
         }
 
-        if (!teamId) {
-          throw new Error(
-            `Are you send teamId? teamId is required, teamId value is ${teamId}. please check teamId value before send`
-          );
-        }
+        const taskValue = await newTask?.toJson();
 
-        const team = await NeodeObject?.findById("Team", teamId);
+        const query = `
+        MATCH (task:Task)
+        MATCH (user:User {id: "${userId}"})
+        WHERE ID(task) = ${taskValue?._id}
+        CREATE (user)-[:HAS_A_TASK {teamId: "${teamId}"}]->(task)
+        RETURN task
+        `;
+        console.log(query);
+
+        await NeodeObject?.writeCypher(query);
 
         await userCreateTask.relateTo(newTask, "create_task");
 
-        await user.relateTo(newTask, "has_a_task");
-
-        await newTask.relateTo(company, "in_company");
-
-        await newTask.relateTo(team, "in_team");
-
-        await backup.info(
-          `CREATE (task:Task {createdDate: datetime(), ${Object.keys(task)
-            ?.map((key) => `${key}: "${task[key]}"`)
-            .join(", ")}})
-          CREATE (user:User) -[has_a_task:HAS_A_TASK]-> (task)
-          CREATE (userCreateTask:User) -[create_task:CREATE_TASK]-> (task)
-          CREATE (company:Company) -[in_company:IN_COMPANY]-> (task)
-          WHERE ID(user) = ${userId}
-          AND ID(company) = ${companyId}
-          AND ID(userCreateTask) = ${userCreateTaskId}
-          RETURN task`
-        );
+        await backup.info(query);
 
         return newTask.toJson();
       } catch (error) {
+        console.log(error);
         Logging.error(
           `${new Date()}, in resolvers.js => createTaskForUser, ${error}`
         );
@@ -2448,7 +2517,7 @@ const resolvers = {
      */
     createCompanyComment: async (parent, args) => {
       try {
-        const { comment, companyId } = args;
+        const { comment, companyId, userId } = args;
 
         if (!companyId) {
           throw new Error(
@@ -2462,9 +2531,22 @@ const resolvers = {
           throw new Error("Company not found");
         }
 
+        if (!userId) {
+          throw new Error(
+            `Are you send userId? userId is required, userId value is ${userId}. please check userId value before send`
+          );
+        }
+
+        const user = await NeodeObject?.first("User", "id", userId);
+
+        if (!user) {
+          throw new Error("User not found");
+        }
+
         const newComment = await NeodeObject?.create("Comment", { ...comment });
 
         await company.relateTo(newComment, "has_a_comment");
+        await user.relateTo(newComment, "write_comment");
 
         await backup.info(
           `CREATE (c:Comment { 
@@ -2819,48 +2901,53 @@ const resolvers = {
       try {
         const { projectId, companyId } = args;
 
-        if (!projectId) {
+        if (projectId === null || projectId === undefined) {
           throw new Error(
-            `Are you send projectId? projectId is required, projectId value is ${projectId}. please check projectId value before send`
+            `Are you sending projectId? projectId is required, projectId value is ${projectId}. Please check projectId value before sending.`
           );
         }
 
-        if (!companyId) {
+        if (companyId === null || companyId === undefined) {
           throw new Error(
-            `Are you send companyId? companyId is required, companyId value is ${companyId}. please check companyId value before send`
+            `Are you sending companyId? companyId is required, companyId value is ${companyId}. Please check companyId value before sending.`
           );
         }
 
-        const project = await NeodeObject?.findById("Project", projectId);
+        // Check for existing relationships
+        const checkQuery = `
+          MATCH (p:Project)<-[r:TAKE_A_PROJECT {finished: false}]-(c:Company)
+          WHERE ID(p) = $projectId
+          RETURN COUNT(r) AS existingRelationships
+        `;
+        const checkParams = { projectId };
+        const result = await NeodeObject.cypher(checkQuery, checkParams);
+        const existingRelationships = result.records[0]
+          .get("existingRelationships")
+          .toNumber();
 
-        if (!project) {
-          Logging.warn(
-            `${new Date()}, in resolvers.js => applyForProject, project not found`
-          );
-          throw new Error("Project not found");
+        if (existingRelationships > 0) {
+          throw new Error("There is already an active relationship.");
         }
 
-        const company = await NeodeObject?.findById("Company", companyId);
+        // Create new relationship if no existing active relationships found
+        const createQuery = `
+          MATCH (c:Company) WHERE ID(c) = $companyId
+          MATCH (p:Project) WHERE ID(p) = $projectId
+          CREATE (c)-[:TAKE_A_PROJECT {finished: false, finishedDate: null}]->(p)
+          RETURN p
+        `;
+        const createParams = { companyId, projectId };
 
-        if (!company) {
-          throw new Error("Company not found");
-        }
+        await NeodeObject.writeCypher(createQuery, createParams);
 
-        await company.relateTo(project, "take_a_project");
-
-        await backup.info(
-          `MATCH (c:Company) WHERE ID(c) = ${companyId}
-              MATCH (p:Project) WHERE ID(p) = ${projectId}
-              Create (c)-[:TAKE_A_PROJECT]->(p)
-              )}`
-        );
+        await backup.info(createQuery);
 
         return true;
       } catch (error) {
         Logging.error(
           `${new Date()}, in resolvers.js => applyForProject, ${error}`
         );
-        throw new Error(`Error in applyForProject: ${error.message}`);
+        throw new Error(`${error.message}`);
       }
     },
     updateEducation: async (parent, args) => {
@@ -2981,6 +3068,172 @@ const resolvers = {
           `${new Date()}, in resolvers.js => deleteUserFromTeam, ${error}`
         );
         throw new Error(`Error in deleteUserFromTeam: ${error.message}`);
+      }
+    },
+    updateUserSkills: async (parent, args) => {
+      try {
+        const { userId, skills } = args;
+
+        if (!userId) {
+          throw new Error(
+            `Are you send userId? userId is required, userId value is ${userId}. please check userId value before send`
+          );
+        }
+
+        const query = `
+        MATCH (u:User {id: "${userId}"}) -[:HAS_A_SKILL] -> (s:Skill)
+        DETACH DELETE s
+        `;
+
+        await NeodeObject?.writeCypher(query);
+
+        const addQuery = `
+        MATCH (u:User {id: "${userId}"})
+        CREATE ${skills
+          .map((skill) => `(u)-[:HAS_A_SKILL]->(:Skill {Skill: "${skill}"})`)
+          .join(",")}
+        RETURN u
+        `;
+
+        const result = await NeodeObject?.writeCypher(addQuery);
+
+        if (!result) {
+          return false;
+        }
+
+        return true;
+      } catch (error) {
+        Logging.error(
+          `${new Date()}, in resolvers.js => updateUserSkills, ${error}`
+        );
+        throw new Error(`Error in updateUserSkills: ${error.message}`);
+      }
+    },
+    updateTaskSteps: async (parent, args) => {
+      try {
+        const { taskId, taskSteps } = args;
+
+        if (!taskId) {
+          throw new Error(
+            `Are you send taskId? taskId is required, taskId value is ${taskId}. please check taskId value before send`
+          );
+        }
+
+        await NeodeObject?.writeCypher(
+          `MATCH (t:Task) -[:HAS_A]-> (s:TaskStep) WHERE ID(t) = ${taskId} 
+          DETACH DELETE s`
+        );
+
+        const addQuery = `
+        MATCH (t:Task) where ID(t) = ${taskId}
+        CREATE ${taskSteps
+          .map(
+            (taskStep) =>
+              `(t)-[:HAS_A]->(:TaskStep {Number: ${taskStep.Number}, Description: "${taskStep.Description}"})`
+          )
+          .join(",")}
+        RETURN t
+        `;
+
+        const result = await NeodeObject?.writeCypher(addQuery);
+
+        if (!result) {
+          return false;
+        }
+
+        return true;
+      } catch (error) {
+        Logging.error(`${new Date()}, in resolvers.js => Messages, ${error}`);
+        throw error;
+      }
+    },
+    makeProjectDone: async (parent, args) => {
+      try {
+        const { projectId, companyId } = args;
+
+        if (projectId === undefined || projectId === null) {
+          throw new Error(
+            `Are you send projectId? projectId is required, projectId value is ${projectId}. please check projectId value before send`
+          );
+        }
+
+        if (companyId === undefined || companyId === null) {
+          throw new Error(
+            `Are you send companyId? companyId is required, companyId value is ${companyId}. please check companyId value before send`
+          );
+        }
+
+        await NeodeObject?.writeCypher(
+          `MATCH (c:Company)-[r:TAKE_A_PROJECT]->(p:Project)
+          WHERE ID(c) = ${companyId} AND ID(p) = ${projectId}
+          SET r.finished = true
+          RETURN r          
+          `
+        );
+
+        await backup.info(
+          `
+          MATCH (c:Company)-[r:TAKE_A_PROJECT]->(p:Project)
+          WHERE ID(c) = ${companyId} AND ID(p) = ${projectId}
+          SET r.finished = true
+          RETURN r  
+          `
+        );
+
+        return true;
+      } catch (error) {
+        Logging.error(`${new Date()}, in resolvers.js => Messages, ${error}`);
+        throw error;
+      }
+    },
+    rateCompany: async (parent, args) => {
+      try {
+        const { companyId, userId, rate } = args;
+
+        if (companyId === undefined || companyId === null) {
+          throw new Error(
+            `Are you send companyId? companyId is required, companyId value is ${companyId}. please check companyId value before send`
+          );
+        }
+
+        if (userId === undefined || userId === null) {
+          throw new Error(
+            `Are you send userId? userId is required, userId value is ${userId}. please check userId value before send`
+          );
+        }
+
+        if (rate === undefined || rate === null) {
+          throw new Error(
+            `Are you send rate? rate is required, rate value is ${rate}. please check rate value before send`
+          );
+        }
+
+        await NeodeObject?.writeCypher(`
+  MATCH (c:Company)
+  MATCH (u:User {id: "${userId}"})
+  WHERE ID(c) = ${companyId}
+  MERGE (u)-[r:RATED]->(c)
+  ON CREATE SET r.rate = ${rate}
+  ON MATCH SET r.rate = ${rate}
+  RETURN r
+`);
+
+        await backup.info(
+          `
+  MATCH (c:Company)
+  MATCH (u:User {id: "${userId}"})
+  WHERE ID(c) = ${companyId}
+  MERGE (u)-[r:RATED]->(c)
+  ON CREATE SET r.rate = ${rate}
+  ON MATCH SET r.rate = ${rate}
+  RETURN r
+`
+        );
+
+        return true;
+      } catch (error) {
+        Logging.error(`${new Date()}, in resolvers.js => Messages, ${error}`);
+        throw error;
       }
     },
   },
@@ -3161,26 +3414,26 @@ const resolvers = {
     Tasks: async (parent) => {
       try {
         const userId = parent.id;
-
         const { page, limit } = parent;
-
         if (!userId) {
           throw new Error("UserID is null");
         }
-
         const cypherQuery = `
-           MATCH (user:User {id: "${userId}"})-[:HAS_A_TASK]->(tasks:Task)
-           RETURN tasks
-           SKIP ${page} * ${limit} LIMIT ${limit}`;
-
+        MATCH (u:User {id: "${userId}"})
+        OPTIONAL MATCH (u)-[:IN_TEAM]->(team:Team)-[:HAS_A_TASK]->(teamTask:Task)
+        OPTIONAL MATCH (u)-[:HAS_A_TASK]->(userTask:Task)
+        WITH COLLECT(teamTask) AS teamTasks, COLLECT(userTask) AS userTasks
+        UNWIND teamTasks AS teamTask
+        UNWIND userTasks AS userTask
+        WITH COLLECT(DISTINCT { task: teamTask, source: 'team' }) + COLLECT(DISTINCT { task: userTask, source: 'user' }) AS tasks
+        UNWIND tasks AS task
+        RETURN task.task AS task, task.source AS source
+        SKIP ${page} * ${limit} LIMIT ${limit}
+        `;
         const result = await NeodeObject.cypher(cypherQuery);
-
         return result?.records?.map((record) => ({
-          ...record.get("tasks").properties,
-          Priority: record.get("tasks")?.properties?.Priority.low,
-          _id: record.get("tasks").identity.low,
-          page,
-          limit,
+          ...record.get("task").properties,
+          _id: record.get("task").identity.low,
         }));
       } catch (error) {
         Logging.error(`${new Date()}, in resolvers.js => Tasks, ${error}`);
@@ -3530,18 +3783,41 @@ const resolvers = {
         }
 
         const cypherQuery = `
-        MATCH (c:Company) -[:TAKE_A_PROJECT] -> (p:Project)
-        WHERE ID(c) = ${companyId}
+        MATCH (c:Company) -[r:TAKE_A_PROJECT] -> (p:Project)
+        WHERE ID(c) = ${companyId} AND r.finished = false
         RETURN p`;
 
         const result = await NeodeObject.cypher(cypherQuery);
 
         return {
           ...result?.records[0]?.get("p")?.properties,
-          _id: result?.records[0]?.get("p")?.identity.low,
+          _id: result?.records[0]?.get("p")?.identity?.low,
         };
       } catch (error) {
         Logging.error(`${new Date()}, in resolvers.js => Project, ${error}`);
+        throw error;
+      }
+    },
+    Rate: async (parent) => {
+      try {
+        const companyId = parent._id;
+
+        if (companyId === null || companyId === undefined) {
+          throw new Error("CompanyID is null");
+        }
+
+        const cypherQuery = `
+  MATCH (u:User)-[r:RATED]->(c:Company)
+  WHERE ID(c) = ${companyId}
+  RETURN AVG(r.rate) AS rates
+`;
+
+        const result = await NeodeObject.cypher(cypherQuery);
+        const rates = result.records[0].get("rates");
+
+        return rates;
+      } catch (error) {
+        Logging.error(`${new Date()}, in resolvers.js => Rate, ${error}`);
         throw error;
       }
     },
@@ -3618,9 +3894,9 @@ const resolvers = {
         const result = await NeodeObject.cypher(cypherQuery);
 
         return result?.records?.map((record) => ({
-          ...record.get("taskSteps").properties,
-          Number: record.get("taskSteps")?.properties?.Number?.low,
-          _id: record.get("taskSteps").identity.low,
+          ...record?.get("taskSteps")?.properties,
+          Number: record?.get("taskSteps")?.properties?.Number?.low,
+          _id: record?.get("taskSteps")?.identity?.low,
         }));
       } catch (error) {
         Logging.error(`${new Date()}, in resolvers.js => Steps, ${error}`);
@@ -3636,13 +3912,14 @@ const resolvers = {
         }
 
         const cypherQuery = `
-           MATCH (task:Task)-[:IN_COMPANY]->(company:Company)
-           WHERE ID(task) = ${taskId}
+           MATCH (u:User)-[r:HAS_A_TASK]->(t:Task)
+           MATCH (u)-[:IN_TEAM]->(team:Team) <- [:HAS_A_TEAM] - (company:Company)
+           WHERE toString(ID(team)) = toString(r.teamId) and ID(t) = ${taskId}
            RETURN company`;
 
         const result = await NeodeObject.cypher(cypherQuery);
 
-        return result?.records[0].get("company").properties?.CompanyName;
+        return result?.records[0]?.get("company").properties?.CompanyName;
       } catch (error) {
         Logging.error(`${new Date()}, in resolvers.js => company, ${error}`);
         throw error;
@@ -3657,13 +3934,14 @@ const resolvers = {
         }
 
         const cypherQuery = `
-           MATCH (task:Task)-[:IN_TEAM]->(team:Team)
-           WHERE ID(task) = ${taskId}
+           MATCH (u:User)-[r:HAS_A_TASK]->(t:Task)
+           MATCH (u)-[:IN_TEAM]->(team:Team)
+           WHERE toString(ID(team)) = toString(r.teamId) and ID(t) = ${taskId}
            RETURN team`;
 
         const result = await NeodeObject.cypher(cypherQuery);
 
-        return result?.records[0].get("team").properties?.TeamName;
+        return result?.records[0]?.get("team").properties?.TeamName;
       } catch (error) {
         Logging.error(`${new Date()}, in resolvers.js => team, ${error}`);
         throw error;
@@ -3792,6 +4070,34 @@ const resolvers = {
         }));
       } catch (error) {
         Logging.error(`${new Date()}, in resolvers.js => Applys, ${error}`);
+        throw error;
+      }
+    },
+  },
+  Comment: {
+    User: async (parent) => {
+      try {
+        const commentId = parent._id;
+
+        if (commentId === null || commentId === undefined) {
+          throw new Error("CommentID is null");
+        }
+
+        const cypherQuery = `
+           MATCH (u:User)-[:WRITE_COMMENT]->(c:Comment)
+           WHERE ID(c) = ${commentId}
+           RETURN u`;
+
+        const result = await NeodeObject.cypher(cypherQuery);
+
+        console.log(result);
+
+        return {
+          ...result?.records[0]?.get("u")?.properties,
+          _id: result?.records[0]?.get("u")?.identity?.low,
+        };
+      } catch (error) {
+        Logging.error(`${new Date()}, in resolvers.js => UserName, ${error}`);
         throw error;
       }
     },

@@ -299,8 +299,8 @@ function ShowAllPosts() {
                       key={index}
                       post={post}
                       index={index}
-                      CompaniesData={CompaniesData}
                       fetch={fetch}
+                      companyId={post?.Company?._id}
                     />
                   );
                 })}
@@ -321,7 +321,7 @@ function ShowAllPosts() {
   );
 }
 
-const PostCard = ({ post, index, fetch }) => {
+const PostCard = ({ post, index, fetch, companyId }) => {
   const [editOpened, { open: editOpen, close: editClose }] =
     useDisclosure(false);
 
@@ -416,7 +416,7 @@ const PostCard = ({ post, index, fetch }) => {
             >
               Edit
             </Button>
-            <Link to={`${Paths.Applys}/${post?._id}`}>
+            <Link to={`${Paths.Applys}/${companyId}/${post?._id}`}>
               <Button onClick={() => {}} variant="filled" size="xs">
                 Apples
               </Button>

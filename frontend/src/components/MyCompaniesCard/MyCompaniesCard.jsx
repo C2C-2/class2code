@@ -41,6 +41,10 @@ export default function MyCompaniesCard({
         onClick={(e) => {
           e.preventDefault();
           e.stopPropagation();
+
+          if (!window.confirm("Are you sure you want to delete this company?"))
+            return;
+
           deleteCompany({ variables: { companyId: parseInt(Company_id) } });
         }}
         variant="light"

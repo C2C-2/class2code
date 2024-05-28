@@ -1,28 +1,34 @@
 import "./UserTask.css";
-import { Button, Table } from "@mantine/core";
-import { gql, useMutation, useQuery } from "@apollo/client";
+import {
+  Button,
+  Modal,
+  NumberInput,
+  Table,
+  Textarea,
+  TextInput,
+} from "@mantine/core";
+import { gql, useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import { useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import DashboardStatusCard from "../../../components/DashboardStatusCard/DashboardStatusCard";
+import { useDisclosure } from "@mantine/hooks";
+import { FaRegTrashAlt } from "react-icons/fa";
+import { MdModeEdit } from "react-icons/md";
 
 const GET_TASKS = gql`
-  query Query($userId: String!) {
-    getUser(userId: $userId) {
-      WorkCompanies {
-        Tasks {
-          TaskName
-          TaskStatus
-          StartDate
-          EndDate
-          Priority
-          Comments
-          CompanyName
-          TeamName
-          IsMarked
-          CreateDate
-          _id
-        }
-      }
+  query GetUserTasksInTeam($userId: String!, $teamId: Int!) {
+    getUserTasksInTeam(userId: $userId, teamId: $teamId) {
+      TaskName
+      TaskStatus
+      StartDate
+      EndDate
+      Priority
+      Comments
+      CompanyName
+      TeamName
+      IsMarked
+      CreateDate
+      _id
     }
   }
 `;
@@ -35,17 +41,46 @@ const UPDATE_TASK = gql`
   }
 `;
 
+const CREATE_TASK = gql`
+  mutation CreateTaskForUser(
+    $task: TaskInput!
+    $userId: String!
+    $userCreateTaskId: String!
+    $companyId: Int!
+    $teamId: Int!
+  ) {
+    createTaskForUser(
+      task: $task
+      userId: $userId
+      userCreateTaskId: $userCreateTaskId
+      companyId: $companyId
+      teamId: $teamId
+    ) {
+      _id
+    }
+  }
+`;
+
+const DELETE_TASK = gql`
+  query Query($taskId: Int!) {
+    deleteTask(taskId: $taskId)
+  }
+`;
+
 export const UserTask = () => {
   const navigation = useNavigate();
-  const user_id = localStorage.getItem("id");
-  const { team_id, company_id } = useParams();
+  const { team_id, company_id, id } = useParams();
   const [taskName, setTaskName] = useState("");
-  const [taskStatus, setTaskStatus] = useState("Open");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [comments, setComments] = useState("");
-  const [priority, setPriority] = useState();
-  const [currentTaskId, setCurrentTaskId] = useState(null);
+  const [priority, setPriority] = useState("");
+  const [editedTaskName, setEditedTaskName] = useState("");
+  const [editedStartDate, setEditedStartDate] = useState("");
+  const [editedEndDate, setEditedEndDate] = useState("");
+  const [editedComments, setEditedComments] = useState("");
+  const [editedPriority, setEditedPriority] = useState("");
+  const [Tasks, setTasks] = useState([]);
 
   const {
     loading: loadingTasks,
@@ -53,7 +88,7 @@ export const UserTask = () => {
     data: dataTasks,
     refetch: refetchTasks,
   } = useQuery(GET_TASKS, {
-    variables: { userId: localStorage.getItem("id") },
+    variables: { userId: id, teamId: parseInt(team_id) },
   });
 
   const [
@@ -65,11 +100,72 @@ export const UserTask = () => {
     },
   ] = useMutation(UPDATE_TASK);
 
-  const combinedTasks = dataTasks?.getUser?.WorkCompanies?.map(
-    (company) => company.Tasks
-  );
+  useEffect(() => {
+    if (dataTasks) {
+      setTasks(dataTasks?.getUserTasksInTeam);
+    }
+  }, [dataTasks]);
 
-  const Tasks = combinedTasks?.flat();
+  const [openedTask, { open: openTask, close: closeTask }] =
+    useDisclosure(false);
+
+  const [createTask, { loading: loadingCreateTask }] = useMutation(CREATE_TASK);
+
+  const [deleteTask, { loading: loadingDeleteTask }] =
+    useLazyQuery(DELETE_TASK);
+
+  const [openedEditModal, { open: openEditModal, close: closeEditModal }] =
+    useDisclosure(false);
+
+  // Function to open edit modal and set the task to edit
+  const handleOpenEditModal = (task) => {
+    setEditedTaskName(task?.TaskName);
+    setEditedStartDate(task?.StartDate);
+    setEditedEndDate(task?.EndDate);
+    setEditedComments(task?.Comments);
+    setEditedPriority(task?.Priority);
+    openEditModal();
+  };
+
+  const handleCreateTask = async () => {
+    await createTask({
+      variables: {
+        companyId: parseInt(company_id),
+        teamId: parseInt(team_id),
+        userId: id,
+        userCreateTaskId: localStorage.getItem("id"),
+        task: {
+          TaskName: taskName,
+          StartDate: startDate,
+          EndDate: endDate,
+          Priority: parseInt(priority),
+          Comments: comments,
+        },
+      },
+    }).then(() => {
+      refetchTasks();
+    });
+  };
+
+  const handleSubmitEditedTask = async (e, id) => {
+    e.preventDefault();
+    const editedTask = {
+      TaskName: editedTaskName,
+      StartDate: editedStartDate,
+      EndDate: editedEndDate,
+      Priority: parseInt(editedPriority),
+      Comments: editedComments,
+    };
+
+    await updateTask({
+      variables: {
+        taskId: parseInt(id),
+        task: editedTask,
+      },
+    });
+    closeEditModal();
+    refetchTasks();
+  };
 
   return (
     <div className="ShowAllPostsAll">
@@ -112,6 +208,98 @@ export const UserTask = () => {
                   />
                 </svg>
               </Button>
+              <div>
+                <Modal
+                  xOffset={"30%"}
+                  yOffset={"8%"}
+                  padding={"xl"}
+                  size={"lg"}
+                  opened={openedTask}
+                  onClose={closeTask}
+                  title="Create Task"
+                  centered
+                >
+                  <form
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      handleCreateTask().then(() => closeTask());
+                    }}
+                  >
+                    <div className="d-flex gap-5">
+                      <div className="flex-grow-1">
+                        <TextInput
+                          label="Task Name"
+                          placeholder="Enter task name"
+                          value={taskName}
+                          onChange={(e) => {
+                            setTaskName(e.target.value);
+                          }}
+                          required
+                        />
+                        <br />
+                        <TextInput
+                          label="Start Date"
+                          placeholder="Enter start date"
+                          type="Date"
+                          value={startDate}
+                          onChange={(e) => setStartDate(e.target.value)}
+                          required
+                        />
+                        <br />
+                        <TextInput
+                          label="End Date"
+                          placeholder="Enter end date"
+                          value={endDate}
+                          type="Date"
+                          onChange={(e) => {
+                            setEndDate(e.target.value);
+                          }}
+                          required
+                        />
+                      </div>
+                      <div className="flex-grow-1">
+                        <NumberInput
+                          label="Priority"
+                          placeholder="Enter priority"
+                          type="number"
+                          min={1}
+                          max={10}
+                          value={priority}
+                          onChange={(e) => {
+                            const value = Number(e);
+                            if (value >= 1 && value <= 10) {
+                              setPriority(value);
+                            }
+                          }}
+                          required
+                        />
+                        <br />
+                        <Textarea
+                          label="Comments"
+                          placeholder="Enter comments"
+                          value={comments}
+                          onChange={(e) => setComments(e.target.value)}
+                        />
+                      </div>
+                    </div>
+                    <br />
+                    <div className="d-flex gap-3 justify-content-end">
+                      <Button type="submit" variant="filled" color="orange">
+                        {loadingCreateTask ? "Saving..." : "Save"}
+                      </Button>
+                    </div>
+                  </form>
+                </Modal>
+
+                <Button
+                  variant="filled"
+                  color="orange"
+                  onClick={openTask}
+                  w={100}
+                >
+                  New
+                </Button>
+              </div>
               <div className="DashboardUnderPart2">
                 <Table>
                   <Table.Thead>
@@ -121,7 +309,8 @@ export const UserTask = () => {
                       <Table.Th>Team</Table.Th>
                       <Table.Th>Company</Table.Th>
                       <Table.Th>Status</Table.Th>
-                      <Table.Th>Action</Table.Th>
+                      <Table.Th>Edit</Table.Th>
+                      <Table.Th>Delete</Table.Th>
                     </Table.Tr>
                   </Table.Thead>
                   <Table.Tbody>
@@ -155,43 +344,115 @@ export const UserTask = () => {
                           />
                         </Table.Td>
                         <Table.Td>
+                          <Modal
+                            // Add modal props here
+                            opened={openedEditModal}
+                            onClose={closeEditModal}
+                            title="Edit Task"
+                            centered
+                          >
+                            <form
+                              onSubmit={(e) => {
+                                handleSubmitEditedTask(e, task?._id);
+                              }}
+                            >
+                              <div className="d-flex gap-5">
+                                <div className="flex-grow-1">
+                                  <TextInput
+                                    label="Task Name"
+                                    placeholder="Enter task name"
+                                    value={editedTaskName}
+                                    onChange={(e) =>
+                                      setEditedTaskName(e.target.value)
+                                    }
+                                    required
+                                  />
+                                  <br />
+                                  <TextInput
+                                    label="Start Date"
+                                    placeholder="Enter start date"
+                                    type="date"
+                                    value={editedStartDate}
+                                    onChange={(e) =>
+                                      setEditedStartDate(e.target.value)
+                                    }
+                                    required
+                                  />
+                                  <br />
+                                  <TextInput
+                                    label="End Date"
+                                    placeholder="Enter end date"
+                                    type="date"
+                                    value={editedEndDate}
+                                    onChange={(e) =>
+                                      setEditedEndDate(e.target.value)
+                                    }
+                                    required
+                                  />
+                                </div>
+                                <div className="flex-grow-1">
+                                  <NumberInput
+                                    label="Priority"
+                                    placeholder="Enter priority"
+                                    type="number"
+                                    min={1}
+                                    max={10}
+                                    value={editedPriority}
+                                    onChange={(e) => setEditedPriority(e)}
+                                    required
+                                  />
+                                  <br />
+                                  <Textarea
+                                    label="Comments"
+                                    placeholder="Enter comments"
+                                    value={editedComments}
+                                    onChange={(e) =>
+                                      setEditedComments(e.target.value)
+                                    }
+                                  />
+                                </div>
+                              </div>
+                              <br />
+                              <div className="d-flex gap-3 justify-content-end">
+                                <Button
+                                  type="submit"
+                                  variant="filled"
+                                  color="orange"
+                                >
+                                  {loadingUpdateTask ? "Updating..." : "Update"}
+                                </Button>
+                              </div>
+                            </form>
+                          </Modal>
                           <Button
+                            onClick={() => handleOpenEditModal(task)}
                             variant="filled"
-                            color="#EE7214"
-                            disabled={
-                              task?.TaskStatus == "Finish" ? "disabled" : null
-                            }
-                            onClick={async (e) => {
-                              e.preventDefault();
-                              await updateTask({
+                            color="orange"
+                          >
+                            Edit &nbsp; <MdModeEdit />
+                          </Button>
+                        </Table.Td>
+                        <Table.Td>
+                          <Button
+                            onClick={() => {
+                              deleteTask({
                                 variables: {
-                                  taskId: parseInt(task._id),
-                                  task: {
-                                    TaskName: task.TaskName,
-                                    TaskStatus:
-                                      task.TaskStatus == "New"
-                                        ? "Pending"
-                                        : task.TaskStatus == "Pending"
-                                        ? "Finish"
-                                        : "New",
-                                    StartDate: task.StartDate,
-                                    EndDate: task.EndDate,
-                                    Priority: task.Priority,
-                                    Comments: task.Comments,
-                                    IsMarked: task.IsMarked,
-                                    CreateDate: task.CreateDate,
-                                  },
+                                  taskId: parseInt(task?._id),
                                 },
                               }).then(() => {
                                 refetchTasks();
                               });
                             }}
+                            variant="filled"
+                            color="red"
                           >
-                            {task?.TaskStatus == "Pending"
-                              ? "Finish"
-                              : task?.TaskStatus == "New"
-                              ? "Start"
-                              : "Done"}
+                            {loadingDeleteTask ? (
+                              "Deleting..."
+                            ) : (
+                              <>
+                                Delete &nbsp; <FaRegTrashAlt />
+                              </>
+                            )}
                           </Button>
                         </Table.Td>
                       </Table.Tr>

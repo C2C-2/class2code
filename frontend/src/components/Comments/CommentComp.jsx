@@ -1,21 +1,25 @@
-import React from 'react';
+import React from "react";
 import "./CommentComp.css";
 import defaultProfileImage from "./Oval.png";
 
-function CommentComp({ commenterName, profilePicture, commentText, timestamp ,ImageUser}) {
+function CommentComp({
+  commenterName,
+  profilePicture,
+  commentText,
+  timestamp,
+  ImageUser,
+}) {
   return (
     <div className="Comments">
-      <div className="Comments1">
-        <button className='CommentsProfileButton'>
-          <img src={ImageUser} alt="CommentsProfile" className='imgEdit' />
-        </button>
-        <button className="ComText">{commenterName}</button>
-        <span className="ComText1">{timestamp}</span>
+      <div className="Comments1 d-flex justify-content-between align-items-center">
+        <div className="d-flex gap-2 align-items-center">
+          <img src={ImageUser} alt="CommentsProfile" className="imgEdit" />
+          <h6>{commenterName}</h6>
+        </div>
+        <span className="ComText1">{timestamp.slice(0, 10)}</span>
       </div>
       <div className="Comments2">
-        <p className="Para1">
-          {commentText}
-        </p>
+        <p className="mt-2 mx-4">{commentText}</p>
       </div>
     </div>
   );

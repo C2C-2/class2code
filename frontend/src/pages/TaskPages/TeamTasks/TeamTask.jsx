@@ -11,6 +11,7 @@ import { gql, useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import { useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useDisclosure } from "@mantine/hooks";
+import { FaCross, FaTrash } from "react-icons/fa";
 
 const GET_TEAM = gql`
   query GetTeam($teamId: Int!) {
@@ -21,7 +22,6 @@ const GET_TEAM = gql`
         StartDate
         Comments
         Priority
-
         Steps {
           Description
           Number
@@ -71,6 +71,12 @@ const DELETE_Task = gql`
   }
 `;
 
+const UPDATE_TASK_STEPS = gql`
+  mutation UpdateTaskSteps($taskId: Int!, $taskSteps: [TaskStepInput]!) {
+    updateTaskSteps(taskId: $taskId, taskSteps: $taskSteps)
+  }
+`;
+
 export const TeamTask = () => {
   const navigation = useNavigate();
   const user_id = localStorage.getItem("id");
@@ -81,6 +87,10 @@ export const TeamTask = () => {
   const [comments, setComments] = useState("");
   const [priority, setPriority] = useState(1);
   const [currentTaskId, setCurrentTaskId] = useState(null);
+
+  const [steps, setSteps] = useState([]);
+  const [number, setNumber] = useState(1);
+  const [description, setDescription] = useState("");
 
   const {
     loading: loadingTeams,
@@ -107,18 +117,6 @@ export const TeamTask = () => {
     useMutation(CREATE_TASK_TEAM);
 
   const handleCreateTask = async () => {
-    console.log({
-      companyId: parseInt(company_id),
-      teamId: parseInt(team_id),
-      userId: user_id,
-      task: {
-        TaskName: taskName,
-        StartDate: startDate,
-        EndDate: endDate,
-        Priority: parseInt(priority),
-        Comments: comments,
-      },
-    });
     await createTask({
       variables: {
         companyId: parseInt(company_id),
@@ -178,6 +176,12 @@ export const TeamTask = () => {
     useDisclosure(false);
   const [openedEditTask, { open: openEditTask, close: closeEditTask }] =
     useDisclosure(false);
+
+  const [openedAddStep, { open: openAddStep, close: closeAddStep }] =
+    useDisclosure(false);
+
+  const [updateTaskSteps, { loading: updateTaskStepsLoading }] =
+    useMutation(UPDATE_TASK_STEPS);
 
   return (
     <div className="ShowAllPostsAll">
@@ -419,15 +423,125 @@ export const TeamTask = () => {
                             </Button>
                           </>
 
-                          <Button
-                            variant="filled"
-                            color="green"
-                            onClick={() => {
-                              /* Add Step logic */
-                            }}
-                          >
-                            Add Step
-                          </Button>
+                          <>
+                            <Modal
+                              opened={openedAddStep}
+                              onClose={closeAddStep}
+                              title="Add Step"
+                              centered
+                            >
+                              <form
+                                onSubmit={async (e) => {
+                                  e.preventDefault();
+
+                                  await updateTaskSteps({
+                                    variables: {
+                                      taskId: parseInt(task._id),
+                                      taskSteps: steps?.map((step) => ({
+                                        Number: step.Number,
+                                        Description: step.Description,
+                                      })),
+                                    },
+                                  }).then(() => {
+                                    refetchTask();
+                                    closeAddStep();
+                                  });
+                                }}
+                              >
+                                <TextInput
+                                  label="Number"
+                                  placeholder="Enter number"
+                                  value={number}
+                                  onChange={(e) =>
+                                    setNumber(parseInt(e.target.value))
+                                  }
+                                  required
+                                />
+                                <Textarea
+                                  label="Description"
+                                  placeholder="Enter description"
+                                  value={description}
+                                  onChange={(e) =>
+                                    setDescription(e.target.value)
+                                  }
+                                  required
+                                />
+                                <br />
+
+                                <div className="px-3 mt-4">
+                                  {steps.map((step, index) => (
+                                    <>
+                                      <div
+                                        key={index}
+                                        className="d-flex justify-content-between align-items-center w-25"
+                                      >
+                                        <h6 key={index}>{step.Number}.</h6>
+                                        <h6 key={index}>{step.Description}</h6>
+                                        <Button
+                                          variant="light"
+                                          color="red"
+                                          onClick={() => {
+                                            setSteps((e) =>
+                                              e.filter((_, i) => i !== index)
+                                            );
+                                          }}
+                                        >
+                                          <FaTrash color="red" />
+                                        </Button>
+                                      </div>
+                                      <br />
+                                    </>
+                                  ))}
+                                </div>
+
+                                <br />
+
+                                <div className="d-flex gap-3">
+                                  <Button
+                                    onClick={(e1) => {
+                                      e1.preventDefault();
+                                      setSteps((e) => [
+                                        ...e,
+                                        {
+                                          Number: number,
+                                          Description: description,
+                                        },
+                                      ]);
+                                    }}
+                                    variant="filled"
+                                    color="orange"
+                                  >
+                                    Add Step
+                                  </Button>
+                                </div>
+                                <br />
+                                <div className="d-flex gap-3 justify-content-end">
+                                  <Button
+                                    type="submit"
+                                    variant="filled"
+                                    color="green"
+                                    style={{
+                                      position: "absolute",
+                                      bottom: "1rem",
+                                    }}
+                                  >
+                                    Save
+                                  </Button>
+                                </div>
+                              </form>
+                            </Modal>
+                            <Button
+                              variant="filled"
+                              color="green"
+                              onClick={() => {
+                                setSteps(task.Steps);
+                                openAddStep();
+                              }}
+                            >
+                              Steps
+                            </Button>
+                          </>
+
                           <Button
                             variant="transparent"
                             color=""

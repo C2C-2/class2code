@@ -62,7 +62,7 @@ const SecondSignup = ({ close }) => {
             Gender: gender,
             Work: specialty,
             Country: country,
-            UserName: username,
+            Username: username,
           },
         },
       });

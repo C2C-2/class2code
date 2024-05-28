@@ -35,7 +35,8 @@ function UserProfile() {
     }
   `;
 
-  const [updateUser] = useMutation(UPDATE_USER);
+  const [updateUser, { loading: updateLoading, error: updateError }] =
+    useMutation(UPDATE_USER);
 
   const GET_USER_IMAGE = gql`
     query Friends($userId: String!) {
@@ -96,7 +97,7 @@ function UserProfile() {
       setCountry(userData?.getUser?.Country);
       setRate(userData?.getUser?.Rate);
       setBio(userData?.getUser?.Bio);
-      setDateOfBirth(new Date(userData?.getUser?.DateOfBirth));
+      setDateOfBirth(userData?.getUser?.DateOfBirth);
       setSkills(userData?.getUser?.Skills?.map((e) => e.Skill));
       setGender(userData?.getUser?.Gender);
     }
@@ -105,6 +106,15 @@ function UserProfile() {
   useEffect(() => {
     fetch();
   }, [fetch]);
+
+  const UPDATE_SKILLS = gql`
+    mutation UpdateUserSkills($userId: String!, $skills: [String]!) {
+      updateUserSkills(userId: $userId, skills: $skills)
+    }
+  `;
+
+  const [updateSkills, { loading: skillsLoading, error: skillsError }] =
+    useMutation(UPDATE_SKILLS);
 
   return (
     <div className="ShowAllPostsAll" id="man">
@@ -208,11 +218,18 @@ function UserProfile() {
                     value={specialty}
                     onChange={(e) => setSpecialty(e.target.value)}
                   />
-                  <DateInput
-                    label="Date Of Birth"
-                    value={dateOfBirth}
-                    onChange={(e) => setDateOfBirth(e.target.value)}
-                  />
+                  <div>
+                    <label htmlFor="dateOfBirth">Date Of Birth</label>
+                    <input
+                      type="date"
+                      name="dateOfBirth"
+                      id="dateOfBirth"
+                      className="form-control"
+                      placeholder="Date Of Birth"
+                      value={dateOfBirth}
+                      onChange={(e) => setDateOfBirth(e.target.value)}
+                    />
+                  </div>
                   <TextInput
                     label="Country"
                     value={country}
@@ -253,22 +270,22 @@ function UserProfile() {
                     </PillsInput>
                     <form
                       action="#"
-                      // onSubmit={(e) => {
-                      //   e.preventDefault();
-                      //   if (!skill) return;
-                      //   if (skills.includes(skill)) return;
-                      //   if (skill.trim() === "") return;
-                      //   setSkills([...skills, skill]);
-                      //   setSkill("");
-                      // }}
+                      onSubmit={(e) => {
+                        e.preventDefault();
+                        if (!skill) return;
+                        if (skills.includes(skill)) return;
+                        if (skill.trim() === "") return;
+                        setSkills([...skills, skill]);
+                        setSkill("");
+                      }}
                       className="addSkillForm"
                     >
                       <Input
                         placeholder="Enter tags"
-                        // value={skill}
-                        // onChange={(event) => {
-                        //   setSkill(event.target.value);
-                        // }}
+                        value={skill}
+                        onChange={(event) => {
+                          setSkill(event.target.value);
+                        }}
                       />
 
                       <div className="addSkillBtn">
@@ -276,13 +293,13 @@ function UserProfile() {
                           variant="filled"
                           color="green"
                           size="sm"
-                          // onClick={() => {
-                          //   if (!skill) return;
-                          //   if (skills.includes(skill)) return;
-                          //   if (skill.trim() === "") return;
-                          //   setSkills([...skills, skill]);
-                          //   setSkill("");
-                          // }}
+                          onClick={() => {
+                            if (!skill) return;
+                            if (skills.includes(skill)) return;
+                            if (skill.trim() === "") return;
+                            setSkills([...skills, skill]);
+                            setSkill("");
+                          }}
                         >
                           Add
                         </Button>
@@ -291,12 +308,12 @@ function UserProfile() {
                   </div>
                   <div className="UserProfileButtons">
                     <Button
-                      onClick={() => {
+                      onClick={async () => {
                         const firstName = fullName.split(" ")[0];
                         const words = fullName.split(" ");
                         words.shift();
                         const lastName = words.join(" ");
-                        updateUser({
+                        await updateUser({
                           variables: {
                             userId,
                             user: {
@@ -312,12 +329,14 @@ function UserProfile() {
                             },
                           },
                         });
+                        console.log({ userId, skills });
+                        await updateSkills({ variables: { userId, skills } });
                       }}
                       variant="filled"
                       color="#388E3C"
                       w={150}
                     >
-                      Update Profile
+                      {updateLoading ? "Loading..." : "Update"}
                     </Button>
                     <Button
                       onClick={() => {

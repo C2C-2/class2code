@@ -11,7 +11,7 @@ function Dashboard() {
   const [companiesNumber, setCompaniesNumber] = useState(0);
   const [teamsNumber, setTeamsNumber] = useState(0);
 
-  const GET_LOCATIONS = gql`
+  const GET_Statistics = gql`
     query Query($userId: String!) {
       getProfileStatistics(userId: $userId) {
         NumberOfProjects
@@ -52,7 +52,7 @@ function Dashboard() {
     }
   `;
 
-  const { loading, error, data } = useQuery(GET_LOCATIONS, {
+  const { loading, error, data } = useQuery(GET_Statistics, {
     variables: { userId: localStorage.getItem("id") },
   });
 
@@ -96,7 +96,11 @@ function Dashboard() {
   return (
     <div className="DashboardAll" id="man">
       {localStorage.getItem("type") == "new" && (
-        <Modal opened={opened} centered>
+        <Modal
+          padding="xl"
+          size="lg"
+          opened={opened}
+        >
           <SecondSignup close={close} />
         </Modal>
       )}
