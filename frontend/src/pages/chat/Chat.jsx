@@ -1,16 +1,8 @@
 import React, { useCallback, useEffect, useRef } from "react";
 import { FaPlus, FaArrowLeft, FaDotCircle, FaPaperPlane } from "react-icons/fa";
-import {
-  Button,
-  Card,
-  Modal,
-  NativeSelect,
-  Select,
-  Text,
-  TextInput,
-} from "@mantine/core";
+import { Button, Modal, Select, Text, TextInput } from "@mantine/core";
 import "./Chat.css";
-import { write, read, updateData } from "../../config/firebase.js";
+import { write, read, updateData, updateField } from "../../config/firebase.js";
 import { Link } from "react-router-dom";
 import { gql, useLazyQuery, useQuery } from "@apollo/client";
 import { useDisclosure } from "@mantine/hooks";
@@ -19,10 +11,11 @@ const Chat = () => {
   const [oldChats, setOldChats] = React.useState([]);
   const [messages, setMessages] = React.useState([]);
   const [friends, setFriends] = React.useState([]);
-  const [chatId, setChatId] = React.useState("");
   const [message, setMessage] = React.useState("");
-  const [friend, setFriend] = React.useState("");
+  const [selectedChat, setSelectedChat] = React.useState(null);
   const listRef = useRef(null);
+  const [friendImg, setFriendImg] = React.useState(null);
+  const [myImg, setMyImg] = React.useState(null);
 
   const userId = localStorage.getItem("id");
 
@@ -37,109 +30,119 @@ const Chat = () => {
     }
   `;
 
-  // useLazyQuery
-
   const [getUser, { data: UserData }] = useLazyQuery(GET_USER);
 
-  const fetchOldChats = () => {
-    // Fetching old chats from Firebase
-    read("users/" + userId, (data) => {
-      const chatsData = data?.chats || {}; // Ensure chats data is available
-
-      // Mapping through each chat key
-      const chatKeys = Object.keys(chatsData);
-      const updatedChats = chatKeys.map(async (key) => {
-        const recipientId =
-          chatsData[key][Object.keys(chatsData[key])[0]].recipientId;
-
-        const userDetails = await getUser({
-          variables: { userId: recipientId },
-        });
-
-        return {
-          chatKey: key,
-          recipientId: recipientId,
-          userDetails: userDetails.data.getUser, // Adding user details to each chat object
-        };
-      });
-
-      Promise.all(updatedChats).then((updatedChatsData) => {
-        setOldChats(updatedChatsData);
-      });
-    });
-  };
-
-  const fetchChat = (chatId) => {
-    read("/chats/" + chatId, (data) => {
-      setMessages(data?.messages || []);
-    });
-  };
-
-  const sendMessage = async (chatId, sender, recipient, e) => {
-    e.preventDefault();
-    await updateData("/chats/" + chatId + "/messages", {
-      content: message,
-      timestamp: new Date().toISOString(),
-    });
-
-    await write("/users/" + sender + "/chats/" + chatId, {
-      lastMessage: message,
-      timestamp: new Date().toISOString(),
-    });
-
-    await write("/users/" + recipient + "/chats/" + chatId, {
-      lastMessage: message,
-      timestamp: new Date().toISOString(),
-    });
-  };
-
-  const fetchData = useCallback(() => {
-    fetchOldChats();
-  }, [userId]);
-
   useEffect(() => {
-    fetchData();
-  }, [fetchData]);
-
-  useEffect(() => {
-    listRef.current?.scrollIntoView();
-  }, [messages]);
-
-  const createChat = async (e, sender, recipient) => {
-    e.preventDefault();
-    const key = await updateData(`/chats`, {
-      recipientId: recipient,
+    getUser({ variables: { userId } }).then((e) => {
+      setMyImg(e.data.getUser.ImageUrl);
     });
-    await updateData(`/users/${userId}/chats/${key}`, {
-      recipientId: recipient,
-    });
-    await updateData(`/users/${recipient}/chats/${key}`, {
-      recipientId: sender,
-    });
-  };
+  }, []);
 
   const GET_Friends = gql`
-    query Query($userId: String!) {
-      getUser(userId: $userId) {
-        Friends {
-          FirstName
-          LastName
-          id
-          ImageUrl
-        }
+    query Query {
+      getAllUsers {
+        LastName
+        ImageUrl
+        FirstName
+        id
       }
     }
   `;
 
-  const { data: Friends } = useQuery(GET_Friends, {
-    variables: { userId: localStorage.getItem("id") },
-  });
+  const { data: Friends } = useQuery(GET_Friends);
 
   useEffect(() => {
     if (Friends) {
-      setFriends(() => Friends.getUser?.Friends);
+      setFriends(Friends.getAllUsers.filter((e) => e.id !== userId));
     }
-  }, [Friends]);
+  }, [Friends, userId]);
+
+  const loadOldChats = useCallback(async () => {
+    read(`chats/${userId}`, async (data) => {
+      if (data) {
+        const chats = await Promise.all(
+          Object.values(data).map(async (chat) => {
+            const friendId = chat.friendId; // Assuming chat object contains friendId
+            const { data: friendData } = await getUser({
+              variables: { userId: friendId },
+            });
+            const friendDetails = friendData?.getUser || {};
+
+            return {
+              ...chat,
+              friendName: `${friendDetails.FirstName} ${friendDetails.LastName}`,
+              friendPicture: friendDetails.ImageUrl,
+            };
+          })
+        );
+        setOldChats(chats);
+      }
+    });
+  }, [getUser, userId]);
+
+  useEffect(() => {
+    loadOldChats();
+  }, [loadOldChats]);
+
+  const loadMessages = useCallback((chatId) => {
+    console.log("chatId", chatId);
+    read(`messages/${chatId}`, (data) => {
+      if (data) {
+        setMessages(Object.values(data));
+      } else {
+        setMessages([]);
+      }
+    });
+  }, []);
+
+  const handleSendMessage = (e) => {
+    e.preventDefault();
+    if (message.trim() === "" || !selectedChat) return;
+
+    const newMessage = {
+      senderId: userId,
+      content: message,
+      timestamp: Date.now(),
+    };
+
+    updateData(`messages/${selectedChat.chatId}`, newMessage);
+    setMessage("");
+    loadMessages(selectedChat.chatId);
+
+    const chatId = selectedChat.chatId;
+    const friendId = selectedChat.friendId;
+
+    updateLastMessage(chatId, userId, message);
+    updateLastMessage(chatId, friendId, message);
+  };
+
+  const updateLastMessage = (chatId, userId, lastMessage) => {
+    const path = `chats/${userId}/${chatId}/lastMessage`;
+    updateField(path, lastMessage)
+      .then(() => {
+        console.log("Last message updated successfully");
+      })
+      .catch((error) => {
+        console.error("Error updating last message:", error);
+      });
+  };
+
+  const startChat = (friendId) => {
+    const chatId = `${userId}_${friendId}`;
+    const chatData = {
+      chatId,
+      userId,
+      friendId,
+      lastMessage: "",
+      timestamp: Date.now(),
+    };
+
+    write(`chats/${userId}/${chatId}`, chatData);
+    write(`chats/${friendId}/${chatId}`, chatData);
+    setSelectedChat(chatData);
+    loadMessages(chatId);
+    close();
+  };
 
   const [opened, { open, close }] = useDisclosure(false);
 
@@ -174,21 +177,21 @@ const Chat = () => {
                   <form
                     onSubmit={(e) => {
                       e.preventDefault();
+                      const friendId = e.target.elements.friendId.value;
+                      startChat(friendId);
                     }}
                   >
                     <div id="friends_search">
                       <Select
+                        name="friendId"
                         label="User Name"
                         placeholder="Pick value"
-                        data={friends?.map((e) => {
-                          return {
-                            value: e.id,
-                            label: e.FirstName + " " + e.LastName,
-                          };
-                        })}
+                        data={friends.map((e) => ({
+                          value: e.id,
+                          label: `${e.FirstName} ${e.LastName}`,
+                        }))}
                         searchable
                         zIndex={10}
-                        onChange={(e) => {}}
                       />
                     </div>
                     <br />
@@ -200,13 +203,13 @@ const Chat = () => {
                         radius="xl"
                         type="submit"
                         w={"20%"}
+                        style={{ position: "absolute", bottom: "4%" }}
                       >
                         Start Chat
                       </Button>
                     </div>
                   </form>
                 </Modal>
-
                 <Button
                   variant="filled"
                   color="green"
@@ -226,22 +229,18 @@ const Chat = () => {
                   size="md"
                 />
                 <div className="chat_chats_body_chats d-flex flex-column gap-1">
-                  {Object.values(oldChats)?.map((messages, index) => {
+                  {oldChats.map((chat, index) => {
                     return (
                       <ChatItem
-                        onClike={() => {
-                          const chatId = Object.keys(oldChats)[index];
-                          setChatId(chatId);
-                          fetchChat(chatId);
-                        }}
                         key={index}
-                        lastMessage={messages?.lastMessage}
-                        image={messages?.userDetails?.ImageUrl}
-                        userName={
-                          messages?.userDetails?.FirstName +
-                          " " +
-                          messages?.userDetails?.LastName
-                        }
+                        onClick={() => {
+                          setSelectedChat(chat);
+                          loadMessages(chat?.chatId);
+                          setFriendImg(chat?.friendPicture);
+                        }}
+                        lastMessage={chat?.lastMessage}
+                        image={chat?.friendPicture}
+                        userName={chat?.friendName}
                       />
                     );
                   })}
@@ -250,9 +249,12 @@ const Chat = () => {
             </div>
             <div className="chat_messages col-7 shadow p-4 bg-white d-flex flex-column gap-4">
               <div className="chat_messages_head d-flex">
-                {UserData?.getUser && (
+                {UserData?.getUser && selectedChat && (
                   <div className="d-flex chat_messages_head_user gap-4 align-content-center">
-                    <img alt={"User 1"} />
+                    <img
+                      src={selectedChat.friendPicture}
+                      alt={selectedChat.friendName}
+                    />
                     <div className="d-flex flex-column justify-content-center">
                       <Text size="xs" color="green">
                         <FaDotCircle size={7} /> online
@@ -262,23 +264,33 @@ const Chat = () => {
                 )}
               </div>
               <div className="chat_messages_body d-flex flex-column gap-4 px-3">
-                {Object.values(messages)?.map((message, index) => (
-                  <MessageItem
-                    key={index}
-                    userName="User 1"
-                    message={message.content}
-                    image={""}
-                    dir={message.senderId === userId ? "ltr" : "rtl"}
-                  />
-                ))}
+                {messages.map((message, index) => {
+                  return message.senderId == userId ? (
+                    <MessageItem
+                      key={index}
+                      userName={message.senderId}
+                      message={message.content}
+                      image={myImg}
+                      dir="ltr"
+                    />
+                  ) : (
+                    <MessageItem
+                      key={index}
+                      userName={message.senderId}
+                      message={message.content}
+                      image={friendImg}
+                      dir="rtl"
+                    />
+                  );
+                })}
                 <div ref={listRef} />
               </div>
               <form
                 className="chat_messages_send d-flex gap-3 w-100"
-                onSubmit={(e) => sendMessage(chatId, e)}
+                onSubmit={handleSendMessage}
               >
                 <TextInput
-                  placeholder="Input placeholder"
+                  placeholder="Type your message"
                   className="w-100"
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
@@ -286,7 +298,7 @@ const Chat = () => {
                 <Button
                   type="submit"
                   variant="filled"
-                  color="#388E3C"
+                  color="green"
                   className="send"
                   rightSection={<FaPaperPlane />}
                 >
@@ -301,13 +313,17 @@ const Chat = () => {
   );
 };
 
-const ChatItem = ({ userName = "User", lastMessage, image, onClike }) => {
+const ChatItem = ({ userName, lastMessage, image, onClick }) => {
   return (
     <div
       className="d-flex chat_item gap-4 align-content-center"
-      onClick={onClike}
+      onClick={onClick}
     >
-      <img src={image} alt={`${userName}`} />
+      <img
+        style={{ width: "50px", height: "50px", borderRadius: "50%" }}
+        src={image}
+        alt={userName}
+      />
       <div className="d-flex flex-column">
         <Text fw={600} size="md">
           {userName}
@@ -323,7 +339,7 @@ const ChatItem = ({ userName = "User", lastMessage, image, onClike }) => {
 const MessageItem = ({ userName, message, image, dir }) => {
   return (
     <div className="d-flex message_item gap-3" dir={dir}>
-      <img src={image} alt={`${userName}`} />
+      <img src={image} alt={userName} />
       <div className="w-75">
         <div
           className="message"
@@ -336,43 +352,6 @@ const MessageItem = ({ userName, message, image, dir }) => {
         </div>
       </div>
     </div>
-  );
-};
-
-const SearchFriends = ({ isSearching, createChatBtnOnClick }) => {
-  return (
-    <Card
-      style={{ display: isSearching ? "block" : "none" }}
-      id="chat_search_card"
-      shadow="sm"
-      padding="lg"
-      radius="md"
-      withBorder
-    >
-      <TextInput
-        label="User Name"
-        placeholder="Mohammad Abu Salh"
-        description="Enter Name to Search"
-      />
-
-      <NativeSelect
-        mt="md"
-        label="Users"
-        data={["React", "Angular", "Vue", "Svelte"]}
-        description="This All Users With Entered Name"
-      />
-      <br />
-      <div id="chat_search_card_btn_div" dir="rtl">
-        <Button
-          onClick={createChatBtnOnClick}
-          id="chat_search_card_btn"
-          variant="filled"
-          color="green"
-        >
-          Start Chat
-        </Button>
-      </div>
-    </Card>
   );
 };
 

@@ -279,7 +279,7 @@ const TeamUsers = () => {
             <div className="postApplies">
               {data?.getTeam?.Members?.map((user, index) => (
                 <div className="apply" key={index}>
-                  <img style={{maxWidth: "100px", maxHeight: "100px"}} src={user?.ImageUrl} />
+                  <img className="applyImg" src={user?.ImageUrl} />
                   <div className="d-flex flex-column gap-1 text-center">
                     <h4>
                       {user?.FirstName} {user?.LastName}

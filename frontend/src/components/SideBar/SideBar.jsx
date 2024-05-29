@@ -43,11 +43,6 @@ function SideBar() {
       link: Paths.NewTasksUser,
     },
     {
-      icon: AiOutlineTeam,
-      label: "teams I am working In it",
-      link: Paths.CompanyWorkingWith,
-    },
-    {
       icon: RiTeamLine,
       label: "My Companies",
       rightSection: <IconChevronRight size="1rem" stroke={1.5} />,

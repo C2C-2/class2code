@@ -40,6 +40,7 @@ import TeamUsers from "./pages/TeamPages/TeamUsers/TeamUsers";
 import { UserTask } from "./pages/TaskPages/UserTasks/UserTask";
 import {MyTasks} from "./pages/TaskPages/MyTasks/MyTasks";
 import OtherUserProfile from "./pages/OtherPages/OtherUserProfile/OtherUserProfile";
+import TeamUsersOthers from "./pages/TeamPages/TeamUsersOthers/TeamUsersOthers";
 
 const TokenChecker = ({ children }) => {
   if (!localStorage.getItem("token")) {
@@ -70,6 +71,15 @@ function App() {
           <Route path={Paths.SignUpFigma} element={<SignUpFigma />} />
           <Route path={Paths.ForgetPassword} element={<ForgetPassword />} />
           <Route path={Paths.Home} element={<Home />} />
+
+          <Route
+            path={Paths.TeamUsersOthers + "/:team_id"}
+            element={
+              <TokenChecker>
+                <TeamUsersOthers />
+              </TokenChecker>
+            }
+          />
 
           <Route
             path={Paths.Applys + "/:companyId/:id"}

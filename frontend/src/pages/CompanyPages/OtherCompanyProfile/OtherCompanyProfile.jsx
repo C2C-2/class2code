@@ -5,7 +5,8 @@ import CommentComp from "../../../components/Comments/CommentComp";
 import TeamOther from "../../../components/TeamOther/TeamOther";
 import { useQuery, useMutation } from "@apollo/client";
 import { gql } from "@apollo/client";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { Paths } from "../../../assets/Paths";
 
 const GET_COMPANY_QUERY = gql`
   query GetCompany($companyId: Int!) {
@@ -33,7 +34,9 @@ const GET_COMPANY_QUERY = gql`
       }
       Rate
       Teams {
+        _id
         TeamName
+        TeamRole
       }
       _id
     }
@@ -222,7 +225,11 @@ function OtherCompanyProfile() {
                     {data?.getCompany?.Comments.map((comment) => (
                       <CommentComp
                         key={comment._id}
-                        commenterName={comment?.User?.FirstName + " " + comment?.User?.LastName}
+                        commenterName={
+                          comment?.User?.FirstName +
+                          " " +
+                          comment?.User?.LastName
+                        }
                         commentText={comment.Value}
                         ImageUser={comment?.User?.ImageUrl}
                         timestamp={comment.CreatedDate}
@@ -280,7 +287,12 @@ function OtherCompanyProfile() {
                   <div className="d-flex flex-column gap-2 pt-5">
                     <h4>Teams</h4>
                     {data?.getCompany?.Teams?.map((team) => (
-                      <TeamOther key={team._id} team={team} />
+                      <Link
+                        to={`${Paths.TeamUsersOthers}/${team._id}`}
+                        key={team._id}
+                      >
+                        <TeamOther team={team} />
+                      </Link>
                     ))}
                   </div>
                 </div>

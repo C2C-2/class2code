@@ -107,4 +107,13 @@ export function deleteImage(imagePath) {
     });
 }
 
+export function updateField(path, data) {
+  // Create an update object where the keys are paths to update and the values are new data
+  const updates = {};
+  updates[path] = data;
+
+  // Use the update method to merge the new data into the existing data at the specified path
+  return update(ref(database), updates);
+}
+
 export const auth = getAuth(app);

@@ -357,3 +357,19 @@
 {"level":"error","message":"Tue May 28 2024 18:44:29 GMT+0300 (Eastern European Summer Time), in resolvers.js => createCompanyComment, Error: Cannot find relationship with type WRITE_COMMENT","service":"user-service"}
 {"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
 {"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
+{"level":"error","message":"Wed May 29 2024 13:33:56 GMT+0300 (Eastern European Summer Time), in resolvers.js => getProfileStatistics, Neo4jError: This record has no field with key 'count(p)', available key are: [projectCount].","service":"user-service"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
+{"level":"error","message":"Wed May 29 2024 13:34:17 GMT+0300 (Eastern European Summer Time), in resolvers.js => getProfileStatistics, Neo4jError: This record has no field with key 'count(p)', available key are: [projectCount].","service":"user-service"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
+{"level":"error","message":"Wed May 29 2024 13:34:34 GMT+0300 (Eastern European Summer Time), in resolvers.js => getProfileStatistics, Neo4jError: This record has no field with key 'count(p)', available key are: [projectCount].","service":"user-service"}
+{"level":"error","message":"Wed May 29 2024 13:34:58 GMT+0300 (Eastern European Summer Time), in resolvers.js => getProfileStatistics, Neo4jError: This record has no field with key 'count(p)', available key are: [projectCount].","service":"user-service"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}

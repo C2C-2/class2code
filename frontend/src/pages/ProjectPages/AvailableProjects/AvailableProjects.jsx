@@ -65,7 +65,7 @@ function AvailableProjects() {
           <div className="sideBareFake"></div>
           <div className="postsBody">
             <div className="navbarFake"></div>
-            <div className="PostsSearchPart">
+            <div className="PostsSearchPart mb-3">
               <Button
                 justify="center"
                 variant="filled"

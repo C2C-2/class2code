@@ -2,11 +2,11 @@ import React from 'react';
 import "./TeamOther.css";
 
 function TeamOther({ team }) {
-  console.log(team);
   return (
-    <button className='TeamAllCard'>
-        <span className='TACard'>{team.TeamName}</span>
-    </button>
+    <div className='TeamAllCard'>
+        <h6>Name: {team?.TeamName}</h6>
+        <p>Role: {team?.TeamRole}</p>
+    </div>
   );
 }
 

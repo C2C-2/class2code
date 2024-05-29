@@ -2,7 +2,6 @@ import "./OtherUserProfile.css";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   Button,
-  Input,
   Pill,
   PillsInput,
   Textarea,
@@ -12,7 +11,6 @@ import { useCallback, useEffect, useState } from "react";
 import { gql, useMutation, useQuery } from "@apollo/client";
 function UserProfile() {
   const [skills, setSkills] = useState([]);
-  const [skill, setSkill] = useState("");
   const { user_id: userId } = useParams();
   const [image, setImage] = useState("");
   const [fullName, setFullName] = useState("");

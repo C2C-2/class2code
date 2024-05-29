@@ -444,8 +444,9 @@ const resolvers = {
         // where all users get the project points.
         const numberOfProjects = await NeodeObject?.cypher(
           `
-          MATCH (u:User {id: "${userId}"}) -[:WORK_ON]-> (p:Project)
-          RETURN count(p)
+          MATCH (u:User {id: "${userId}"}) -[:IN_TEAM]-> (team:Team) 
+          <- [:HAS_A_TEAM] - (company:Company) - [:TAKE_A_PROJECT] -> (p:Project)
+          RETURN count(DISTINCT ID(p)) AS projectCount
           `
         );
 
@@ -471,7 +472,7 @@ const resolvers = {
         );
 
         return {
-          NumberOfProjects: numberOfProjects.records[0].get("count(p)").low,
+          NumberOfProjects: numberOfProjects.records[0].get("projectCount").low,
           NumberOfTeams: numberOfTeams.records[0].get("count(t)").low,
           NumberOfTasks: numberOfTasks.records[0].get("tasks").low,
           NumberOfMyCompanies:
@@ -2331,7 +2332,6 @@ const resolvers = {
         CREATE (user)-[:HAS_A_TASK {teamId: "${teamId}"}]->(task)
         RETURN task
         `;
-        console.log(query);
 
         await NeodeObject?.writeCypher(query);
 
@@ -3432,8 +3432,9 @@ const resolvers = {
         `;
         const result = await NeodeObject.cypher(cypherQuery);
         return result?.records?.map((record) => ({
-          ...record.get("task").properties,
-          _id: record.get("task").identity.low,
+          ...record?.get("task")?.properties,
+          _id: record?.get("task")?.identity?.low,
+          Priority: record?.get("task")?.properties?.Priority?.low,
         }));
       } catch (error) {
         Logging.error(`${new Date()}, in resolvers.js => Tasks, ${error}`);
@@ -3919,7 +3920,18 @@ const resolvers = {
 
         const result = await NeodeObject.cypher(cypherQuery);
 
-        return result?.records[0]?.get("company").properties?.CompanyName;
+        const cypherQuery1 = `
+           MATCH (company:Company) - [:HAS_A_TEAM] -> 
+           (team:Team) -[:HAS_A_TASK] -> (task:Task)
+           WHERE ID(task) = ${taskId}
+           RETURN company`;
+
+        const result1 = await NeodeObject.cypher(cypherQuery1);
+
+        return (
+          result?.records[0]?.get("company")?.properties?.CompanyName ||
+          result1?.records[0]?.get("company")?.properties?.CompanyName
+        );
       } catch (error) {
         Logging.error(`${new Date()}, in resolvers.js => company, ${error}`);
         throw error;
@@ -3941,7 +3953,17 @@ const resolvers = {
 
         const result = await NeodeObject.cypher(cypherQuery);
 
-        return result?.records[0]?.get("team").properties?.TeamName;
+        const cypherQuery1 = `
+           MATCH (team:Team) -[:HAS_A_TASK] -> (task:Task)
+           WHERE ID(task) = ${taskId}
+           RETURN team`;
+
+        const result1 = await NeodeObject.cypher(cypherQuery1);
+
+        return (
+          result?.records[0]?.get("team").properties?.TeamName ||
+          result1?.records[0]?.get("team").properties?.TeamName
+        );
       } catch (error) {
         Logging.error(`${new Date()}, in resolvers.js => team, ${error}`);
         throw error;
