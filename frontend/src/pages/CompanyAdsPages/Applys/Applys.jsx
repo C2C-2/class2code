@@ -47,7 +47,7 @@ const Applys = () => {
     }
   `;
 
-  const [deleteApply] = useLazyQuery(DELETE_APPLY);
+  const [deleteApply, { loading: deleteLoading }] = useLazyQuery(DELETE_APPLY);
 
   const GET_MY_Teams = gql`
     query GetCompany($companyId: Int!) {
@@ -234,7 +234,7 @@ const Applys = () => {
                           }).then(() => refetchApplies());
                         }}
                       >
-                        Disapprove
+                        {deleteLoading ? "Deleting" : "Delete"}
                       </Button>
                     </div>
                   </div>

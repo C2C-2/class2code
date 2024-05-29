@@ -85,7 +85,6 @@ const Chat = () => {
   }, [loadOldChats]);
 
   const loadMessages = useCallback((chatId) => {
-    console.log("chatId", chatId);
     read(`messages/${chatId}`, (data) => {
       if (data) {
         setMessages(Object.values(data));
@@ -137,8 +136,16 @@ const Chat = () => {
       timestamp: Date.now(),
     };
 
+    const friendChat = {
+      chatId,
+      userId: friendId,
+      friendId: userId,
+      lastMessage: "",
+      timestamp: Date.now(),
+    };
+
     write(`chats/${userId}/${chatId}`, chatData);
-    write(`chats/${friendId}/${chatId}`, chatData);
+    write(`chats/${friendId}/${chatId}`, friendChat);
     setSelectedChat(chatData);
     loadMessages(chatId);
     close();

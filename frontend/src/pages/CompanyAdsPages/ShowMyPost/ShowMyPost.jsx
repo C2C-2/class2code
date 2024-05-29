@@ -4,7 +4,7 @@ import { Button, Input, Pagination, Modal, Textarea } from "@mantine/core";
 import { useQuery, useMutation, gql, useLazyQuery } from "@apollo/client";
 import { Link, useNavigate } from "react-router-dom";
 import { useDisclosure } from "@mantine/hooks";
-import { FaArrowDown, FaArrowUp } from "react-icons/fa";
+import { FaArrowDown, FaArrowUp, FaTrash } from "react-icons/fa";
 import { Paths } from "../../../assets/Paths";
 
 function ShowAllPosts() {
@@ -126,6 +126,7 @@ function ShowAllPosts() {
   const [opened, { open, close }] = useDisclosure(false);
   const handleSubmit = (e) => {
     e.preventDefault();
+
     createPost({
       variables: {
         post: {
@@ -135,6 +136,8 @@ function ShowAllPosts() {
       },
     })
       .then(() => {
+        fetch();
+        setDescription("");
         close();
       })
       .catch((error) => {
@@ -343,6 +346,14 @@ const PostCard = ({ post, index, fetch, companyId }) => {
 
   const [updatePost] = useMutation(UPDATE_POST);
 
+  const DELETE_POST = gql`
+    query Query($postId: Int!) {
+      deletePost(postId: $postId)
+    }
+  `;
+
+  const [deletePost, { loading: loadingDelete }] = useLazyQuery(DELETE_POST);
+
   return (
     <div key={index} className="PostsCardDesign">
       <div className="PostsCardProfile">
@@ -417,10 +428,26 @@ const PostCard = ({ post, index, fetch, companyId }) => {
               Edit
             </Button>
             <Link to={`${Paths.Applys}/${companyId}/${post?._id}`}>
-              <Button onClick={() => {}} variant="filled" size="xs">
+              <Button variant="filled" size="xs">
                 Apples
               </Button>
             </Link>
+            <Button
+              variant="filled"
+              size="xs"
+              color="red"
+              onClick={() => {
+                deletePost({
+                  variables: {
+                    postId: parseInt(post?._id),
+                  },
+                }).then(() => {
+                  fetch();
+                });
+              }}
+            >
+              {loadingDelete ? "Loading..." : <FaTrash />}
+            </Button>
           </div>
         </>
       </div>

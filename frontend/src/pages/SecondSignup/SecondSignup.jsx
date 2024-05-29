@@ -139,7 +139,7 @@ const SecondSignup = ({ close }) => {
             </select>
           </div>
 
-          <Input
+          <TextInput
             value={username}
             onChange={(e) => setUsername(() => e.target.value)}
             label="Your Username"

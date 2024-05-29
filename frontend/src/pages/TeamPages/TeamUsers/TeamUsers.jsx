@@ -21,11 +21,6 @@ const TeamUsers = () => {
   const [userId, setUserId] = useState("");
   const [role, setRole] = useState("Member");
   const [err, setErr] = useState(null);
-  const [comments, setComments] = useState("");
-  const [endDate, setEndDate] = useState("");
-  const [priority, setPriority] = useState("");
-  const [startDate, setStartDate] = useState("");
-  const [taskName, setTaskName] = useState("");
 
   const GET_APPLIES = gql`
     query GetTeam($teamId: Int!) {

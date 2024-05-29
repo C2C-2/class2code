@@ -373,3 +373,100 @@
 {"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
 {"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
 {"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
+{"level":"warn","message":"Wed May 29 2024 17:42:55 GMT+0300 (Eastern European Summer Time), in resolvers.js => getUser, User not found in database","service":"user-service"}
+{"level":"error","message":"Wed May 29 2024 17:42:55 GMT+0300 (Eastern European Summer Time), in resolvers.js => getUser, Error: User not found","service":"user-service"}
+{"level":"warn","message":"Wed May 29 2024 17:42:55 GMT+0300 (Eastern European Summer Time), in resolvers.js => getUser, User not found in database","service":"user-service"}
+{"level":"error","message":"Wed May 29 2024 17:42:55 GMT+0300 (Eastern European Summer Time), in resolvers.js => getUser, Error: User not found","service":"user-service"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
+{"level":"error","message":"Wed May 29 2024 17:55:30 GMT+0300 (Eastern European Summer Time), in resolvers.js => deletePostPositionApply, Neo4jError: Writing in read access mode not allowed. Attempted write to neo4j","service":"user-service"}
+{"level":"error","message":"Wed May 29 2024 17:55:43 GMT+0300 (Eastern European Summer Time), in resolvers.js => deletePostPositionApply, Neo4jError: Writing in read access mode not allowed. Attempted write to neo4j","service":"user-service"}
+{"level":"error","message":"Wed May 29 2024 17:55:45 GMT+0300 (Eastern European Summer Time), in resolvers.js => deletePostPositionApply, Neo4jError: Writing in read access mode not allowed. Attempted write to neo4j","service":"user-service"}
+{"level":"error","message":"Wed May 29 2024 17:55:46 GMT+0300 (Eastern European Summer Time), in resolvers.js => deletePostPositionApply, Neo4jError: Writing in read access mode not allowed. Attempted write to neo4j","service":"user-service"}
+{"level":"error","message":"Wed May 29 2024 17:55:46 GMT+0300 (Eastern European Summer Time), in resolvers.js => deletePostPositionApply, Neo4jError: Writing in read access mode not allowed. Attempted write to neo4j","service":"user-service"}
+{"level":"error","message":"Wed May 29 2024 17:55:46 GMT+0300 (Eastern European Summer Time), in resolvers.js => deletePostPositionApply, Neo4jError: Writing in read access mode not allowed. Attempted write to neo4j","service":"user-service"}
+{"level":"error","message":"Wed May 29 2024 17:55:46 GMT+0300 (Eastern European Summer Time), in resolvers.js => deletePostPositionApply, Neo4jError: Writing in read access mode not allowed. Attempted write to neo4j","service":"user-service"}
+{"level":"error","message":"Wed May 29 2024 17:55:46 GMT+0300 (Eastern European Summer Time), in resolvers.js => deletePostPositionApply, Neo4jError: Writing in read access mode not allowed. Attempted write to neo4j","service":"user-service"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
+{"level":"error","message":"Wed May 29 2024 18:08:39 GMT+0300 (Eastern European Summer Time), in resolvers.js => Tasks, Neo4jError: Invalid input. '50.0' is not a valid value. Must be a non-negative integer.","service":"user-service"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
+{"level":"error","message":"Wed May 29 2024 18:09:03 GMT+0300 (Eastern European Summer Time), in resolvers.js => Tasks, Neo4jError: Invalid input. '50.0' is not a valid value. Must be a non-negative integer.","service":"user-service"}
+{"level":"error","message":"Wed May 29 2024 18:09:11 GMT+0300 (Eastern European Summer Time), in resolvers.js => Tasks, Neo4jError: Invalid input. '50.0' is not a valid value. Must be a non-negative integer.","service":"user-service"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
+{"level":"error","message":"Wed May 29 2024 18:10:24 GMT+0300 (Eastern European Summer Time), in resolvers.js => Tasks, TypeError: Cannot read properties of null (reading 'properties')","service":"user-service"}
+{"level":"error","message":"Wed May 29 2024 18:10:27 GMT+0300 (Eastern European Summer Time), in resolvers.js => Tasks, TypeError: Cannot read properties of null (reading 'properties')","service":"user-service"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
+{"level":"error","message":"Wed May 29 2024 18:13:41 GMT+0300 (Eastern European Summer Time), in resolvers.js => Tasks, Neo4jError: This record has no field with key 'teamTask', available key are: [task].","service":"user-service"}
+{"level":"error","message":"Wed May 29 2024 18:13:46 GMT+0300 (Eastern European Summer Time), in resolvers.js => Tasks, Neo4jError: This record has no field with key 'teamTask', available key are: [task].","service":"user-service"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
+{"level":"error","message":"Wed May 29 2024 18:14:40 GMT+0300 (Eastern European Summer Time), in resolvers.js => Tasks, Neo4jError: This record has no field with key 'teamTask', available key are: [task].","service":"user-service"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
+{"level":"error","message":"Wed May 29 2024 18:15:19 GMT+0300 (Eastern European Summer Time), in resolvers.js => Tasks, Neo4jError: This record has no field with key 'teamTask', available key are: [task].","service":"user-service"}
+{"level":"error","message":"Wed May 29 2024 18:15:24 GMT+0300 (Eastern European Summer Time), in resolvers.js => Tasks, Neo4jError: This record has no field with key 'teamTask', available key are: [task].","service":"user-service"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
+{"level":"error","message":"Wed May 29 2024 18:15:44 GMT+0300 (Eastern European Summer Time), in resolvers.js => Tasks, Neo4jError: This record has no field with key 'teamTask', available key are: [task].","service":"user-service"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
+{"level":"error","message":"Wed May 29 2024 18:18:37 GMT+0300 (Eastern European Summer Time), in resolvers.js => Tasks, Neo4jError: Invalid input. '50.0' is not a valid value. Must be a non-negative integer.","service":"user-service"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
+{"level":"error","message":"Wed May 29 2024 18:18:56 GMT+0300 (Eastern European Summer Time), in resolvers.js => Tasks, Neo4jError: Invalid input. '50.0' is not a valid value. Must be a non-negative integer.","service":"user-service"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
+{"level":"error","message":"Wed May 29 2024 18:19:38 GMT+0300 (Eastern European Summer Time), in resolvers.js => Tasks, Neo4jError: Invalid input. '50.0' is not a valid value. Must be a non-negative integer.","service":"user-service"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
+{"level":"error","message":"Wed May 29 2024 18:20:03 GMT+0300 (Eastern European Summer Time), in resolvers.js => Tasks, Neo4jError: Invalid input. '50.0' is not a valid value. Must be a non-negative integer.","service":"user-service"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
+{"level":"error","message":"Wed May 29 2024 18:20:29 GMT+0300 (Eastern European Summer Time), in resolvers.js => Tasks, Neo4jError: Invalid input. '50.0' is not a valid value. Must be a non-negative integer.","service":"user-service"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
+{"level":"error","message":"Wed May 29 2024 18:21:31 GMT+0300 (Eastern European Summer Time), in resolvers.js => Tasks, TypeError: Cannot read properties of null (reading 'properties')","service":"user-service"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
+{"level":"error","message":"Wed May 29 2024 18:21:45 GMT+0300 (Eastern European Summer Time), in resolvers.js => Tasks, TypeError: Cannot read properties of null (reading 'properties')","service":"user-service"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
+{"level":"error","message":"Wed May 29 2024 18:22:11 GMT+0300 (Eastern European Summer Time), in resolvers.js => Tasks, TypeError: Cannot read properties of null (reading 'properties')","service":"user-service"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
+{"level":"error","message":"Wed May 29 2024 18:22:33 GMT+0300 (Eastern European Summer Time), in resolvers.js => Tasks, TypeError: Cannot read properties of null (reading 'properties')","service":"user-service"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
+{"level":"error","message":"Wed May 29 2024 18:23:05 GMT+0300 (Eastern European Summer Time), in resolvers.js => company, Error: TaskID is null","service":"user-service"}
+{"level":"error","message":"Wed May 29 2024 18:23:05 GMT+0300 (Eastern European Summer Time), in resolvers.js => team, Error: TaskID is null","service":"user-service"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
+{"level":"error","message":"Wed May 29 2024 18:24:06 GMT+0300 (Eastern European Summer Time), in resolvers.js => company, Error: TaskID is null","service":"user-service"}
+{"level":"error","message":"Wed May 29 2024 18:24:06 GMT+0300 (Eastern European Summer Time), in resolvers.js => team, Error: TaskID is null","service":"user-service"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
+{"level":"error","message":"Wed May 29 2024 18:24:27 GMT+0300 (Eastern European Summer Time), in resolvers.js => company, Error: TaskID is null","service":"user-service"}
+{"level":"error","message":"Wed May 29 2024 18:24:27 GMT+0300 (Eastern European Summer Time), in resolvers.js => team, Error: TaskID is null","service":"user-service"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
+{"level":"error","message":"Wed May 29 2024 18:25:17 GMT+0300 (Eastern European Summer Time), in resolvers.js => company, Error: TaskID is null","service":"user-service"}
+{"level":"error","message":"Wed May 29 2024 18:25:17 GMT+0300 (Eastern European Summer Time), in resolvers.js => team, Error: TaskID is null","service":"user-service"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}

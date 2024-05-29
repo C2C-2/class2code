@@ -1,15 +1,17 @@
 import { useEffect, useState } from "react";
 import "./ShowAllPosts.css";
-import { Button, Input, Pagination } from "@mantine/core";
+import { Alert, Button, Input, Pagination } from "@mantine/core";
 import { gql, useLazyQuery, useMutation } from "@apollo/client";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Paths } from "../../../assets/Paths";
 
 function ShowAllPosts() {
   const [searchWord, setSearchWord] = useState("");
-
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
+  const [err, setErr] = useState(null);
+
+  const navigation = useNavigate();
 
   const [postsData, setPostsData] = useState([]);
 
@@ -47,47 +49,64 @@ function ShowAllPosts() {
     }
   `;
 
-  const [applyToPost] = useMutation(APPLAY_FOR_POST);
+  const [applyToPost, { loading: loadingApplyToPost }] =
+    useMutation(APPLAY_FOR_POST);
 
   return (
     <div className="ShowAllPostsAll">
+      {err && (
+        <div
+          style={{
+            zIndex: 1000000000000000,
+            position: "absolute",
+            top: "2%",
+            right: 0,
+            left: 0,
+            width: "100%",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Alert style={{ width: "fit-content" }} color="green" title={err} />
+        </div>
+      )}
       <div className="ShowAllPostsMain">
         <div className="ShowAllPostsContent">
           <div className="sideBareFake"></div>
           <div className="postsBody">
             <div className="navbarFake"></div>
             <div className="PostsSearchPart">
-              <Link to="/Dashboard">
-                <Button
-                  justify="center"
-                  variant="filled"
-                  color="#283739"
-                  radius="md"
+              <Button
+                justify="center"
+                variant="filled"
+                color="#283739"
+                radius="md"
+                onClick={() => navigation(-1)}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="18"
+                  height="12"
+                  viewBox="0 0 18 12"
+                  fill="none"
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="18"
-                    height="12"
-                    viewBox="0 0 18 12"
-                    fill="none"
-                  >
-                    <path
-                      d="M1.5 6H16.5"
-                      stroke="white"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M6.49999 11L1.5 6L6.49999 1"
-                      stroke="white"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </Button>
-              </Link>
+                  <path
+                    d="M1.5 6H16.5"
+                    stroke="white"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M6.49999 11L1.5 6L6.49999 1"
+                    stroke="white"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </Button>
               <div className="SearchPartShowAllPosts">
                 <Input
                   type="text"
@@ -164,10 +183,14 @@ function ShowAllPosts() {
                               postId: parseInt(post?._id),
                               userId: localStorage.getItem("id"),
                             },
+                          }).then(() => {
+                            setErr("Applied");
+                            const time = setTimeout(() => setErr(null), 3000);
+                            return () => clearTimeout(time);
                           });
                         }}
                       >
-                        Apply
+                        {loadingApplyToPost ? "Applied" : "Apply"}
                       </Button>
                     </div>
                   </div>

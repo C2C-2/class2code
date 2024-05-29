@@ -10,6 +10,7 @@ function Dashboard() {
   const [tasksNumber, setTasksNumber] = useState(0);
   const [companiesNumber, setCompaniesNumber] = useState(0);
   const [teamsNumber, setTeamsNumber] = useState(0);
+  const [Tasks, setTasks] = useState([]);
 
   const GET_Statistics = gql`
     query Query($userId: String!) {
@@ -23,22 +24,20 @@ function Dashboard() {
   `;
 
   const GET_TASKS = gql`
-    query Query($userId: String!) {
+    query GetUser($userId: String!) {
       getUser(userId: $userId) {
-        WorkCompanies {
-          Tasks {
-            TaskName
-            TaskStatus
-            StartDate
-            EndDate
-            Priority
-            Comments
-            CompanyName
-            TeamName
-            IsMarked
-            CreateDate
-            _id
-          }
+        Tasks {
+          TaskName
+          TaskStatus
+          StartDate
+          EndDate
+          Priority
+          Comments
+          CompanyName
+          TeamName
+          IsMarked
+          CreateDate
+          _id
         }
       }
     }
@@ -65,11 +64,11 @@ function Dashboard() {
     variables: { userId: localStorage.getItem("id") },
   });
 
-  const combinedTasks = dataTasks?.getUser?.WorkCompanies?.map(
-    (company) => company.Tasks
-  );
-
-  const Tasks = combinedTasks?.flat();
+  useEffect(() => {
+    if (dataTasks) {
+      setTasks(dataTasks.getUser.Tasks);
+    }
+  }, [dataTasks]);
 
   const [
     updateTask,
@@ -96,11 +95,7 @@ function Dashboard() {
   return (
     <div className="DashboardAll" id="man">
       {localStorage.getItem("type") == "new" && (
-        <Modal
-          padding="xl"
-          size="lg"
-          opened={opened}
-        >
+        <Modal padding="xl" size="lg" opened={opened}>
           <SecondSignup close={close} />
         </Modal>
       )}
