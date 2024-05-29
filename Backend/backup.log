@@ -212,3 +212,9 @@
 {"level":"info","message":"\n          Match (t:Team) WHERE ID(t) = 48\n          MATCH (n:User {id: \"56O8yFq2XrZO4hp8DSySLU2o6UH2\"})\n          CREATE (n) -[tr:IN_TEAM {role: \"Backend\"}] -> (t)\n          RETURN n\n          ","service":"user-service"}
 {"level":"info","message":"\n          MATCH (u:User {id: \"56O8yFq2XrZO4hp8DSySLU2o6UH2\"})-[r:APPLY_TO]->(p:PositionPost)\n          WHERE ID(p) = 6\n          DETACH DELETE r\n        ","service":"user-service"}
 {"level":"info","message":"CREATE (c:Comment { \n            createdDate: datetime(), \n            Value: \"its very good\" }) -[has_a_comment:HAS_A_COMMENT]-> (company:Company)\n          WHERE ID(company) = 47\n          RETURN c","service":"user-service"}
+{"level":"info","message":"MATCH (pp:PositionPost)\n          WHERE ID(pp) = 6\n          SET pp = {isApplied: true} RETURN pp","service":"user-service"}
+{"level":"info","message":"MATCH (pp:PositionPost)\n          WHERE ID(pp) = 7\n          SET pp = {isApplied: true} RETURN pp","service":"user-service"}
+{"level":"info","message":"\n          MATCH (u:User {id: \"56O8yFq2XrZO4hp8DSySLU2o6UH2\"})-[r:APPLY_TO]->(p:PositionPost)\n          WHERE ID(p) = 7\n          DETACH DELETE r\n        ","service":"user-service"}
+{"level":"info","message":"MATCH (p:PositionPost) WHERE ID(p) = 6 DETACH DELETE p","service":"user-service"}
+{"level":"info","message":"\n  MATCH (c:Company)\n  MATCH (u:User {id: \"56O8yFq2XrZO4hp8DSySLU2o6UH2\"})\n  WHERE ID(c) = 47\n  MERGE (u)-[r:RATED]->(c)\n  ON CREATE SET r.rate = 4\n  ON MATCH SET r.rate = 4\n  RETURN r\n","service":"user-service"}
+{"level":"info","message":"\n  MATCH (c:Company)\n  MATCH (u:User {id: \"56O8yFq2XrZO4hp8DSySLU2o6UH2\"})\n  WHERE ID(c) = 47\n  MERGE (u)-[r:RATED]->(c)\n  ON CREATE SET r.rate = 3\n  ON MATCH SET r.rate = 3\n  RETURN r\n","service":"user-service"}
