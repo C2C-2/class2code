@@ -2917,11 +2917,11 @@ const resolvers = {
         // Check for existing relationships
         const checkQuery = `
           MATCH (p:Project)<-[r:TAKE_A_PROJECT {finished: false}]-(c:Company)
-          WHERE ID(p) = $projectId
+          WHERE ID(p) = ${projectId} AND ID(c) = ${companyId}
           RETURN COUNT(r) AS existingRelationships
         `;
-        const checkParams = { projectId };
-        const result = await NeodeObject.cypher(checkQuery, checkParams);
+
+        const result = await NeodeObject.cypher(checkQuery);
         const existingRelationships = result.records[0]
           .get("existingRelationships")
           .toNumber();
@@ -3990,6 +3990,30 @@ const resolvers = {
         );
       } catch (error) {
         Logging.error(`${new Date()}, in resolvers.js => team, ${error}`);
+        throw error;
+      }
+    },
+    UserCreated: async (parent) => {
+      try {
+        const taskId = parent._id;
+
+        if (!taskId) {
+          throw new Error("TaskID is null");
+        }
+
+        const cypherQuery = `
+           MATCH (u:User)-[r:CREATE_TASK]->(t:Task)
+           WHERE ID(t) = ${taskId}
+           RETURN u`;
+
+        const result = await NeodeObject.cypher(cypherQuery);
+
+        return result?.records?.map((record) => ({
+          ...record.get("u").properties,
+          _id: record.get("u").identity.low,
+        }))[0];
+      } catch (error) {
+        Logging.error(`${new Date()}, in resolvers.js => UserCreated, ${error}`);
         throw error;
       }
     },

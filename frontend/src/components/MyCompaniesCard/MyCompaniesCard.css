@@ -20,4 +20,6 @@
 
 .MyCompaniesCard p {
   text-align: center;
+  max-height: 12vw;
+  overflow: auto;
 }

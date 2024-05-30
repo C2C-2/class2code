@@ -3,11 +3,16 @@ import { gql, useMutation, useQuery } from "@apollo/client";
 import { useNavigate, useParams } from "react-router-dom";
 import { useState } from "react";
 import DashboardStatusCard from "../../../components/DashboardStatusCard/DashboardStatusCard";
+import { FaArrowDown, FaArrowUp } from "react-icons/fa";
 
 const GET_TASKS = gql`
   query GetUser($userId: String!) {
     getUser(userId: $userId) {
       Tasks {
+        UserCreated {
+          FirstName
+          LastName
+        }
         TaskName
         TaskStatus
         StartDate
@@ -34,6 +39,7 @@ const UPDATE_TASK = gql`
 
 export const MyTasks = () => {
   const navigation = useNavigate();
+  const [isDesc, setIsDesc] = useState(true);
 
   const {
     loading: loadingTasks,
@@ -60,16 +66,15 @@ export const MyTasks = () => {
           <div className="sideBareFake"></div>
           <div className="postsBody">
             <div className="navbarFake"></div>
-            <div className="EditMyCompaniesContentData">
+            <div className="PostsSearchPart">
               <Button
-                w={"fit-content"}
                 justify="center"
                 variant="filled"
                 color="#283739"
                 radius="md"
-                size="lg"
-                h={70}
-                onClick={() => navigation(-1)}
+                onClick={() => {
+                  navigation(-1);
+                }}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -94,12 +99,27 @@ export const MyTasks = () => {
                   />
                 </svg>
               </Button>
+            </div>
+            <div className="EditMyCompaniesContentData">
+              <div className="ShowAllPostsButtons">
+                <Button
+                  variant="filled"
+                  color="gray"
+                  onClick={() => {
+                    setIsDesc(!isDesc);
+                  }}
+                  rightSection={isDesc ? <FaArrowUp /> : <FaArrowDown />}
+                >
+                  Date
+                </Button>
+              </div>
               <div className="DashboardUnderPart2">
                 <Table>
                   <Table.Thead>
                     <Table.Tr>
                       <Table.Th>Name</Table.Th>
                       <Table.Th>Deadline</Table.Th>
+                      <Table.Th>Created By</Table.Th>
                       <Table.Th>Team</Table.Th>
                       <Table.Th>Company</Table.Th>
                       <Table.Th>Status</Table.Th>
@@ -116,11 +136,15 @@ export const MyTasks = () => {
                               {task?.EndDate}
                             </span>
                             <span className="TableDesignText2 text-dark">
-                              IN
                               {getDaysDifference(task.StartDate, task.EndDate)}
-                              DAYS
+                              &nbsp; DAYS
                             </span>
                           </div>
+                        </Table.Td>
+                        <Table.Td>
+                          {task?.UserCreated?.FirstName +
+                            " " +
+                            task?.UserCreated?.LastName}
                         </Table.Td>
                         <Table.Td>{task?.TeamName}</Table.Td>
                         <Table.Td>{task?.CompanyName}</Table.Td>
@@ -193,7 +217,7 @@ export const MyTasks = () => {
       return 0; // Return 0 if either date is falsy (e.g., null or undefined)
     }
 
-    const startDate = new Date(startDateString);
+    const startDate = new Date();
     const endDate = new Date(endDateString);
 
     if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {

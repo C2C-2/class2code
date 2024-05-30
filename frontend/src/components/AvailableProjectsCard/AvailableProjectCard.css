@@ -40,6 +40,8 @@ a {
 .PartTextAvailableProject p {
   color: #505060;
   font-weight: 400;
+  max-height: 12vw;
+  overflow: auto;
 }
 
 .ReqNeed {

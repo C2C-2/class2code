@@ -4,12 +4,14 @@ import { Alert, Button, Input, Pagination } from "@mantine/core";
 import { gql, useLazyQuery, useMutation } from "@apollo/client";
 import { Link, useNavigate } from "react-router-dom";
 import { Paths } from "../../../assets/Paths";
+import { FaArrowDown, FaArrowUp } from "react-icons/fa";
 
 function ShowAllPosts() {
   const [searchWord, setSearchWord] = useState("");
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
   const [err, setErr] = useState(null);
+  const [isDesc, setIsDesc] = useState(true);
 
   const navigation = useNavigate();
 
@@ -143,11 +145,13 @@ function ShowAllPosts() {
                 </Link>
                 <Button
                   variant="filled"
-                  color="rgba(202, 204, 202, 1)"
-                  w={70}
-                  onClick={() => {}}
+                  color="gray"
+                  onClick={() => {
+                    setIsDesc(!isDesc);
+                  }}
+                  rightSection={isDesc ? <FaArrowUp /> : <FaArrowDown />}
                 >
-                  <span style={{ color: "#000000" }}>Date</span>
+                  Date
                 </Button>
               </div>
               <div className="ShowAllPostsCards">
@@ -166,7 +170,7 @@ function ShowAllPosts() {
                         <p>{post?.Company?.CompanyName}</p>
                       </div>
                     </div>
-                    <p>{post?.Content}</p>
+                    <p id="PostsCardContent">{post?.Content}</p>
                     <div className="PostsCardTime">
                       <p className="PostTime">
                         {post?.CreatedDate?.slice(0, 15)}
@@ -177,7 +181,13 @@ function ShowAllPosts() {
                         size="xs"
                         h={30}
                         w={110}
-                        onClick={() => {
+                        onClick={(e) => {
+                          e.preventDefault();
+
+                          if (!confirm("Are you sure?")) {
+                            return;
+                          }
+
                           applyToPost({
                             variables: {
                               postId: parseInt(post?._id),
@@ -205,6 +215,7 @@ function ShowAllPosts() {
                 onChange={setPage}
               />
             </div>
+            <br />
           </div>
         </div>
       </div>

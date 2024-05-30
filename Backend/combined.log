@@ -470,3 +470,19 @@
 {"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
 {"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
 {"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
+{"level":"error","message":"Thu May 30 2024 20:22:20 GMT+0300 (Eastern European Summer Time), in resolvers.js => applyForProject, Error: There is already an active relationship.","service":"user-service"}
+{"level":"error","message":"Thu May 30 2024 20:22:36 GMT+0300 (Eastern European Summer Time), in resolvers.js => applyForProject, Error: There is already an active relationship.","service":"user-service"}
+{"level":"error","message":"Thu May 30 2024 20:24:13 GMT+0300 (Eastern European Summer Time), in resolvers.js => applyForProject, Error: There is already an active relationship.","service":"user-service"}
+{"level":"error","message":"Thu May 30 2024 20:24:23 GMT+0300 (Eastern European Summer Time), in resolvers.js => applyForProject, Error: There is already an active relationship.","service":"user-service"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}

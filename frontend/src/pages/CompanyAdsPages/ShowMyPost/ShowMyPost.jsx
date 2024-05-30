@@ -127,6 +127,13 @@ function ShowAllPosts() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    console.log({
+      post: {
+        Content: description,
+      },
+      companyId: parseInt(companyId),
+    });
+
     createPost({
       variables: {
         post: {
@@ -369,7 +376,7 @@ const PostCard = ({ post, index, fetch, companyId }) => {
           <p>{post?.Company?.CompanyName}</p>
         </div>
       </div>
-      <p>{post?.Content}</p>
+      <p id="PostsCardContent">{post?.Content}</p>
       <div className="PostsCardTime">
         <p className="PostTime">{post?.CreatedDate?.slice(0, 15)}</p>
         <>

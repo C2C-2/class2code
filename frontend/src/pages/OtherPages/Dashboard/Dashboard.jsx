@@ -27,6 +27,10 @@ function Dashboard() {
     query GetUser($userId: String!) {
       getUser(userId: $userId) {
         Tasks {
+          UserCreated {
+            FirstName
+            LastName
+          }
           TaskName
           TaskStatus
           StartDate
@@ -218,6 +222,7 @@ function Dashboard() {
                       <Table.Tr>
                         <Table.Th>Name</Table.Th>
                         <Table.Th>Deadline</Table.Th>
+                        <Table.Th>Created By</Table.Th>
                         <Table.Th>Team</Table.Th>
                         <Table.Th>Company</Table.Th>
                         <Table.Th>Status</Table.Th>
@@ -234,14 +239,18 @@ function Dashboard() {
                                 {task?.EndDate}
                               </span>
                               <span className="TableDesignText2 text-dark">
-                                IN
                                 {getDaysDifference(
                                   task.StartDate,
                                   task.EndDate
                                 )}
-                                DAYS
+                                &nbsp; DAYS
                               </span>
                             </div>
+                          </Table.Td>
+                          <Table.Td>
+                            {task?.UserCreated?.FirstName +
+                              " " +
+                              task?.UserCreated?.LastName}
                           </Table.Td>
                           <Table.Td>{task?.TeamName}</Table.Td>
                           <Table.Td>{task?.CompanyName}</Table.Td>
@@ -316,7 +325,7 @@ function getDaysDifference(startDateString, endDateString) {
     return 0; // Return 0 if either date is falsy (e.g., null or undefined)
   }
 
-  const startDate = new Date(startDateString);
+  const startDate = new Date();
   const endDate = new Date(endDateString);
 
   if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {

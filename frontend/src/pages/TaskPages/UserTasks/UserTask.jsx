@@ -12,7 +12,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import DashboardStatusCard from "../../../components/DashboardStatusCard/DashboardStatusCard";
 import { useDisclosure } from "@mantine/hooks";
-import { FaRegTrashAlt } from "react-icons/fa";
+import { FaCheckCircle, FaRegTrashAlt } from "react-icons/fa";
 import { MdModeEdit } from "react-icons/md";
 
 const GET_TASKS = gql`
@@ -309,7 +309,9 @@ export const UserTask = () => {
                       <Table.Th>Team</Table.Th>
                       <Table.Th>Company</Table.Th>
                       <Table.Th>Status</Table.Th>
+                      <Table.Th>Approve</Table.Th>
                       <Table.Th>Edit</Table.Th>
+                      <Table.Th>Reset</Table.Th>
                       <Table.Th>Delete</Table.Th>
                     </Table.Tr>
                   </Table.Thead>
@@ -425,11 +427,62 @@ export const UserTask = () => {
                             </form>
                           </Modal>
                           <Button
+                            onClick={() => {
+                              deleteTask({
+                                variables: {
+                                  taskId: parseInt(task?._id),
+                                },
+                              }).then(() => {
+                                refetchTasks();
+                              });
+                            }}
+                            variant="filled"
+                            color="green"
+                          >
+                            {loadingDeleteTask ? (
+                              "Approving..."
+                            ) : (
+                              <>
+                                Approve &nbsp; <FaCheckCircle />
+                              </>
+                            )}
+                          </Button>
+                        </Table.Td>
+                        <Table.Td>
+                          <Button
                             onClick={() => handleOpenEditModal(task)}
                             variant="filled"
                             color="orange"
                           >
                             Edit &nbsp; <MdModeEdit />
+                          </Button>
+                        </Table.Td>
+                        <Table.Td>
+                          <Button
+                            onClick={async (e) => {
+                              e.preventDefault();
+                              const editedTask = {
+                                TaskStatus: "New",
+                              };
+                              await updateTask({
+                                variables: {
+                                  taskId: parseInt(task?._id),
+                                  task: editedTask,
+                                },
+                              }).then(() => {
+                                refetchTasks();
+                              });
+                            }}
+                            variant="filled"
+                            color="yellow"
+                          >
+                            {loadingUpdateTask ? (
+                              "Updating..."
+                            ) : (
+                              <>
+                                Reset &nbsp; <FaCheckCircle />
+                              </>
+                            )}
                           </Button>
                         </Table.Td>
                         <Table.Td>

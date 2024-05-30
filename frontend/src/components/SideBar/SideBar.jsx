@@ -1,5 +1,5 @@
 import "./SideBar.css";
-import { Box, Button, NavLink } from "@mantine/core";
+import { Badge, Box, Button, NavLink } from "@mantine/core";
 import { IconChevronRight, IconGauge } from "@tabler/icons-react";
 import { BsChatDots, BsPostcard, BsClipboard2Data } from "react-icons/bs";
 import { RiTeamLine } from "react-icons/ri";
@@ -31,6 +31,11 @@ function SideBar() {
       icon: BsChatText,
       label: "Chat",
       link: Paths.Chat,
+      rightSection: (
+        <Badge size="xs" color="red" circle>
+          3
+        </Badge>
+      ),
     },
     {
       icon: BsClipboard2Data,

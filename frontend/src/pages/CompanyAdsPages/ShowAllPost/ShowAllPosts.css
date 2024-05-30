@@ -1,3 +1,8 @@
+#PostsCardContent {
+  max-height: 12vw;
+  overflow: auto;
+}
+
 .ShowAllPostsContent {
   width: 100%;
   display: flex;
@@ -66,6 +71,7 @@
   flex-direction: column;
   gap: 1.5rem;
   min-width: 26rem;
+  max-width: 60%;
 }
 
 .PostsCardProfile {

@@ -101,10 +101,15 @@
   gap: 30px;
 }
 
-.ShowAllPostsData .ShowAllPostsCards{
+.ShowAllPostsData .ShowAllPostsCards {
   width: 100%;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
+}
+
+#PostsCardContent {
+  max-height: 12vw;
+  overflow: auto;
 }

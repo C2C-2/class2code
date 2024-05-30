@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { MantineProvider } from "@mantine/core";
 import "@mantine/core/styles.css";
+import './App.css'
 
 import SecondSignup from "./pages/SecondSignup/SecondSignup";
 import SignUpFigma from "./pages/SignUp/SignUpFigma";
@@ -38,14 +39,30 @@ import Applys from "./pages/CompanyAdsPages/Applys/Applys";
 import { TeamTask } from "./pages/TaskPages/TeamTasks/TeamTask";
 import TeamUsers from "./pages/TeamPages/TeamUsers/TeamUsers";
 import { UserTask } from "./pages/TaskPages/UserTasks/UserTask";
-import {MyTasks} from "./pages/TaskPages/MyTasks/MyTasks";
+import { MyTasks } from "./pages/TaskPages/MyTasks/MyTasks";
 import OtherUserProfile from "./pages/OtherPages/OtherUserProfile/OtherUserProfile";
 import TeamUsersOthers from "./pages/TeamPages/TeamUsersOthers/TeamUsersOthers";
+import Lodaer from "./components/Lodaer/Lodaer";
+import { useEffect, useState } from "react";
 
 const TokenChecker = ({ children }) => {
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Simulate an async operation to check token
+    setTimeout(() => {
+      setLoading(false);
+    }, 1500); // Adjust the timeout as needed
+  }, []);
+
+  if (loading) {
+    return <Lodaer />;
+  }
+
   if (!localStorage.getItem("token")) {
     return <Navigate to="/LogIn" />;
   }
+
   return (
     <>
       <NavBar />
