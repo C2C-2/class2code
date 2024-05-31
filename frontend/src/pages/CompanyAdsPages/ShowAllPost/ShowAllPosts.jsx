@@ -43,7 +43,7 @@ function ShowAllPosts() {
     }).then((e) => {
       setPostsData(e?.data?.getAllPosts);
     });
-  }, [page]);
+  }, [page, getPosts]);
 
   const APPLAY_FOR_POST = gql`
     mutation Mutation($postId: Int!, $userId: String!) {
@@ -53,6 +53,12 @@ function ShowAllPosts() {
 
   const [applyToPost, { loading: loadingApplyToPost }] =
     useMutation(APPLAY_FOR_POST);
+
+  const sortedPosts = postsData?.slice().sort((a, b) => {
+    const dateA = new Date(a.CreatedDate);
+    const dateB = new Date(b.CreatedDate);
+    return isDesc ? dateB - dateA : dateA - dateB;
+  });
 
   return (
     <div className="ShowAllPostsAll">
@@ -155,7 +161,7 @@ function ShowAllPosts() {
                 </Button>
               </div>
               <div className="ShowAllPostsCards">
-                {postsData?.map((post, index) => (
+                {sortedPosts?.map((post, index) => (
                   <div key={index} className="PostsCardDesign">
                     <div className="PostsCardProfile">
                       <img

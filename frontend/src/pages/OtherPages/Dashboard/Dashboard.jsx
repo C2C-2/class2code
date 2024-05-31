@@ -269,7 +269,7 @@ function Dashboard() {
                           <Table.Td>
                             <Button
                               variant="filled"
-                              color="#EE7214"
+                              color="#2C5D63"
                               disabled={
                                 task?.TaskStatus == "Finish" ? "disabled" : null
                               }

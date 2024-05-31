@@ -120,7 +120,7 @@ function NavBar() {
               }}
             >
               <Menu.Target>
-                <Button color="green" variant="subtle" className="Notifications">
+                <Button color="#283739" variant="subtle" className="Notifications">
                 <IoMdNotifications size={24} />
                   {notifications?.length > 0 && (
                     <Badge color="red" variant="filled" size="sm">

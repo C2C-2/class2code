@@ -59,6 +59,12 @@ export const MyTasks = () => {
     },
   ] = useMutation(UPDATE_TASK);
 
+  const sortedTasks = dataTasks?.getUser?.Tasks?.slice().sort((a, b) => {
+    const dateA = new Date(a.EndDate);
+    const dateB = new Date(b.EndDate);
+    return isDesc ? dateB - dateA : dateA - dateB;
+  });
+
   return (
     <div className="ShowAllPostsAll">
       <div className="ShowAllPostsMain">
@@ -127,7 +133,7 @@ export const MyTasks = () => {
                     </Table.Tr>
                   </Table.Thead>
                   <Table.Tbody>
-                    {dataTasks?.getUser?.Tasks?.map((task, index) => (
+                    {sortedTasks?.map((task, index) => (
                       <Table.Tr key={index}>
                         <Table.Td>{task?.TaskName}</Table.Td>
                         <Table.Td>
@@ -152,9 +158,9 @@ export const MyTasks = () => {
                           <DashboardStatusCard
                             status={task?.TaskStatus}
                             color={
-                              task?.TaskStatus == "Pending"
+                              task?.TaskStatus === "Pending"
                                 ? "red"
-                                : task.TaskStatus == "new"
+                                : task.TaskStatus === "new"
                                 ? "yellow"
                                 : "green"
                             }
@@ -165,7 +171,7 @@ export const MyTasks = () => {
                             variant="filled"
                             color="#EE7214"
                             disabled={
-                              task?.TaskStatus == "Finish" ? "disabled" : null
+                              task?.TaskStatus === "Finish" ? "disabled" : null
                             }
                             onClick={async (e) => {
                               e.preventDefault();
@@ -175,9 +181,9 @@ export const MyTasks = () => {
                                   task: {
                                     TaskName: task.TaskName,
                                     TaskStatus:
-                                      task.TaskStatus == "New"
+                                      task.TaskStatus === "New"
                                         ? "Pending"
-                                        : task.TaskStatus == "Pending"
+                                        : task.TaskStatus === "Pending"
                                         ? "Finish"
                                         : "New",
                                     StartDate: task.StartDate,
@@ -193,9 +199,9 @@ export const MyTasks = () => {
                               });
                             }}
                           >
-                            {task?.TaskStatus == "Pending"
+                            {task?.TaskStatus === "Pending"
                               ? "Finish"
-                              : task?.TaskStatus == "New"
+                              : task?.TaskStatus === "New"
                               ? "Start"
                               : "Done"}
                           </Button>
@@ -214,19 +220,19 @@ export const MyTasks = () => {
 
   function getDaysDifference(startDateString, endDateString) {
     if (!startDateString || !endDateString) {
-      return 0; // Return 0 if either date is falsy (e.g., null or undefined)
+      return 0;
     }
 
-    const startDate = new Date();
+    const startDate = new Date(startDateString);
     const endDate = new Date(endDateString);
 
     if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
-      return 0; // Return 0 if either date is invalid
+      return 0;
     }
 
     const diffInMilliseconds = endDate.getTime() - startDate.getTime();
     const diffInDays = diffInMilliseconds / (1000 * 60 * 60 * 24);
 
-    return Math.round(diffInDays); // Round the result to the nearest integer
+    return Math.round(diffInDays);
   }
 };

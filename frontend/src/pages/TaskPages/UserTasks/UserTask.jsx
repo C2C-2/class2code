@@ -129,7 +129,7 @@ export const UserTask = () => {
   const [deleteTask, { loading: loadingDeleteTask }] =
     useLazyQuery(DELETE_TASK);
 
-  const [updateTaskSteps, { loading: updateTaskStepsLoading }] =
+  const [updateTaskSteps] =
     useMutation(UPDATE_TASK_STEPS);
 
   const [openedEditModal, { open: openEditModal, close: closeEditModal }] =
