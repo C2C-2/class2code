@@ -3423,8 +3423,10 @@ const resolvers = {
         const cypherQuery = `
           MATCH (u:User {id: "${userId}"})
           OPTIONAL MATCH (u)-[:IN_TEAM]->(team:Team)-[:HAS_A_TASK]->(teamTask:Task)
+          WHERE teamTask.TaskStatus <> "Approved"
           WITH u, teamTask
           OPTIONAL MATCH (u)-[:HAS_A_TASK]->(userTask:Task)
+          WHERE userTask.TaskStatus <> "Approved"
           WITH DISTINCT teamTask, userTask
           SKIP ${page} * ${limit} LIMIT ${limit}
           RETURN teamTask, userTask
@@ -4013,7 +4015,9 @@ const resolvers = {
           _id: record.get("u").identity.low,
         }))[0];
       } catch (error) {
-        Logging.error(`${new Date()}, in resolvers.js => UserCreated, ${error}`);
+        Logging.error(
+          `${new Date()}, in resolvers.js => UserCreated, ${error}`
+        );
         throw error;
       }
     },

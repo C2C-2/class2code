@@ -12,8 +12,9 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import DashboardStatusCard from "../../../components/DashboardStatusCard/DashboardStatusCard";
 import { useDisclosure } from "@mantine/hooks";
-import { FaCheckCircle, FaRegTrashAlt } from "react-icons/fa";
+import { FaCheckCircle, FaRegTrashAlt, FaTrash } from "react-icons/fa";
 import { MdModeEdit } from "react-icons/md";
+import { updateFieldWithKey } from "../../../config/firebase";
 
 const GET_TASKS = gql`
   query GetUserTasksInTeam($userId: String!, $teamId: Int!) {
@@ -29,6 +30,11 @@ const GET_TASKS = gql`
       IsMarked
       CreateDate
       _id
+      Steps {
+        Description
+        Number
+        _id
+      }
     }
   }
 `;
@@ -67,6 +73,12 @@ const DELETE_TASK = gql`
   }
 `;
 
+const UPDATE_TASK_STEPS = gql`
+  mutation UpdateTaskSteps($taskId: Int!, $taskSteps: [TaskStepInput]!) {
+    updateTaskSteps(taskId: $taskId, taskSteps: $taskSteps)
+  }
+`;
+
 export const UserTask = () => {
   const navigation = useNavigate();
   const { team_id, company_id, id } = useParams();
@@ -81,6 +93,9 @@ export const UserTask = () => {
   const [editedComments, setEditedComments] = useState("");
   const [editedPriority, setEditedPriority] = useState("");
   const [Tasks, setTasks] = useState([]);
+  const [steps, setSteps] = useState([]);
+  const [number, setNumber] = useState(1);
+  const [description, setDescription] = useState("");
 
   const {
     loading: loadingTasks,
@@ -114,7 +129,13 @@ export const UserTask = () => {
   const [deleteTask, { loading: loadingDeleteTask }] =
     useLazyQuery(DELETE_TASK);
 
+  const [updateTaskSteps, { loading: updateTaskStepsLoading }] =
+    useMutation(UPDATE_TASK_STEPS);
+
   const [openedEditModal, { open: openEditModal, close: closeEditModal }] =
+    useDisclosure(false);
+
+  const [openedAddStep, { open: openAddStep, close: closeAddStep }] =
     useDisclosure(false);
 
   // Function to open edit modal and set the task to edit
@@ -144,6 +165,12 @@ export const UserTask = () => {
       },
     }).then(() => {
       refetchTasks();
+      updateFieldWithKey(
+        `notifications/${id}`,
+        {
+          notification: `You have a new task: ${taskName}`,
+        }
+      );
     });
   };
 
@@ -427,10 +454,14 @@ export const UserTask = () => {
                             </form>
                           </Modal>
                           <Button
+                            className="mx-2"
                             onClick={() => {
-                              deleteTask({
+                              updateTask({
                                 variables: {
                                   taskId: parseInt(task?._id),
+                                  task: {
+                                    TaskStatus: "Approved",
+                                  },
                                 },
                               }).then(() => {
                                 refetchTasks();
@@ -439,7 +470,7 @@ export const UserTask = () => {
                             variant="filled"
                             color="green"
                           >
-                            {loadingDeleteTask ? (
+                            {loadingUpdateTask ? (
                               "Approving..."
                             ) : (
                               <>
@@ -447,6 +478,124 @@ export const UserTask = () => {
                               </>
                             )}
                           </Button>
+                          <>
+                            <Modal
+                              opened={openedAddStep}
+                              onClose={closeAddStep}
+                              title="Add Step"
+                              centered
+                            >
+                              <form
+                                onSubmit={async (e) => {
+                                  e.preventDefault();
+
+                                  await updateTaskSteps({
+                                    variables: {
+                                      taskId: parseInt(task._id),
+                                      taskSteps: steps?.map((step) => ({
+                                        Number: step.Number,
+                                        Description: step.Description,
+                                      })),
+                                    },
+                                  }).then(() => {
+                                    refetchTasks();
+                                    closeAddStep();
+                                  });
+                                }}
+                              >
+                                <TextInput
+                                  label="Number"
+                                  placeholder="Enter number"
+                                  value={number}
+                                  onChange={(e) =>
+                                    setNumber(parseInt(e.target.value))
+                                  }
+                                  required
+                                />
+                                <Textarea
+                                  label="Description"
+                                  placeholder="Enter description"
+                                  value={description}
+                                  onChange={(e) =>
+                                    setDescription(e.target.value)
+                                  }
+                                  required
+                                />
+                                <br />
+
+                                <div className="px-3 mt-4">
+                                  {steps?.map((step, index) => (
+                                    <>
+                                      <div
+                                        key={index}
+                                        className="d-flex justify-content-between align-items-center w-25"
+                                      >
+                                        <h6 key={index}>{step.Number}.</h6>
+                                        <h6 key={index}>{step.Description}</h6>
+                                        <Button
+                                          variant="light"
+                                          color="red"
+                                          onClick={() => {
+                                            setSteps((e) =>
+                                              e.filter((_, i) => i !== index)
+                                            );
+                                          }}
+                                        >
+                                          <FaTrash color="red" />
+                                        </Button>
+                                      </div>
+                                      <br />
+                                    </>
+                                  ))}
+                                </div>
+
+                                <br />
+
+                                <div className="d-flex gap-3">
+                                  <Button
+                                    onClick={(e1) => {
+                                      e1.preventDefault();
+                                      setSteps((e) => [
+                                        ...e,
+                                        {
+                                          Number: number,
+                                          Description: description,
+                                        },
+                                      ]);
+                                    }}
+                                    variant="filled"
+                                    color="orange"
+                                  >
+                                    Add Step
+                                  </Button>
+                                </div>
+                                <br />
+                                <div className="d-flex gap-3 justify-content-end">
+                                  <Button
+                                    type="submit"
+                                    variant="filled"
+                                    color="green"
+                                    style={{
+                                      position: "absolute",
+                                      bottom: "1rem",
+                                    }}
+                                  >
+                                    Save
+                                  </Button>
+                                </div>
+                              </form>
+                            </Modal>
+                            <Button
+                              variant="filled"
+                              color="violet"
+                              onClick={() => {
+                                setSteps(task.Steps);
+                                openAddStep();
+                              }}
+                            >
+                              Steps
+                            </Button>
+                          </>
                         </Table.Td>
                         <Table.Td>
                           <Button

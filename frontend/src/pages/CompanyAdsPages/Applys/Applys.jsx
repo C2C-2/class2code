@@ -4,31 +4,57 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Button, Input, InputLabel, Modal, TextInput } from "@mantine/core";
 import { gql, useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import { useDisclosure } from "@mantine/hooks";
+import { updateFieldWithKey } from "../../../config/firebase";
+
+const DELETE_APPLY = gql`
+  query Query($postId: Int!, $userId: String!) {
+    deletePostPositionApply(postId: $postId, userId: $userId)
+  }
+`;
+
+const GET_MY_Teams = gql`
+  query GetCompany($companyId: Int!) {
+    getCompany(companyId: $companyId) {
+      Teams {
+        _id
+        TeamName
+      }
+    }
+  }
+`;
+
+const ADD_USER_TO_TEAM = gql`
+  mutation Mutation($teamId: Int!, $userId: String!, $role: String!) {
+    addUserToTeam(teamId: $teamId, userId: $userId, role: $role)
+  }
+`;
+
+const GET_APPLIES = gql`
+  query GetPost($postId: Int!) {
+    getPost(postId: $postId) {
+      Applies {
+        LastName
+        FirstName
+        ImageUrl
+        Work
+        Bio
+        Skills {
+          _id
+          Skill
+        }
+        id
+      }
+    }
+  }
+`;
+
 const Applys = () => {
   const { id, companyId } = useParams();
   const navigate = useNavigate();
   const [applies, setApplies] = useState([]);
   const [role, setRole] = useState("Member");
   const [teamId, setTeamId] = useState(null);
-
-  const GET_APPLIES = gql`
-    query GetPost($postId: Int!) {
-      getPost(postId: $postId) {
-        Applies {
-          LastName
-          FirstName
-          ImageUrl
-          Work
-          Bio
-          Skills {
-            _id
-            Skill
-          }
-          id
-        }
-      }
-    }
-  `;
+  const [teamName, setTeamName] = useState("");
 
   const {
     data,
@@ -41,24 +67,7 @@ const Applys = () => {
     },
   });
 
-  const DELETE_APPLY = gql`
-    query Query($postId: Int!, $userId: String!) {
-      deletePostPositionApply(postId: $postId, userId: $userId)
-    }
-  `;
-
   const [deleteApply, { loading: deleteLoading }] = useLazyQuery(DELETE_APPLY);
-
-  const GET_MY_Teams = gql`
-    query GetCompany($companyId: Int!) {
-      getCompany(companyId: $companyId) {
-        Teams {
-          _id
-          TeamName
-        }
-      }
-    }
-  `;
 
   const { data: myTeams } = useQuery(GET_MY_Teams, {
     variables: {
@@ -71,12 +80,6 @@ const Applys = () => {
       setTeamId(myTeams?.getCompany?.Teams[0]?._id);
     }
   }, [myTeams]);
-
-  const ADD_USER_TO_TEAM = gql`
-    mutation Mutation($teamId: Int!, $userId: String!, $role: String!) {
-      addUserToTeam(teamId: $teamId, userId: $userId, role: $role)
-    }
-  `;
 
   const [addUserToTeam] = useMutation(ADD_USER_TO_TEAM);
 
@@ -182,6 +185,12 @@ const Applys = () => {
                                 close();
                               });
                             });
+                            await updateFieldWithKey(
+                              `notifications/${user?.id}`,
+                              {
+                                notification: `You have been added to (${teamName}) team`,
+                              }
+                            );
                           }}
                         >
                           <label htmlFor="team" className="form-label">
@@ -192,7 +201,10 @@ const Applys = () => {
                             className="form-select"
                             aria-label="Default select example"
                             required
-                            onChange={(e) => setTeamId(e.target.value)}
+                            onChange={(e) => {
+                              setTeamId(e.target.value);
+                              setTeamName(e.target.options[e.target.selectedIndex].text);
+                            }}
                           >
                             {myTeams?.getCompany?.Teams?.map((team, index) => (
                               <option key={index} value={team?._id}>

@@ -1,21 +1,28 @@
-import React, { useCallback, useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { FaPlus, FaArrowLeft, FaDotCircle, FaPaperPlane } from "react-icons/fa";
 import { Button, Modal, Select, Text, TextInput } from "@mantine/core";
 import "./Chat.css";
-import { write, read, updateData, updateField } from "../../config/firebase.js";
+import {
+  write,
+  read,
+  updateData,
+  updateField,
+  updateFieldWithKey,
+} from "../../config/firebase.js";
 import { Link } from "react-router-dom";
 import { gql, useLazyQuery, useQuery } from "@apollo/client";
 import { useDisclosure } from "@mantine/hooks";
 
 const Chat = () => {
-  const [oldChats, setOldChats] = React.useState([]);
-  const [messages, setMessages] = React.useState([]);
-  const [friends, setFriends] = React.useState([]);
-  const [message, setMessage] = React.useState("");
-  const [selectedChat, setSelectedChat] = React.useState(null);
+  const [oldChats, setOldChats] = useState([]);
+  const [messages, setMessages] = useState([]);
+  const [friends, setFriends] = useState([]);
+  const [message, setMessage] = useState("");
+  const [selectedChat, setSelectedChat] = useState(null);
   const listRef = useRef(null);
-  const [friendImg, setFriendImg] = React.useState(null);
-  const [myImg, setMyImg] = React.useState(null);
+  const [friendImg, setFriendImg] = useState(null);
+  const [myImg, setMyImg] = useState(null);
+  const [hasNotified, setHasNotified] = useState({});
 
   const userId = localStorage.getItem("id");
 
@@ -84,17 +91,18 @@ const Chat = () => {
     loadOldChats();
   }, [loadOldChats]);
 
-  const loadMessages = useCallback((chatId) => {
-    read(`messages/${chatId}`, (data) => {
+  const loadMessages = useCallback(async (chatId) => {
+    await read(`messages/${chatId}`, (data) => {
       if (data) {
         setMessages(Object.values(data));
       } else {
         setMessages([]);
       }
     });
+    scrollToBottom();
   }, []);
 
-  const handleSendMessage = (e) => {
+  const handleSendMessage = async (e) => {
     e.preventDefault();
     if (message.trim() === "" || !selectedChat) return;
 
@@ -104,15 +112,31 @@ const Chat = () => {
       timestamp: Date.now(),
     };
 
-    updateData(`messages/${selectedChat.chatId}`, newMessage);
+    await updateData(`messages/${selectedChat.chatId}`, newMessage);
     setMessage("");
     loadMessages(selectedChat.chatId);
 
     const chatId = selectedChat.chatId;
     const friendId = selectedChat.friendId;
 
-    updateLastMessage(chatId, userId, message);
-    updateLastMessage(chatId, friendId, message);
+    await updateLastMessage(chatId, userId, message);
+    await updateLastMessage(chatId, friendId, message);
+
+    // Check if a notification has been sent for this chat
+    if (!hasNotified[chatId]) {
+      await updateFieldWithKey(`notifications/${friendId}`, {
+        notification: `You have a new message from ${selectedChat.friendName}`,
+      });
+
+      // Mark the chat as notified
+      setHasNotified((prev) => ({ ...prev, [chatId]: true }));
+    }
+
+    scrollToBottom();
+  };
+
+  const scrollToBottom = () => {
+    listRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   const updateLastMessage = (chatId, userId, lastMessage) => {

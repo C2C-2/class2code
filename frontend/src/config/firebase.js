@@ -8,6 +8,7 @@ import {
   set,
   onValue,
   update,
+  remove,
 } from "firebase/database";
 import { getAuth } from "firebase/auth";
 import {
@@ -114,6 +115,26 @@ export function updateField(path, data) {
 
   // Use the update method to merge the new data into the existing data at the specified path
   return update(ref(database), updates);
+}
+
+export function updateFieldWithKey(path, data) {
+  const database = getDatabase();
+  const newNotificationRef = push(ref(database, path));
+  const newKey = newNotificationRef.key;
+  const updates = {};
+  updates[`${path}/${newKey}`] = data;
+  return update(ref(database), updates);
+}
+
+export function deleteFieldAtPath(path) {
+  const database = getDatabase();
+  return remove(ref(database, path))
+    .then(() => {
+      console.log("Data deleted successfully");
+    })
+    .catch((error) => {
+      console.error("Error deleting data:", error);
+    });
 }
 
 export const auth = getAuth(app);
