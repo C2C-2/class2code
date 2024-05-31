@@ -64,14 +64,18 @@
 }
 
 .PostsCardDesign {
-  box-shadow: 0px 20px 60px #00000033;
+  box-shadow: 0px 15px 15px #00000033;
   border-radius: 10px;
   padding: 2rem;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  justify-content: space-between;
+  gap: 1rem;
   min-width: 26rem;
   max-width: 60%;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  flex: 1;
+  height: 100%;
 }
 
 .PostsCardProfile {

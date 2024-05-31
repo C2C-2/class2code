@@ -13,6 +13,7 @@ import { Link } from "react-router-dom";
 import { gql, useLazyQuery, useQuery } from "@apollo/client";
 import { Paths } from "../../assets/Paths";
 import { read, deleteFieldAtPath } from "../../config/firebase";
+import { IoIosNotifications, IoMdNotifications } from "react-icons/io";
 
 const GET_USER_IMAGE = gql`
   query Friends($userId: String!) {
@@ -119,31 +120,8 @@ function NavBar() {
               }}
             >
               <Menu.Target>
-                <Button variant="subtle">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="25"
-                    viewBox="0 0 24 25"
-                    fill="none"
-                  >
-                    <g clipPath="url(#clip0_214_3796)">
-                      <path
-                        d="M19.2896 17.79L17.9996 16.5V11.5C17.9996 8.43 16.3596 5.86 13.4996 5.18V4.5C13.4996 3.67 12.8296 3 11.9996 3C11.1696 3 10.4996 3.67 10.4996 4.5V5.18C7.62956 5.86 5.99956 8.42 5.99956 11.5V16.5L4.70956 17.79C4.07956 18.42 4.51956 19.5 5.40956 19.5H18.5796C19.4796 19.5 19.9196 18.42 19.2896 17.79ZM15.9996 17.5H7.99956V11.5C7.99956 9.02 9.50956 7 11.9996 7C14.4896 7 15.9996 9.02 15.9996 11.5V17.5ZM11.9996 22.5C13.0996 22.5 13.9996 21.6 13.9996 20.5H9.99956C9.99956 21.6 10.8896 22.5 11.9996 22.5Z"
-                        fill="#A3AED0"
-                      />
-                    </g>
-                    <defs>
-                      <clipPath id="clip0_214_3796">
-                        <rect
-                          width="24"
-                          height="24"
-                          fill="white"
-                          transform="translate(0 0.5)"
-                        />
-                      </clipPath>
-                    </defs>
-                  </svg>
+                <Button color="green" variant="subtle" className="Notifications">
+                <IoMdNotifications size={24} />
                   {notifications?.length > 0 && (
                     <Badge color="red" variant="filled" size="sm">
                       {notifications?.length}

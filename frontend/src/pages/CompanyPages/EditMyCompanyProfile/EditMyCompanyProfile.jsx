@@ -406,7 +406,7 @@ function EditMyCompanyProfile() {
                         </div>
                       </form>
                     </Modal>
-                    <Button color="green" onClick={open}>
+                    <Button color="yellow" onClick={open}>
                       Create Team
                     </Button>
                     <div style={{ overflow: "auto", maxHeight: 300 }}>
@@ -477,17 +477,16 @@ function EditMyCompanyProfile() {
                             <Link
                               to={`${Paths.TeamUsers}/${company_id}/${team._id}`}
                             >
-                              <Button radius={"xl"}>Users</Button>
+                              <Button color="blue" radius={"xl"}>Users</Button>
                             </Link>
                             <Link
                               to={`/TeamTasks/${team._id}/company/${company_id}`}
                             >
-                              <Button color="orange" radius={"xl"}>
+                              <Button color="blue" radius={"xl"}>
                                 Tasks
                               </Button>
                             </Link>
                             <Button
-                              variant="outline"
                               color="red"
                               radius={"xl"}
                               onClick={() => {

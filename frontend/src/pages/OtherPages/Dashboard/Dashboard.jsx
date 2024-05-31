@@ -213,7 +213,7 @@ function Dashboard() {
                 <div className="DashboardUnderPart1">
                   <span className="DashboardUnderPart1Text1">New Tasks</span>
                   <span className="DashboardUnderPart1Text2">
-                    {tasksNumber} Tasks
+                    {Tasks?.length} Tasks
                   </span>
                 </div>
                 <div className="DashboardUnderPart2">

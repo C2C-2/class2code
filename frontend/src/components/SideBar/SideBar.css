@@ -1,629 +1,73 @@
 .SideBarMain {
-  align-items: flex-start;
-  background-color: #ffffff;
-  border: 0.5px solid #e3e0e0;
-  border-radius: 10px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  height: 100%;
-  width: 15%;
+  align-items: flex-start;
+  width: 250px;
+  padding: 10px;
+  background-color: #fff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  border-top-right-radius: 12px;
+  border-bottom-right-radius: 12px;
   position: fixed;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  z-index: 1001;
-}
-
-.SideBarSectionProfile {
-  height: 10%;
-  justify-content: center;
-  align-items: center;
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-}
-
-.SideBarSectionProfilePart1 {
-  padding-top: 30px;
-  width: 100%;
-  padding-left: 10px;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  gap: 20px;
-}
-
-.SideBarSectionProfilePart1Img {
-  height: 44px;
-  width: 44px;
-}
-
-.SideBarSectionProfilePart1Texts {
-  align-items: flex-start;
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  flex-grow: 1;
-  gap: 4px;
-}
-
-.SideBarSectionProfilePart1Text1 {
-  color: #757575;
-  font-family: "Inter-Medium", Helvetica;
-  font-size: 10px;
-  font-weight: 500;
-  letter-spacing: 0.4px;
-  line-height: 12px;
-}
-
-.SideBarSectionProfilePart1Text2 {
-  color: #000000;
-  font-family: "Inter-Medium", Helvetica;
-  font-size: 14px;
-  font-weight: 500;
-  letter-spacing: 0;
-  line-height: 20px;
-}
-.SideBarSectionProfilePart1Text2Dark {
-  color: #fff;
-  font-family: "Inter-Medium", Helvetica;
-  font-size: 14px;
-  font-weight: 500;
-  letter-spacing: 0;
-  line-height: 20px;
-}
-
-.SideBarSectionProfilePart2 {
-  width: 98%;
-  height: 1px;
-  border: 1.2px solid #00000099;
-}
-.SideBarSectionProfilePart2Dark {
-  width: 98%;
-  height: 1px;
-  border: 1.2px solid #fff;
-}
-
-.SideBarSectionCenter {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  align-items: center;
-  gap: 20px;
-}
-
-.SideBarSectionCenterMain {
-  align-items: flex-start;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding: 0px 12px;
-  width: 90%;
-}
-
-.SideBarSectionCenterMainText {
-  color: #757575;
-  font-family: "Inter-Medium", Helvetica;
-  font-size: 12px;
-  font-weight: 500;
-  letter-spacing: 0.4px;
-  line-height: 12px;
-  white-space: nowrap;
-}
-
-.SideBarSectionCenterContent {
-  display: flex;
-  width: 100%;
-  align-items: flex-start;
-  flex-direction: column;
-  height: 90%;
-}
-
-.SideBarSectionCenterContentSections {
-  display: flex;
-  width: 100%;
-  align-items: flex-start;
-  justify-content: flex-start;
-  flex-direction: column;
-  height: 100%;
-  gap: 20px;
-}
-
-.SvgImg {
-  height: 20px;
-  width: 20px;
-}
-
-.SvgImg.active {
-  stroke: #008000;
-}
-
-.SideBarText {
-  color: #757575;
-  flex: 1;
-  font-family: "Inter-Medium", Helvetica;
-  font-size: 16px;
-  font-weight: 500;
-  letter-spacing: -0.28px;
-  line-height: 20px;
-  padding-top: 2px;
-}
-
-.SideBarText.active {
-  color: green;
-}
-
-.SideBarSectionCenterContent ul li {
-  list-style: none;
-  margin-bottom: 5px;
-  width: 100%;
-}
-
-.SideBarSectionCenterContent ul li a {
-  display: flex;
-  align-items: flex-start;
-  flex-direction: row;
-  justify-content: flex-start;
-  width: 100%;
-  gap: 10px;
-  text-decoration: none;
-  transition: all 0.3s;
-}
-.SideBarSectionCenterContent ul li Link {
-  display: flex;
-  align-items: flex-start;
-  flex-direction: row;
-  justify-content: flex-start;
-  width: 100%;
-  gap: 10px;
-  text-decoration: none;
-  transition: all 0.3s;
-}
-
-.SideBarSectionCenterContent ul li:hover a svg {
-  border-color: green;
-}
-.SideBarSectionCenterContent ul li:hover Link svg {
-  border-color: green;
-}
-
-.SideBarSectionText {
-  align-items: center;
-  background-color: #fff;
-  border-radius: 8px;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  gap: 12px;
-  padding: 10px 5px;
-  width: 90%;
-}
-
-.SideBarSectionText.active {
-  background-color: #c3f4bd;
-}
-
-.SideBarSectionCenterContent ul li:hover a .SideBarText {
-  color: green;
-}
-.SideBarSectionCenterContent ul li:hover Link .SideBarText {
-  color: green;
-}
-
-.SideBarSectionTextMyCompanies {
-  align-items: center;
-  background-color: #fff;
-  border-radius: 8px;
-  display: flex;
-  gap: 12px;
-  padding: 10px 5px;
-  width: 90%;
-}
-
-.SideBarSectionCenterContent ul li:hover a .SideBarSectionTextMyCompanies {
-  background-color: #c3f4bd;
-}
-.SideBarSectionCenterContent ul li:hover Link .SideBarSectionTextMyCompanies {
-  background-color: #c3f4bd;
-}
-.SideBarSectionTextMyCompanies.active {
-  background-color: #c3f4bd;
-}
-
-.icon-chevron {
-  height: 16px;
-  width: 16px;
-}
-
-.icon-chevron.active {
-  transform: rotate(180deg);
-}
-
-.SideBarSectionCenterContent ul li a:hover .SideBarSectionText {
-  background-color: #c3f4bd;
-}
-.SideBarSectionCenterContent ul li Link:hover .SideBarSectionText {
-  background-color: #c3f4bd;
-}
-.SubSection {
-  background-color: #f0f8ff;
-  border-radius: 5px;
-  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.05);
-  left: 95%;
-  padding-left: 10px;
-  padding-top: 10px;
-  height: 80px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 15px;
-  position: absolute;
-  width: 190px;
-}
-
-.SubSectionCompany {
-  background-color: #f0f8ff;
-  border-radius: 5px;
-  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.05);
-  left: 95%;
-  padding-left: 10px;
-  padding-top: 10px;
-  height: 130px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 15px;
-  position: absolute;
-  width: 190px;
-}
-
-.SubTextTeam {
-  color: #757575;
-  flex: 1;
-  font-family: "Inter-Medium", Helvetica;
-  font-size: 13px;
-  font-weight: 500;
-  letter-spacing: -0.24px;
-  line-height: 16px;
-}
-
-.SubTextCompany {
-  color: #757575;
-  flex: 1;
-  font-family: "Inter-Medium", Helvetica;
-  font-size: 13px;
-  font-weight: 500;
-  letter-spacing: -0.24px;
-  line-height: 16px;
-}
-.SubTextSetting {
-  color: #757575;
-  flex: 1;
-  font-family: "Inter-Medium", Helvetica;
-  font-size: 13px;
-  font-weight: 500;
-  letter-spacing: -0.24px;
-  line-height: 16px;
-}
-.ArrowTeam1 {
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-color: #f6f6f6;
-  border-left-style: solid;
-  border-left-width: 2px;
-  border-radius: 0px 0px 0px 8px;
-  height: 10px;
-  left: -13px;
-  position: absolute;
-  top: 12px;
-  width: 13px;
-}
-.ArrowSetting1 {
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-color: #f6f6f6;
-  border-left-style: solid;
-  border-left-width: 2px;
-  border-radius: 0px 0px 0px 8px;
-  height: 10px;
-  left: -13px;
-  position: absolute;
-  top: 12px;
-  width: 13px;
-}
-.ArrowSetting2 {
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-color: #f6f6f6;
-  border-left-style: solid;
-  border-left-width: 2px;
-  border-radius: 0px 0px 0px 8px;
-  height: 40px;
-  left: -13px;
-  position: absolute;
-  top: 12px;
-  width: 13px;
-}
-.ArrowCompany1 {
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-color: #f6f6f6;
-  border-left-style: solid;
-  border-left-width: 2px;
-  border-radius: 0px 0px 0px 8px;
-  height: 10px;
-  left: -13px;
-  position: absolute;
-  top: 12px;
-  width: 13px;
-}
-.ArrowCompany2 {
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-color: #f6f6f6;
-  border-left-style: solid;
-  border-left-width: 2px;
-  border-radius: 0px 0px 0px 8px;
-  height: 40px;
-  left: -13px;
-  position: absolute;
-  top: 12px;
-  width: 13px;
-}
-.ArrowCompany3 {
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-color: #f6f6f6;
-  border-left-style: solid;
-  border-left-width: 2px;
-  border-radius: 0px 0px 0px 8px;
-  height: 70px;
-  left: -13px;
-  position: absolute;
-  top: 12px;
-  width: 13px;
-}
-.ArrowCompany4 {
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-color: #f6f6f6;
-  border-left-style: solid;
-  border-left-width: 2px;
-  border-radius: 0px 0px 0px 8px;
-  height: 100px;
-  left: -13px;
-  position: absolute;
-  top: 12px;
-  width: 13px;
-}
-.ArrowTeam2 {
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-color: #f6f6f6;
-  border-left-style: solid;
-  border-left-width: 2px;
-  border-radius: 0px 0px 0px 8px;
-  height: 40px;
-  left: -13px;
-  position: absolute;
-  top: 12px;
-  width: 13px;
-}
-
-.lineSubTeam {
-  background-color: #f6f6f6;
-  height: 45px;
-  left: -13px;
-  position: absolute;
-  top: 0;
-  width: 2px;
-}
-
-.lineSubCompany {
-  background-color: #f6f6f6;
-  height: 109px;
-  left: -13px;
-  position: absolute;
-  top: 0;
-  width: 2px;
-}
-
-.SideBarCenterLine {
-  width: 100%;
-  height: 1px;
-  border: 1.2px solid #00000099;
-}
-
-.SideBarSettings {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 20px;
-}
-
-.SideBarSettingText {
-  padding-left: 30px;
-  color: #757575;
-  font-family: Inter;
-  font-size: 10px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: 12px;
-  letter-spacing: 0.4px;
-  text-transform: uppercase;
-}
-
-.SideBarSettingsCenter {
-  width: 100%;
+  top: 0px;
+  left: 0px;
   bottom: 0px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  gap: 10px;
-}
-
-.SideBarSettingsCenterSections {
-  list-style: none;
-  height: 100%;
-  width: 100%;
-  gap: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-}
-
-.SideBarSettingsCenter ul li {
-  gap: 20px;
-  list-style: none;
-  margin-bottom: 5px;
-  width: 100%;
-}
-
-.SideBarSettingsCenter ul li a {
-  display: flex;
-  align-items: flex-start;
-  flex-direction: row;
-  justify-content: flex-start;
-  width: 100%;
-  gap: 10px;
-  text-decoration: none;
-  transition: all 0.3s;
-}
-.SideBarSettingsCenter ul li Link {
-  display: flex;
-  align-items: flex-start;
-  flex-direction: row;
-  justify-content: flex-start;
-  width: 100%;
-  gap: 10px;
-  text-decoration: none;
-  transition: all 0.3s;
-}
-
-.SideBarSettingsCenter ul li:hover a .SideBarText {
-  color: green;
-}
-
-.SideBarSettingsCenter ul li:hover a .SideBarSectionTextSetting {
-  background-color: #c3f4bd;
-}
-.SideBarSettingsCenter ul li:hover Link .SideBarText {
-  color: green;
-}
-
-.SideBarSettingsCenter ul li:hover Link .SideBarSectionTextSetting {
-  background-color: #c3f4bd;
-}
-
-.SideBarSectionTextSetting.active {
-  background-color: #c3f4bd;
-}
-
-.SideBarSectionTextSetting {
-  align-items: center;
-  background-color: #fff;
-  border-radius: 8px;
-  display: flex;
-  gap: 12px;
-  padding: 10px 5px;
-  width: 90%;
-}
-
-.SideBarSettingButton {
-  height: 30%;
-  padding-bottom: 20px;
-  width: 100%;
-  padding-left: 20px;
-}
-
-.SideBarSettingLogout {
-  width: 90%;
-  height: 100%;
-  gap: 20px;
-  display: flex;
-  flex-direction: row;
-  display: flex;
-  padding: 10px var(--12, 12px);
-  align-items: center;
-  gap: var(--12, 12px);
-  align-self: stretch;
-  border-radius: var(--8, 8px);
-  border: 1px solid var(--red, #eb5757);
-  background: var(--white-100, #fff);
-}
-.SideBarSettingLogoutDark {
-  width: 90%;
-  height: 100%;
-  gap: 20px;
-  display: flex;
-  flex-direction: row;
-  display: flex;
-  padding: 10px var(--12, 12px);
-  align-items: center;
-  gap: var(--12, 12px);
-  align-self: stretch;
-  border-radius: var(--8, 8px);
-  border: 1px solid var(--red, #eb5757);
-  background: #000;
-}
-
-.SideBarSettingLogoutText {
-  color: var(--red, #eb5757);
-  font-family: Inter;
-  font-size: 14px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: 20px;
-  letter-spacing: -0.28px;
-}
-
-.SideBarAccount img {
-  width: 48px;
-  height: 48px;
-}
-
-.SideBarAccount {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  padding: 1rem 1rem 0rem 1rem;
-  gap: 1rem;
-}
-
-.SideBarHeader {
-  width: 100%;
+  z-index: 1001;
+  transition: transform 0.3s ease, opacity 0.3s ease;
 }
 
 .SideBarBody {
   width: 100%;
   height: 100%;
   display: flex;
-  padding: 1rem 0.5rem;
   flex-direction: column;
   justify-content: space-between;
+  padding: 1rem 0.5rem;
 }
 
-.SideBarAccount h6{
-  font-family: Inter;
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: 20px;
-  letter-spacing: -0.28px;
-  text-transform: uppercase;
-  height: fit-content;
+.SideBarSectionCenter {
+  width: 100%;
 }
 
-.SideBarAccount span {
-  color: #757575;
-  font-family: Inter;
-  font-size: 12px;
-  font-style: normal;
-  font-weight: 500;
-  text-transform: uppercase;
-  height: fit-content;
+.SideBarSectionCenterMain {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 0;
+  margin-bottom: 20px;
+  background: #DDEEDF;
+  border-radius: 8px;
+}
+
+.SideBarSectionCenterMainText {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+}
+
+.SideBarMenuCard{
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.SideBarMenuCard a {
+  text-decoration: none;
+  width: 100%;
+  font-weight: 600;
+}
+
+.SideBarMenuCard .mantine-NavLink-root {
+  margin-bottom: 8px;
+  transition: background 0.2s ease;
+}
+
+.SideBarMenuCard .mantine-NavLink-root:hover {
+  background: #e8f5e9;
+}
+
+.mantine-Button-root {
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: bold;
 }

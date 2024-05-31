@@ -3055,8 +3055,8 @@ const resolvers = {
         }
 
         await NeodeObject?.writeCypher(
-          `MATCH (u:User) -[r:IN_TEAM]-> (t:Team) <- [cr:HAS_A_TEAM]-(c:Company) -[tp:TAKE_A_PROJECT]-> (p:Project) <- [wr:WORK_ON]-(u) WHERE u.id = "${userId}" AND ID(t) = ${teamId}
-           DETACH DELETE r, wr`
+          `MATCH (u:User) -[r:IN_TEAM]-> (t:Team) WHERE u.id = "${userId}" AND ID(t) = ${teamId}
+           DETACH DELETE r`
         );
 
         await backup.info(`MATCH (u:User) -[r:IN_TEAM]-> (t:Team) WHERE u.id = "${userId}" AND ID(t) = ${teamId}

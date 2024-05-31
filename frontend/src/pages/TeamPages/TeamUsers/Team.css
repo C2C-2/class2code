@@ -3,3 +3,11 @@
   max-height: 100px;
   border-radius: 50%;
 }
+
+.postApplies{
+  flex-wrap: wrap;
+}
+
+.apply{
+  max-height: 26rem;
+}
