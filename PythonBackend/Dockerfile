@@ -1,5 +1,5 @@
 # Use Python as base image
-FROM python:latest
+FROM python:3.12
 
 # Set working directory
 WORKDIR /app
@@ -8,7 +8,10 @@ WORKDIR /app
 COPY requirements.txt .
 
 # Install Python dependencies
-RUN pip install -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Verify installation of langchain-community
+RUN pip show langchain-community
 
 # Copy all other files
 COPY . .
@@ -17,4 +20,4 @@ COPY . .
 EXPOSE 5000
 
 # Command to run the app
-CMD ["python", "app.py"]
+CMD ["python", "index.py"]

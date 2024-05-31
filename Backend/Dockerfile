@@ -14,7 +14,7 @@ RUN npm install --legacy-peer-deps
 COPY . .
 
 # Build React app
-RUN npm run build
+# RUN npm run build
 
 # Expose port
 EXPOSE 4000

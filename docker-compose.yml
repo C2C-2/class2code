@@ -1,16 +1,29 @@
-version: "3.4"
+version: "3.8"
 services:
   react:
     build: ./frontend
     ports:
       - "5173:5173"
+    networks:
+      - network-backend
 
   express:
     build: ./Backend
+    environment:
+      - AI_USERNAME=QA2!eR23c
+      - AI_PASSWORD=yu23M@1R!f
+      - NeodePassword=Qazwsx1234
+      - NeodeUsername=neo4j
+      - NeodeServerUrl=bolt://host.docker.internal:7687
+      - DB_NAME=class2codetokens
+      - FR_STORAGE_BUCKET=class2code.appspot.com
+      - Redis_URL=redis://host.docker.internal:6379
     ports:
       - "4000:4000"
     depends_on:
       - neo4j
+    networks:
+      - network-backend
 
   flask:
     build: ./PythonBackend
@@ -18,14 +31,26 @@ services:
       - "5000:5000"
     depends_on:
       - redis
+    networks:
+      - network-backend
 
   neo4j:
     image: neo4j
     ports:
       - "7474:7474"
       - "7687:7687"
+    environment:
+      - NEO4J_AUTH=neo4j/Qazwsx1234
+    networks:
+      - network-backend
 
   redis:
     image: redis
     ports:
       - "6379:6379"
+    networks:
+      - network-backend
+
+networks:
+  network-backend:
+    driver: bridge

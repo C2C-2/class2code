@@ -1,23 +1,13 @@
-# Use Node.js as base image
-FROM node:latest
+FROM node:16-alpine
 
-# Set working directory
-WORKDIR /app
+WORKDIR /usr/src/app
 
-# Copy package.json and package-lock.json
 COPY package*.json ./
 
-# Install dependencies
-RUN npm install --legacy-peer-deps
+RUN npm install
 
-# Copy all other files
 COPY . .
 
-# Build React app
-RUN npm run build
-
-# Expose port
 EXPOSE 5173
 
-# Command to run the app
-CMD ["npm", "start"]
+CMD ["npm", "run", "dev", "--", "--host"]

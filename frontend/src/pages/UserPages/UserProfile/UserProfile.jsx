@@ -1,6 +1,7 @@
 import "./UserProfile.css";
 import { useNavigate } from "react-router-dom";
 import {
+  Alert,
   Button,
   Input,
   Pill,
@@ -23,7 +24,7 @@ function UserProfile() {
   const [country, setCountry] = useState("");
   const [rate, setRate] = useState(0);
   const [Bio, setBio] = useState("");
-  const [error, setError] = useState(null);
+  const [err, setErr] = useState(null);
 
   const navigate = useNavigate();
 
@@ -118,6 +119,23 @@ function UserProfile() {
 
   return (
     <div className="ShowAllPostsAll" id="man">
+      {err && (
+        <div
+          style={{
+            zIndex: 1000000000000000,
+            position: "absolute",
+            top: "2%",
+            right: 0,
+            left: 0,
+            width: "100%",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Alert style={{ width: "fit-content" }} color="green" title={err} />
+        </div>
+      )}
       <div className="ShowAllPostsMain">
         <div className="ShowAllPostsContent">
           <div className="sideBareFake"></div>
@@ -328,9 +346,17 @@ function UserProfile() {
                               Gender: gender,
                             },
                           },
+                        }).then(() => {
+                          updateSkills({ variables: { userId, skills } }).then(
+                            () => {
+                              userRefetch();
+                              statisticsRefetch();
+                              fetch();
+                            }
+                          );
+
+                          setErr("Updated successfully!");
                         });
-                        console.log({ userId, skills });
-                        await updateSkills({ variables: { userId, skills } });
                       }}
                       variant="filled"
                       color="#388E3C"

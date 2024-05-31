@@ -1,14 +1,14 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from langchain.embeddings.openai import OpenAIEmbeddings
+from langchain_community.embeddings import OpenAIEmbeddings
 from dotenv import dotenv_values
 from dotenv import load_dotenv
 import os
 from PyPDF2 import PdfReader
 from langchain.chains.question_answering import load_qa_chain
-from langchain.llms import OpenAI
+from langchain_community.llms import OpenAI
 from langchain.text_splitter import CharacterTextSplitter
-from langchain.vectorstores import FAISS
+from langchain_community.vectorstores import FAISS
 from flask_httpauth import HTTPBasicAuth
 import firebase_admin
 from firebase_admin import credentials, storage
@@ -39,7 +39,7 @@ def verify_password(username, password):
 env_values = dotenv_values("./app.env")
 os.environ["OPENAI_API_KEY"] = env_values["OPENAI_API_KEY"]
 
-# Assuming you have a module `llm` defined, and a function `load_qa_chain` that uses this `llm`
+# Initialize OpenAI model
 llm = OpenAI(model_name="gpt-3.5-turbo", temperature=0.5)
 chain = load_qa_chain(llm)
 embeddings = OpenAIEmbeddings()
@@ -104,7 +104,7 @@ def read_and_answer():
     # Read file in-memory and splitting
     pdf_text = readPdfFromBytes(file_bytes)
     text_chunks = text_splitter.split_text(pdf_text)
-    
+
     # Convert text to embedding and create vectors
     pdf_embeddings = FAISS.from_texts(text_chunks, embeddings)
 
