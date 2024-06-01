@@ -13,6 +13,7 @@ function AvailableProjectsCard({
   requirements,
   colorProp,
   project_id,
+  setError,
 }) {
   const [opened, { open, close }] = useDisclosure(false);
   const [companyId, setCompanyId] = useState("");
@@ -46,7 +47,7 @@ function AvailableProjectsCard({
 
   const [applyToProject, { loading: applyLoading, error: applyError }] =
     useMutation(APPLY_TO_PROJECT);
-    const [showError, setShowError] = useState(false);
+  const [showError, setShowError] = useState(false);
 
   useEffect(() => {
     if (applyError) {
@@ -102,8 +103,13 @@ function AvailableProjectsCard({
                   projectId: parseInt(project_id),
                   companyId: parseInt(companyId),
                 },
+              }).then(() => {
+                console.log("aaa");
+                setError("Applied Successfully!");
+                const time = setTimeout(() => setError(null), 3000);
+                close();
+                return () => clearTimeout(time);
               });
-              close();
             }}
           >
             <div className="htmlInputGroup">

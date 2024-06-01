@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react";
-import { Button, Input, Modal, Textarea, TextInput } from "@mantine/core";
-import MyCompaniesCard from "../../../components/MyCompaniesCard/MyCompaniesCard";
-import { useQuery, gql, useLazyQuery, useMutation } from "@apollo/client";
+import { Button, Input} from "@mantine/core";
+import { useQuery, gql, useLazyQuery } from "@apollo/client";
 import { Link, useNavigate } from "react-router-dom";
-import { useDisclosure } from "@mantine/hooks";
 import { FaArrowDown, FaArrowUp, FaStar, FaTrash } from "react-icons/fa";
 import { Paths } from "../../../assets/Paths";
 

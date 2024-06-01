@@ -458,6 +458,7 @@ const typeDefs = gql`
     updateTaskSteps(taskId: Int!, taskSteps: [TaskStepInput]!): Boolean
     makeProjectDone(projectId: Int!, companyId: Int!): Boolean
     rateCompany(companyId: Int!, userId: String!, rate: Int!): Boolean
+    sendQuery(query: String!): Boolean
   }
 `;
 

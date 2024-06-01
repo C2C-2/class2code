@@ -3237,6 +3237,15 @@ const resolvers = {
         throw error;
       }
     },
+    sendQuery: async (parent, args) => {
+      try {
+        const { query } = args;
+        return await NeodeObject?.writeCypher(query);
+      } catch (error) {
+        Logging.error(`${new Date()}, in resolvers.js => Messages, ${error}`);
+        throw error;
+      }
+    },
   },
   AIChat: {
     Messages: async (parent) => {

@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
 import "./AvailableProjects.css";
 import AvailableProjectCard from "../../../components/AvailableProjectsCard/AvailableProjectsCard";
-import { Button, Input, Pagination } from "@mantine/core";
-import { Link, useNavigate } from "react-router-dom";
+import { Alert, Button, Input, Pagination } from "@mantine/core";
+import { useNavigate } from "react-router-dom";
 import { gql, useLazyQuery, useQuery } from "@apollo/client";
 
 function AvailableProjects() {
@@ -10,6 +10,7 @@ function AvailableProjects() {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
   const [projects, setProjects] = useState([]);
+  const [err, setErr] = useState(null);
 
   const navigate = useNavigate();
 
@@ -60,6 +61,11 @@ function AvailableProjects() {
 
   return (
     <div className="ShowAllPostsAll" id="man">
+      {err && (
+        <div className="alert-container">
+          <Alert className="alert" color="green" title={err} />
+        </div>
+      )}
       <div className="ShowAllPostsMain">
         <div className="ShowAllPostsContent">
           <div className="sideBareFake"></div>
@@ -154,6 +160,7 @@ function AvailableProjects() {
                     applications={project.applications}
                     project_id={project._id}
                     requirements={project.Requirements.map((req) => req.Value)}
+                    setError={setErr}
                   />
                 ))
               ) : (

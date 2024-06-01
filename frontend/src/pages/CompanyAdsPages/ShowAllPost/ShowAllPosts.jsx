@@ -5,6 +5,7 @@ import { gql, useLazyQuery, useMutation } from "@apollo/client";
 import { Link, useNavigate } from "react-router-dom";
 import { Paths } from "../../../assets/Paths";
 import { FaArrowDown, FaArrowUp } from "react-icons/fa";
+import { updateFieldWithKey } from "../../../config/firebase";
 
 function ShowAllPosts() {
   const [searchWord, setSearchWord] = useState("");
@@ -187,14 +188,14 @@ function ShowAllPosts() {
                         size="xs"
                         h={30}
                         w={110}
-                        onClick={(e) => {
+                        onClick={async (e) => {
                           e.preventDefault();
 
                           if (!confirm("Are you sure?")) {
                             return;
                           }
 
-                          applyToPost({
+                          await applyToPost({
                             variables: {
                               postId: parseInt(post?._id),
                               userId: localStorage.getItem("id"),

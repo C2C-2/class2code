@@ -190,7 +190,7 @@ const Applys = () => {
                               {
                                 notification: `You have been added to (${teamName}) team`,
                               }
-                            );
+                            ).catch((err) => console.log(err));
                           }}
                         >
                           <label htmlFor="team" className="form-label">

@@ -244,9 +244,9 @@ const TeamUsers = () => {
                     placeholder="Pick a user"
                     searchable
                     nothingFound="No users found"
-                    data={users?.getAllUsers.map((user) => ({
-                      value: user.id,
-                      label: user.Username,
+                    data={users?.getAllUsers?.map((user) => ({
+                      value: user?.id,
+                      label: user?.Username,
                     }))}
                     onChange={setUserId}
                   />
