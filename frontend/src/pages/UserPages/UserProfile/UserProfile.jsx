@@ -233,11 +233,6 @@ function UserProfile() {
                   onChange={(e) => setCountry(e.target.value)}
                 />
                 <TextInput
-                  label="Rate"
-                  value={rate}
-                  onChange={(e) => setRate(e.target.value)}
-                />
-                <TextInput
                   label="Gender"
                   value={gender}
                   onChange={(e) => setGender(e.target.value)}
