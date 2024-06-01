@@ -36,6 +36,8 @@ services:
 
   neo4j:
     image: neo4j
+    depends_on:
+      - redis
     ports:
       - "7474:7474"
       - "7687:7687"

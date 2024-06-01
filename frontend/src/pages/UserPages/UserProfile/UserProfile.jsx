@@ -12,6 +12,7 @@ import {
 import { useCallback, useEffect, useState } from "react";
 import { gql, useMutation, useQuery } from "@apollo/client";
 import { DateInput } from "@mantine/dates";
+
 function UserProfile() {
   const [skills, setSkills] = useState([]);
   const [skill, setSkill] = useState("");
@@ -118,67 +119,54 @@ function UserProfile() {
     useMutation(UPDATE_SKILLS);
 
   return (
-    <div className="ShowAllPostsAll" id="man">
+    <div className="UserProfile w-100">
       {err && (
-        <div
-          style={{
-            zIndex: 1000000000000000,
-            position: "absolute",
-            top: "2%",
-            right: 0,
-            left: 0,
-            width: "100%",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <Alert style={{ width: "fit-content" }} color="green" title={err} />
+        <div className="alert-container">
+          <Alert className="alert" color="green" title={err} />
         </div>
       )}
-      <div className="ShowAllPostsMain">
-        <div className="ShowAllPostsContent">
-          <div className="sideBareFake"></div>
-          <div className="postsBody">
-            <div className="navbarFake"></div>
-            <div className="UserProfileBackGroundColor"></div>
-            <Button
-              justify="center "
-              variant="filled"
-              color="#283739"
-              radius="md"
-              onClick={() => navigate(-1)}
-              w={"fit-content"}
+      <div className="navbarFake"></div>
+      <div className="d-flex">
+        <div className="sideBareFake"></div>
+        <div className="UserProfileContainer w-100">
+          <Button
+            className="back-button"
+            variant="filled"
+            radius="md"
+            onClick={() => navigate(-1)}
+            color="#283739"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="18"
+              height="12"
+              viewBox="0 0 18 12"
+              fill="none"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="18"
-                height="12"
-                viewBox="0 0 18 12"
-                fill="none"
-              >
-                <path
-                  d="M1.5 6H16.5"
-                  stroke="white"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M6.49999 11L1.5 6L6.49999 1"
-                  stroke="white"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </Button>
-            <div className="UserProfileContent">
-              <div className="UserProfileImage">
+              <path
+                d="M1.5 6H16.5"
+                stroke="white"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M6.49999 11L1.5 6L6.49999 1"
+                stroke="white"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </Button>
+          <br />
+          <div className="UserProfileContent">
+            <div className="UserProfileHeader">
+              <div className="UserProfileImageContainer">
                 <UserProfileImg image={image} setImage={setImage} />
-                <div className="UserProfileImageText">
-                  <h6 className="UserProfileImageText1">{fullName}</h6>
-                  <h6 className="UserProfileImageText2">
+                <div className="UserProfileName">
+                  <h2>{fullName}</h2>
+                  <p>
                     {specialty} {rate}
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -192,193 +180,166 @@ function UserProfile() {
                         fill="#F4CE14"
                       />
                     </svg>
-                  </h6>
+                  </p>
                 </div>
               </div>
-              <div className="UserProfileData">
-                <div className="UserProfileDataDesign">
-                  <h6 className="UserProfileDataTextNumber">
+              <div className="UserProfileStats">
+                <div className="stat">
+                  <h3>
                     {statisticsData?.getProfileStatistics?.NumberOfProjects}
-                  </h6>
-                  <span className="UserProfileDataText">Project</span>
+                  </h3>
+                  <span>Projects</span>
                 </div>
-                <hr className="UserProfileDataLine" />
-                <div className="UserProfileDataDesign">
-                  <h6 className="UserProfileDataTextNumber">
-                    {statisticsData?.getProfileStatistics?.NumberOfTasks}
-                  </h6>
-                  <span className="UserProfileDataText">Task</span>
+                <div className="stat">
+                  <h3>{statisticsData?.getProfileStatistics?.NumberOfTasks}</h3>
+                  <span>Tasks</span>
                 </div>
-                <hr className="UserProfileDataLine" />
-                <div className="UserProfileDataDesign">
-                  <h6 className="UserProfileDataTextNumber">
-                    {statisticsData?.getProfileStatistics?.NumberOfTeams}
-                  </h6>
-                  <span className="UserProfileDataText">Team</span>
+                <div className="stat">
+                  <h3>{statisticsData?.getProfileStatistics?.NumberOfTeams}</h3>
+                  <span>Teams</span>
                 </div>
               </div>
-              <div className="UserProfileDetails">
-                <div className="UserProfileDetails1">
-                  <Textarea
-                    label="About me"
-                    value={Bio}
-                    onChange={(e) => setBio(e.target.value)}
-                  />
-                  <TextInput
-                    label="Full Name"
-                    value={fullName}
-                    onChange={(e) => {
-                      setFullName(e.target.value);
-                    }}
-                  />
-                  <TextInput
-                    label="Your Work"
-                    value={specialty}
-                    onChange={(e) => setSpecialty(e.target.value)}
-                  />
-                  <div>
-                    <label htmlFor="dateOfBirth">Date Of Birth</label>
-                    <input
-                      type="date"
-                      name="dateOfBirth"
-                      id="dateOfBirth"
-                      className="form-control"
-                      placeholder="Date Of Birth"
-                      value={dateOfBirth}
-                      onChange={(e) => setDateOfBirth(e.target.value)}
-                    />
-                  </div>
-                  <TextInput
-                    label="Country"
-                    value={country}
-                    onChange={(e) => setCountry(e.target.value)}
-                  />
-                  <div className="genderContainer">
-                    <h6 className="genderText fw-semibold">Gender</h6>
-                    <select
-                      className="form-control"
-                      name="gender"
-                      id="gender"
-                      value={gender}
-                      onChange={(e) => setGender(e.target.value)}
-                    >
-                      <option value="male">Male</option>
-                      <option value="female">Female</option>
-                    </select>
-                  </div>
-                </div>
-                <div className="skills">
-                  <div className="addSkill">
-                    <PillsInput label="Skills" description="Add Your Skills">
-                      <Pill.Group>
-                        {skills?.map((skill) => (
-                          <Pill
-                            key={skill}
-                            value={skill}
-                            withRemoveButton
-                            onRemove={() =>
-                              setSkills(skills.filter((s) => s !== skill))
-                            }
-                            size="md"
-                          >
-                            {skill}
-                          </Pill>
-                        ))}
-                      </Pill.Group>
-                    </PillsInput>
-                    <form
-                      action="#"
-                      onSubmit={(e) => {
-                        e.preventDefault();
-                        if (!skill) return;
-                        if (skills.includes(skill)) return;
-                        if (skill.trim() === "") return;
-                        setSkills([...skills, skill]);
-                        setSkill("");
-                      }}
-                      className="addSkillForm"
-                    >
-                      <Input
-                        placeholder="Enter tags"
-                        value={skill}
-                        onChange={(event) => {
-                          setSkill(event.target.value);
-                        }}
-                      />
-
-                      <div className="addSkillBtn">
-                        <Button
-                          variant="filled"
-                          color="green"
-                          size="sm"
-                          onClick={() => {
-                            if (!skill) return;
-                            if (skills.includes(skill)) return;
-                            if (skill.trim() === "") return;
-                            setSkills([...skills, skill]);
-                            setSkill("");
-                          }}
-                        >
-                          Add
-                        </Button>
-                      </div>
-                    </form>
-                  </div>
-                  <div className="UserProfileButtons">
-                    <Button
-                      onClick={async () => {
-                        const firstName = fullName.split(" ")[0];
-                        const words = fullName.split(" ");
-                        words.shift();
-                        const lastName = words.join(" ");
-                        await updateUser({
-                          variables: {
-                            userId,
-                            user: {
-                              ImageUrl: image,
-                              Work: specialty,
-                              FirstName: firstName,
-                              LastName: lastName,
-                              Country: country,
-                              Rate: rate,
-                              Bio: Bio,
-                              DateOfBirth: dateOfBirth,
-                              Gender: gender,
-                            },
-                          },
-                        }).then(() => {
-                          updateSkills({ variables: { userId, skills } }).then(
-                            () => {
-                              userRefetch();
-                              statisticsRefetch();
-                              fetch();
-                            }
+            </div>
+            <br />
+            <div className="UserProfileDetails">
+              <div className="UserProfileDetailsLeft">
+                <Textarea
+                  label="About me"
+                  value={Bio}
+                  onChange={(e) => setBio(e.target.value)}
+                  rows={5}
+                  cols={30}
+                />
+                <TextInput
+                  label="Full Name"
+                  value={fullName}
+                  onChange={(e) => {
+                    setFullName(e.target.value);
+                  }}
+                />
+                <TextInput
+                  label="Your Work"
+                  value={specialty}
+                  onChange={(e) => setSpecialty(e.target.value)}
+                />
+                <DateInput
+                  label="Date Of Birth"
+                  value={new Date(dateOfBirth)}
+                  onChange={setDateOfBirth}
+                />
+                <TextInput
+                  label="Country"
+                  value={country}
+                  onChange={(e) => setCountry(e.target.value)}
+                />
+                <TextInput
+                  label="Rate"
+                  value={rate}
+                  onChange={(e) => setRate(e.target.value)}
+                />
+                <TextInput
+                  label="Gender"
+                  value={gender}
+                  onChange={(e) => setGender(e.target.value)}
+                />
+              </div>
+              <div className="UserProfileDetailsRight">
+                <div>
+                  <label htmlFor="skills">Skills</label>
+                  <PillsInput value={skills} onChange={setSkills}>
+                    {skills.map((e, i) => (
+                      <Pill
+                        key={i}
+                        onRemove={() => {
+                          const newSkills = skills.filter(
+                            (skill) => skill !== e
                           );
-
-                          setErr("Updated successfully!");
-                        });
-                      }}
-                      variant="filled"
-                      color="#388E3C"
-                      w={150}
-                    >
-                      {updateLoading ? "Loading..." : "Update"}
-                    </Button>
-                    <Button
-                      onClick={() => {
-                        userRefetch();
-                        statisticsRefetch();
-                        fetch();
-                      }}
-                      variant="transparent"
-                      color="#283739"
-                      size="md"
-                    >
-                      Reset
-                    </Button>
-                  </div>
+                          setSkills(newSkills);
+                          updateSkills({
+                            variables: { userId, skills: newSkills },
+                          });
+                        }}
+                        withRemoveButton
+                        size="md"
+                        className="mx-1"
+                      >
+                        {e}
+                      </Pill>
+                    ))}
+                  </PillsInput>
                 </div>
+                <Input
+                  placeholder="Type your skill and press Enter"
+                  value={skill}
+                  onChange={(e) => setSkill(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && skill.trim() !== "") {
+                      if (!skills.includes(skill.trim())) {
+                        const newSkills = [...skills, skill.trim()];
+                        setSkills(newSkills);
+                        updateSkills({
+                          variables: { userId, skills: newSkills },
+                        });
+                      }
+                      setSkill("");
+                    }
+                  }}
+                />
               </div>
+            </div>
+            <br />
+            <div className="UserProfileButtons">
+              <Button
+                onClick={async () => {
+                  const firstName = fullName.split(" ")[0];
+                  const words = fullName.split(" ");
+                  words.shift();
+                  const lastName = words.join(" ");
+                  await updateUser({
+                    variables: {
+                      userId,
+                      user: {
+                        ImageUrl: image,
+                        Work: specialty,
+                        FirstName: firstName,
+                        LastName: lastName,
+                        Country: country,
+                        Rate: rate,
+                        Bio: Bio,
+                        DateOfBirth: dateOfBirth,
+                        Gender: gender,
+                      },
+                    },
+                  }).then(() => {
+                    updateSkills({ variables: { userId, skills } }).then(() => {
+                      userRefetch();
+                      statisticsRefetch();
+                      fetch();
+                    });
+
+                    setErr("Updated successfully!");
+                    const time = setTimeout(() => setErr(null), 3000);
+                    return () => clearTimeout(time);
+                  });
+                }}
+                variant="filled"
+                color="green"
+                w={150}
+              >
+                {updateLoading ? "Loading..." : "Update"}
+              </Button>
+              <Button
+                onClick={() => {
+                  userRefetch();
+                  statisticsRefetch();
+                  fetch();
+                }}
+                variant="transparent"
+                color="#283739"
+                size="md"
+              >
+                Reset
+              </Button>
             </div>
           </div>
         </div>
@@ -387,49 +348,38 @@ function UserProfile() {
   );
 }
 
-const UserProfileImg = ({ image, setImage }) => {
-  const handleImageChange = (e) => {
+function UserProfileImg({ image, setImage }) {
+  const [imageFile, setImageFile] = useState(null);
+
+  const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
         setImage(reader.result);
+        setImageFile(file);
       };
       reader.readAsDataURL(file);
     }
   };
 
   return (
-    <div
-      className="UserProfileImgContainer"
-      onClick={() => document.getElementById("fileInput").click()}
-    >
-      <img src={image} className="UserProfileImg" alt="User Profile" />
-      <div className="EditIcon">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          className="feather feather-edit-2"
-        >
-          <path d="M17 3l4 4L7 21H3v-4L17 3z"></path>
-        </svg>
+    <div className="UserProfileImg">
+      <div className="image-preview">
+        {image ? (
+          <img src={image} alt="Profile" />
+        ) : (
+          <span>No Image Available</span>
+        )}
       </div>
       <input
-        id="fileInput"
         type="file"
-        style={{ display: "none" }}
-        onChange={handleImageChange}
         accept="image/*"
+        onChange={handleImageUpload}
+        className="image-upload"
       />
     </div>
   );
-};
+}
 
 export default UserProfile;

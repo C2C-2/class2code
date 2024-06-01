@@ -13,11 +13,13 @@ RUN npm install --legacy-peer-deps
 # Copy all other files
 COPY . .
 
+# Copy the wait script into the image
+COPY wait-for-neo4j.sh /wait-for-neo4j.sh
+
 # Build React app
 # RUN npm run build
 
 # Expose port
 EXPOSE 4000
 
-# Command to run the app
-CMD ["npm", "start"]
+CMD ["./wait-for-neo4j.sh", "npm", "start"]

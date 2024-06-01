@@ -1,14 +1,10 @@
 import "./OtherUserProfile.css";
 import { useNavigate, useParams } from "react-router-dom";
-import {
-  Button,
-  Pill,
-  PillsInput,
-  Textarea,
-  TextInput,
-} from "@mantine/core";
+import { Button, Pill, PillsInput, Textarea, TextInput } from "@mantine/core";
 import { useCallback, useEffect, useState } from "react";
 import { gql, useMutation, useQuery } from "@apollo/client";
+import { Alert } from "antd";
+
 function UserProfile() {
   const [skills, setSkills] = useState([]);
   const { user_id: userId } = useParams();
@@ -20,6 +16,7 @@ function UserProfile() {
   const [country, setCountry] = useState("");
   const [rate, setRate] = useState(0);
   const [Bio, setBio] = useState("");
+  const [err, setErr] = useState(null);
 
   const navigate = useNavigate();
 
@@ -113,21 +110,18 @@ function UserProfile() {
     useMutation(UPDATE_SKILLS);
 
   return (
-    <div className="ShowAllPostsAll" id="man">
-      <div className="ShowAllPostsMain">
-        <div className="ShowAllPostsContent">
-          <div className="sideBareFake"></div>
-          <div className="postsBody">
-            <div className="navbarFake"></div>
-            <div className="UserProfileBackGroundColor"></div>
-            <Button
-              justify="center "
-              variant="filled"
-              color="#283739"
-              radius="md"
-              onClick={() => navigate(-1)}
-              w={"fit-content"}
-            >
+    <div className="OtherUserProfile w-100">
+      {err && (
+        <div className="alert-container">
+          <Alert className="alert" color="green" title={err} />
+        </div>
+      )}
+      <div className="navbarFake"></div>
+      <div className="d-flex">
+        <div className="sideBareFake"></div>
+        <div className="profile-container">
+          <div className="profile-content d-flex flex-column gap-3">
+            <Button className="back-button" onClick={() => navigate(-1)}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="18"
@@ -151,126 +145,96 @@ function UserProfile() {
                 />
               </svg>
             </Button>
-            <div className="UserProfileContent">
-              <div className="UserProfileImage">
-                <img
-                  src={image}
-                  className="UserProfileImg"
-                  alt="User Profile"
-                />
-                <div className="UserProfileImageText">
-                  <h6 className="UserProfileImageText1">{fullName}</h6>
-                  <h6 className="UserProfileImageText2">
-                    {specialty} {rate}
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="12"
-                      height="12"
-                      viewBox="0 0 17 17"
-                      fill="none"
-                    >
-                      <path
-                        d="M15.7904 5.95969L11.3896 5.31897L9.42295 1.33848C9.24616 0.982791 8.90129 0.802994 8.55643 0.802994C8.21368 0.802994 7.87122 0.980386 7.69383 1.33848L5.72658 5.31867L1.32546 5.95878C0.536214 6.07304 0.219915 7.04388 0.792079 7.60011L3.97581 10.697L3.22235 15.071C3.11531 15.6958 3.61411 16.197 4.17275 16.197C4.32098 16.197 4.47341 16.1618 4.61984 16.0843L8.55703 14.0193L12.4939 16.0849C12.6401 16.1615 12.7922 16.1964 12.9398 16.1964C13.4991 16.1964 13.9988 15.697 13.8917 15.0719L13.1392 10.6976L16.3235 7.60131C16.896 7.04508 16.5797 6.07394 15.7904 5.95969ZM12.1301 9.66387L11.5853 10.1936L11.714 10.9417L12.3009 14.3527L9.23022 12.7415L8.55733 12.3885L8.55824 2.85172L10.0925 5.95728L10.4287 6.63768L11.1806 6.74713L14.6151 7.24713L12.1301 9.66387Z"
-                        fill="#F4CE14"
-                      />
-                    </svg>
-                  </h6>
-                </div>
-              </div>
-              <div className="UserProfileData">
-                <div className="UserProfileDataDesign">
-                  <h6 className="UserProfileDataTextNumber">
-                    {statisticsData?.getProfileStatistics?.NumberOfProjects}
-                  </h6>
-                  <span className="UserProfileDataText">Project</span>
-                </div>
-                <hr className="UserProfileDataLine" />
-                <div className="UserProfileDataDesign">
-                  <h6 className="UserProfileDataTextNumber">
-                    {statisticsData?.getProfileStatistics?.NumberOfTasks}
-                  </h6>
-                  <span className="UserProfileDataText">Task</span>
-                </div>
-                <hr className="UserProfileDataLine" />
-                <div className="UserProfileDataDesign">
-                  <h6 className="UserProfileDataTextNumber">
-                    {statisticsData?.getProfileStatistics?.NumberOfTeams}
-                  </h6>
-                  <span className="UserProfileDataText">Team</span>
-                </div>
-              </div>
-              <div className="UserProfileDetails">
-                <div className="UserProfileDetails1">
-                  <Textarea
-                    label="About me"
-                    value={Bio || "No bio"}
-                    disabled
-                  />
-                  <TextInput
-                    label="Full Name"
-                    value={fullName}
-                    disabled
-                  />
-                  <TextInput
-                    label="Your Work"
-                    value={specialty}
-                    disabled
-                  />
-                  <div>
-                    <label htmlFor="dateOfBirth">Date Of Birth</label>
-                    <input
-                      type="date"
-                      name="dateOfBirth"
-                      id="dateOfBirth"
-                      className="form-control"
-                      placeholder="Date Of Birth"
-                      value={dateOfBirth}
-                      disabled
+            <div className="profile-header">
+              <UserProfileImg image={image} setImage={setImage} />
+              <div className="profile-info">
+                <h2>{fullName}</h2>
+                <p>
+                  {specialty} • {rate}
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="12"
+                    height="12"
+                    viewBox="0 0 17 17"
+                    fill="none"
+                  >
+                    <path
+                      d="M15.7904 5.95969L11.3896 5.31897L9.42295 1.33848C9.24616 0.982791 8.90129 0.802994 8.55643 0.802994C8.21368 0.802994 7.87122 0.980386 7.69383 1.33848L5.72658 5.31867L1.32546 5.95878C0.536214 6.07304 0.219915 7.04388 0.792079 7.60011L3.97581 10.697L3.22235 15.071C3.11531 15.6958 3.61411 16.197 4.17275 16.197C4.32098 16.197 4.47341 16.1618 4.61984 16.0843L8.55703 14.0193L12.4939 16.0849C12.6401 16.1615 12.7922 16.1964 12.9398 16.1964C13.4991 16.1964 13.9988 15.697 13.8917 15.0719L13.1392 10.6976L16.3235 7.60131C16.896 7.04508 16.5797 6.07394 15.7904 5.95969ZM12.1301 9.66387L11.5853 10.1936L11.714 10.9417L12.3009 14.3527L9.23022 12.7415L8.55733 12.3885L8.55824 2.85172L10.0925 5.95728L10.4287 6.63768L11.1806 6.74713L14.6151 7.24713L12.1301 9.66387Z"
+                      fill="#F4CE14"
                     />
-                  </div>
-                  <TextInput
-                    label="Country"
-                    value={country}
+                  </svg>
+                </p>
+              </div>
+            </div>
+            <div className="profile-stats">
+              <div className="stat">
+                <h3>
+                  {statisticsData?.getProfileStatistics?.NumberOfProjects}
+                </h3>
+                <p>Projects</p>
+              </div>
+              <div className="stat">
+                <h3>{statisticsData?.getProfileStatistics?.NumberOfTasks}</h3>
+                <p>Tasks</p>
+              </div>
+              <div className="stat">
+                <h3>{statisticsData?.getProfileStatistics?.NumberOfTeams}</h3>
+                <p>Teams</p>
+              </div>
+            </div>
+            <div className="profile-details">
+              <div className="details-section d-flex flex-column gap-3">
+                <Textarea label="About me" value={Bio || "No bio"} disabled />
+                <TextInput label="Full Name" value={fullName} disabled />
+                <TextInput label="Your Work" value={specialty} disabled />
+                <TextInput label="Country" value={country} disabled />
+                <div className="form-group">
+                  <label htmlFor="dateOfBirth">Date Of Birth</label>
+                  <input
+                    type="date"
+                    name="dateOfBirth"
+                    id="dateOfBirth"
+                    className="form-control"
+                    value={dateOfBirth}
                     disabled
                   />
-                  <div className="genderContainer">
-                    <h6 className="genderText fw-semibold">Gender</h6>
-                    <select
-                      className="form-control"
-                      name="gender"
-                      id="gender"
-                      value={gender}
-                      disabled
-                    >
-                      <option value="male">Male</option>
-                      <option value="female">Female</option>
-                    </select>
-                  </div>
                 </div>
-                <div className="skills">
-                  <div className="addSkill">
-                    <PillsInput label="Skills" description="Add Your Skills">
-                      <Pill.Group>
-                        {skills?.map((skill) => (
-                          <Pill
-                            key={skill}
-                            value={skill}
-                            withRemoveButton
-                            disabled
-                            size="md"
-                          >
-                            {skill}
-                          </Pill>
-                        ))}
-                      </Pill.Group>
-                    </PillsInput>
-                  </div>
+                <div className="form-group">
+                  <label htmlFor="gender">Gender</label>
+                  <select
+                    className="form-control"
+                    name="gender"
+                    id="gender"
+                    value={gender}
+                    disabled
+                  >
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                  </select>
                 </div>
+              </div>
+              <div className="skills-section">
+                <PillsInput label="Skills" description="Add Your Skills">
+                  <Pill.Group>
+                    {skills?.map((skill) => (
+                      <Pill
+                        key={skill}
+                        value={skill}
+                        withRemoveButton
+                        disabled
+                        size="md"
+                      >
+                        {skill}
+                      </Pill>
+                    ))}
+                  </Pill.Group>
+                </PillsInput>
               </div>
             </div>
           </div>
         </div>
       </div>
+      <br />
     </div>
   );
 }
@@ -289,11 +253,11 @@ const UserProfileImg = ({ image, setImage }) => {
 
   return (
     <div
-      className="UserProfileImgContainer"
+      className="profile-img-container"
       onClick={() => document.getElementById("fileInput").click()}
     >
-      <img src={image} className="UserProfileImg" alt="User Profile" />
-      <div className="EditIcon">
+      <img src={image} className="profile-img" alt="User Profile" />
+      <div className="edit-icon">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="24"
