@@ -13,6 +13,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Verify installation of langchain-community
 RUN pip show langchain-community
 
+RUN pip install tiktoken
+
 # Copy all other files
 COPY . .
 

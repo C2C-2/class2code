@@ -76,9 +76,10 @@ firebase_admin.initialize_app(cred, {"storageBucket": "class2code.appspot.com"})
 # Get a reference to the storage service
 bucket = storage.bucket()
 
+print(os.getenv("REDIS_URL"))
 # Initialize Redis
 r = redis.Redis(
-    host="127.0.0.1",
+    host=os.getenv("REDIS_URL"),
     port=6379,
 )
 
@@ -118,4 +119,4 @@ def read_and_answer():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)  # Run in debug mode for development
+    app.run(host="0.0.0.0", port=5000, debug=True)  # Run in debug mode for development

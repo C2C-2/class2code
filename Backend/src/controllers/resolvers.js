@@ -1477,6 +1477,7 @@ const resolvers = {
               Authorization: `Basic ${encodedCredentials}`,
               "Content-Type": "application/json",
             },
+            timeout: 500000000, // Timeout in milliseconds
           }
         );
 
@@ -1508,6 +1509,7 @@ const resolvers = {
           ...createdMessage.properties(),
         };
       } catch (error) {
+        console.log(error);
         Logging.error(
           `${new Date()}, in resolvers.js => sendAIMessage, ${error}`
         );

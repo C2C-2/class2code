@@ -18,6 +18,7 @@ services:
       - DB_NAME=class2codetokens
       - FR_STORAGE_BUCKET=class2code.appspot.com
       - Redis_URL=redis://host.docker.internal:6379
+      - PYTHON=flask:5000
     ports:
       - "4000:4000"
     depends_on:
@@ -27,6 +28,8 @@ services:
 
   flask:
     build: ./PythonBackend
+    environment:
+      - REDIS_URL=host.docker.internal
     ports:
       - "5000:5000"
     depends_on:
