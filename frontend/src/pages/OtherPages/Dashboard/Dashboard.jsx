@@ -221,6 +221,7 @@ function Dashboard() {
                     <Table.Thead>
                       <Table.Tr>
                         <Table.Th>Name</Table.Th>
+                        <Table.Th>Comment</Table.Th>
                         <Table.Th>Deadline</Table.Th>
                         <Table.Th>Created By</Table.Th>
                         <Table.Th>Team</Table.Th>
@@ -233,6 +234,7 @@ function Dashboard() {
                       {Tasks?.map((task, index) => (
                         <Table.Tr key={index}>
                           <Table.Td>{task?.TaskName}</Table.Td>
+                          <Table.Td>{task?.Comments}</Table.Td>
                           <Table.Td>
                             <div className="TableDesign">
                               <span className="TableDesignText1 justify-content-center">

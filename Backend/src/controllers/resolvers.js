@@ -3307,7 +3307,7 @@ const resolvers = {
     MyCompanies: async (parent) => {
       try {
         const userId = parent.id;
-        const { page, limit } = parent;
+        const { page = 0, limit = 10 } = parent;
 
         if (!userId) {
           throw new Error("UserID is null");
@@ -3325,6 +3325,7 @@ const resolvers = {
         }
 
         return result?.records?.map((record) => ({
+          Rate: parseFloat(record.get("companies").properties.Rate),
           ...record.get("companies").properties,
           _id: `${record.get("companies").identity}`,
         }));

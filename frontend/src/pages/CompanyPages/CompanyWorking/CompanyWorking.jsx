@@ -259,7 +259,7 @@ const WorkingCompaniesCard = ({
     >
       <h4>{CompanyName}</h4>
       <p>{CompanyDescription}</p>
-      <h2>{Rate} <FaStar color="yellow" size={20} /></h2>
+      <h2>{Rate || 0} <FaStar color="yellow" size={20} /></h2>
       <hr />
       <Button
         onClick={(e) => {

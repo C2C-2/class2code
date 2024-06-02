@@ -78,6 +78,7 @@ function MyCompanies() {
 
   useEffect(() => {
     if (companiesData) {
+      console.log(companiesData.getUser.MyCompanies);
       setCompanies(companiesData?.getUser?.MyCompanies);
     }
   }, [companiesData]);
@@ -306,7 +307,7 @@ function MyCompanies() {
                     Company_id={company?._id}
                     CompanyName={company?.CompanyName}
                     CompanyDescription={company?.CompanyDescription}
-                    Rate={company?.Rate}
+                    Rate={company?.Rate || 0}
                     refetchCompanies={refetchCompanies}
                   />
                 );
