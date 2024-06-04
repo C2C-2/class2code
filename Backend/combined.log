@@ -1,0 +1,21 @@
+{"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
+{"code":"ServiceUnavailable","level":"error","name":"Neo4jError","query":"CREATE INDEX SearchInMyPosts IF NOT EXISTS FOR (n:PositionPost) ON (n.Content)","service":"user-service"}
+{"code":"ServiceUnavailable","level":"error","name":"Neo4jError","query":"CREATE INDEX SearchInProjects IF NOT EXISTS \n        FOR (n:Project) ON (n.ProjectName, n.ProjectDescription)","service":"user-service"}
+{"code":"ServiceUnavailable","level":"error","name":"Neo4jError","query":"CREATE INDEX SearchInMyCompanies IF NOT EXISTS \n        FOR (n:Company) ON (n.CompanyName, n.CompanyDescription, n.Domain)","service":"user-service"}
+{"level":"error","message":"Mon Jun 03 2024 08:22:05 GMT+0300 (Eastern European Summer Time), in resolvers.js => sendAIMessage, Error: getaddrinfo ENOTFOUND undefined","service":"user-service"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
+{"code":"ServiceUnavailable","level":"error","name":"Neo4jError","query":"CREATE INDEX SearchInMyPosts IF NOT EXISTS FOR (n:PositionPost) ON (n.Content)","service":"user-service"}
+{"code":"ServiceUnavailable","level":"error","name":"Neo4jError","query":"CREATE INDEX SearchInProjects IF NOT EXISTS \n        FOR (n:Project) ON (n.ProjectName, n.ProjectDescription)","service":"user-service"}
+{"code":"ServiceUnavailable","level":"error","name":"Neo4jError","query":"CREATE INDEX SearchInMyCompanies IF NOT EXISTS \n        FOR (n:Company) ON (n.CompanyName, n.CompanyDescription, n.Domain)","service":"user-service"}
+{"level":"error","message":"Mon Jun 03 2024 08:30:12 GMT+0300 (Eastern European Summer Time), in resolvers.js => sendAIMessage, AxiosError: Request failed with status code 500","service":"user-service"}
+{"level":"error","message":"Mon Jun 03 2024 08:31:17 GMT+0300 (Eastern European Summer Time), in resolvers.js => sendAIMessage, AxiosError: Request failed with status code 500","service":"user-service"}
+{"level":"error","message":"Mon Jun 03 2024 08:32:10 GMT+0300 (Eastern European Summer Time), in resolvers.js => sendAIMessage, AxiosError: Request failed with status code 500","service":"user-service"}
+{"level":"error","message":"Mon Jun 03 2024 08:32:54 GMT+0300 (Eastern European Summer Time), in resolvers.js => sendAIMessage, AxiosError: Request failed with status code 500","service":"user-service"}
+{"level":"error","message":"Mon Jun 03 2024 08:37:14 GMT+0300 (Eastern European Summer Time), in resolvers.js => sendAIMessage, AxiosError: Request failed with status code 500","service":"user-service"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}
+{"level":"error","message":"Mon Jun 03 2024 11:09:27 GMT+0300 (Eastern European Summer Time), in resolvers.js => sendAIMessage, AxiosError: Request failed with status code 500","service":"user-service"}
+{"level":"error","message":"Mon Jun 03 2024 11:12:02 GMT+0300 (Eastern European Summer Time), in resolvers.js => sendAIMessage, AxiosError: Request failed with status code 500","service":"user-service"}
+{"level":"error","message":"Mon Jun 03 2024 11:12:28 GMT+0300 (Eastern European Summer Time), in resolvers.js => sendAIMessage, AxiosError: Request failed with status code 500","service":"user-service"}
+{"level":"error","message":"Mon Jun 03 2024 11:17:37 GMT+0300 (Eastern European Summer Time), in resolvers.js => sendAIMessage, AxiosError: Request failed with status code 500","service":"user-service"}
+{"level":"error","message":"Mon Jun 03 2024 11:20:09 GMT+0300 (Eastern European Summer Time), in resolvers.js => sendAIMessage, AxiosError: Request failed with status code 500","service":"user-service"}
+{"level":"info","message":"🚀 Server ready at http://localhost:4000","service":"user-service"}

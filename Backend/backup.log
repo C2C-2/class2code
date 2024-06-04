@@ -1,0 +1,4 @@
+{"level":"info","message":"CREATE (project:Project {createdDate: datetime(), ProjectName: \"a\", ProjectDescription: \"a\", FileName: \"Class2Code.pdf\"})\n          RETURN project","service":"user-service"}
+{"level":"info","message":"CREATE (project:Project {createdDate: datetime(), ProjectName: \"a\", ProjectDescription: \"a\", FileName: \"Class2Code.pdf\"})\n          RETURN project","service":"user-service"}
+{"level":"info","message":"CREATE (chat:AIChat {createdDate: datetime()}) - [:chat_with_AI]-> (user:User {id: \"Hii6gYVKhMd2mvSwNkhcUhVHsSE3\"}) \n          RETURN chat","service":"user-service"}
+{"level":"info","message":"MATCH (chat:AIChat) where ID(chat) = 2\n          Create (chat)-[r:has_a]->(message:AIMessage {Question: \"hi\", Answer: \"Hello! How can I assist you today?\", CreatedDate: datetime()})\n          RETURN message","service":"user-service"}

@@ -6,6 +6,7 @@ import {
   Divider,
   Group,
   Input,
+  Loader,
   Select,
   Text,
 } from "@mantine/core";
@@ -18,7 +19,8 @@ import { IconArrowLeft, IconPlus, IconTrash } from "@tabler/icons-react";
 import { AiFillWechat } from "react-icons/ai";
 import { Paths } from "../../../assets/Paths";
 import { gql, useLazyQuery, useMutation, useQuery } from "@apollo/client";
-import { useCallback, useState } from "react";
+import { useState } from "react";
+import { RiQuestionAnswerLine } from "react-icons/ri";
 
 function AIChat() {
   const [opened, { toggle }] = useDisclosure();
@@ -140,7 +142,8 @@ function AIChat() {
     }
   `;
 
-  const [sendMessageQuery] = useMutation(SEND_MESSAGE);
+  const [sendMessageQuery, { loading: sendAIMessageLoading }] =
+    useMutation(SEND_MESSAGE);
 
   const sendMessage = async (e, chatId) => {
     e.preventDefault();
@@ -354,10 +357,10 @@ function AIChat() {
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    class="icon icon-tabler icons-tabler-outline icon-tabler-message-question"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="icon icon-tabler icons-tabler-outline icon-tabler-message-question"
                   >
                     <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                     <path d="M8 9h8" />
@@ -368,26 +371,9 @@ function AIChat() {
                   </svg>
                   <div className="Massage">{message.Question}</div>
                 </div>
+                <br />
                 <div className="answer">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="100"
-                    height="100"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    class="icon icon-tabler icons-tabler-outline icon-tabler-brackets-contain"
-                  >
-                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                    <path d="M7 4h-4v16h4" />
-                    <path d="M17 4h4v16h-4" />
-                    <path d="M8 16h.01" />
-                    <path d="M12 16h.01" />
-                    <path d="M16 16h.01" />
-                  </svg>
+                  <RiQuestionAnswerLine size="sm" className="answer_icon" />
                   <div className="Massage">{message.Answer}</div>
                 </div>
               </div>
@@ -414,7 +400,7 @@ function AIChat() {
                 size="md"
                 radius="md"
               >
-                Send &nbsp;
+                Send &nbsp; {sendAIMessageLoading && <Loader size="sm" color="white" />}
               </Button>
             </form>
           )}

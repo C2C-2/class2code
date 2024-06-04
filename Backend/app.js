@@ -47,13 +47,6 @@ const server = new ApolloServer({
   resolvers,
 });
 
-/*
-@ this method to start apollo Server and add app as middleware
-to add other middleware: compression, because I can't make it without
-express server.
-
-@without any parameters and return type.
-*/
 async function startServer() {
   try {
     await server.start();

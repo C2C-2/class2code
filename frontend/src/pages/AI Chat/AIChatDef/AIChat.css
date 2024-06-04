@@ -54,6 +54,7 @@
 .ChatBox {
   padding: 1vw 2vw;
   overflow: auto;
+  max-height: 60vh;
 }
 
 .Title h2 {
@@ -74,6 +75,11 @@
   gap: 1vw;
 }
 
+.answer .Massage {
+  background-color: rgb(131, 194, 157, 0.2);
+  border: 1px solid rgb(131, 194, 157, 0.2) !important;
+}
+
 .Massage {
   border: 1px solid rgb(27, 37, 89, 0.3);
   padding: 0.5vw;
@@ -85,7 +91,7 @@
   flex-direction: row;
   align-items: center;
   gap: 1vw;
-  position: absolute;
+  position: fixed;
   bottom: 3.5rem;
   right: 2rem;
   left: 22%;
@@ -99,15 +105,20 @@
   width: 100%;
 }
 
-.Footer{
-  position: absolute;
+.Footer {
+  position: fixed;
   bottom: 1rem;
   right: 2rem;
 }
 
-.CreateNewChat{
+.CreateNewChat {
   position: absolute;
   bottom: 1rem;
   right: 1rem;
   left: 1rem;
+}
+
+.answer_icon {
+  max-width: 16px;
+  max-height: 16px;
 }

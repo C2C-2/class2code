@@ -80,6 +80,7 @@ const resolvers = {
           limit,
         };
       } catch (error) {
+        console.log(error);
         Logging.error(`${new Date()}, in resolvers.js => getAIChat, ${error}`);
         throw error;
       }
@@ -1439,36 +1440,18 @@ const resolvers = {
     it file */
     sendAIMessage: async (parent, args) => {
       try {
-        // this used to basic auth in python backend (AI model)
-        const username = process.env.AI_USERNAME;
-        const password = process.env.AI_PASSWORD;
-        const credentials = `${username}:${password}`;
+        const { message, fileName, AIchatId } = args;
 
-        // this string args from frontend as parameters to AI chat
-        const { message } = args;
-        const { fileName } = args;
-
-        // this int args from to check if chat already exist or create new
-        const { AIchatId } = args;
-
-        if (!message) {
+        if (!message || !fileName) {
           throw new Error(
-            `Are you send message? message is required, message value is ${message}. please check message value before send`
+            `Both message and fileName are required. Received message: ${message}, fileName: ${fileName}`
           );
         }
 
-        if (!fileName) {
-          throw new Error(
-            `Are you send fileName? fileName is required, fileName value is ${fileName}. please check fileName value before send`
-          );
-        }
+        const encodedCredentials = Buffer.from(
+          `${process.env.AI_USERNAME}:${process.env.AI_PASSWORD}`
+        ).toString("base64");
 
-        // Base64 encode the credentials
-        // this step required to send username & password to auth
-        const encodedCredentials = base64.encode(credentials);
-
-        // this to get answer from AI model about some question
-        // return type is string
         const response = await axios.post(
           Variables.pythonLink,
           { query: message, filename: fileName },
@@ -1477,12 +1460,10 @@ const resolvers = {
               Authorization: `Basic ${encodedCredentials}`,
               "Content-Type": "application/json",
             },
-            timeout: 500000000, // Timeout in milliseconds
+            timeout: 500000, // Adjust the timeout to a reasonable value
           }
         );
 
-        // Create AIChat and AIMessage nodes
-        // I save it in database to get it when user need it from old chats
         const [chat, createdMessage] = await Promise.all([
           AIchatId
             ? NeodeObject.findById("AIChat", AIchatId)
@@ -1493,15 +1474,16 @@ const resolvers = {
           }),
         ]);
 
-        // Relate AIMessage to AIChat
         await chat.relateTo(createdMessage, "has_a");
 
         await backup.info(
-          `MATCH (chat:AIChat) where ID(chat) = ${chat.identity().low}
-          Create (chat)-[r:has_a]->(message:AIMessage {Question: "${message}", Answer: "${
-            response.data
-          }", CreatedDate: datetime()})
-          RETURN message`
+          `MATCH (chat:AIChat) WHERE ID(chat) = ${chat.identity().low}
+           CREATE (chat)-[r:has_a]->(message:AIMessage {
+             Question: "${message}",
+             Answer: "${response.data}",
+             CreatedDate: datetime()
+           })
+           RETURN message`
         );
 
         return {
@@ -1509,7 +1491,7 @@ const resolvers = {
           ...createdMessage.properties(),
         };
       } catch (error) {
-        console.log(error);
+        console.error(error);
         Logging.error(
           `${new Date()}, in resolvers.js => sendAIMessage, ${error}`
         );
@@ -3253,7 +3235,7 @@ const resolvers = {
     Messages: async (parent) => {
       try {
         const chatId = parent._id;
-        const { page, limit } = parent;
+        const { page = 0, limit = 6 } = parent;
 
         if (!chatId) {
           throw new Error("ChatID is null");
@@ -3264,6 +3246,7 @@ const resolvers = {
            MATCH (chat:AIChat)-[:HAS_A]->(messages:AIMessage) 
            WHERE ID(chat) = $chatId 
            RETURN messages
+           ORDER BY messages.CreatedDate ASC
            SKIP ${page} * ${limit} LIMIT ${limit}`;
         const result = await NeodeObject.cypher(cypherQuery, { chatId });
 
@@ -3272,10 +3255,11 @@ const resolvers = {
         }
 
         return result?.records?.map((record) => ({
-          ...record.get("messages").properties,
-          _id: `${record.get("messages").identity().low}`,
+          ...record?.get("messages")?.properties,
+          _id: `${record?.get("messages")?.identity?.low}`,
         }));
       } catch (error) {
+        console.log(error);
         Logging.error(`${new Date()}, in resolvers.js => Messages, ${error}`);
         throw error;
       }
@@ -3300,6 +3284,7 @@ const resolvers = {
 
         return result?.records[0].get("fileName");
       } catch (error) {
+        console.log(error);
         Logging.error(`${new Date()}, in resolvers.js => FileName, ${error}`);
         console.log(error);
       }
@@ -3341,7 +3326,7 @@ const resolvers = {
     WorkCompanies: async (parent) => {
       try {
         const userId = parent.id;
-        const { page, limit } = parent;
+        const { page = 0, limit = 6 } = parent;
 
         if (!userId) {
           throw new Error("UserID is null");
@@ -3402,7 +3387,7 @@ const resolvers = {
     Accounts: async (parent) => {
       try {
         const userId = parent.id;
-        const { page, limit } = parent;
+        const { page = 0, limit = 6 } = parent;
 
         if (!userId) {
           throw new Error("UserID is null");
@@ -3427,7 +3412,7 @@ const resolvers = {
     Tasks: async (parent) => {
       try {
         const userId = parent.id;
-        const { page, limit } = parent;
+        const { page = 0, limit = 6 } = parent;
         if (!userId) {
           throw new Error("UserID is null");
         }
@@ -3505,7 +3490,7 @@ const resolvers = {
     AIChats: async (parent) => {
       try {
         const userId = parent.id;
-        const { page, limit } = parent;
+        const { page = 0, limit = 6 } = parent;
 
         if (!userId) {
           throw new Error("UserID is null");
@@ -3525,6 +3510,7 @@ const resolvers = {
           limit,
         }));
       } catch (error) {
+        console.log(error);
         Logging.error(`${new Date()}, in resolvers.js => AIChats, ${error}`);
         throw error;
       }
@@ -3532,7 +3518,7 @@ const resolvers = {
     CreatedTasks: async (parent) => {
       try {
         const userId = parent.id;
-        const { page, limit } = parent;
+        const { page = 0, limit = 6 } = parent;
 
         if (!userId) {
           throw new Error("UserID is null");
@@ -3560,7 +3546,7 @@ const resolvers = {
     Posts: async (parent) => {
       try {
         const userId = parent.id;
-        const { page, limit } = parent;
+        const { page = 0, limit = 6 } = parent;
 
         if (!userId) {
           throw new Error("UserID is null");
@@ -3670,7 +3656,7 @@ const resolvers = {
     Applies: async (parent) => {
       try {
         const projectId = parent._id;
-        const { page, limit } = parent;
+        const { page = 0, limit = 6 } = parent;
 
         if (!projectId) {
           throw new Error(`ProjectID is ${projectId}`);
@@ -3865,7 +3851,7 @@ const resolvers = {
     Messages: async (parent) => {
       try {
         const chatId = parent._id;
-        const { page, limit } = parent;
+        const { page = 0, limit = 6 } = parent;
 
         if (!chatId) {
           throw new Error("ChatID is null");

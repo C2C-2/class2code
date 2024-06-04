@@ -4,9 +4,10 @@ flask-cors
 flask-httpauth
 langchain
 langchain-community
-openai
+openai==0.28
 python-dotenv
 PyPDF2
 firebase-admin
 redis
 tiktoken
+faiss-cpu
