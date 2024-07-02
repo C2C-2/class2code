@@ -20,14 +20,7 @@ import {
 } from "firebase/storage";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCjlW-VgZ05J5gWwLRsfRuUjsETmJV5lJI",
-  authDomain: "class2code.firebaseapp.com",
-  databaseURL: "https://class2code-default-rtdb.firebaseio.com",
-  projectId: "class2code",
-  storageBucket: "class2code.appspot.com",
-  messagingSenderId: "221134602131",
-  appId: "1:221134602131:web:2698ab692bfc3ce5f8f266",
-  measurementId: "G-260LL3YSX9",
+...
 };
 
 // Initialize Firebase
